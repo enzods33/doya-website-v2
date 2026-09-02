@@ -36,6 +36,8 @@ Le build est généré dans `dist/`. L’aperçu du build utilise le port `4174`
 
 Les valeurs `null` signalent une information non fournie. Le site n’en fait pas un lien cliquable. Les dates de concerts restent dans une liste vide tant qu’aucune n’est confirmée. Les prix s’expriment en euros dans les données et ne s’affichent que lorsqu’ils sont renseignés.
 
+Les six profils du footer (Instagram, YouTube, TikTok, Facebook, Spotify et Apple Music) sont renseignés. Leur vérification est documentée dans `reference/social-links.md`. Les liens d’écoute propres à Luna Bohemia restent distincts et à compléter.
+
 ## Architecture
 
 ```text
@@ -78,6 +80,7 @@ doya-website-v2/
 │   ├── asset-manifest.json
 │   ├── project-notes.md
 │   ├── motion-notes.md
+│   ├── social-links.md
 │   ├── qa-report.md
 │   └── screenshots/
 ├── scripts/                Audit des sources, séparation des tracés natifs

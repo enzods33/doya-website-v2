@@ -3,7 +3,7 @@
 ## Résultat
 
 - `npm run lint` : aucune erreur ni avertissement.
-- `npm test` : six tests réussis (contenus, destinations, médias, JPEG natifs, tracés SVG, réglages reduced motion).
+- `npm test` : sept tests réussis (contenus, destinations, médias, six profils sociaux, JPEG natifs, tracés SVG, réglages reduced motion).
 - `npm run build` : compilation de production réussie.
 - React / React DOM : une seule version, dépendances dédupliquées.
 - Ancien projet `doya-website` : comparaison SHA-256 de 99 fichiers, aucun changement ni suppression.
@@ -52,3 +52,7 @@ Les tentatives de capture intégrale après changement de facteur d’échelle p
 ## À faire avant ouverture publique
 
 Valider les contenus avec DOYA, fournir les originaux HD, les webfonts licenciées, la biographie et les URLs officielles. Voir `project-notes.md` et `motion-notes.md`. L’aperçu est destiné à une relecture privée et reste non indexable.
+
+## Ajout des profils sociaux
+
+Les six destinations du footer sont renseignées et distinctes. Les contrôles lint, les sept tests et le build ont été relancés avec succès après cet ajout. Aucun composant, style, animation ou asset n’a changé. Les liens spécifiques à l’album restent vides. La vérification externe et ses limites sont détaillées dans `social-links.md` ; aucun nouveau contrôle visuel n’est revendiqué pour cette modification de données.

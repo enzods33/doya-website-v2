@@ -40,6 +40,18 @@ test('les médias déclarés existent et ont des dimensions explicites', () => {
   assert.equal(new Set(galleryImages.map((image) => image.src)).size, galleryImages.length)
 })
 
+test('les six profils officiels sont distincts et prêts pour le footer', () => {
+  assert.deepEqual(socials.map((social) => social.name), ['Instagram', 'YouTube', 'TikTok', 'Facebook', 'Spotify', 'Apple Music'])
+  assert.ok(socials.every((social) => isExternalUrl(social.url)))
+  assert.equal(new Set(socials.map((social) => social.url)).size, socials.length)
+  assert.deepEqual(socials.map((social) => new URL(social.url).hostname), [
+    'www.instagram.com', 'www.youtube.com', 'www.tiktok.com', 'www.facebook.com', 'open.spotify.com', 'music.apple.com',
+  ])
+  assert.ok(socials.find((social) => social.name === 'Spotify').url.endsWith('/1JGqJy0whUevjrA3Tw6OMA'))
+  assert.ok(socials.find((social) => social.name === 'Apple Music').url.endsWith('/1646461706'))
+  assert.ok(album.platforms.every((platform) => platform.url === null), 'ne pas remplacer les liens album par des profils artistes')
+})
+
 test('les JPEG sources correspondent aux flux natifs du PDF', () => {
   const manifest = JSON.parse(readFileSync(new URL('../reference/asset-manifest.json', import.meta.url), 'utf8'))
   const photographs = manifest.filter((asset) => asset.file.endsWith('.jpg'))

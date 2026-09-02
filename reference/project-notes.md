@@ -22,7 +22,7 @@ Le PDF ne fournit pas de mockup autonome de vinyle. Le CD est une composition so
 - Live en état vide explicite, sans date inventée ni photographie de concert substituée.
 - Collection en quatre colonnes sur desktop, deux sur mobile, avec vues face/dos réellement connectées aux mockups officiels.
 - About fondé sur l’identité et un portrait officiel, avec biographie signalée comme manquante.
-- Footer noir minimal, sans URL sociale inventée.
+- Footer noir minimal, avec six profils officiels vérifiés ; sources dans `social-links.md`.
 
 Noir `#000000`, blanc `#FFFFFF`, rouge `#E30613` : identité vérifiée. Le fond papier `#F2EFEA` est un choix web neutre, pas une couleur revendiquée comme officielle. Fallbacks serif/sans centralisés ; aucun téléchargement de police.
 
@@ -57,7 +57,6 @@ Tee-shirts Luna Bohemia A, B, C et identité DOYA : maquettes officielles des pa
 | Destinations éventuelles des 12 titres | `src/data/album.js`, `tracks` |
 | Concerts, dates, villes, salles et URLs billets | `src/data/live.js` |
 | 4 URLs produits, prix et confirmation de commercialisation | `src/data/products.js` |
-| 5 URLs sociales : Instagram, YouTube, TikTok, Spotify, Apple Music | `src/data/socials.js` |
 | Biographie officielle et contact éventuel | `src/data/siteContent.js` |
 | Domaine officiel / indexation | `.env.local`, d’après `.env.example` |
 | Webfonts Editorial New et New Frank, avec licences | `src/assets/fonts/` |
