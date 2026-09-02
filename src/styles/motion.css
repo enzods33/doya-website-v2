@@ -16,6 +16,28 @@
 .gallery-controls button:last-of-type:hover { transform: translateX(4px); }
 .back-to-top { transition: transform 400ms var(--motion-ease); }
 .back-to-top:hover { transform: translateY(-4px); }
+.desktop-navigation a { transition: transform 450ms var(--motion-ease); }
+.desktop-navigation a::after { transform-origin: right; transition: transform 450ms var(--motion-ease); }
+.desktop-navigation a:focus-visible::after { transform: scaleX(1); transform-origin: left; }
+.text-link { position: relative; }
+.text-link::after { content: ''; position: absolute; bottom: 4px; left: 0; right: 46px; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: right; transition: transform 450ms var(--motion-ease); }
+.text-link:focus-visible::after { transform: scaleX(1); transform-origin: left; }
+.product-caption { position: relative; }
+.product-caption::before { content: ''; position: absolute; top: -1px; left: 0; width: 100%; height: 1px; background: var(--color-doya-red); transform: scaleX(0); transform-origin: right; transition: transform 500ms var(--motion-ease); }
+.product-image { transition: transform 550ms var(--motion-ease); }
+.product-view-controls button::after { content: ''; position: absolute; left: 0; right: 0; bottom: 6px; height: 1px; background: var(--color-doya-red); transform: scaleX(0); transform-origin: right; transition: transform 350ms var(--motion-ease); }
+.product-view-controls button[aria-pressed='true']::after, .product-view-controls button:focus-visible::after { transform: scaleX(1); transform-origin: left; }
+.mobile-menu nav a { transition: color 240ms; }
+.mobile-menu nav a:focus-visible { color: var(--color-doya-red); }
+@media (hover: hover) and (pointer: fine) {
+  .desktop-navigation a:hover { transform: translateY(-2px); }
+  .desktop-navigation a:hover::after, .text-link:hover::after { transform: scaleX(1); transform-origin: left; }
+  .product:hover .product-image { transform: translateY(-5px); }
+  .product:hover .product-caption::before { transform: scaleX(1); transform-origin: left; }
+  .product-view-controls button:hover::after { transform: scaleX(1); transform-origin: left; }
+  .mobile-menu nav a:hover { color: var(--color-doya-red); }
+}
 @media (prefers-reduced-motion: reduce) {
-  .track-row:hover > :nth-child(2), .gallery-controls button:hover, .back-to-top:hover { transform: none; }
+  .track-row:hover > :nth-child(2), .gallery-controls button:hover, .back-to-top:hover,
+  .desktop-navigation a:hover, .product:hover .product-image { transform: none; }
 }

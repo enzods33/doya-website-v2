@@ -32,6 +32,7 @@ Le navigateur de capture utilise une mise à l’échelle système : ses fichier
 - Un seul h1 ; aucune ancre interne sans destination.
 - Les quatre glyphes du Hero finissent à opacité 1. Aucun élément visité ne reste masqué après les apparitions.
 - La photographie principale garde `filter: none` ; les fichiers JPEG sont vérifiés par leur empreinte.
+- Passe hover : passage sur le premier vêtement, apparition de son vrai mockup de face, déplacement mesuré de 5 px, puis retour au dos quand le pointeur sort. Les commandes globales restent utilisables au clavier ; les textes restent noirs pour leur contraste.
 
 ## Console et limites du contrôle
 

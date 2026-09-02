@@ -35,3 +35,11 @@ La courbe commune est `[0.22, 1, 0.36, 1]`. L’entrée du Hero ne retarde pas l
 - [Motion — Accessibility](https://motion.dev/docs/react-accessibility) : préférence de réduction des mouvements.
 
 Les animations sont propres au projet ; aucun composant Motion+ payant n’a été importé.
+
+## Passe hover
+
+- Navigation : filet rouge directionnel et déplacement de 2 px ; le texte reste noir pour préserver le contraste sur la photographie.
+- Liens éditoriaux : soulignement progressif et flèche déjà animée.
+- Vêtements : survol à la souris = aperçu de l’autre face avec les vrais mockups, puis retour au choix global quand la souris sort. Un filet rouge et un déplacement de 5 px accompagnent l’aperçu ; les titres restent noirs.
+- Les commandes Vue face / Vue dos restent la solution tactile et clavier ; aucun faux lien d’achat ni arrêt de tabulation supplémentaire n’est créé.
+- Les nouveaux déplacements de survol sont limités aux pointeurs fins compatibles hover, puis supprimés en mode reduced motion. La fonction de prévisualisation ne s’active pas au toucher.
