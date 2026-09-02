@@ -1,0 +1,162 @@
+.section-heading { display: flex; align-items: end; justify-content: space-between; gap: 28px; margin-bottom: clamp(36px, 4vw, 72px); }
+.section-heading h2 { font-size: clamp(52px, 6.8vw, 118px); }
+.section-kicker { margin-bottom: 20px; }
+.small-separator { margin-inline: 12px; color: var(--color-doya-red); }
+.photo-caption { display: flex; justify-content: space-between; gap: 12px; margin-top: 12px; text-transform: uppercase; letter-spacing: .07em; font-size: 9px; }
+.music-section { padding-block: var(--section-space); }
+.music-layout { display: grid; grid-template-columns: 1.04fr 1.12fr .68fr; gap: clamp(32px, 4.2vw, 80px); align-items: start; }
+.music-cover-column, .tracklist-column, .music-aside { min-width: 0; }
+.album-cover { width: 100%; aspect-ratio: 1; }
+.listening-area { margin-top: 40px; padding-top: 22px; border-top: 1px solid var(--hairline); }
+.platforms { display: flex; flex-wrap: wrap; gap: 10px 20px; margin-top: 18px; font-size: 12px; }
+.platforms a { padding-block: 12px; border-bottom: 1px solid var(--color-doya-red); }
+.unavailable-link { color: var(--muted); }
+.availability-note { margin-top: 14px; color: var(--muted); font-size: 11px; line-height: 1.6; }
+.tracklist-header { display: flex; justify-content: space-between; gap: 20px; padding-bottom: 18px; border-bottom: 1px solid var(--hairline); }
+.track-row { display: grid; grid-template-columns: 24px minmax(0, 1fr) auto; align-items: baseline; column-gap: 15px; padding: 12px 0; border-bottom: 1px solid var(--hairline); font-size: clamp(11px, .87vw, 15px); line-height: 1.6; letter-spacing: .025em; text-transform: uppercase; transition: color var(--motion-duration); }
+.track-row:hover { color: var(--color-doya-red); }
+.track-number { font-size: 9px; color: var(--muted); }
+.tracklist li:first-child .track-number { color: var(--color-doya-red); }
+.music-portrait { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; object-position: 53% center; }
+.album-number { margin-top: 42px; display: flex; align-items: end; gap: 22px; }
+.album-number > span { font-family: var(--font-editorial); font-size: clamp(70px, 8vw, 128px); line-height: .72; letter-spacing: -.06em; }
+.album-number p { font-size: 9px; }
+.editorial-section { position: relative; padding-top: clamp(32px, 3vw, 64px); padding-bottom: var(--section-space); border-top: 1px solid var(--hairline); display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); }
+.editorial-composition { display: contents; }
+.editorial-composition > span { font-family: var(--font-editorial); text-transform: uppercase; letter-spacing: -.035em; line-height: .8; font-size: clamp(100px, 18.4vw, 335px); position: relative; z-index: 1; }
+.editorial-composition > span:first-child { grid-column: 1 / 7; grid-row: 1; align-self: start; }
+.editorial-composition > span:last-child { grid-column: 3 / 13; grid-row: 3; justify-self: end; margin-top: -6px; }
+.editorial-photo { grid-column: 6 / 12; grid-row: 1 / 3; padding-top: 48px; }
+.editorial-photo img { width: 100%; }
+.editorial-photo figcaption { margin-bottom: 40px; }
+.editorial-note { grid-column: 1 / 5; grid-row: 2; align-self: end; padding-bottom: 56px; }
+.editorial-note img { width: 22px; margin-bottom: 22px; }
+.editorial-note .text-link { margin-top: 22px; font-size: 10px; }
+.photography-section { color: var(--color-paper); background: #000; padding-block: clamp(50px, 5vw, 96px); }
+.gallery-header { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-bottom: 40px; }
+.gallery-header h2 { font-family: var(--font-editorial); font-size: clamp(26px, 2.4vw, 40px); text-transform: uppercase; letter-spacing: -.02em; }
+.gallery-controls { display: flex; align-items: center; gap: 12px; }
+.gallery-controls p { margin-right: 26px; font-size: 10px; }
+.gallery-controls button { background: none; border: 0; min-width: 44px; height: 44px; font-family: var(--font-editorial); font-size: 28px; line-height: 1; transition: color var(--motion-duration); }
+.gallery-controls button:hover { color: var(--color-doya-red); }
+.gallery-stage { display: grid; grid-template-columns: .85fr 1.65fr .8fr; align-items: center; gap: clamp(20px, 3vw, 58px); }
+.gallery-side { min-width: 0; }
+.gallery-side img { width: 100%; object-fit: cover; }
+.gallery-side-left { padding-top: 90px; }
+.gallery-side-left img { aspect-ratio: 4 / 3; }
+.gallery-side-right { padding-top: 40px; }
+.gallery-side-right img { aspect-ratio: 3 / 4; }
+.gallery-main img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
+.gallery-main figcaption { color: #b9b7b4; }
+.gallery-stars { width: 28px; margin: 44px auto 0; }
+.live-section { background: #000; color: var(--color-paper); border-top: 1px solid #333; padding-block: clamp(64px, 7vw, 132px); }
+.live-layout { display: grid; grid-template-columns: .8fr 1.4fr .3fr; align-items: start; gap: clamp(36px, 6vw, 110px); }
+.live-layout h2 { font-size: clamp(80px, 12vw, 210px); }
+.live-content { padding-top: 4px; }
+.live-content > .eyebrow { padding-bottom: 22px; border-bottom: 1px solid #555; }
+.live-empty { padding-top: 32px; }
+.live-empty-title { font-family: var(--font-editorial); font-size: clamp(40px, 4.8vw, 78px); letter-spacing: -.02em; line-height: 1; margin-bottom: 18px; }
+.live-empty > p:last-child { font-size: 12px; color: #bbb; max-width: 310px; }
+.live-stars { width: 46px; margin-top: 70px; justify-self: end; }
+.concerts li { display: grid; grid-template-columns: 75px 1fr 1fr auto; align-items: center; gap: 18px; padding-block: 18px; border-bottom: 1px solid #444; font-size: 11px; text-transform: uppercase; }
+.concerts .availability-note { color: #bbb; }
+.shop-section { padding-block: var(--section-space); }
+.shop-section .section-heading h2 { font-size: clamp(70px, 9vw, 160px); }
+.product-view-controls { display: flex; align-items: center; gap: 15px; font-size: 10px; text-transform: uppercase; letter-spacing: .06em; }
+.product-view-controls button { border: 0; min-height: 44px; background: transparent; position: relative; }
+.product-view-controls button[aria-pressed='true']::after { content: ''; position: absolute; left: 0; right: 0; bottom: 6px; height: 1px; background: var(--color-doya-red); }
+.product-view-controls button[aria-pressed='false'] { color: var(--muted); }
+.products { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(18px, 2.8vw, 54px); }
+.product { min-width: 0; }
+.product > img { width: 100%; aspect-ratio: 1; object-fit: contain; }
+.product-caption { border-top: 1px solid var(--hairline); padding-top: 20px; margin-top: 16px; }
+.product-caption > .eyebrow { font-size: 9px; color: var(--muted); }
+.product-caption h3 { margin-top: 4px; font-family: var(--font-editorial); font-size: clamp(18px, 1.5vw, 25px); text-transform: uppercase; }
+.product-details { display: flex; justify-content: space-between; gap: 16px; margin-top: 10px; font-size: 10px; letter-spacing: .04em; text-transform: uppercase; }
+.shop-note { margin-top: 42px; }
+.about-section { border-top: 1px solid var(--hairline); padding-block: var(--section-space); display: grid; grid-template-columns: .32fr 1fr 1fr; gap: clamp(32px, 5vw, 96px); align-items: center; }
+.about-label { height: 100%; display: flex; flex-direction: column; justify-content: space-between; align-items: start; }
+.about-label img { width: 25px; }
+.about-photo img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: 54% center; }
+.about-wordmark { width: 100%; max-width: 410px; }
+.about-album { font-size: clamp(32px, 3.6vw, 60px); margin-top: 36px; margin-bottom: 20px; }
+.about-biography { margin-top: 36px; max-width: 35ch; }
+.site-footer { background: #000; color: var(--color-paper); padding-block: 58px 28px; }
+.footer-top { display: grid; grid-template-columns: 1fr 1fr 1fr; align-items: center; padding-bottom: 44px; }
+.footer-wordmark { width: 220px; }
+.footer-stars { width: 32px; justify-self: center; }
+.back-to-top { justify-self: end; font-size: 28px; text-align: center; width: 44px; line-height: 44px; }
+.footer-bottom { border-top: 1px solid #333; padding-top: 28px; display: flex; justify-content: space-between; gap: 28px; align-items: start; }
+.socials { display: flex; flex-wrap: wrap; gap: 14px 28px; font-size: 9px; letter-spacing: .06em; text-transform: uppercase; }
+.socials a { display: inline-block; padding-block: 8px; }
+.socials span { color: #b9b7b4; }
+.footer-note { color: #a7a5a2; font-size: 10px; margin-top: 12px; }
+.copyright { font-size: 9px; letter-spacing: .035em; text-transform: uppercase; }
+@media (max-width: 1100px) {
+  .music-layout { grid-template-columns: .95fr 1.05fr; gap: 42px; }
+  .music-aside { display: none; }
+  .track-row { font-size: 12px; padding-block: 10px; }
+  .editorial-composition > span { font-size: 18vw; }
+  .editorial-photo { grid-column: 6 / 13; }
+  .editorial-note { padding-bottom: 28px; }
+  .live-layout { grid-template-columns: .8fr 1.4fr; gap: 48px; }
+  .live-stars { display: none; }
+  .about-section { grid-template-columns: 1fr 1fr; }
+  .about-label { grid-column: 1 / 3; flex-direction: row; align-items: center; }
+  .about-label img { width: 22px; }
+}
+@media (max-width: 767px) {
+  .section-heading { align-items: start; flex-direction: column; gap: 22px; }
+  .section-heading h2 { font-size: clamp(47px, 12.7vw, 78px); }
+  .section-kicker { margin-bottom: 18px; }
+  .music-layout { grid-template-columns: 1fr; gap: 44px; }
+  .music-cover-column { max-width: 500px; width: 100%; }
+  .listening-area { margin-top: 26px; }
+  .platforms { gap: 10px 20px; font-size: 12px; }
+  .track-row { padding-block: 13px; font-size: 12px; gap: 15px; }
+  .music-aside { display: none; }
+  .editorial-section { padding-top: 34px; grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .editorial-composition > span { font-size: clamp(76px, 19vw, 144px); line-height: .85; }
+  .editorial-composition > span:first-child { grid-row: 1; grid-column: 1 / 6; font-size: 30vw; margin-bottom: 24px; }
+  .editorial-photo { grid-column: 2 / 7; grid-row: 2; padding: 0; }
+  .editorial-photo figcaption { margin-bottom: 24px; }
+  .editorial-composition > span:last-child { grid-column: 1 / 7; grid-row: 3; margin: 0; justify-self: center; font-size: 17.3vw; }
+  .editorial-note { grid-column: 1 / 7; grid-row: 4; margin-top: 34px; padding-bottom: 0; }
+  .editorial-note img { width: 22px; float: right; }
+  .editorial-note .text-link { margin-top: 14px; }
+  .gallery-header { align-items: start; flex-direction: column; gap: 16px; margin-bottom: 28px; }
+  .gallery-header h2 { font-size: 29px; }
+  .gallery-controls { justify-content: flex-end; width: 100%; gap: 10px; }
+  .gallery-controls p { margin-right: auto; }
+  .gallery-stage { display: block; }
+  .gallery-side { display: none; }
+  .gallery-main img { aspect-ratio: 4 / 5; object-position: 55% center; }
+  .gallery-stars { margin-top: 34px; }
+  .live-layout { grid-template-columns: 1fr; gap: 34px; }
+  .live-layout h2 { font-size: clamp(84px, 23vw, 150px); }
+  .live-empty { padding-top: 26px; }
+  .live-empty-title { font-size: 48px; }
+  .concerts li { grid-template-columns: 78px 1fr; gap: 8px 15px; }
+  .concerts li > :nth-child(3), .concerts li > :nth-child(4) { grid-column: 2; }
+  .shop-section .section-heading { gap: 18px; }
+  .shop-section .section-heading h2 { font-size: 24vw; }
+  .products { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 38px 18px; }
+  .product-caption { padding-top: 15px; margin-top: 10px; }
+  .product-caption h3 { font-size: 19px; line-height: 1.15; }
+  .product-details { font-size: 9px; }
+  .shop-note { max-width: 290px; }
+  .about-section { grid-template-columns: 1fr; gap: 32px; }
+  .about-label { grid-column: 1; }
+  .about-photo { width: 88%; }
+  .about-photo img { aspect-ratio: 4 / 5; }
+  .about-copy { width: 88%; margin-left: auto; }
+  .about-wordmark { max-width: 280px; }
+  .about-album { font-size: 42px; }
+  .about-biography { margin-top: 25px; }
+  .site-footer { padding-top: 38px; }
+  .footer-wordmark { width: 126px; }
+  .footer-top { grid-template-columns: 1fr auto 1fr; padding-bottom: 28px; gap: 20px; }
+  .footer-stars { width: 22px; }
+  .footer-bottom { flex-direction: column; gap: 30px; }
+  .socials { gap: 14px 22px; }
+}

@@ -1,0 +1,101 @@
+{
+  "layout": [
+    {
+      "broken": [],
+      "clientWidth": 1431,
+      "height": 900,
+      "pageHeight": 5917,
+      "scrollWidth": 1431,
+      "width": 1440
+    },
+    {
+      "broken": [],
+      "clientWidth": 382,
+      "height": 844,
+      "pageHeight": 6119,
+      "scrollWidth": 382,
+      "width": 390
+    },
+    {
+      "broken": [],
+      "clientWidth": 312,
+      "height": 700,
+      "pageHeight": 5676,
+      "scrollWidth": 312,
+      "width": 320
+    },
+    {
+      "broken": [],
+      "clientWidth": 1016,
+      "height": 768,
+      "pageHeight": 4975,
+      "scrollWidth": 1016,
+      "width": 1024
+    },
+    {
+      "broken": [],
+      "clientWidth": 1912,
+      "height": 1080,
+      "pageHeight": 7369,
+      "scrollWidth": 1912,
+      "width": 1920
+    }
+  ],
+  "interactions": {
+    "galleryBefore": "http://127.0.0.1:4174/assets/doya-portrait-02-XVVidvyb.jpg",
+    "galleryAfter": "http://127.0.0.1:4174/assets/doya-desert-03-dQZaK00t.jpg",
+    "front": [
+      "",
+      "",
+      "",
+      ""
+    ],
+    "frontImages": [
+      {
+        "alt": "T-shirt Luna Bohemia A, noir, vue de face.",
+        "complete": true,
+        "src": "http://127.0.0.1:4174/assets/shop-tshirt-doya-black-front-DnnmWhto.png"
+      },
+      {
+        "alt": "T-shirt Luna Bohemia B, noir, vue de face.",
+        "complete": true,
+        "src": "http://127.0.0.1:4174/assets/shop-tshirt-doya-black-front-DnnmWhto.png"
+      },
+      {
+        "alt": "T-shirt Luna Bohemia C, noir, vue de face.",
+        "complete": true,
+        "src": "http://127.0.0.1:4174/assets/shop-tshirt-doya-black-front-DnnmWhto.png"
+      },
+      {
+        "alt": "T-shirt DOYA, noir, vue de face.",
+        "complete": true,
+        "src": "http://127.0.0.1:4174/assets/shop-tshirt-wordmark-black-front-ngGCfieB.png"
+      }
+    ],
+    "menuBackwardFocus": "#about",
+    "menuForwardFocus": "Fermer le menu",
+    "menuClosed": {
+      "focus": "menu-trigger",
+      "open": false,
+      "overflow": ""
+    },
+    "menuNavigation": {
+      "hash": "#about",
+      "open": false,
+      "overflow": ""
+    },
+    "finalSemantics": {
+      "brokenAnchors": 0,
+      "h1": 1,
+      "heroFilter": "none",
+      "heroLetters": [
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      "hidden": []
+    },
+    "productionLogs": []
+  }
+}

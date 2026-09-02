@@ -1,0 +1,18 @@
+@theme {
+  --color-doya-black: #000000;
+  --color-doya-white: #ffffff;
+  --color-doya-red: #e30613;
+  --color-paper: #f2efea;
+  --font-editorial: 'Editorial New', 'Iowan Old Style', 'Baskerville', 'Times New Roman', serif;
+  --font-functional: 'New Frank', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+}
+
+:root {
+  --page-gutter: clamp(20px, 4.8vw, 92px);
+  --section-space: clamp(64px, 7.5vw, 144px);
+  --content-width: 1728px;
+  --hairline: rgb(0 0 0 / 20%);
+  --muted: #625e59;
+  --motion-duration: 240ms;
+  --motion-ease: cubic-bezier(.22, 1, .36, 1);
+}

@@ -1,0 +1,52 @@
+.site-header { position: absolute; z-index: 10; inset: 0 0 auto; padding: 22px var(--page-gutter); display: flex; align-items: center; justify-content: space-between; color: #000; }
+.header-brand { display: flex; align-items: center; min-height: 44px; width: clamp(88px, 8vw, 124px); }
+.desktop-navigation { width: min(68%, 980px); display: grid; grid-template-columns: 1fr 1fr 2fr 1fr 1fr; align-items: center; text-align: center; font-size: 11px; text-transform: uppercase; letter-spacing: .07em; }
+.desktop-navigation a { display: flex; align-items: center; min-height: 44px; padding: 12px 4px; justify-self: center; position: relative; }
+.desktop-navigation a::after { content: ''; position: absolute; bottom: 6px; left: 4px; right: 4px; height: 1px; background: var(--color-doya-red); transform: scaleX(0); transform-origin: left; transition: transform var(--motion-duration); }
+.desktop-navigation a:hover::after { transform: scaleX(1); }
+.header-stars { width: 24px; height: 30px; justify-self: center; }
+.menu-trigger { display: none; border: 0; padding: 8px 0 8px 12px; background: transparent; text-transform: uppercase; letter-spacing: .08em; font-size: 11px; align-items: center; gap: 14px; min-height: 44px; }
+.menu-trigger span { font-size: 24px; }
+.mobile-menu { margin: 0; padding: 28px var(--page-gutter); border: 0; width: 100%; max-width: none; height: 100svh; max-height: none; background: #000; color: var(--color-paper); }
+.mobile-menu::backdrop { background: #000; }
+.mobile-menu-top { display: flex; justify-content: space-between; align-items: center; }
+.mobile-wordmark { width: 100px; }
+.mobile-menu-top button { min-height: 44px; border: 0; background: none; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
+.mobile-menu-top button span { margin-left: 16px; font-size: 26px; vertical-align: middle; }
+.mobile-menu nav { display: grid; margin-top: clamp(48px, 9svh, 110px); }
+.mobile-menu nav a { padding: 14px 0; font-family: var(--font-editorial); font-size: clamp(42px, 10vw, 72px); line-height: 1.1; text-transform: uppercase; border-bottom: 1px solid #444; }
+.mobile-menu nav a span { display: inline-block; width: 42px; font: 10px var(--font-functional); color: #bbb; vertical-align: middle; }
+.mobile-menu-bottom { display: flex; justify-content: space-between; align-items: end; margin-top: 52px; }
+.mobile-menu-bottom img { width: 28px; }
+.mobile-menu-bottom p { font-size: 11px; text-transform: uppercase; text-align: right; }
+.hero { position: relative; isolation: isolate; height: 100svh; min-height: 640px; max-height: 1400px; background: #d2ceca; }
+.hero-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 52%; }
+.hero-letters { position: absolute; inset: 0; pointer-events: none; }
+.hero-letter { position: absolute; height: clamp(120px, 19.2vw, 330px); width: auto; max-width: 24%; }
+.letter-d, .letter-o { top: 17%; }
+.letter-y, .letter-a { bottom: 11%; }
+.letter-d, .letter-y { left: 8.5%; }
+.letter-o, .letter-a { right: 7%; }
+.hero-stars { position: absolute; left: 35%; top: 45%; width: clamp(32px, 3.2vw, 52px); transform: translate(-50%, -50%); }
+.hero-caption { position: absolute; left: 43%; bottom: 3%; transform: translateX(-50%); text-align: center; width: max-content; max-width: 60%; color: #000; }
+.hero-caption h1 { margin-top: 9px; font-family: var(--font-editorial); font-size: clamp(28px, 3.6vw, 64px); letter-spacing: -.025em; line-height: 1.1; text-transform: uppercase; }
+.hero-caption .text-link { margin-top: 8px; }
+.caption-dash { display: inline-block; vertical-align: middle; width: 26px; height: 1px; background: var(--color-doya-red); margin: 0 12px; }
+.hero-index { position: absolute; right: var(--page-gutter); bottom: 27px; font-size: 9px; writing-mode: vertical-rl; }
+@media (min-width: 1800px) { .hero { max-height: 1200px; } }
+@media (max-width: 767px) {
+  .site-header { padding-top: 14px; }
+  .desktop-navigation { display: none; }
+  .menu-trigger { display: inline-flex; }
+  .hero { min-height: 630px; max-height: 1000px; }
+  .hero-photo { object-position: 53% 50%; }
+  .hero-letter { height: clamp(92px, 24vw, 160px); max-width: 27%; }
+  .letter-d, .letter-o { top: 17%; }
+  .letter-y, .letter-a { bottom: 25%; }
+  .letter-d, .letter-y { left: 7%; }
+  .letter-o, .letter-a { right: 7%; }
+  .hero-stars { left: 48%; top: 42%; width: 32px; }
+  .hero-caption { left: 50%; bottom: 5%; max-width: calc(100% - 40px); }
+  .hero-caption h1 { font-size: clamp(29px, 7.6vw, 54px); }
+  .hero-index { display: none; }
+}

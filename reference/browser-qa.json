@@ -1,0 +1,262 @@
+{
+  "layout": [
+    {
+      "contentWidth": 1425,
+      "imagesNotLoaded": [],
+      "overflowing": [],
+      "pageHeight": 5909,
+      "photoOpacity": [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      "scrollWidth": 1425,
+      "viewport": [
+        1440,
+        900
+      ]
+    },
+    {
+      "contentWidth": 1905,
+      "imagesNotLoaded": [],
+      "overflowing": [],
+      "pageHeight": 7360,
+      "photoOpacity": [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      "scrollWidth": 1905,
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "contentWidth": 1009,
+      "imagesNotLoaded": [],
+      "overflowing": [],
+      "pageHeight": 4965,
+      "photoOpacity": [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      "scrollWidth": 1009,
+      "viewport": [
+        1024,
+        768
+      ]
+    },
+    {
+      "contentWidth": 375,
+      "imagesNotLoaded": [],
+      "overflowing": [],
+      "pageHeight": 6204,
+      "photoOpacity": [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      "scrollWidth": 375,
+      "viewport": [
+        390,
+        844
+      ]
+    },
+    {
+      "contentWidth": 305,
+      "imagesNotLoaded": [],
+      "overflowing": [],
+      "pageHeight": 5668,
+      "photoOpacity": [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      "scrollWidth": 305,
+      "viewport": [
+        320,
+        700
+      ]
+    }
+  ],
+  "interactions": {
+    "menuFocusLoop": {
+      "href": "#about",
+      "tag": "A"
+    },
+    "menuEscape": {
+      "focusClass": "menu-trigger",
+      "open": false,
+      "overflow": ""
+    },
+    "menuNavigation": {
+      "hash": "#about",
+      "open": false
+    },
+    "galleryChanges": true,
+    "shopFront": true,
+    "shopBack": true,
+    "menuForwardLoop": "Fermer le menu"
+  },
+  "logs": [
+    {
+      "level": "error",
+      "message": "Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:\n1. You might have mismatching versions of React and the renderer (such as React DOM)\n2. You might be breaking the Rules of Hooks\n3. You might have more than one copy of React in the same app\nSee https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.",
+      "timestamp": "2026-09-02T08:31:46.427Z",
+      "url": "http://127.0.0.1:5174/@vite/client"
+    },
+    {
+      "level": "error",
+      "message": "Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:\n1. You might have mismatching versions of React and the renderer (such as React DOM)\n2. You might be breaking the Rules of Hooks\n3. You might have more than one copy of React in the same app\nSee https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.",
+      "timestamp": "2026-09-02T08:31:46.428Z",
+      "url": "http://127.0.0.1:5174/@vite/client"
+    },
+    {
+      "level": "error",
+      "message": "TypeError: Cannot read properties of null (reading 'useState')\n    at exports.useState (http://127.0.0.1:5174/node_modules/.vite/deps/react.js?v=83526f7c:748:30)\n    at LazyMotion (http://127.0.0.1:5174/node_modules/.vite/deps/motion_react.js?v=da7738b5:10079:52)\n    at Object.react_stack_bottom_frame (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=4a478484:12866:12)\n    at renderWithHooks (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=4a478484:4213:19)\n    at updateFunctionComponent (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=4a478484:5569:16)\n    at beginWork (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=4a478484:6140:20)\n    at runWithFiberInDEV (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=4a478484:851:66)\n    at performUnitOfWork (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=4a478484:8429:92)\n    at workLoopSync (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=4a478484:8325:37)\n    at renderRootSync (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=4a478484:8309:6)",
+      "timestamp": "2026-09-02T08:31:46.436Z",
+      "url": "http://127.0.0.1:5174/node_modules/.vite/deps/react.js?v=83526f7c"
+    },
+    {
+      "level": "warn",
+      "message": "%s\n\n%s\n An error occurred in the <LazyMotion> component. Consider adding an error boundary to your tree to customize error handling behavior.\nVisit https://react.dev/link/error-boundaries to learn more about error boundaries.",
+      "timestamp": "2026-09-02T08:31:46.436Z",
+      "url": "http://127.0.0.1:5174/@vite/client"
+    },
+    {
+      "level": "error",
+      "message": "Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:\n1. You might have mismatching versions of React and the renderer (such as React DOM)\n2. You might be breaking the Rules of Hooks\n3. You might have more than one copy of React in the same app\nSee https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.",
+      "timestamp": "2026-09-02T08:36:59.668Z",
+      "url": "http://127.0.0.1:5174/@vite/client"
+    },
+    {
+      "level": "error",
+      "message": "Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:\n1. You might have mismatching versions of React and the renderer (such as React DOM)\n2. You might be breaking the Rules of Hooks\n3. You might have more than one copy of React in the same app\nSee https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.",
+      "timestamp": "2026-09-02T08:36:59.672Z",
+      "url": "http://127.0.0.1:5174/@vite/client"
+    },
+    {
+      "level": "error",
+      "message": "TypeError: Cannot read properties of null (reading 'useState')\n    at exports.useState (http://127.0.0.1:5174/node_modules/.vite/deps/react.js?v=4fcf42c4:748:30)\n    at useReducedMotion (http://127.0.0.1:5174/node_modules/.vite/deps/motion_react.js?v=e49f56f3:13058:57)\n    at Photo (http://127.0.0.1:5174/src/components/Photo.jsx:7:24)\n    at Object.react_stack_bottom_frame (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=83526f7c:12866:12)\n    at renderWithHooks (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=83526f7c:4213:19)\n    at updateFunctionComponent (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=83526f7c:5569:16)\n    at beginWork (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=83526f7c:6140:20)\n    at runWithFiberInDEV (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=83526f7c:851:66)\n    at performUnitOfWork (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=83526f7c:8429:92)\n    at workLoopSync (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=83526f7c:8325:37)",
+      "timestamp": "2026-09-02T08:36:59.674Z",
+      "url": "http://127.0.0.1:5174/node_modules/.vite/deps/react.js?v=4fcf42c4"
+    },
+    {
+      "level": "warn",
+      "message": "%s\n\n%s\n An error occurred in the <Photo> component. Consider adding an error boundary to your tree to customize error handling behavior.\nVisit https://react.dev/link/error-boundaries to learn more about error boundaries.",
+      "timestamp": "2026-09-02T08:36:59.675Z",
+      "url": "http://127.0.0.1:5174/@vite/client"
+    },
+    {
+      "level": "error",
+      "message": "Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:\n1. You might have mismatching versions of React and the renderer (such as React DOM)\n2. You might be breaking the Rules of Hooks\n3. You might have more than one copy of React in the same app\nSee https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.",
+      "timestamp": "2026-09-02T08:36:59.755Z",
+      "url": "http://127.0.0.1:5174/@vite/client"
+    },
+    {
+      "level": "error",
+      "message": "Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:\n1. You might have mismatching versions of React and the renderer (such as React DOM)\n2. You might be breaking the Rules of Hooks\n3. You might have more than one copy of React in the same app\nSee https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.",
+      "timestamp": "2026-09-02T08:36:59.761Z",
+      "url": "http://127.0.0.1:5174/@vite/client"
+    },
+    {
+      "level": "error",
+      "message": "TypeError: Cannot read properties of null (reading 'useState')\n    at exports.useState (http://127.0.0.1:5174/node_modules/.vite/deps/react.js?v=4fcf42c4:748:30)\n    at LazyMotion (http://127.0.0.1:5174/node_modules/.vite/deps/motion_react.js?v=e49f56f3:10079:52)\n    at Object.react_stack_bottom_frame (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=83526f7c:12866:12)\n    at renderWithHooks (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=83526f7c:4213:19)\n    at updateFunctionComponent (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=83526f7c:5569:16)\n    at beginWork (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=83526f7c:6140:20)\n    at runWithFiberInDEV (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=83526f7c:851:66)\n    at performUnitOfWork (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=83526f7c:8429:92)\n    at workLoopSync (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=83526f7c:8325:37)\n    at renderRootSync (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=83526f7c:8309:6)",
+      "timestamp": "2026-09-02T08:36:59.761Z",
+      "url": "http://127.0.0.1:5174/node_modules/.vite/deps/react.js?v=4fcf42c4"
+    },
+    {
+      "level": "warn",
+      "message": "%s\n\n%s\n An error occurred in the <LazyMotion> component. Consider adding an error boundary to your tree to customize error handling behavior.\nVisit https://react.dev/link/error-boundaries to learn more about error boundaries.",
+      "timestamp": "2026-09-02T08:36:59.761Z",
+      "url": "http://127.0.0.1:5174/@vite/client"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+.hero { overflow: clip; }
+.hero-stars img { width: 100%; }
+.editorial-word { overflow: clip; overflow-clip-margin: .09em; }
+.editorial-word > span { display: block; }
+.image-transition { display: grid; overflow: hidden; }
+.image-transition > img { grid-area: 1 / 1; min-width: 0; width: 100%; }
+.product-image { aspect-ratio: 1; }
+.product-image > img { width: 100%; aspect-ratio: 1; object-fit: contain; }
+.track-row { position: relative; }
+.track-row::after { content: ''; position: absolute; bottom: -1px; left: 0; width: 100%; height: 1px; background: var(--color-doya-red); transform: scaleX(0); transform-origin: right; transition: transform 450ms var(--motion-ease); }
+.track-row:hover::after, .track-row:focus-visible::after { transform: scaleX(1); transform-origin: left; }
+.track-row > :nth-child(2) { transition: transform 450ms var(--motion-ease); }
+.track-row:hover > :nth-child(2) { transform: translateX(5px); }
+.gallery-controls button { transition: color 240ms, transform 400ms var(--motion-ease); }
+.gallery-controls button:first-of-type:hover { transform: translateX(-4px); }
+.gallery-controls button:last-of-type:hover { transform: translateX(4px); }
+.back-to-top { transition: transform 400ms var(--motion-ease); }
+.back-to-top:hover { transform: translateY(-4px); }
+@media (prefers-reduced-motion: reduce) {
+  .track-row:hover > :nth-child(2), .gallery-controls button:hover, .back-to-top:hover { transform: none; }
+}
