@@ -24,6 +24,12 @@ export function publicSiteUrl(): string {
   return LOCAL_ORIGINS[0]
 }
 
+export function checkoutReturnOrigin(requestOrigin: string | null): string {
+  const normalized = (requestOrigin ?? '').replace(/\/$/, '')
+  if (normalized && siteOrigins().includes(normalized)) return normalized
+  return publicSiteUrl()
+}
+
 export function corsHeaders(origin: string | null): HeadersInit {
   const allowed = origin && siteOrigins().includes(origin.replace(/\/$/, ''))
     ? origin.replace(/\/$/, '')

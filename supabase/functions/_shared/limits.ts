@@ -6,4 +6,11 @@ export const CART_LIMITS = {
   productIdPattern: /^[a-z0-9-]+$/,
 } as const
 
-export const LOCAL_ORIGINS = ['http://127.0.0.1:5174', 'http://127.0.0.1:4174']
+export const LOCAL_ORIGINS = [
+  'http://127.0.0.1:5174',
+  'http://localhost:5174',
+  'http://127.0.0.1:5173',
+  'http://localhost:5173',
+  'http://127.0.0.1:4174',
+  'http://localhost:4174',
+]

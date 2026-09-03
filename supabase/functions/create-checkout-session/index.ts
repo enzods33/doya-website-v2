@@ -1,5 +1,5 @@
 import { CART_LIMITS } from '../_shared/limits.ts'
-import { json, preflight, publicSiteUrl, rejectOrigin } from '../_shared/http.ts'
+import { checkoutReturnOrigin, json, preflight, rejectOrigin } from '../_shared/http.ts'
 import { serviceClient, shippingCents, stripeClient, userClient } from '../_shared/clients.ts'
 
 const PRODUCT_NAMES: Record<string, string> = {
@@ -7,6 +7,7 @@ const PRODUCT_NAMES: Record<string, string> = {
   'luna-b': 'Luna Bohemia B',
   'luna-c': 'Luna Bohemia C',
   doya: 'DOYA',
+  test: 'Article test',
 }
 
 Deno.serve(async (req) => {
@@ -87,7 +88,7 @@ Deno.serve(async (req) => {
     return json(known.some((code) => message.includes(code)) ? 409 : 400, { error: known.find((code) => message.includes(code)) ?? 'order_failed' }, origin)
   }
 
-  const site = publicSiteUrl()
+  const site = checkoutReturnOrigin(origin)
   const stripe = stripeClient()
   const lineItems = (order.lines as { name: string; productId: string; size: string; quantity: number; unitPriceCents: number }[]).map((line) => ({
     quantity: line.quantity,

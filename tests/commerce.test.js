@@ -14,6 +14,8 @@ test('les limites du panier restent alignées avec les fonctions', () => {
   assert.match(deno, new RegExp(`maxLines: ${CART_LIMITS.maxLines}`))
   assert.match(deno, new RegExp(`maxTotalQuantity: ${CART_LIMITS.maxTotalQuantity}`))
   for (const size of CART_LIMITS.sizes) assert.match(deno, new RegExp(`'${size}'`))
+  assert.match(deno, /http:\/\/localhost:5174/)
+  assert.match(deno, /http:\/\/localhost:5173/)
 })
 
 test('validation du panier et fusion des lignes', () => {
@@ -48,4 +50,7 @@ test('aucune clé secrète n’est embarquée dans le client', () => {
   assert.match(init, /create_pending_order/)
   assert.match(lock, /revoke all on table public.catalog_products/)
   assert.match(lock, /grant select on table public.catalog_products/)
+  const checkoutFn = readFileSync(new URL('../supabase/functions/create-checkout-session/index.ts', import.meta.url), 'utf8')
+  assert.match(checkoutFn, /checkoutReturnOrigin/)
+  assert.match(checkoutFn, /test: 'Article test'/)
 })
