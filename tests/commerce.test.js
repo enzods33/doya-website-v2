@@ -53,4 +53,6 @@ test('aucune clé secrète n’est embarquée dans le client', () => {
   const checkoutFn = readFileSync(new URL('../supabase/functions/create-checkout-session/index.ts', import.meta.url), 'utf8')
   assert.match(checkoutFn, /checkoutReturnOrigin/)
   assert.match(checkoutFn, /test: 'Article test'/)
+  const clients = readFileSync(new URL('../supabase/functions/_shared/clients.ts', import.meta.url), 'utf8')
+  assert.match(clients, /Authorization: `Bearer \$\{key\}`/)
 })

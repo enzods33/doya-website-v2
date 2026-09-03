@@ -84,8 +84,10 @@ Deno.serve(async (req) => {
 
   if (orderError || !order) {
     const message = orderError?.message ?? 'order_failed'
-    const known = ['invalid_email', 'empty_cart', 'too_many_lines', 'too_many_items', 'invalid_product', 'invalid_size', 'invalid_quantity', 'product_unavailable', 'out_of_stock', 'promo_invalid', 'promo_already_used', 'invalid_shipping']
-    return json(known.some((code) => message.includes(code)) ? 409 : 400, { error: known.find((code) => message.includes(code)) ?? 'order_failed' }, origin)
+    console.error('create_pending_order', orderError?.code ?? '', message)
+    const known = ['invalid_email', 'empty_cart', 'too_many_lines', 'too_many_items', 'invalid_product', 'invalid_size', 'invalid_quantity', 'product_unavailable', 'out_of_stock', 'promo_invalid', 'promo_already_used', 'invalid_shipping', 'forbidden']
+    const code = known.find((item) => message.includes(item))
+    return json(code ? 409 : 400, { error: code ?? 'order_failed' }, origin)
   }
 
   const site = checkoutReturnOrigin(origin)
