@@ -108,7 +108,7 @@ function Header() {
         initial={false} animate={{ opacity: menuOpen ? 1 : 0 }} transition={{ duration: reducedMotion ? 0 : 0.28 }}
         onAnimationComplete={finishClosingMenu}>
         <div className="mobile-menu-top">
-          <Wordmark light className="mobile-wordmark" />
+          <Wordmark className="mobile-wordmark" />
           <button type="button" autoFocus onClick={() => setMenuOpen(false)} aria-label={t('a11y.menuClose')}>{t('nav.menuClose')} <span aria-hidden="true">×</span></button>
         </div>
         <m.nav aria-label={t('a11y.navMobile')} initial={false} animate={menuOpen ? 'open' : 'closed'}
@@ -120,7 +120,10 @@ function Header() {
           ))}
         </m.nav>
         <LanguageSwitcher className="mobile-language-switcher" />
-        <div className="mobile-menu-bottom"><Stars /><p>{siteContent.albumTitle}<br />{siteContent.year}</p></div>
+        <div className="mobile-menu-bottom">
+          <p>{siteContent.albumTitle}<br />{siteContent.year}</p>
+        </div>
+        <Stars className="mobile-menu-stars" />
       </m.dialog>
     </m.header>
   )
