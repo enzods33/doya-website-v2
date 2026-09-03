@@ -8,6 +8,12 @@ export default defineConfig(({ mode }) => {
 
   return {
     appType: 'spa',
+    server: {
+      host: true,
+      port: 5174,
+      strictPort: true,
+      allowedHosts: true,
+    },
     plugins: [react(), tailwindcss(), {
       name: 'doya-metadata',
       transformIndexHtml(html) {
