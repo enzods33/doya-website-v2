@@ -38,10 +38,7 @@
 .size-list button[aria-pressed='true']::after { content: ''; position: absolute; left: 4px; right: 4px; bottom: 6px; height: 1px; background: var(--color-doya-red); }
 .size-list button:disabled { color: var(--muted); }
 .shop-feedback, .shop-cart-link { margin-top: 18px; font-size: 12px; }
-.account-shell { max-width: 720px; }
-.account-form, .account-session { display: grid; gap: 18px; max-width: 420px; }
-.account-email { font-size: 14px; }
-.account-orders-title { margin-top: 20px; font-family: var(--font-editorial); font-size: 28px; text-transform: uppercase; }
+.commerce-shell { max-width: 720px; }
 .order-list { display: grid; gap: 18px; }
 .order-list > li { padding-bottom: 16px; border-bottom: 1px solid var(--hairline); }
 .order-list ul { margin-top: 8px; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }

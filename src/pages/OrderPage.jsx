@@ -34,7 +34,7 @@ function OrderPage() {
 
   return (
     <main id="main" className="page-main" tabIndex={-1}>
-      <div className="page-shell account-shell">
+      <div className="page-shell commerce-shell">
         <p className="eyebrow section-kicker">{t('order.kicker')}</p>
         <h1 className="editorial-title page-title">{t('order.title')}</h1>
         {state.loading && <p>{t('order.verifying')}</p>}

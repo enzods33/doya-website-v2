@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react'
-import { useAuth } from '../commerce/AuthProvider.jsx'
 import { useCart } from '../commerce/CartProvider.jsx'
 import { useCatalog } from '../commerce/CatalogProvider.jsx'
 import { startCheckout } from '../commerce/checkout.js'
@@ -11,11 +10,10 @@ import { useI18n } from '../i18n/I18nProvider.jsx'
 import Link from '../components/Link.jsx'
 
 function CartPage() {
-  const { user } = useAuth()
   const { items, setQuantity, removeItem } = useCart()
   const { items: catalog } = useCatalog()
   const { t } = useI18n()
-  const [email, setEmail] = useState(user?.email ?? '')
+  const [email, setEmail] = useState('')
   const [promoCode, setPromoCode] = useState('')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState(() => (new URLSearchParams(window.location.search).get('canceled') ? commerceMessage('canceled', t) : ''))
@@ -36,7 +34,7 @@ function CartPage() {
   async function pay(event) {
     event.preventDefault()
     setError('')
-    if (!user && !isValidEmail(email)) {
+    if (!isValidEmail(email)) {
       setError(commerceMessage('invalid_email', t))
       return
     }
@@ -44,7 +42,7 @@ function CartPage() {
     try {
       const { url } = await startCheckout({
         items: lines.map(({ productId, size, quantity }) => ({ productId, size, quantity })),
-        email: user?.email ?? email,
+        email: email.trim(),
         promoCode: normalizePromoCode(promoCode) || undefined,
       })
       if (typeof url !== 'string' || !url.startsWith('https://')) throw new Error('stripe_unavailable')
@@ -90,12 +88,10 @@ function CartPage() {
               })}
             </ul>
             <div className="cart-aside">
-              {!user && (
-                <label className="field">
-                  <span>{t('cart.email')}</span>
-                  <input type="email" autoComplete="email" required value={email} onChange={(event) => setEmail(event.target.value)} />
-                </label>
-              )}
+              <label className="field">
+                <span>{t('cart.email')}</span>
+                <input type="email" autoComplete="email" required value={email} onChange={(event) => setEmail(event.target.value)} />
+              </label>
               <label className="field">
                 <span>{t('cart.promo')}</span>
                 <input type="text" autoComplete="off" spellCheck="false" value={promoCode} onChange={(event) => setPromoCode(event.target.value)} placeholder={t('cart.promoPlaceholder')} />

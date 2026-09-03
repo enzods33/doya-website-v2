@@ -70,10 +70,7 @@ function Header() {
   }
 
   const tools = commerceConfigured
-    ? [
-      { href: '/compte', label: t('nav.account') },
-      { href: '/panier', label: count ? t('nav.cartWithCount', { count }) : t('nav.cart') },
-    ]
+    ? [{ href: '/panier', label: count ? t('nav.cartWithCount', { count }) : t('nav.cart') }]
     : []
 
   return (
@@ -94,7 +91,6 @@ function Header() {
       <div className="header-end">
         {commerceConfigured && (
           <nav className="header-tools" aria-label={t('a11y.navTools')}>
-            <Link href="/compte"><span className="header-tool-label">{t('nav.account')}</span><Stars color="red" className="nav-hover-stars" /></Link>
             <Link href="/panier"><span className="header-tool-label">{t('nav.cart')}{count > 0 && <span className="cart-count">{count}</span>}</span><Stars color="red" className="nav-hover-stars" /></Link>
           </nav>
         )}

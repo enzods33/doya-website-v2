@@ -124,8 +124,12 @@
   letter-spacing: .04em;
   line-height: 1.05;
 }
-.live-content { padding-top: 4px; }
-.live-content > .eyebrow { padding-bottom: 22px; border-bottom: 1px solid var(--section-rule); }
+.live-content { padding-top: 4px; min-width: 0; }
+.live-content > .eyebrow {
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--section-rule);
+  letter-spacing: .14em;
+}
 .live-empty { padding-top: 32px; }
 .live-empty-title {
   font-family: var(--font-editorial);
@@ -135,10 +139,105 @@
   margin-bottom: 18px;
   text-transform: uppercase;
 }
-.live-empty > p:last-child { font-size: 12px; color: var(--muted); max-width: 310px; }
+.live-empty > p:last-child { font-size: 13px; color: var(--muted); max-width: 310px; line-height: 1.55; }
 .live-stars { width: 46px; margin-top: 70px; justify-self: end; }
-.concerts li { display: grid; grid-template-columns: 75px 1fr 1fr auto; align-items: center; gap: 18px; padding-block: 18px; border-bottom: 1px solid var(--hairline); font-size: 11px; text-transform: uppercase; }
-.concerts .availability-note { color: var(--muted); }
+.concerts { margin: 0; padding: 0; list-style: none; }
+.concerts li {
+  display: grid;
+  grid-template-columns: minmax(8.5rem, 10rem) minmax(0, 1fr) minmax(0, 1.15fr) auto;
+  gap: clamp(14px, 2vw, 28px);
+  align-items: baseline;
+  padding-block: clamp(22px, 2.6vw, 34px);
+  border-bottom: 1px solid var(--section-rule);
+}
+.concerts time {
+  font-family: var(--font-editorial);
+  font-size: clamp(20px, 1.85vw, 28px);
+  letter-spacing: .04em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.concerts time.is-past {
+  color: var(--color-doya-red);
+  text-decoration: line-through;
+  text-decoration-color: var(--color-doya-red);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 0.18em;
+}
+.concert-city {
+  font-size: clamp(14px, 1.2vw, 17px);
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.concert-venue {
+  font-size: clamp(13px, 1.1vw, 16px);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.concert-tickets {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: end;
+  min-height: 42px;
+  min-width: 7.5rem;
+  padding: 0 20px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--ink);
+  border: 1px solid rgb(44 41 38 / 32%);
+  background: transparent;
+  position: relative;
+  transition:
+    border-color .4s var(--motion-ease),
+    background .4s var(--motion-ease),
+    transform .45s var(--motion-ease);
+  box-sizing: border-box;
+}
+.concert-tickets::after {
+  content: '';
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 8px;
+  height: 1px;
+  background: var(--color-doya-red);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform .45s var(--motion-ease);
+}
+a.concert-tickets:hover,
+a.concert-tickets:focus-visible {
+  border-color: var(--ink);
+  background: rgb(44 41 38 / 4%);
+}
+a.concert-tickets:hover::after,
+a.concert-tickets:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+.concert-tickets.is-muted {
+  color: var(--muted);
+  border-color: rgb(44 41 38 / 16%);
+  pointer-events: none;
+}
+.concert-tickets.is-muted::after { display: none; }
+.concerts li.is-past .concert-city,
+.concerts li.is-past .concert-venue { opacity: .72; }
+.concerts li.is-past .concert-tickets { opacity: .45; }
+.concerts .availability-note {
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  justify-self: end;
+}
 .shop-section {
   background: var(--color-mist);
   border-top: 1px solid var(--section-rule);
@@ -370,8 +469,17 @@
   .live-layout h2 { font-size: clamp(26px, 7vw, 34px); }
   .live-empty { padding-top: 26px; }
   .live-empty-title { font-size: clamp(24px, 6vw, 32px); }
-  .concerts li { grid-template-columns: 78px 1fr; gap: 8px 15px; }
-  .concerts li > :nth-child(3), .concerts li > :nth-child(4) { grid-column: 2; }
+  .concerts li {
+    grid-template-columns: minmax(7.5rem, auto) 1fr;
+    gap: 10px 18px;
+    padding-block: 22px;
+  }
+  .concerts time { font-size: clamp(20px, 5.8vw, 26px); }
+  .concert-city { font-size: 15px; }
+  .concert-venue,
+  .concert-tickets { grid-column: 2; justify-self: start; }
+  .concert-venue { font-size: 14px; }
+  .concert-tickets { margin-top: 6px; min-width: 6.75rem; }
   .shop-section .section-heading { gap: 18px; }
   .shop-section .section-heading h2 { font-size: clamp(26px, 7vw, 34px); }
   .products { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 38px 18px; }

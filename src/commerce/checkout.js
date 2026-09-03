@@ -1,16 +1,13 @@
 import { commerceConfigured, supabaseAnonKey, supabaseUrl } from './config.js'
-import { supabase } from './supabase.js'
 
 async function invoke(path, body) {
-  if (!commerceConfigured || !supabase) throw new Error('commerce_disabled')
-  const { data: sessionData } = await supabase.auth.getSession()
-  const token = sessionData.session?.access_token ?? supabaseAnonKey
+  if (!commerceConfigured) throw new Error('commerce_disabled')
   const response = await fetch(`${supabaseUrl}/functions/v1/${path}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       apikey: supabaseAnonKey,
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${supabaseAnonKey}`,
     },
     body: JSON.stringify(body),
   })

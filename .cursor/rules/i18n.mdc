@@ -11,6 +11,6 @@ Quand tu ajoutes ou modifies un texte visible (label, CTA, message, aria-label, 
 1. Ajoute la clé dans `src/i18n/locales/fr.js` (référence)
 2. Traduis la **même clé** dans `es.js`, `en.js`, `pt.js`
 3. Consomme via `useI18n().t('groupe.cle')` — pas de string hardcodée dans les composants
-4. Ne traduis **jamais** les ancres (`#music`, `#live`, `#shop`, `#about`, `#contact`), routes (`/panier`, `/compte`) ni noms propres (DOYA, Luna Bohemia, titres de pistes)
+4. Ne traduis **jamais** les ancres (`#music`, `#live`, `#shop`, `#about`, `#contact`), routes (`/panier`, `/commande`) ni noms propres (DOYA, Luna Bohemia, titres de pistes)
 
 Sélecteur : `LanguageSwitcher`. Défaut = langue navigateur (`detectBrowserLocale`), sinon FR. Choix utilisateur persisté dans `localStorage` (`doya-locale`).

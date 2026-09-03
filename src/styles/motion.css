@@ -44,6 +44,7 @@
   .product-view-controls button:hover::after { transform: scaleX(1); transform-origin: left; }
   .mobile-menu nav a:hover { color: var(--color-doya-red); }
   .footer-cta:hover { color: var(--ink); border-color: var(--ink); background: rgb(44 41 38 / 6%); }
+  a.concert-tickets:hover { transform: translateY(-1px); }
 }
 @media (prefers-reduced-motion: reduce) {
   .track-row:hover > :nth-child(2), .gallery-controls button:hover, .back-to-top:hover,
