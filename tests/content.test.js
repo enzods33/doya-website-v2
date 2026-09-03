@@ -22,6 +22,9 @@ test('aucun faux lien, prix ou concert', () => {
   for (const entry of [...album.tracks, ...album.platforms, ...products, ...socials]) {
     assert.ok(entry.url === null || isExternalUrl(entry.url))
   }
+  const tracksWithUrl = album.tracks.filter((track) => track.url)
+  assert.deepEqual(tracksWithUrl.map((track) => track.title), ['Mariposa', 'Mueve'], 'seules les avances singles publiées ont une URL')
+  assert.ok(tracksWithUrl.every((track) => new URL(track.url).hostname === 'open.spotify.com'))
   assert.ok(products.every((product) => product.price === null))
   assert.equal(isExternalUrl('#'), false)
   assert.equal(isExternalUrl('javascript:alert(1)'), false)
@@ -40,15 +43,16 @@ test('les médias déclarés existent et ont des dimensions explicites', () => {
   assert.equal(new Set(galleryImages.map((image) => image.src)).size, galleryImages.length)
 })
 
-test('les six profils officiels sont distincts et prêts pour le footer', () => {
-  assert.deepEqual(socials.map((social) => social.name), ['Instagram', 'YouTube', 'TikTok', 'Facebook', 'Spotify', 'Apple Music'])
+test('les profils officiels sont distincts et prêts pour le footer', () => {
+  assert.deepEqual(socials.map((social) => social.name), ['Instagram', 'YouTube', 'TikTok', 'Facebook', 'Spotify', 'Apple Music', 'Deezer'])
   assert.ok(socials.every((social) => isExternalUrl(social.url)))
   assert.equal(new Set(socials.map((social) => social.url)).size, socials.length)
   assert.deepEqual(socials.map((social) => new URL(social.url).hostname), [
-    'www.instagram.com', 'www.youtube.com', 'www.tiktok.com', 'www.facebook.com', 'open.spotify.com', 'music.apple.com',
+    'www.instagram.com', 'www.youtube.com', 'www.tiktok.com', 'www.facebook.com', 'open.spotify.com', 'music.apple.com', 'www.deezer.com',
   ])
   assert.ok(socials.find((social) => social.name === 'Spotify').url.endsWith('/1JGqJy0whUevjrA3Tw6OMA'))
   assert.ok(socials.find((social) => social.name === 'Apple Music').url.endsWith('/1646461706'))
+  assert.ok(socials.find((social) => social.name === 'Deezer').url.endsWith('/184643787'))
   assert.ok(album.platforms.every((platform) => platform.url === null), 'ne pas remplacer les liens album par des profils artistes')
 })
 
