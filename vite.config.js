@@ -7,6 +7,7 @@ export default defineConfig(({ mode }) => {
   const origin = env.VITE_SITE_URL ? new URL(env.VITE_SITE_URL).origin : null
 
   return {
+    appType: 'spa',
     plugins: [react(), tailwindcss(), {
       name: 'doya-metadata',
       transformIndexHtml(html) {

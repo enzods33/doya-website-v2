@@ -1,8 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import { m, useReducedMotion } from 'motion/react'
 import { navigation, siteContent } from '../data/siteContent.js'
+import { commerceConfigured } from '../commerce/config.js'
+import { useCart } from '../commerce/CartProvider.jsx'
 import { Stars, Wordmark } from './Brand.jsx'
+import Link from './Link.jsx'
 import { editorialEase } from '../utils/motion.js'
+import { useRoute } from '../utils/router.js'
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -10,6 +14,8 @@ function Header() {
   const triggerRef = useRef(null)
   const bodyOverflowRef = useRef(null)
   const reducedMotion = useReducedMotion()
+  const { path } = useRoute()
+  const { count } = useCart()
 
   useEffect(() => {
     const dialog = dialogRef.current
@@ -56,15 +62,32 @@ function Header() {
     }
   }
 
+  function sectionHref(href) {
+    return path === '/' ? href : `/${href}`
+  }
+
+  const tools = commerceConfigured
+    ? [
+      { href: '/compte', label: 'Compte' },
+      { href: '/panier', label: count ? `Panier (${count})` : 'Panier' },
+    ]
+    : []
+
   return (
-    <m.header className="site-header" initial={reducedMotion ? false : { opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
+    <m.header className={`site-header${path === '/' ? '' : ' is-page'}`} initial={reducedMotion ? false : { opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
       transition={{ duration: reducedMotion ? 0 : 0.7, delay: reducedMotion ? 0 : 0.1, ease: editorialEase }}>
-      <a href="#top" className="header-brand" aria-label="DOYA — accueil"><Wordmark /></a>
+      <Link href={path === '/' ? '#top' : '/'} className="header-brand" aria-label="DOYA — accueil"><Wordmark /></Link>
       <nav className="desktop-navigation" aria-label="Navigation principale">
-        {navigation.slice(0, 2).map((item) => <a key={item.href} href={item.href}>{item.label}</a>)}
+        {navigation.slice(0, 2).map((item) => <Link key={item.href} href={sectionHref(item.href)}>{item.label}</Link>)}
         <Stars color="black" className="header-stars" />
-        {navigation.slice(2).map((item) => <a key={item.href} href={item.href}>{item.label}</a>)}
+        {navigation.slice(2).map((item) => <Link key={item.href} href={sectionHref(item.href)}>{item.label}</Link>)}
       </nav>
+      {commerceConfigured && (
+        <nav className="header-tools" aria-label="Compte et panier">
+          <Link href="/compte">Compte</Link>
+          <Link href="/panier">Panier{count > 0 && <span className="cart-count">{count}</span>}</Link>
+        </nav>
+      )}
       <button ref={triggerRef} type="button" className="menu-trigger" aria-expanded={menuOpen} aria-controls="mobile-menu" onClick={() => setMenuOpen(true)}>
         Menu <span aria-hidden="true">＋</span>
       </button>
@@ -78,8 +101,8 @@ function Header() {
         </div>
         <m.nav aria-label="Navigation mobile" initial={false} animate={menuOpen ? 'open' : 'closed'}
           variants={{ open: { transition: { delayChildren: reducedMotion ? 0 : 0.08, staggerChildren: reducedMotion ? 0 : 0.055 } }, closed: {} }}>
-          {navigation.map((item, index) => (
-            <m.a key={item.href} href={item.href} onClick={() => setMenuOpen(false)}
+          {[...navigation, ...tools].map((item, index) => (
+            <m.a key={item.href} href={item.href.startsWith('#') ? sectionHref(item.href) : item.href} onClick={() => setMenuOpen(false)}
               variants={{ open: { opacity: 1, y: 0 }, closed: { opacity: reducedMotion ? 1 : 0, y: reducedMotion ? 0 : 16 } }}
               transition={{ duration: reducedMotion ? 0 : 0.5, ease: editorialEase }}><span>{String(index + 1).padStart(2, '0')}</span>{item.label}</m.a>
           ))}
