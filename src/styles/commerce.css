@@ -1,15 +1,7 @@
 .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
-.header-tools { display: flex; align-items: center; gap: 20px; font-size: 14px; letter-spacing: .08em; text-transform: uppercase; font-weight: 600; }
-.header-tools a { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 10px 4px 14px; position: relative; }
-.header-tool-label { display: inline-flex; align-items: center; gap: 8px; }
-.cart-count { color: var(--color-doya-red); }
-.site-header.is-page { position: sticky; top: 0; background: var(--color-stone); color: var(--ink); text-shadow: none; }
-.site-header.is-page .header-brand > img:not(.nav-hover-stars) { filter: none; }
-.site-header.is-page .nav-hover-stars { filter: none; }
-.site-header.is-page .header-language-switcher .language-trigger { text-shadow: none; }
-.site-header.is-page .menu-icon-bar { box-shadow: none; }
+.site-header.is-page { background: var(--color-header); color: var(--ink); }
 .site-page { min-height: 100svh; display: flex; flex-direction: column; }
-.page-main { flex: 1; padding: 120px 0 80px; }
+.page-main { flex: 1; padding: 72px 0 80px; }
 .page-shell { width: min(100%, calc(980px + 2 * var(--page-gutter))); margin-inline: auto; padding-inline: var(--page-gutter); }
 .page-title { font-size: clamp(28px, 3.2vw, 44px); letter-spacing: .04em; margin-bottom: 28px; }
 .page-empty, .page-back { margin-top: 28px; }
@@ -42,15 +34,8 @@
 .order-list { display: grid; gap: 18px; }
 .order-list > li { padding-bottom: 16px; border-bottom: 1px solid var(--hairline); }
 .order-list ul { margin-top: 8px; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
-@media (min-width: 768px) {
-  .header-tools { display: flex; }
-}
 @media (max-width: 767px) {
-  .header-tools { display: none; }
   .page-main { padding-top: 96px; }
   .cart-form { grid-template-columns: 1fr; }
   .cart-line { grid-template-columns: 76px minmax(0, 1fr); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .header-tools { transform: none; }
 }

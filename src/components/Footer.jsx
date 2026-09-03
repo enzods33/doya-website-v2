@@ -81,7 +81,12 @@ function Footer() {
         <div className="footer-meta">
           <p className="copyright">{t('footer.copyright', { year: siteContent.year })}</p>
           <LanguageSwitcher className="footer-language-switcher" />
-          <a href="#top" className="back-to-top">{t('footer.backToTop')} <span aria-hidden="true">↑</span></a>
+          <a href="#top" className="back-to-top">
+            {t('footer.backToTop')}
+            <svg className="back-to-top-icon" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+              <path d="M6 10.25V1.75M6 1.75 2.25 5.5M6 1.75 9.75 5.5" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </a>
         </div>
       </div>
     </footer>

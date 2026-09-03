@@ -4,7 +4,7 @@ import { navigation, mobileNavigation, siteContent } from '../data/siteContent.j
 import { commerceConfigured } from '../commerce/config.js'
 import { useCart } from '../commerce/CartProvider.jsx'
 import { useI18n } from '../i18n/I18nProvider.jsx'
-import { Stars, Wordmark, MenuIcon } from './Brand.jsx'
+import { Stars, Wordmark, MenuIcon, CartIcon, HomeIcon } from './Brand.jsx'
 import LanguageSwitcher from './LanguageSwitcher.jsx'
 import Link from './Link.jsx'
 import { editorialEase } from '../utils/motion.js'
@@ -69,32 +69,42 @@ function Header() {
     return path === '/' ? href : `/${href}`
   }
 
-  const tools = commerceConfigured
-    ? [{ href: '/panier', label: count ? t('nav.cartWithCount', { count }) : t('nav.cart') }]
-    : []
+  const tools = []
 
   return (
     <m.header className={`site-header${path === '/' ? '' : ' is-page'}`} initial={reducedMotion ? false : { opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
       transition={{ duration: reducedMotion ? 0 : 0.7, delay: reducedMotion ? 0 : 0.1, ease: editorialEase }}>
+      <Link
+        href={path === '/' ? '#top' : '/'}
+        className="header-home"
+        aria-label={t('a11y.home')}
+      >
+        <HomeIcon className="header-home-icon" />
+      </Link>
       <Link href={path === '/' ? '#about' : '/#about'} className="header-brand" aria-label={t('a11y.brandBio')}>
-        <Wordmark />
-        <Stars color="red" className="nav-hover-stars" />
+        <Stars color="red" className="header-brand-star" />
+        <Wordmark className="header-brand-wordmark" />
+        <Stars color="red" className="header-brand-star" />
       </Link>
       <nav className="desktop-navigation" aria-label={t('a11y.navMain')}>
         {navigation.map((item) => (
           <Link key={item.href} href={sectionHref(item.href)}>
             {t(item.labelKey)}
-            <Stars color="red" className="nav-hover-stars" />
           </Link>
         ))}
+        <LanguageSwitcher className="header-language-switcher header-nav-language" />
       </nav>
       <div className="header-end">
         {commerceConfigured && (
-          <nav className="header-tools" aria-label={t('a11y.navTools')}>
-            <Link href="/panier"><span className="header-tool-label">{t('nav.cart')}{count > 0 && <span className="cart-count">{count}</span>}</span><Stars color="red" className="nav-hover-stars" /></Link>
-          </nav>
+          <Link
+            href="/panier"
+            className="header-cart"
+            aria-label={count ? t('nav.cartWithCount', { count }) : t('nav.cart')}
+          >
+            <CartIcon className="header-cart-icon" />
+            {count > 0 && <span className="header-cart-badge">{count > 99 ? '99+' : count}</span>}
+          </Link>
         )}
-        <LanguageSwitcher className="header-language-switcher" />
         <button ref={triggerRef} type="button" className="menu-trigger" aria-expanded={menuOpen} aria-controls="mobile-menu" aria-label={t('a11y.menuOpen')} onClick={() => setMenuOpen(true)}>
           <MenuIcon />
         </button>

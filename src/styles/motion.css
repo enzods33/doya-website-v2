@@ -14,12 +14,8 @@
 .gallery-controls button:last-of-type:hover { transform: translateX(4px); }
 .back-to-top { transition: transform 400ms var(--motion-ease), color 240ms; }
 .back-to-top:hover { transform: translateY(-3px); color: var(--color-doya-red); }
-.header-brand { transition: transform 450ms var(--motion-ease); }
-.header-brand:focus-visible .nav-hover-stars { opacity: 1; transform: translate(-50%, 0) scale(1) rotate(0deg); }
-.header-tools a { position: relative; }
-.header-tools a:focus-visible .nav-hover-stars { opacity: 1; transform: translate(-50%, 0) scale(1) rotate(0deg); }
-.desktop-navigation a { transition: transform 450ms var(--motion-ease); }
-.desktop-navigation a:focus-visible .nav-hover-stars { opacity: 1; transform: translate(-50%, 0) scale(1) rotate(0deg); }
+.header-brand { transition: opacity 350ms var(--motion-ease); }
+.desktop-navigation a { transition: color .35s var(--motion-ease), opacity .35s var(--motion-ease); }
 .text-link { position: relative; }
 .text-link::after { content: ''; position: absolute; bottom: 4px; left: 0; right: 46px; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: right; transition: transform 450ms var(--motion-ease); }
 .text-link:focus-visible::after { transform: scaleX(1); transform-origin: left; }
@@ -32,12 +28,10 @@
 .mobile-menu nav a { transition: color 240ms; }
 .mobile-menu nav a:focus-visible { color: var(--color-doya-red); }
 @media (hover: hover) and (pointer: fine) {
-  .header-brand:hover { transform: translateY(-2px); }
-  .header-brand:hover .nav-hover-stars { opacity: 1; transform: translate(-50%, 0) scale(1) rotate(0deg); }
-  .desktop-navigation a:hover { transform: translateY(-2px); }
-  .desktop-navigation a:hover .nav-hover-stars { opacity: 1; transform: translate(-50%, 0) scale(1) rotate(0deg); }
-  .header-tools a:hover { transform: translateY(-2px); }
-  .header-tools a:hover .nav-hover-stars { opacity: 1; transform: translate(-50%, 0) scale(1) rotate(0deg); }
+  .header-brand:hover { opacity: .72; }
+  .desktop-navigation a:hover { opacity: .72; }
+  .header-home:hover,
+  .header-cart:hover { opacity: .72; }
   .text-link:hover::after { transform: scaleX(1); transform-origin: left; }
   .product:hover .product-image { transform: translateY(-5px); }
   .product:hover .product-caption::before { transform: scaleX(1); transform-origin: left; }
@@ -48,9 +42,6 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .track-row:hover > :nth-child(2), .gallery-controls button:hover, .back-to-top:hover,
-  .header-brand:hover, .desktop-navigation a:hover, .header-tools a:hover, .product:hover .product-image,
-  .header-brand:hover .nav-hover-stars, .desktop-navigation a:hover .nav-hover-stars { transform: none; }
-  .header-brand:hover .nav-hover-stars, .header-brand:focus-visible .nav-hover-stars,
-  .desktop-navigation a:hover .nav-hover-stars, .desktop-navigation a:focus-visible .nav-hover-stars,
-  .header-tools a:hover .nav-hover-stars, .header-tools a:focus-visible .nav-hover-stars { opacity: 1; transform: translate(-50%, 0); }
+  .header-brand:hover, .desktop-navigation a:hover, .header-home:hover, .header-cart:hover, .product:hover .product-image { transform: none; }
+  .header-brand:hover, .desktop-navigation a:hover, .header-home:hover, .header-cart:hover { opacity: 1; }
 }

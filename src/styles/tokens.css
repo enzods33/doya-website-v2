@@ -8,6 +8,7 @@
   --color-stone: #d8d5d0;
   --color-mist: #e3dfd8;
   --color-taupe: #c4bfb7;
+  --color-header: #f4f0ea;
   --font-editorial: 'FK Display Regular Alt', 'Iowan Old Style', 'Baskerville', 'Times New Roman', serif;
   --font-functional: 'Degular Medium', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
 }
@@ -20,6 +21,7 @@
   --section-rule: rgb(44 41 38 / 28%);
   --muted: #5a554f;
   --ink: #2c2926;
+  --header-height: 4.5rem;
   --motion-duration: 240ms;
   --motion-ease: cubic-bezier(.22, 1, .36, 1);
 }

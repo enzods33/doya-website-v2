@@ -1,10 +1,10 @@
 import spotify from '../assets/icons/platforms/spotify.png'
 import apple from '../assets/icons/platforms/apple-music.png'
 import deezer from '../assets/icons/platforms/deezer.png'
-import youtube from '../assets/icons/platforms/youtube.png'
-import instagram from '../assets/icons/platforms/instagram.svg'
+import youtube from '../assets/icons/platforms/youtube.svg'
+import instagram from '../assets/icons/platforms/instagram.png'
 import tiktok from '../assets/icons/platforms/tiktok.svg'
-import facebook from '../assets/icons/platforms/facebook.svg'
+import facebook from '../assets/icons/platforms/facebook.png'
 
 const sources = { spotify, apple, deezer, youtube, instagram, tiktok, facebook }
 

@@ -7,6 +7,7 @@ export default {
   a11y: {
     skipToContent: 'Aller au contenu',
     brandBio: 'DOYA — bio',
+    home: 'Accueil',
     navMain: 'Navigation principale',
     navTools: 'Panier',
     navMobile: 'Navigation mobile',

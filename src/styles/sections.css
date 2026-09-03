@@ -405,7 +405,7 @@ a.concert-tickets:focus-visible::after {
 .header-language-switcher.is-open .language-menu { transform: translateY(0); }
 .header-language-switcher .language-menu .language-option { color: var(--muted); }
 .header-language-switcher .language-menu [aria-selected="true"] .language-option { color: var(--color-doya-red); }
-.site-header.is-page .header-language-switcher .language-menu { background: var(--color-stone); }
+.site-header.is-page .header-language-switcher .language-menu { background: var(--color-header); }
 .mobile-language-switcher { margin-top: clamp(28px, 5svh, 48px); justify-content: center; }
 .mobile-language-switcher .language-menu {
   left: 50%;
@@ -424,8 +424,23 @@ a.concert-tickets:focus-visible::after {
   .gallery-embla-card { transition: none; }
 }
 .copyright { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
-.back-to-top { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
-.back-to-top span { font-size: 16px; }
+.back-to-top {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 44px;
+  font-size: 12px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+.back-to-top-icon {
+  display: block;
+  width: 0.7rem;
+  height: 0.7rem;
+  flex-shrink: 0;
+  translate: 0 -0.02em;
+}
 @media (max-width: 1100px) {
   .music-layout { grid-template-columns: auto 1fr; gap: 32px; }
   .music-cover-column { width: min(42vh, 48%); }
