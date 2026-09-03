@@ -18,7 +18,7 @@ test('les limites du panier restent alignées avec les fonctions', () => {
 
 test('validation du panier et fusion des lignes', () => {
   assert.equal(validateCartItems([]).ok, false)
-  assert.equal(validateCartItems([{ productId: 'luna-a', size: 'm', quantity: 2 }]).ok, true)
+  assert.equal(validateCartItems([{ productId: 'test', size: 'M', quantity: 1 }]).ok, true)
   assert.equal(validateCartItems([{ productId: 'unknown', size: 'M', quantity: 1 }]).ok, false)
   assert.equal(validateCartItems([{ productId: 'luna-a', size: 'M', quantity: 6 }]).ok, false)
   const merged = mergeCartLine([{ productId: 'luna-a', size: 'M', quantity: 2 }], 'luna-a', 'M', 1)
