@@ -14,10 +14,7 @@ function AccountPage() {
   const [orders, setOrders] = useState([])
 
   useEffect(() => {
-    if (!supabase || !user) {
-      setOrders([])
-      return undefined
-    }
+    if (!supabase || !user) return undefined
     let active = true
     supabase
       .from('orders')

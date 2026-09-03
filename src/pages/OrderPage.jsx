@@ -8,9 +8,12 @@ import Link from '../components/Link.jsx'
 function OrderPage() {
   const { clear } = useCart()
   const clearCart = useRef(clear)
-  clearCart.current = clear
   const sessionId = new URLSearchParams(window.location.search).get('session_id') ?? ''
   const [state, setState] = useState({ loading: true, order: null, error: '' })
+
+  useEffect(() => {
+    clearCart.current = clear
+  }, [clear])
 
   useEffect(() => {
     let active = true
