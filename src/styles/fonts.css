@@ -1,0 +1,21 @@
+/* Polices licenciées du site. Déposer les fichiers correspondants dans
+   src/assets/fonts/ (formats .woff2 puis .woff) pour qu'elles se chargent.
+   Sans ces fichiers, les piles de repli de tokens.css restent utilisées. */
+
+@font-face {
+  font-family: 'FK Display Regular Alt';
+  src: url('../assets/fonts/FKDisplay-RegularAlt.woff2') format('woff2'),
+       url('../assets/fonts/FKDisplay-RegularAlt.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Degular Medium';
+  src: url('../assets/fonts/Degular-Medium.woff2') format('woff2'),
+       url('../assets/fonts/Degular-Medium.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}

@@ -109,7 +109,7 @@ Les scripts Python d’audit sont facultatifs pour le développement du site. Il
 
 Le wordmark et les étoiles sont les SVG officiels. Les quatre grandes lettres du Hero sont des chemins séparés du wordmark blanc : mêmes tracés, sans police substituée ni vectorisation. Les JPEG natifs sont inchangés. Les photographies ne reçoivent aucun filtre, grain, flou, sharpening ou upscaling.
 
-Les piles de polices sont provisoires : Editorial New et New Frank ne sont pas distribuées ici. À réception des webfonts licenciées, ajouter les `@font-face` et conserver les deux noms de variables du thème.
+Les polices du site sont **FK Display Regular Alt** (titres, variable `--font-editorial`) et **Degular Medium** (textes, variable `--font-functional`). Les `@font-face` sont déclarés dans `src/styles/fonts.css`. Déposer les fichiers licenciés `FKDisplay-RegularAlt` et `Degular-Medium` (`.woff2` puis `.woff`) dans `src/assets/fonts/` pour qu'elles se chargent ; tant qu'ils sont absents, les piles de repli de `tokens.css` s'appliquent.
 
 Voir `reference/project-notes.md` pour les sources, les limites HD et la liste des informations à compléter.
 
