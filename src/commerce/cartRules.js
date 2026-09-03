@@ -3,7 +3,7 @@ export const CART_LIMITS = {
   maxLines: 8,
   maxTotalQuantity: 12,
   sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
-  productIds: ['luna-a', 'luna-b', 'luna-c', 'doya'],
+  productIds: ['luna-a', 'luna-b', 'luna-c', 'doya', 'test'],
 }
 
 export function normalizePromoCode(value) {

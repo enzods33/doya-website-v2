@@ -14,6 +14,9 @@ export const products = [
   { id: 'doya', name: 'DOYA', type: 'T-shirt', color: 'Noir', front: wordmarkFront,
     back: new URL('../assets/images/shop/shop-tshirt-logo-black-back.png', import.meta.url).href,
     width: 1070, height: 1070, price: null, url: null, sourcePage: 21 },
+  { id: 'test', name: 'Article test', type: 'Test', color: 'Noir', front,
+    back: new URL('../assets/images/shop/shop-tshirt-logo-black-back.png', import.meta.url).href,
+    width: 1070, height: 1070, price: null, url: null, sourcePage: null },
 ]
 
 export const shopContent = {
