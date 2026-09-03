@@ -60,7 +60,7 @@ Tee-shirts Luna Bohemia A, B, C et identité DOYA : maquettes officielles des pa
 | Frais de port | Secret de fonction `SHIPPING_CENTS` |
 | Biographie officielle et contact éventuel | `src/data/siteContent.js` |
 | Domaine officiel / indexation | `.env.local`, d’après `.env.example` |
-| Webfonts Editorial New et New Frank, avec licences | `src/assets/fonts/` |
+| Webfonts FK Display Regular Alt et Degular Medium, avec licences | `src/assets/fonts/` |
 
 Les plateformes non connectées sont du texte, jamais des ancres vides. Aucun compte social, concert, prix, extrait audio, témoignage, origine géographique ou fait biographique n’a été ajouté par supposition.
 
