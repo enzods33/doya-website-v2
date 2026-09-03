@@ -33,7 +33,9 @@ VITE_SUPABASE_ANON_KEY=eyJ...
 
 7. L’hébergement statique doit renvoyer `index.html` pour `/panier`, `/compte` et `/commande`.
 
-## Mettre un tee-shirt en vente
+## Article test
+
+Un SKU `test` (« Article test », 1,00 €, 5 pièces par taille) sert uniquement aux paiements Stripe en mode test. Le passer `on_sale = false` avant toute ouverture publique.
 
 Dans la table `products` : renseigner `price_cents` (ex. `4500` = 45 €), puis `on_sale = true`.  
 Dans `product_variants` : stock par taille (`XS` … `XXL`).  
