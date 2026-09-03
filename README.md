@@ -2,6 +2,15 @@
 
 Site de présentation indépendant, créé de zéro en React et JavaScript. L’ancien dossier `doya-website` n’est ni importé ni modifié. Seuls les assets et le PDF fournis ont été repris, sans altération des originaux.
 
+## État actuel
+
+- **Base technique** : React 19 + Vite 8, Tailwind 4, Motion 13. `npm run lint`, `npm test` (contenu + commerce) et `npm run build` passent.
+- **Environnement Cloud Agent** : `.cursor/environment.json` en place (voir plus bas).
+- **Polices** : `FK Display Regular Alt` et `Degular Medium` câblées via `src/styles/fonts.css` ; en attente des fichiers licenciés dans `src/assets/fonts/` (repli automatique d’ici là).
+- **Liens externes** : audités et vérifiés. Sept profils artistes au footer (dont Deezer) ; deux avances singles reliées (`Mariposa`, `Mueve`) ; album complet et dix autres titres en attente de sortie (`null`). Détails dans `reference/social-links.md`.
+- **Design** : un audit design a été réalisé (Hero et système global : contraste, tailles de texte, header, placement des étoiles). Une refonte est prévue sur une branche dédiée ; le design actuel n’a pas encore été modifié.
+- **Boutique** : non activée (Supabase/Stripe optionnels) ; le Shop reste une collection visuelle sans clés.
+
 ## Lancer le site
 
 Depuis ce dossier, avec Node.js compatible Vite 8 (Node 22.12+ conseillé) :
@@ -22,6 +31,10 @@ npm run preview
 
 Le build est généré dans `dist/`. L’aperçu du build utilise le port `4174`.
 
+## Environnement Cloud Agent
+
+Le fichier `.cursor/environment.json` décrit l’environnement des Cloud Agents Cursor : `install` exécute `npm ci`, un terminal `dev` lance `npm run dev`, et le port `5174` est exposé. Il permet à un agent (ou à un aperçu cloud) de démarrer le site déjà installé et en cours d’exécution, sans configuration manuelle. Aucun secret n’y figure : la boutique (Supabase/Stripe) reste optionnelle et le site tourne sans clés.
+
 ## Où modifier les contenus ?
 
 | Besoin | Fichier |
@@ -37,7 +50,7 @@ Le build est généré dans `dist/`. L’aperçu du build utilise le port `4174`
 
 Les valeurs `null` signalent une information non fournie. Le site n’en fait pas un lien cliquable. Les dates de concerts restent dans une liste vide tant qu’aucune n’est confirmée. Les prix s’expriment en euros dans les données et ne s’affichent que lorsqu’ils sont renseignés.
 
-Les six profils du footer (Instagram, YouTube, TikTok, Facebook, Spotify et Apple Music) sont renseignés. Leur vérification est documentée dans `reference/social-links.md`. Les liens d’écoute propres à Luna Bohemia restent distincts et à compléter.
+Les sept profils du footer (Instagram, YouTube, TikTok, Facebook, Spotify, Apple Music et Deezer) sont renseignés et vérifiés (documentation et sources dans `reference/social-links.md`). Ce sont des profils artistes, distincts des liens d’écoute de l’album. L’album `Luna Bohemia` n’étant pas encore sorti, `album.platforms` reste `null` ; seules les deux avances singles publiées ont une URL dans `src/data/album.js` (`Mariposa` et `Mueve`, pistes Spotify rattachées à l’artiste `1JGqJy0whUevjrA3Tw6OMA`). Les dix autres titres restent `null`. Aucun profil YouTube Music ni X/Twitter n’est ajouté tant qu’une URL officielle n’est pas confirmée.
 
 ## Architecture
 
@@ -74,7 +87,7 @@ doya-website-v2/
 │   ├── pages/              Accueil, panier, compte, commande
 │   ├── commerce/           Catalogue distant, panier, auth, appels fonctions
 │   ├── data/               album, live, products, socials, siteContent, media
-│   ├── styles/             index, tokens, base, hero, sections, motion, commerce
+│   ├── styles/             index, fonts, tokens, base, hero, sections, motion, commerce
 │   └── utils/              Validation HTTPS, routeur léger, réglages des mouvements
 ├── supabase/               Migration, RLS, Edge Functions Stripe
 ├── reference/
@@ -88,7 +101,8 @@ doya-website-v2/
 │   ├── qa-report.md
 │   └── screenshots/
 ├── scripts/                Audit des sources, séparation des tracés natifs
-├── tests/content.test.js
+├── tests/                  content.test.js, commerce.test.js
+├── .cursor/                environment.json (environnement Cloud Agent)
 ├── index.html              Métadonnées de base
 ├── vite.config.js
 ├── .env.example
