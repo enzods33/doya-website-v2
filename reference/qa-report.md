@@ -3,7 +3,7 @@
 ## Résultat
 
 - `npm run lint` : aucune erreur ni avertissement.
-- `npm test` : sept tests réussis (contenus, destinations, médias, six profils sociaux, JPEG natifs, tracés SVG, réglages reduced motion).
+- `npm test` : sept tests de contenu plus les tests boutique (limites panier, absence de prix inventés, pas de secret côté client).
 - `npm run build` : compilation de production réussie.
 - React / React DOM : une seule version, dépendances dédupliquées.
 - Ancien projet `doya-website` : comparaison SHA-256 de 99 fichiers, aucun changement ni suppression.

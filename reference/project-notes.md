@@ -56,7 +56,8 @@ Tee-shirts Luna Bohemia A, B, C et identité DOYA : maquettes officielles des pa
 | 4 URLs album : Spotify, Apple Music, YouTube, Deezer | `src/data/album.js`, `platforms` |
 | Destinations éventuelles des 12 titres | `src/data/album.js`, `tracks` |
 | Concerts, dates, villes, salles et URLs billets | `src/data/live.js` |
-| 4 URLs produits, prix et confirmation de commercialisation | `src/data/products.js` |
+| Prix, stocks, codes promo et mise en vente | Dashboard Supabase, voir `reference/commerce.md` |
+| Frais de port | Secret de fonction `SHIPPING_CENTS` |
 | Biographie officielle et contact éventuel | `src/data/siteContent.js` |
 | Domaine officiel / indexation | `.env.local`, d’après `.env.example` |
 | Webfonts Editorial New et New Frank, avec licences | `src/assets/fonts/` |

@@ -28,7 +28,8 @@ Le build est généré dans `dist/`. L’aperçu du build utilise le port `4174`
 | --- | --- |
 | Titres et liens d’écoute | `src/data/album.js` |
 | Dates, villes, salles, billetterie | `src/data/live.js` |
-| Vêtements, prix et liens produits | `src/data/products.js` |
+| Vêtements, visuels | `src/data/products.js` |
+| Prix, stock, promos, vente | Dashboard Supabase — `reference/commerce.md` |
 | Liens sociaux | `src/data/socials.js` |
 | Biographie, année, libellés et mentions | `src/data/siteContent.js` |
 | Photographies, dimensions et textes alternatifs | `src/data/media.js` |
@@ -70,9 +71,12 @@ doya-website-v2/
 │   │   ├── live/Live.jsx
 │   │   ├── shop/Shop.jsx
 │   │   └── about/About.jsx
+│   ├── pages/              Accueil, panier, compte, commande
+│   ├── commerce/           Catalogue distant, panier, auth, appels fonctions
 │   ├── data/               album, live, products, socials, siteContent, media
-│   ├── styles/             index, tokens, base, hero, sections, motion
-│   └── utils/              Validation HTTPS, réglages des mouvements
+│   ├── styles/             index, tokens, base, hero, sections, motion, commerce
+│   └── utils/              Validation HTTPS, routeur léger, réglages des mouvements
+├── supabase/               Migration, RLS, Edge Functions Stripe
 ├── reference/
 │   ├── direction-artistique-luna-bohemia.pdf
 │   ├── web-reference.png
@@ -91,11 +95,13 @@ doya-website-v2/
 └── package.json
 ```
 
-Une section correspond à un fichier lisible. Les styles spécifiques restent groupés, les paramètres graphiques sont centralisés. Les quelques utilitaires Tailwind et les styles de composition utilisent le même thème. Aucune bibliothèque UI, aucun routeur, aucune infrastructure de boutique ou lecteur audio ne sont ajoutés.
+Une section correspond à un fichier lisible. Les styles spécifiques restent groupés, les paramètres graphiques sont centralisés. Les quelques utilitaires Tailwind et les styles de composition utilisent le même thème. Aucune bibliothèque UI ni lecteur audio ne sont ajoutés.
+
+La boutique se branche via Supabase (stock, promo, compte) et Stripe Checkout (paiement). Sans clés et sans produit `on_sale`, le Shop reste une collection visuelle. Détail dans `reference/commerce.md`.
 
 ## Dépendances
 
-React / React DOM 19.2.8, Vite 8.2.2, Tailwind CSS / plugin Vite 4.3.3, Motion 13.1.1, plugin React Vite 6.1.0, Oxlint 1.79.0. Les tests utilisent le runner natif de Node.js.
+React / React DOM 19.2.8, Vite 8.2.2, Tailwind CSS / plugin Vite 4.3.3, Motion 13.1.1, plugin React Vite 6.1.0, Oxlint 1.79.0, Supabase JS 2.x. Les tests utilisent le runner natif de Node.js. Stripe n’est appelé que depuis les Edge Functions.
 
 Les scripts Python d’audit sont facultatifs pour le développement du site. Ils demandent `pypdf`, `Pillow` et Poppler (`pdftoppm`). Les résultats de provenance sont déjà conservés dans `reference/`.
 
@@ -116,7 +122,7 @@ Les paramètres partagés sont dans `src/utils/motion.js`, les détails de survo
 ## Avant publication publique
 
 1. Faire valider la tracklist retranscrite du livret, la biographie et les liens officiels.
-2. Confirmer les modèles commercialisés, leurs prix et leurs destinations boutique.
+2. Confirmer les modèles commercialisés, leurs prix et leurs stocks dans Supabase, plus `SHIPPING_CENTS`.
 3. Remplacer les photographies utilisées en grand par les originaux HD.
 4. Ajouter les webfonts uniquement avec leur licence web.
 5. Copier `.env.example` en `.env.local`, renseigner `VITE_SITE_URL` avec le domaine vérifié, puis passer `VITE_INDEXABLE=true` seulement lorsque le site est prêt à être indexé.
