@@ -12,3 +12,13 @@ export function Stars({ color = 'red', className = '' }) {
   const sources = { red: starsRed, white: starsWhite, black: starsBlack }
   return <img src={sources[color]} width="36" height="45" alt="" aria-hidden="true" className={className} />
 }
+
+export function MenuIcon({ className = '' }) {
+  return (
+    <span className={`menu-icon${className ? ` ${className}` : ''}`} aria-hidden="true">
+      <span className="menu-icon-bar" />
+      <span className="menu-icon-bar" />
+      <span className="menu-icon-bar" />
+    </span>
+  )
+}

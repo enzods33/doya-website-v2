@@ -27,7 +27,11 @@ export function navigate(to) {
   }
   if (url.hash) {
     requestAnimationFrame(() => {
-      requestAnimationFrame(() => document.querySelector(url.hash)?.scrollIntoView())
+      requestAnimationFrame(() => {
+        const target = document.querySelector(url.hash)
+        if (!target) return
+        window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY, left: 0, behavior: 'auto' })
+      })
     })
   } else {
     window.scrollTo(0, 0)

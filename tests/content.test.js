@@ -8,6 +8,8 @@ import { concerts } from '../src/data/live.js'
 import { products } from '../src/data/products.js'
 import { socials } from '../src/data/socials.js'
 import { media, galleryImages } from '../src/data/media.js'
+import { navigation, mobileNavigation } from '../src/data/siteContent.js'
+import { contacts, pressKit } from '../src/data/contacts.js'
 import { isExternalUrl } from '../src/utils/links.js'
 import { revealMotion } from '../src/utils/motion.js'
 
@@ -19,12 +21,31 @@ test('12 titres dans l’ordre des crédits officiels', () => {
 
 test('aucun faux lien, prix ou concert', () => {
   assert.equal(concerts.length, 0)
-  for (const entry of [...album.tracks, ...album.platforms, ...products, ...socials]) {
+  for (const platform of album.platforms) {
+    assert.ok(platform.url === null || isExternalUrl(platform.url))
+  }
+  for (const track of album.tracks) {
+    for (const url of Object.values(track.links || {})) {
+      assert.ok(url === null || isExternalUrl(url))
+    }
+  }
+  for (const entry of [...products, ...socials]) {
     assert.ok(entry.url === null || isExternalUrl(entry.url))
   }
-  const tracksWithUrl = album.tracks.filter((track) => track.url)
-  assert.deepEqual(tracksWithUrl.map((track) => track.title), ['Mariposa', 'Mueve'], 'seules les avances singles publiées ont une URL')
-  assert.ok(tracksWithUrl.every((track) => new URL(track.url).hostname === 'open.spotify.com'))
+  const tracksWithLinks = album.tracks.filter((track) => Object.values(track.links || {}).some((url) => isExternalUrl(url)))
+  assert.deepEqual(
+    tracksWithLinks.map((track) => track.title),
+    ['Todo de mí', 'Mariposa', 'Lo vi venir', 'Mueve'],
+    'uniquement les titres déjà publiés ont des liens',
+  )
+  for (const track of tracksWithLinks) {
+    assert.ok(isExternalUrl(track.links.spotify))
+    assert.ok(isExternalUrl(track.links.deezer))
+    assert.ok(isExternalUrl(track.links.youtube), 'clip YouTube officiel attendu')
+    assert.equal(new URL(track.links.spotify).hostname, 'open.spotify.com')
+    assert.equal(new URL(track.links.deezer).hostname, 'www.deezer.com')
+    assert.equal(new URL(track.links.youtube).hostname, 'www.youtube.com')
+  }
   assert.ok(products.every((product) => product.price === null))
   assert.equal(isExternalUrl('#'), false)
   assert.equal(isExternalUrl('javascript:alert(1)'), false)
@@ -44,16 +65,31 @@ test('les médias déclarés existent et ont des dimensions explicites', () => {
 })
 
 test('les profils officiels sont distincts et prêts pour le footer', () => {
-  assert.deepEqual(socials.map((social) => social.name), ['Instagram', 'YouTube', 'TikTok', 'Facebook', 'Spotify', 'Apple Music', 'Deezer'])
+  assert.deepEqual(socials.map((social) => social.name), ['Spotify', 'Apple Music', 'Deezer', 'YouTube', 'Instagram', 'TikTok', 'Facebook'])
+  assert.deepEqual(socials.filter((social) => social.group === 'listen').map((social) => social.name), ['Spotify', 'Apple Music', 'Deezer', 'YouTube'])
+  assert.deepEqual(socials.filter((social) => social.group === 'social').map((social) => social.name), ['Instagram', 'TikTok', 'Facebook'])
   assert.ok(socials.every((social) => isExternalUrl(social.url)))
   assert.equal(new Set(socials.map((social) => social.url)).size, socials.length)
   assert.deepEqual(socials.map((social) => new URL(social.url).hostname), [
-    'www.instagram.com', 'www.youtube.com', 'www.tiktok.com', 'www.facebook.com', 'open.spotify.com', 'music.apple.com', 'www.deezer.com',
+    'open.spotify.com', 'music.apple.com', 'www.deezer.com', 'www.youtube.com', 'www.instagram.com', 'www.tiktok.com', 'www.facebook.com',
   ])
   assert.ok(socials.find((social) => social.name === 'Spotify').url.endsWith('/1JGqJy0whUevjrA3Tw6OMA'))
   assert.ok(socials.find((social) => social.name === 'Apple Music').url.endsWith('/1646461706'))
   assert.ok(socials.find((social) => social.name === 'Deezer').url.endsWith('/184643787'))
-  assert.ok(album.platforms.every((platform) => platform.url === null), 'ne pas remplacer les liens album par des profils artistes')
+  assert.deepEqual(album.platforms.map((platform) => platform.id), ['spotify', 'apple', 'deezer'])
+  assert.ok(album.platforms.every((platform) => isExternalUrl(platform.url)), 'liens album temporaires = profils artistes jusqu’à la sortie')
+  assert.equal(album.buyHref, '#shop')
+  assert.equal(album.buyLabel, 'Merch')
+})
+
+test('la navigation et le contact officiels sont en place', () => {
+  assert.deepEqual(navigation.map((item) => item.labelKey), ['nav.music', 'nav.live', 'nav.shop', 'nav.about', 'nav.contact'])
+  assert.equal(navigation.at(-1).href, '#contact')
+  assert.deepEqual(mobileNavigation.map((item) => item.labelKey), ['nav.music', 'nav.live', 'nav.shop', 'nav.about', 'nav.contact'])
+  assert.equal(mobileNavigation.find((item) => item.labelKey === 'nav.about').href, '#about')
+  assert.deepEqual(contacts.map((contact) => contact.email), ['almenaprod@gmail.com', 'doyamusicofficial@gmail.com'])
+  assert.deepEqual(contacts.map((contact) => contact.id), ['booking', 'press'])
+  assert.ok(pressKit.href === null || pressKit.href.startsWith('/'))
 })
 
 test('les JPEG sources correspondent aux flux natifs du PDF', () => {

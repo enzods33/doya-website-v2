@@ -5,19 +5,20 @@ import { useCatalog } from '../commerce/CatalogProvider.jsx'
 import { startCheckout } from '../commerce/checkout.js'
 import { formatEuros, isValidEmail, normalizePromoCode } from '../commerce/cartRules.js'
 import { commerceConfigured } from '../commerce/config.js'
-import { commerceMessage } from '../commerce/messages.js'
+import { commerceMessage, translateProduct } from '../commerce/messages.js'
 import { availableFor } from '../commerce/catalog.js'
+import { useI18n } from '../i18n/I18nProvider.jsx'
 import Link from '../components/Link.jsx'
-import { shopContent } from '../data/products.js'
 
 function CartPage() {
   const { user } = useAuth()
   const { items, setQuantity, removeItem } = useCart()
   const { items: catalog } = useCatalog()
+  const { t } = useI18n()
   const [email, setEmail] = useState(user?.email ?? '')
   const [promoCode, setPromoCode] = useState('')
   const [busy, setBusy] = useState(false)
-  const [error, setError] = useState(new URLSearchParams(window.location.search).get('canceled') ? commerceMessage('canceled') : '')
+  const [error, setError] = useState(() => (new URLSearchParams(window.location.search).get('canceled') ? commerceMessage('canceled', t) : ''))
 
   const lines = useMemo(() => items.map((item) => {
     const product = catalog.find((entry) => entry.id === item.productId)
@@ -36,7 +37,7 @@ function CartPage() {
     event.preventDefault()
     setError('')
     if (!user && !isValidEmail(email)) {
-      setError(commerceMessage('invalid_email'))
+      setError(commerceMessage('invalid_email', t))
       return
     }
     setBusy(true)
@@ -49,7 +50,7 @@ function CartPage() {
       if (typeof url !== 'string' || !url.startsWith('https://')) throw new Error('stripe_unavailable')
       window.location.assign(url)
     } catch (caught) {
-      setError(commerceMessage(caught.message))
+      setError(commerceMessage(caught.message, t))
       setBusy(false)
     }
   }
@@ -57,49 +58,52 @@ function CartPage() {
   return (
     <main id="main" className="page-main" tabIndex={-1}>
       <div className="page-shell">
-        <p className="eyebrow section-kicker">Boutique</p>
-        <h1 className="editorial-title page-title">Panier</h1>
-        {!commerceConfigured && <p className="availability-note">{shopContent.note}</p>}
+        <p className="eyebrow section-kicker">{t('cart.kicker')}</p>
+        <h1 className="editorial-title page-title">{t('cart.title')}</h1>
+        {!commerceConfigured && <p className="availability-note">{t('shop.note')}</p>}
         {lines.length === 0 ? (
-          <p className="page-empty">Le panier est vide. <Link href="/#shop" className="text-link">Voir la collection <span aria-hidden="true">↗</span></Link></p>
+          <p className="page-empty">{t('cart.empty')} <Link href="/#shop" className="text-link">{t('cart.seeCollection')} <span aria-hidden="true">↗</span></Link></p>
         ) : (
           <form className="cart-form" onSubmit={pay}>
             <ul className="cart-list">
-              {lines.map((line) => (
-                <li key={`${line.productId}-${line.size}`} className="cart-line">
-                  <img src={line.product?.front} alt="" width={line.product?.width} height={line.product?.height} />
-                  <div>
-                    <p className="eyebrow">{line.product?.type}</p>
-                    <h2>{line.product?.name ?? line.productId}</h2>
-                    <p className="cart-meta">Noir · taille {line.size}{line.priceCents ? ` · ${formatEuros(line.priceCents)}` : ''}</p>
-                    <div className="cart-actions">
-                      <label>
-                        <span className="visually-hidden">Quantité</span>
-                        <input type="number" min="1" max="5" value={line.quantity} disabled={busy}
-                          onChange={(event) => setQuantity(line.productId, line.size, Number(event.target.value), line.available)} />
-                      </label>
-                      <button type="button" onClick={() => removeItem(line.productId, line.size)}>Retirer</button>
+              {lines.map((line) => {
+                const labels = translateProduct(t, line.product)
+                return (
+                  <li key={`${line.productId}-${line.size}`} className="cart-line">
+                    <img src={line.product?.front} alt="" width={line.product?.width} height={line.product?.height} />
+                    <div>
+                      <p className="eyebrow">{labels.type}</p>
+                      <h2>{labels.name || line.productId}</h2>
+                      <p className="cart-meta">{t('cart.lineMeta', { color: labels.color || '—', size: line.size })}{line.priceCents ? ` · ${formatEuros(line.priceCents)}` : ''}</p>
+                      <div className="cart-actions">
+                        <label>
+                          <span className="visually-hidden">{t('cart.quantity')}</span>
+                          <input type="number" min="1" max="5" value={line.quantity} disabled={busy}
+                            onChange={(event) => setQuantity(line.productId, line.size, Number(event.target.value), line.available)} />
+                        </label>
+                        <button type="button" onClick={() => removeItem(line.productId, line.size)}>{t('cart.remove')}</button>
+                      </div>
+                      {line.available < line.quantity && <p className="field-error">{commerceMessage('out_of_stock', t)}</p>}
                     </div>
-                    {line.available < line.quantity && <p className="field-error">{commerceMessage('out_of_stock')}</p>}
-                  </div>
-                </li>
-              ))}
+                  </li>
+                )
+              })}
             </ul>
             <div className="cart-aside">
               {!user && (
                 <label className="field">
-                  <span>E-mail de confirmation</span>
+                  <span>{t('cart.email')}</span>
                   <input type="email" autoComplete="email" required value={email} onChange={(event) => setEmail(event.target.value)} />
                 </label>
               )}
               <label className="field">
-                <span>Code promo</span>
-                <input type="text" autoComplete="off" spellCheck="false" value={promoCode} onChange={(event) => setPromoCode(event.target.value)} placeholder="Vérifié au paiement" />
+                <span>{t('cart.promo')}</span>
+                <input type="text" autoComplete="off" spellCheck="false" value={promoCode} onChange={(event) => setPromoCode(event.target.value)} placeholder={t('cart.promoPlaceholder')} />
               </label>
-              <p className="cart-total"><span>Sous-total estimé</span><strong>{formatEuros(subtotal) ?? '—'}</strong></p>
-              <p className="availability-note">Le total définitif, la promo et la livraison sont confirmés par Stripe. Aucune carte n’est saisie sur ce site.</p>
+              <p className="cart-total"><span>{t('cart.subtotal')}</span><strong>{formatEuros(subtotal) ?? '—'}</strong></p>
+              <p className="availability-note">{t('cart.stripeAside')}</p>
               {error && <p className="field-error" role="alert">{error}</p>}
-              <button type="submit" className="commerce-button" disabled={busy || !canPay}>{busy ? 'Redirection…' : 'Payer avec Stripe'}</button>
+              <button type="submit" className="commerce-button" disabled={busy || !canPay}>{busy ? t('cart.redirecting') : t('cart.pay')}</button>
             </div>
           </form>
         )}

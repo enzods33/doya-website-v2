@@ -1,21 +1,19 @@
+// Hrefs stables (#music, etc.) — seuls les labels passent par i18n (labelKey).
 export const navigation = [
-  { label: 'Music', href: '#music' },
-  { label: 'Live', href: '#live' },
-  { label: 'Shop', href: '#shop' },
-  { label: 'About', href: '#about' },
+  { labelKey: 'nav.music', href: '#music' },
+  { labelKey: 'nav.live', href: '#live' },
+  { labelKey: 'nav.shop', href: '#shop' },
+  { labelKey: 'nav.about', href: '#about' },
+  { labelKey: 'nav.contact', href: '#contact' },
 ]
+
+// Même structure que desktop (Bio inclus).
+export const mobileNavigation = navigation
 
 export const siteContent = {
   name: 'DOYA',
   year: 2026,
-  heroLabel: 'New album',
   albumTitle: 'Luna Bohemia',
-  discoverLabel: 'Découvrir l’album',
-  editorialLabel: 'L’univers Luna Bohemia',
-  editorialWords: ['Luna', 'Bohemia'],
-  aboutLabel: 'À propos de DOYA',
   biography: null,
-  biographyPlaceholder: 'Biographie officielle à compléter.',
-  legal: '© DOYA 2026 — ALMENA PROD',
-  contactUrl: null,
+  contactUrl: '#contact',
 }
