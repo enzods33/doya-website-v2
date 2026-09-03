@@ -41,7 +41,7 @@ export function AuthProvider({ children }) {
       if (!supabase) throw new Error('commerce_disabled')
       const { error } = await supabase.auth.signInWithOtp({
         email,
-        options: { emailRedirectTo: `${window.location.origin}/compte` },
+        options: { emailRedirectTo: `${window.location.origin}${import.meta.env.BASE_URL.replace(/\/$/, '')}/compte` },
       })
       if (error) throw error
     },

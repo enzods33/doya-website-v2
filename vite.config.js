@@ -5,8 +5,10 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   const origin = env.VITE_SITE_URL ? new URL(env.VITE_SITE_URL).origin : null
+  const pages = env.GITHUB_PAGES === 'true'
 
   return {
+    base: pages ? '/doya-website-v2/' : '/',
     appType: 'spa',
     server: {
       host: true,

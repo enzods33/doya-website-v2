@@ -1,12 +1,25 @@
 import { useEffect, useState } from 'react'
 
+const BASE = (import.meta.env.BASE_URL || '/').replace(/\/$/, '')
+
+function stripBase(pathname) {
+  if (BASE && pathname.startsWith(BASE)) return pathname.slice(BASE.length) || '/'
+  return pathname || '/'
+}
+
+function withBase(pathname) {
+  if (!pathname.startsWith('/')) return pathname
+  return `${BASE}${pathname}` || '/'
+}
+
 export function currentPath() {
-  return window.location.pathname
+  return stripBase(window.location.pathname)
 }
 
 export function navigate(to) {
-  const url = new URL(to, window.location.origin)
-  const next = `${url.pathname}${url.search}${url.hash}`
+  const url = new URL(to, window.location.href)
+  const path = stripBase(url.pathname)
+  const next = `${withBase(path)}${url.search}${url.hash}`
   const current = `${window.location.pathname}${window.location.search}${window.location.hash}`
   if (next !== current) {
     window.history.pushState({}, '', next)
@@ -23,13 +36,13 @@ export function navigate(to) {
 
 export function useRoute() {
   const [route, setRoute] = useState(() => ({
-    path: window.location.pathname,
+    path: stripBase(window.location.pathname),
     search: window.location.search,
   }))
 
   useEffect(() => {
     function onPop() {
-      setRoute({ path: window.location.pathname, search: window.location.search })
+      setRoute({ path: stripBase(window.location.pathname), search: window.location.search })
     }
     window.addEventListener('popstate', onPop)
     return () => window.removeEventListener('popstate', onPop)
