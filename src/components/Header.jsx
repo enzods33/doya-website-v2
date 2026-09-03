@@ -76,10 +76,10 @@ function Header() {
   return (
     <m.header className={`site-header${path === '/' ? '' : ' is-page'}`} initial={reducedMotion ? false : { opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
       transition={{ duration: reducedMotion ? 0 : 0.7, delay: reducedMotion ? 0 : 0.1, ease: editorialEase }}>
-      <Link href={path === '/' ? '#top' : '/'} className="header-brand" aria-label="DOYA — accueil"><Wordmark /></Link>
+      <Link href={path === '/' ? '#about' : '/#about'} className="header-brand" aria-label="DOYA — bio"><Wordmark /></Link>
       <nav className="desktop-navigation" aria-label="Navigation principale">
         {navigation.slice(0, 2).map((item) => <Link key={item.href} href={sectionHref(item.href)}>{item.label}</Link>)}
-        <Stars color="black" className="header-stars" />
+        <Stars color="red" className="header-stars" />
         {navigation.slice(2).map((item) => <Link key={item.href} href={sectionHref(item.href)}>{item.label}</Link>)}
       </nav>
       {commerceConfigured && (

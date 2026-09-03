@@ -73,7 +73,7 @@ function Shop() {
           </div>
         </Reveal>})}
       </div>
-      <p className="availability-note shop-note">{purchasable ? 'Paiement sécurisé par Stripe. Stocks et codes promo sont confirmés au paiement.' : shopContent.note}</p>
+      {purchasable && <p className="availability-note shop-note">Paiement sécurisé par Stripe. Stocks et codes promo sont confirmés au paiement.</p>}
       {notice && <p className="shop-feedback" role="status">{notice}</p>}
       {purchasable && <p className="shop-cart-link"><Link href="/panier" className="text-link">Voir le panier <span aria-hidden="true">↗</span></Link></p>}
     </section>

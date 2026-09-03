@@ -19,14 +19,16 @@ function Hero() {
           initial={reducedMotion ? false : { opacity: 0, y: 26 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: reducedMotion ? 0 : 1.1, delay: reducedMotion ? 0 : 0.12 + index * 0.11, ease: editorialEase }} />)}
       </div>
-      <div className="hero-stars"><m.div initial={reducedMotion ? false : { opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: reducedMotion ? 0 : 0.9, delay: reducedMotion ? 0 : 0.5, ease: editorialEase }}><Stars /></m.div></div>
       <div className="hero-caption">
-        <m.div initial={reducedMotion ? false : { opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: reducedMotion ? 0 : 0.85, delay: reducedMotion ? 0 : 0.55, ease: editorialEase }}>
-        <p className="eyebrow">{siteContent.heroLabel} <span className="caption-dash" /> {siteContent.year}</p>
+        <m.div initial={reducedMotion ? false : { opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: reducedMotion ? 0 : 1, delay: reducedMotion ? 0 : 0.5, ease: editorialEase }}>
+        <div className="hero-stars"><Stars /></div>
+        <p className="hero-subtitle">{siteContent.heroLabel}</p>
         <h1 id="hero-title">{siteContent.albumTitle}</h1>
-        <a href="#music" className="text-link">{siteContent.discoverLabel}<span aria-hidden="true">↗</span></a>
+        <div className="hero-cta-group">
+          <a href="#music" className="hero-cta">{siteContent.discoverLabel} <span aria-hidden="true">↗</span></a>
+          <a href="#live" className="hero-cta">Prochaines dates <span aria-hidden="true">↗</span></a>
+        </div>
         </m.div>
       </div>
       <span className="hero-index eyebrow" aria-hidden="true">DOYA / 2026</span>

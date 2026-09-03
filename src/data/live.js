@@ -3,6 +3,6 @@ export const concerts = []
 export const liveContent = {
   title: 'Live',
   label: 'Prochaines dates',
-  emptyTitle: 'À suivre.',
-  emptyText: 'Aucune date annoncée sur le site pour le moment.',
+  emptyTitle: 'Bientôt sur scène.',
+  emptyText: 'Les dates de la tournée Luna Bohemia seront annoncées ici.',
 }

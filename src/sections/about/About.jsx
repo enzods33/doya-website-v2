@@ -13,7 +13,7 @@ function About() {
         <h2 id="about-title"><span className="sr-only">DOYA</span><Wordmark decorative className="about-wordmark" /></h2>
         <p className="about-album editorial-title">{siteContent.albumTitle}</p>
         <p className="eyebrow">{siteContent.year}</p>
-        {siteContent.biography ? <p className="about-biography">{siteContent.biography}</p> : <p className="availability-note about-biography">{siteContent.biographyPlaceholder}</p>}
+        {siteContent.biography && <p className="about-biography">{siteContent.biography}</p>}
       </Reveal>
     </section>
   )

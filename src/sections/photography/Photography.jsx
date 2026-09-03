@@ -24,7 +24,7 @@ function Photography() {
           <figure id="gallery-main" className="gallery-main"><TransitionImage image={galleryImages[index]} /><figcaption className="photo-caption"><span>{siteContent.name}</span><span>{siteContent.albumTitle} / {siteContent.year}</span></figcaption></figure>
           <div className="gallery-side gallery-side-right" aria-hidden="true"><TransitionImage image={galleryImages[next]} alt="" /></div>
         </Reveal>
-        <Stars className="gallery-stars" />
+        <Stars color="white" className="gallery-stars" />
       </div>
     </section>
   )

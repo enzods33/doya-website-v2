@@ -18,11 +18,9 @@ function Music() {
           <div className="listening-area">
             <h3 className="eyebrow">Écouter l’album</h3>
             <ul className="platforms">
-              {album.platforms.map((platform) => <li key={platform.name}>{isExternalUrl(platform.url)
-                ? <a href={platform.url} target="_blank" rel="noopener noreferrer">{platform.name} ↗</a>
-                : <span className="unavailable-link">{platform.name}</span>}</li>)}
+              {album.platforms.filter((platform) => isExternalUrl(platform.url)).map((platform) => <li key={platform.name}><a href={platform.url} target="_blank" rel="noopener noreferrer">{platform.name} ↗</a></li>)}
             </ul>
-            {!hasPlatform && <p className="availability-note">{album.listeningNote}</p>}
+            {/* Note masquée tant que les liens ne sont pas renseignés */}
           </div>
         </div>
         <div className="tracklist-column">

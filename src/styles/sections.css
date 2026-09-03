@@ -2,7 +2,7 @@
 .section-heading h2 { font-size: clamp(52px, 6.8vw, 118px); }
 .section-kicker { margin-bottom: 20px; }
 .small-separator { margin-inline: 12px; color: var(--color-doya-red); }
-.photo-caption { display: flex; justify-content: space-between; gap: 12px; margin-top: 12px; text-transform: uppercase; letter-spacing: .07em; font-size: 9px; }
+.photo-caption { display: flex; justify-content: space-between; gap: 12px; margin-top: 12px; text-transform: uppercase; letter-spacing: .07em; font-size: 11px; }
 .music-section { padding-block: var(--section-space); }
 .music-layout { display: grid; grid-template-columns: 1.04fr 1.12fr .68fr; gap: clamp(32px, 4.2vw, 80px); align-items: start; }
 .music-cover-column, .tracklist-column, .music-aside { min-width: 0; }
@@ -15,12 +15,12 @@
 .tracklist-header { display: flex; justify-content: space-between; gap: 20px; padding-bottom: 18px; border-bottom: 1px solid var(--hairline); }
 .track-row { display: grid; grid-template-columns: 24px minmax(0, 1fr) auto; align-items: baseline; column-gap: 15px; padding: 12px 0; border-bottom: 1px solid var(--hairline); font-size: clamp(11px, .87vw, 15px); line-height: 1.6; letter-spacing: .025em; text-transform: uppercase; transition: color var(--motion-duration); }
 .track-row:hover { color: var(--color-doya-red); }
-.track-number { font-size: 9px; color: var(--muted); }
+.track-number { font-size: 11px; color: var(--muted); }
 .tracklist li:first-child .track-number { color: var(--color-doya-red); }
 .music-portrait { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; object-position: 53% center; }
 .album-number { margin-top: 42px; display: flex; align-items: end; gap: 22px; }
 .album-number > span { font-family: var(--font-editorial); font-size: clamp(70px, 8vw, 128px); line-height: .72; letter-spacing: -.06em; }
-.album-number p { font-size: 9px; }
+.album-number p { font-size: 11px; }
 .editorial-section { position: relative; padding-top: clamp(32px, 3vw, 64px); padding-bottom: var(--section-space); border-top: 1px solid var(--hairline); display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); }
 .editorial-composition { display: contents; }
 .editorial-composition > span { font-family: var(--font-editorial); text-transform: uppercase; letter-spacing: -.035em; line-height: .8; font-size: clamp(100px, 18.4vw, 335px); position: relative; z-index: 1; }
@@ -31,12 +31,12 @@
 .editorial-photo figcaption { margin-bottom: 40px; }
 .editorial-note { grid-column: 1 / 5; grid-row: 2; align-self: end; padding-bottom: 56px; }
 .editorial-note img { width: 22px; margin-bottom: 22px; }
-.editorial-note .text-link { margin-top: 22px; font-size: 10px; }
+.editorial-note .text-link { margin-top: 22px; font-size: 11px; }
 .photography-section { color: var(--color-paper); background: #000; padding-block: clamp(50px, 5vw, 96px); }
 .gallery-header { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-bottom: 40px; }
 .gallery-header h2 { font-family: var(--font-editorial); font-size: clamp(26px, 2.4vw, 40px); text-transform: uppercase; letter-spacing: -.02em; }
 .gallery-controls { display: flex; align-items: center; gap: 12px; }
-.gallery-controls p { margin-right: 26px; font-size: 10px; }
+.gallery-controls p { margin-right: 26px; font-size: 11px; }
 .gallery-controls button { background: none; border: 0; min-width: 44px; height: 44px; font-family: var(--font-editorial); font-size: 28px; line-height: 1; transition: color var(--motion-duration); }
 .gallery-controls button:hover { color: var(--color-doya-red); }
 .gallery-stage { display: grid; grid-template-columns: .85fr 1.65fr .8fr; align-items: center; gap: clamp(20px, 3vw, 58px); }
@@ -48,7 +48,7 @@
 .gallery-side-right img { aspect-ratio: 3 / 4; }
 .gallery-main img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
 .gallery-main figcaption { color: #b9b7b4; }
-.gallery-stars { width: 28px; margin: 44px auto 0; }
+.gallery-stars { width: 40px; margin: 44px auto 0; }
 .live-section { background: #000; color: var(--color-paper); border-top: 1px solid #333; padding-block: clamp(64px, 7vw, 132px); }
 .live-layout { display: grid; grid-template-columns: .8fr 1.4fr .3fr; align-items: start; gap: clamp(36px, 6vw, 110px); }
 .live-layout h2 { font-size: clamp(80px, 12vw, 210px); }
@@ -62,7 +62,7 @@
 .concerts .availability-note { color: #bbb; }
 .shop-section { padding-block: var(--section-space); }
 .shop-section .section-heading h2 { font-size: clamp(70px, 9vw, 160px); }
-.product-view-controls { display: flex; align-items: center; gap: 15px; font-size: 10px; text-transform: uppercase; letter-spacing: .06em; }
+.product-view-controls { display: flex; align-items: center; gap: 15px; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; }
 .product-view-controls button { border: 0; min-height: 44px; background: transparent; position: relative; }
 .product-view-controls button[aria-pressed='true']::after { content: ''; position: absolute; left: 0; right: 0; bottom: 6px; height: 1px; background: var(--color-doya-red); }
 .product-view-controls button[aria-pressed='false'] { color: var(--muted); }
@@ -70,9 +70,9 @@
 .product { min-width: 0; }
 .product > img { width: 100%; aspect-ratio: 1; object-fit: contain; }
 .product-caption { border-top: 1px solid var(--hairline); padding-top: 20px; margin-top: 16px; }
-.product-caption > .eyebrow { font-size: 9px; color: var(--muted); }
+.product-caption > .eyebrow { font-size: 11px; color: var(--muted); }
 .product-caption h3 { margin-top: 4px; font-family: var(--font-editorial); font-size: clamp(18px, 1.5vw, 25px); text-transform: uppercase; }
-.product-details { display: flex; justify-content: space-between; gap: 16px; margin-top: 10px; font-size: 10px; letter-spacing: .04em; text-transform: uppercase; }
+.product-details { display: flex; justify-content: space-between; gap: 16px; margin-top: 10px; font-size: 11px; letter-spacing: .04em; text-transform: uppercase; }
 .shop-note { margin-top: 42px; }
 .about-section { border-top: 1px solid var(--hairline); padding-block: var(--section-space); display: grid; grid-template-columns: .32fr 1fr 1fr; gap: clamp(32px, 5vw, 96px); align-items: center; }
 .about-label { height: 100%; display: flex; flex-direction: column; justify-content: space-between; align-items: start; }
@@ -81,17 +81,23 @@
 .about-wordmark { width: 100%; max-width: 410px; }
 .about-album { font-size: clamp(32px, 3.6vw, 60px); margin-top: 36px; margin-bottom: 20px; }
 .about-biography { margin-top: 36px; max-width: 35ch; }
-.site-footer { background: #000; color: var(--color-paper); padding-block: 58px 28px; }
-.footer-top { display: grid; grid-template-columns: 1fr 1fr 1fr; align-items: center; padding-bottom: 44px; }
-.footer-wordmark { width: 220px; }
-.footer-stars { width: 32px; justify-self: center; }
-.back-to-top { justify-self: end; font-size: 28px; text-align: center; width: 44px; line-height: 44px; }
-.footer-bottom { border-top: 1px solid #333; padding-top: 28px; display: flex; justify-content: space-between; gap: 28px; align-items: start; }
-.socials { display: flex; flex-wrap: wrap; gap: 14px 28px; font-size: 9px; letter-spacing: .06em; text-transform: uppercase; }
-.socials a { display: inline-block; padding-block: 8px; }
+.site-footer { background: #000; color: var(--color-paper); padding-block: clamp(80px, 10vw, 140px) 36px; }
+.footer-brand { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 22px; }
+.footer-wordmark { width: clamp(220px, 28vw, 420px); }
+.footer-stars { width: 44px; }
+.footer-album { font-family: var(--font-editorial); font-size: clamp(20px, 2.2vw, 32px); letter-spacing: -.02em; text-transform: uppercase; }
+.footer-album span { margin-inline: 10px; color: var(--color-doya-red); }
+.footer-socials { margin-top: clamp(48px, 6vw, 80px); }
+.socials { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 32px; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; }
+.socials a { display: inline-flex; align-items: center; min-height: 44px; position: relative; }
+.socials a::after { content: ''; position: absolute; left: 0; right: 0; bottom: 10px; height: 1px; background: var(--color-doya-red); transform: scaleX(0); transform-origin: right; transition: transform 450ms var(--motion-ease); }
+.socials a:hover::after, .socials a:focus-visible::after { transform: scaleX(1); transform-origin: left; }
 .socials span { color: #b9b7b4; }
-.footer-note { color: #a7a5a2; font-size: 10px; margin-top: 12px; }
-.copyright { font-size: 9px; letter-spacing: .035em; text-transform: uppercase; }
+.footer-note { color: #a7a5a2; font-size: 12px; margin-top: 12px; text-align: center; }
+.footer-meta { margin-top: 48px; padding-top: 28px; border-top: 1px solid #333; display: flex; justify-content: space-between; align-items: center; gap: 24px; }
+.copyright { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: #b9b7b4; }
+.back-to-top { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+.back-to-top span { font-size: 16px; }
 @media (max-width: 1100px) {
   .music-layout { grid-template-columns: .95fr 1.05fr; gap: 42px; }
   .music-aside { display: none; }
@@ -143,7 +149,7 @@
   .products { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 38px 18px; }
   .product-caption { padding-top: 15px; margin-top: 10px; }
   .product-caption h3 { font-size: 19px; line-height: 1.15; }
-  .product-details { font-size: 9px; }
+  .product-details { font-size: 11px; }
   .shop-note { max-width: 290px; }
   .about-section { grid-template-columns: 1fr; gap: 32px; }
   .about-label { grid-column: 1; }
@@ -153,10 +159,11 @@
   .about-wordmark { max-width: 280px; }
   .about-album { font-size: 42px; }
   .about-biography { margin-top: 25px; }
-  .site-footer { padding-top: 38px; }
-  .footer-wordmark { width: 126px; }
-  .footer-top { grid-template-columns: 1fr auto 1fr; padding-bottom: 28px; gap: 20px; }
-  .footer-stars { width: 22px; }
-  .footer-bottom { flex-direction: column; gap: 30px; }
-  .socials { gap: 14px 22px; }
+  .site-footer { padding-block: 56px 28px; }
+  .footer-wordmark { width: min(68vw, 240px); }
+  .footer-stars { width: 32px; }
+  .footer-album { font-size: 20px; }
+  .footer-socials { margin-top: 36px; }
+  .socials { gap: 0 18px; justify-content: center; font-size: 12px; }
+  .footer-meta { flex-direction: column; gap: 4px; text-align: center; margin-top: 36px; padding-top: 22px; }
 }

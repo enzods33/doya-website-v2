@@ -1,7 +1,7 @@
 @theme {
   --color-doya-black: #000000;
   --color-doya-white: #ffffff;
-  --color-doya-red: #e30613;
+  --color-doya-red: #c2050f;
   --color-paper: #f2efea;
   --font-editorial: 'FK Display Regular Alt', 'Iowan Old Style', 'Baskerville', 'Times New Roman', serif;
   --font-functional: 'Degular Medium', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
@@ -9,10 +9,10 @@
 
 :root {
   --page-gutter: clamp(20px, 4.8vw, 92px);
-  --section-space: clamp(64px, 7.5vw, 144px);
+  --section-space: clamp(80px, 9vw, 160px);
   --content-width: 1728px;
   --hairline: rgb(0 0 0 / 20%);
-  --muted: #625e59;
+  --muted: #4a4744;
   --motion-duration: 240ms;
   --motion-ease: cubic-bezier(.22, 1, .36, 1);
 }

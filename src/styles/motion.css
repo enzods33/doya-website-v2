@@ -14,8 +14,8 @@
 .gallery-controls button { transition: color 240ms, transform 400ms var(--motion-ease); }
 .gallery-controls button:first-of-type:hover { transform: translateX(-4px); }
 .gallery-controls button:last-of-type:hover { transform: translateX(4px); }
-.back-to-top { transition: transform 400ms var(--motion-ease); }
-.back-to-top:hover { transform: translateY(-4px); }
+.back-to-top { transition: transform 400ms var(--motion-ease), color 240ms; }
+.back-to-top:hover { transform: translateY(-3px); color: var(--color-doya-red); }
 .header-tools a { position: relative; }
 .header-tools a::after { content: ''; position: absolute; bottom: 6px; left: 0; right: 0; height: 1px; background: var(--color-doya-red); transform: scaleX(0); transform-origin: right; transition: transform 450ms var(--motion-ease); }
 .header-tools a:focus-visible::after { transform: scaleX(1); transform-origin: left; }

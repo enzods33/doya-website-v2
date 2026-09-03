@@ -1,9 +1,9 @@
 export const media = {
   hero: {
-    src: new URL('../assets/images/doya/doya-desert-05.jpg', import.meta.url).href,
-    width: 717, height: 478,
-    alt: 'DOYA marchent côte à côte entre les reliefs désertiques, en noir et blanc.',
-    sourcePage: 28,
+    src: new URL('../assets/images/doya/doya-desert-chairs-front.jpg', import.meta.url).href,
+    width: 1024, height: 1024,
+    alt: 'DOYA assises de face sur des chaises dans le désert, l’une en noir, l’autre en blanc.',
+    sourcePage: 9,
   },
   cover: {
     src: new URL('../assets/images/luna-bohemia/luna-bohemia-cover.jpg', import.meta.url).href,
