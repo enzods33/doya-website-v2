@@ -1,21 +1,68 @@
-const front = new URL('../assets/images/shop/shop-tshirt-doya-black-front.png', import.meta.url).href
-const wordmarkFront = new URL('../assets/images/shop/shop-tshirt-wordmark-black-front.png', import.meta.url).href
+// Visuels merch P224 — noms / types / couleurs → i18n (shop.product.*, shop.type.*, shop.color.*)
 
-// Noms / types / couleurs → i18n (shop.product.*, shop.type.*, shop.color.*)
+function shopImage(file) {
+  return new URL(`../assets/images/shop/${file}`, import.meta.url).href
+}
+
 export const products = [
-  { id: 'luna-a', typeKey: 'tshirt', colorKey: 'black', front,
-    back: new URL('../assets/images/shop/shop-tshirt-luna-a-black-back.png', import.meta.url).href,
-    width: 1070, height: 1070, price: null, url: null, sourcePage: 18 },
-  { id: 'luna-b', typeKey: 'tshirt', colorKey: 'black', front,
-    back: new URL('../assets/images/shop/shop-tshirt-luna-b-black-back.png', import.meta.url).href,
-    width: 1070, height: 1070, price: null, url: null, sourcePage: 19 },
-  { id: 'luna-c', typeKey: 'tshirt', colorKey: 'black', front,
-    back: new URL('../assets/images/shop/shop-tshirt-luna-c-black-back.png', import.meta.url).href,
-    width: 1070, height: 1070, price: null, url: null, sourcePage: 20 },
-  { id: 'doya', typeKey: 'tshirt', colorKey: 'black', front: wordmarkFront,
-    back: new URL('../assets/images/shop/shop-tshirt-logo-black-back.png', import.meta.url).href,
-    width: 1070, height: 1070, price: null, url: null, sourcePage: 21 },
-  { id: 'test', typeKey: 'test', colorKey: 'black', front,
-    back: new URL('../assets/images/shop/shop-tshirt-logo-black-back.png', import.meta.url).href,
-    width: 1070, height: 1070, price: null, url: null, sourcePage: null },
+  {
+    id: 'cd-luna-bohemia',
+    typeKey: 'cd',
+    colorKey: 'digipack',
+    defaultView: 'front',
+    front: shopImage('cd-luna-bohemia-front.jpg'),
+    back: shopImage('cd-luna-bohemia-back.png'),
+    width: 1024,
+    height: 1024,
+    price: null,
+    url: null,
+  },
+  {
+    id: 'luna-bohemia-white',
+    typeKey: 'tshirt',
+    colorKey: 'white',
+    defaultView: 'front',
+    front: shopImage('luna-bohemia-white-front.png'),
+    back: shopImage('luna-bohemia-white-back.png'),
+    width: 1600,
+    height: 1600,
+    price: null,
+    url: null,
+  },
+  {
+    id: 'luna-bohemia-black',
+    typeKey: 'tshirt',
+    colorKey: 'black',
+    defaultView: 'front',
+    front: shopImage('luna-bohemia-black-front.png'),
+    back: shopImage('luna-bohemia-black-back.png'),
+    width: 1600,
+    height: 1600,
+    price: null,
+    url: null,
+  },
+  {
+    id: 'doya-white',
+    typeKey: 'tshirt',
+    colorKey: 'white',
+    defaultView: 'front',
+    front: shopImage('doya-white-front.png'),
+    back: shopImage('doya-white-back.png'),
+    width: 1600,
+    height: 1600,
+    price: null,
+    url: null,
+  },
+  {
+    id: 'doya-black',
+    typeKey: 'tshirt',
+    colorKey: 'black',
+    defaultView: 'front',
+    front: shopImage('doya-black-front.png'),
+    back: shopImage('doya-black-back.png'),
+    width: 1600,
+    height: 1600,
+    price: null,
+    url: null,
+  },
 ]

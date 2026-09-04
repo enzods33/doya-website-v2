@@ -60,7 +60,13 @@ function CartPage() {
         <h1 className="editorial-title page-title">{t('cart.title')}</h1>
         {!commerceConfigured && <p className="availability-note">{t('shop.note')}</p>}
         {lines.length === 0 ? (
-          <p className="page-empty">{t('cart.empty')} <Link href="/#shop" className="text-link">{t('cart.seeCollection')} <span aria-hidden="true">↗</span></Link></p>
+          <div className="page-empty">
+            <p className="page-empty-text">{t('cart.empty')}</p>
+            <div className="page-empty-links">
+              <Link href="/" className="text-link">{t('cart.backHome')} <span aria-hidden="true">↗</span></Link>
+              <Link href="/#shop" className="text-link">{t('cart.seeCollection')} <span aria-hidden="true">↗</span></Link>
+            </div>
+          </div>
         ) : (
           <form className="cart-form" onSubmit={pay}>
             <ul className="cart-list">
@@ -72,7 +78,7 @@ function CartPage() {
                     <div>
                       <p className="eyebrow">{labels.type}</p>
                       <h2>{labels.name || line.productId}</h2>
-                      <p className="cart-meta">{t('cart.lineMeta', { color: labels.color || '—', size: line.size })}{line.priceCents ? ` · ${formatEuros(line.priceCents)}` : ''}</p>
+                      <p className="cart-meta">{t('cart.lineMeta', { color: labels.color || '—', size: line.size === 'U' ? t('shop.cdEdition') : line.size })}{line.priceCents ? ` · ${formatEuros(line.priceCents)}` : ''}</p>
                       <div className="cart-actions">
                         <label>
                           <span className="visually-hidden">{t('cart.quantity')}</span>

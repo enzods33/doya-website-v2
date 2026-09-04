@@ -2,8 +2,9 @@ export const CART_LIMITS = {
   maxLineQuantity: 5,
   maxLines: 8,
   maxTotalQuantity: 12,
-  sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
-  productIds: ['luna-a', 'luna-b', 'luna-c', 'doya', 'test'],
+  /** U = unique (CD / articles sans taillage) */
+  sizes: ['XS', 'S', 'M', 'L', 'XL', 'U'],
+  productIds: ['cd-luna-bohemia', 'luna-bohemia-white', 'luna-bohemia-black', 'doya-white', 'doya-black'],
 }
 
 export function normalizePromoCode(value) {

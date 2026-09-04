@@ -2,7 +2,8 @@ export const CART_LIMITS = {
   maxLineQuantity: 5,
   maxLines: 8,
   maxTotalQuantity: 12,
-  sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+  /** U = unique (CD / articles sans taillage) */
+  sizes: ['XS', 'S', 'M', 'L', 'XL', 'U'],
   productIdPattern: /^[a-z0-9-]+$/,
 } as const
 

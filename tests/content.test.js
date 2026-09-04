@@ -19,8 +19,25 @@ test('12 titres dans l’ordre des crédits officiels', () => {
   assert.deepEqual(album.tracks.map((track) => track.title), ['Solo tú', 'Ángel de la guarda', 'Guerrières', 'Casa de los limoneros', 'Todo de mí', 'Mariposa', 'Lo vi venir', 'Ahora', 'Dónde se va', 'Mueve', 'Luna Bohemia', 'Amor y libertad'])
 })
 
-test('aucun faux lien, prix ou concert', () => {
-  assert.equal(concerts.length, 0)
+test('concerts locaux ont une forme valide (date, ville, salle, pays, billetterie)', () => {
+  assert.ok(concerts.length > 0)
+  assert.ok(concerts.length <= 12)
+  for (const concert of concerts) {
+    assert.ok(/^\d{4}-\d{2}-\d{2}$/.test(concert.date), concert.date)
+    assert.ok(concert.city.trim().length > 0)
+    assert.ok(concert.venue.trim().length > 0)
+    assert.ok(/^[A-Z]{2,3}$/.test(concert.country), concert.country)
+    assert.ok(['link', 'soon', 'none'].includes(concert.ticketing), concert.ticketing)
+    if (concert.ticketing === 'link') {
+      assert.ok(isExternalUrl(concert.ticketUrl))
+    } else {
+      assert.ok(concert.ticketUrl === null || isExternalUrl(concert.ticketUrl))
+    }
+  }
+  assert.ok(concerts.some((c) => c.venue === 'Audentia' && c.ticketing === 'link' && isExternalUrl(c.ticketUrl)))
+})
+
+test('aucun faux lien ou prix inventé', () => {
   for (const platform of album.platforms) {
     assert.ok(platform.url === null || isExternalUrl(platform.url))
   }

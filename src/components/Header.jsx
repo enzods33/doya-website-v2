@@ -19,6 +19,18 @@ function Header() {
   const { path } = useRoute()
   const { count } = useCart()
   const { t } = useI18n()
+  const prevCountRef = useRef(count)
+  const [cartPulse, setCartPulse] = useState(false)
+
+  useEffect(() => {
+    if (count > prevCountRef.current) {
+      setCartPulse(true)
+      const timer = window.setTimeout(() => setCartPulse(false), 700)
+      prevCountRef.current = count
+      return () => window.clearTimeout(timer)
+    }
+    prevCountRef.current = count
+  }, [count])
 
   useEffect(() => {
     const dialog = dialogRef.current
@@ -74,18 +86,19 @@ function Header() {
   return (
     <m.header className={`site-header${path === '/' ? '' : ' is-page'}`} initial={reducedMotion ? false : { opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
       transition={{ duration: reducedMotion ? 0 : 0.7, delay: reducedMotion ? 0 : 0.1, ease: editorialEase }}>
-      <Link
-        href={path === '/' ? '#top' : '/'}
-        className="header-home"
-        aria-label={t('a11y.home')}
-      >
-        <HomeIcon className="header-home-icon" />
-      </Link>
-      <Link href={path === '/' ? '#about' : '/#about'} className="header-brand" aria-label={t('a11y.brandBio')}>
-        <Stars color="red" className="header-brand-star" />
-        <Wordmark className="header-brand-wordmark" />
-        <Stars color="red" className="header-brand-star" />
-      </Link>
+      <div className="header-start">
+        <Link
+          href={path === '/' ? '#top' : '/'}
+          className="header-home"
+          aria-label={t('a11y.home')}
+        >
+          <HomeIcon className="header-home-icon" />
+        </Link>
+        <Link href={path === '/' ? '#about' : '/#about'} className="header-brand" aria-label={t('a11y.brandBio')}>
+          <Wordmark className="header-brand-wordmark" />
+        </Link>
+        <Stars color="red" className="header-stars" />
+      </div>
       <nav className="desktop-navigation" aria-label={t('a11y.navMain')}>
         {navigation.map((item) => (
           <Link key={item.href} href={sectionHref(item.href)}>
@@ -98,7 +111,7 @@ function Header() {
         {commerceConfigured && (
           <Link
             href="/panier"
-            className="header-cart"
+            className={`header-cart${cartPulse ? ' is-pulse' : ''}`}
             aria-label={count ? t('nav.cartWithCount', { count }) : t('nav.cart')}
           >
             <CartIcon className="header-cart-icon" />

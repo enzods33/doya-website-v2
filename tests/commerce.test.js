@@ -20,13 +20,14 @@ test('les limites du panier restent alignées avec les fonctions', () => {
 
 test('validation du panier et fusion des lignes', () => {
   assert.equal(validateCartItems([]).ok, false)
-  assert.equal(validateCartItems([{ productId: 'test', size: 'M', quantity: 1 }]).ok, true)
+  assert.equal(validateCartItems([{ productId: 'doya-black', size: 'M', quantity: 1 }]).ok, true)
   assert.equal(validateCartItems([{ productId: 'unknown', size: 'M', quantity: 1 }]).ok, false)
-  assert.equal(validateCartItems([{ productId: 'luna-a', size: 'M', quantity: 6 }]).ok, false)
-  const merged = mergeCartLine([{ productId: 'luna-a', size: 'M', quantity: 2 }], 'luna-a', 'M', 1)
+  assert.equal(validateCartItems([{ productId: 'doya-black', size: 'M', quantity: 6 }]).ok, false)
+  assert.equal(validateCartItems([{ productId: 'doya-black', size: 'XXL', quantity: 1 }]).ok, false)
+  const merged = mergeCartLine([{ productId: 'doya-black', size: 'M', quantity: 2 }], 'doya-black', 'M', 1)
   assert.equal(merged.ok, true)
   assert.equal(merged.items[0].quantity, 3)
-  const overflow = mergeCartLine([{ productId: 'luna-a', size: 'M', quantity: 5 }], 'luna-a', 'M', 1)
+  const overflow = mergeCartLine([{ productId: 'doya-black', size: 'M', quantity: 5 }], 'doya-black', 'M', 1)
   assert.equal(overflow.ok, false)
 })
 
@@ -55,7 +56,8 @@ test('aucune clé secrète n’est embarquée dans le client', () => {
   assert.match(pendingFix, /create or replace function public.create_pending_order/)
   const checkoutFn = readFileSync(new URL('../supabase/functions/create-checkout-session/index.ts', import.meta.url), 'utf8')
   assert.match(checkoutFn, /checkoutReturnOrigin/)
-  assert.match(checkoutFn, /test: 'Article test'/)
+  assert.match(checkoutFn, /'luna-bohemia-black': 'Luna Bohemia — Noir'/)
+  assert.match(checkoutFn, /'doya-white': 'DOYA — Blanc'/)
   const clients = readFileSync(new URL('../supabase/functions/_shared/clients.ts', import.meta.url), 'utf8')
   assert.match(clients, /Authorization: `Bearer \$\{key\}`/)
 })

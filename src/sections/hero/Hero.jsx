@@ -9,6 +9,7 @@ import letterD from '../../assets/logos/glyphs/doya-d-white.svg'
 import letterO from '../../assets/logos/glyphs/doya-o-white.svg'
 import letterY from '../../assets/logos/glyphs/doya-y-white.svg'
 import letterA from '../../assets/logos/glyphs/doya-a-white.svg'
+import lunaPhases from '../../assets/hero/luna-phases.png'
 
 function Hero() {
   const reducedMotion = useReducedMotion()
@@ -35,6 +36,7 @@ function Hero() {
       </div>
       <div className="hero-copy">
         <div className="hero-caption">
+          <img src={lunaPhases} alt="" aria-hidden="true" className="hero-luna" />
           <m.div
             initial={reducedMotion ? false : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

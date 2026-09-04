@@ -3,11 +3,11 @@ import { checkoutReturnOrigin, json, preflight, rejectOrigin } from '../_shared/
 import { serviceClient, shippingCents, stripeClient, userClient } from '../_shared/clients.ts'
 
 const PRODUCT_NAMES: Record<string, string> = {
-  'luna-a': 'Luna Bohemia A',
-  'luna-b': 'Luna Bohemia B',
-  'luna-c': 'Luna Bohemia C',
-  doya: 'DOYA',
-  test: 'Article test',
+  'luna-bohemia-white': 'Luna Bohemia — Blanc',
+  'luna-bohemia-black': 'Luna Bohemia — Noir',
+  'doya-white': 'DOYA — Blanc',
+  'doya-black': 'DOYA — Noir',
+  'cd-luna-bohemia': 'Luna Bohemia — CD',
 }
 
 Deno.serve(async (req) => {
@@ -99,7 +99,7 @@ Deno.serve(async (req) => {
       unit_amount: line.unitPriceCents,
       product_data: {
         name: PRODUCT_NAMES[line.productId] ?? line.name,
-        description: `T-shirt noir · taille ${line.size}`,
+        description: line.size === 'U' ? 'Taille unique' : `Taille ${line.size}`,
         metadata: { productId: line.productId, size: line.size },
       },
     },
