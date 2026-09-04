@@ -1,5 +1,5 @@
 * { box-sizing: border-box; }
-html { scroll-padding-top: 0; background: var(--color-stone); }
+html { scroll-padding-top: var(--header-height); background: var(--color-stone); }
 body { margin: 0; color: var(--ink); font-family: var(--font-functional); font-size: 16px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
 button, a { -webkit-tap-highlight-color: transparent; }
 button { font: inherit; color: inherit; cursor: pointer; }

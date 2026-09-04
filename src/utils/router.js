@@ -28,14 +28,21 @@ export function navigate(to) {
   if (url.hash) {
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        const target = document.querySelector(url.hash)
-        if (!target) return
-        window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY, left: 0, behavior: 'auto' })
+        scrollToHash(url.hash)
       })
     })
   } else {
     window.scrollTo(0, 0)
   }
+}
+
+function scrollToHash(hash) {
+  const target = document.querySelector(hash)
+  if (!target) return
+  const header = document.querySelector('.site-header')
+  const offset = header ? header.getBoundingClientRect().height : 56
+  const top = target.getBoundingClientRect().top + window.scrollY - offset
+  window.scrollTo({ top: Math.max(0, top), left: 0, behavior: 'auto' })
 }
 
 export function useRoute() {

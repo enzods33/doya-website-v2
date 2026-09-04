@@ -50,8 +50,8 @@ function Hero() {
         <div className="hero-cta-group">
           <m.div
             className="hero-cta-inner"
-            initial={reducedMotion ? false : { opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={reducedMotion ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
             transition={{ duration: reducedMotion ? 0 : 1, delay: reducedMotion ? 0 : 0.62, ease: editorialEase }}
           >
             <div className="hero-cta-primary">

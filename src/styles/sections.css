@@ -11,7 +11,7 @@
 .music-section {
   position: relative;
   isolation: isolate;
-  scroll-margin-top: 0;
+  scroll-margin-top: var(--header-height);
   background: var(--color-stone);
   border-top: 1px solid var(--section-rule);
   min-height: 100svh;
@@ -117,6 +117,7 @@
 }
 .gallery-stars { width: 40px; margin: 44px auto 0; }
 .live-section {
+  scroll-margin-top: var(--header-height);
   background: var(--color-sand);
   color: var(--ink);
   border-top: 1px solid var(--section-rule);
@@ -279,6 +280,7 @@ a.concert-tickets:focus-visible {
   justify-self: end;
 }
 .shop-section {
+  scroll-margin-top: var(--header-height);
   background: var(--color-mist);
   border-top: 1px solid var(--section-rule);
   padding-block: var(--section-space);
@@ -419,6 +421,7 @@ a.concert-tickets:focus-visible {
 .product-details { display: flex; justify-content: space-between; gap: 16px; margin-top: 10px; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; }
 .shop-note { margin-top: 42px; }
 .about-section {
+  scroll-margin-top: var(--header-height);
   background: var(--color-sand);
   border-top: 1px solid var(--section-rule);
 }
@@ -455,6 +458,7 @@ a.concert-tickets:focus-visible {
   color: var(--muted);
 }
 .site-footer {
+  scroll-margin-top: var(--header-height);
   background: var(--color-taupe);
   color: var(--ink);
   border-top: 1px solid var(--section-rule);
