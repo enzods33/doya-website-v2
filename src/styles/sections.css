@@ -382,7 +382,7 @@ a.concert-tickets:focus-visible {
   width: 100%;
   max-height: min(70svh, 640px);
   object-fit: contain;
-  background: #fff;
+  background: transparent;
 }
 .product-zoom-controls {
   margin-top: 0;

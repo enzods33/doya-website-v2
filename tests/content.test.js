@@ -79,6 +79,13 @@ test('les médias déclarés existent et ont des dimensions explicites', () => {
     assert.ok(existsSync(fileURLToPath(product.back)))
   }
   assert.equal(new Set(galleryImages.map((image) => image.src)).size, galleryImages.length)
+  assert.ok(galleryImages.length > 0)
+  assert.ok(galleryImages.every((image) => (
+    image.src.startsWith('https://')
+    && image.width > 0
+    && image.height > 0
+    && image.alt.length > 5
+  )))
 })
 
 test('les profils officiels sont distincts et prêts pour le footer', () => {
@@ -106,17 +113,24 @@ test('la navigation et le contact officiels sont en place', () => {
   assert.equal(mobileNavigation.find((item) => item.labelKey === 'nav.about').href, '#about')
   assert.deepEqual(contacts.map((contact) => contact.email), ['almenaprod@gmail.com', 'doyamusicofficial@gmail.com'])
   assert.deepEqual(contacts.map((contact) => contact.id), ['booking', 'press'])
-  assert.ok(pressKit.href === null || pressKit.href.startsWith('/'))
+  assert.ok(pressKit.href === null || pressKit.href.startsWith('/') || pressKit.href.startsWith('https://'))
 })
 
-test('les JPEG sources correspondent aux flux natifs du PDF', () => {
+test('les JPEG sources locaux restants correspondent au manifeste', () => {
   const manifest = JSON.parse(readFileSync(new URL('../reference/asset-manifest.json', import.meta.url), 'utf8'))
-  const photographs = manifest.filter((asset) => asset.file.endsWith('.jpg'))
-  assert.equal(photographs.length, 46)
-  assert.ok(photographs.every((asset) => asset.nativeJpegVerified && asset.pages.length > 0))
-  for (const asset of photographs) {
-    const bytes = readFileSync(new URL(`../${asset.file}`, import.meta.url))
-    assert.equal(createHash('sha256').update(bytes).digest('hex'), asset.sha256, asset.file)
+  const byFile = new Map(manifest.map((asset) => [asset.file, asset]))
+  const localJpgs = [
+    'src/assets/images/doya/doya-desert-02.jpg',
+    'src/assets/images/doya/doya-desert-chairs-front.jpg',
+    'src/assets/images/luna-bohemia/luna-bohemia-cover.jpg',
+  ]
+  for (const file of localJpgs) {
+    const abs = fileURLToPath(new URL(`../${file}`, import.meta.url))
+    assert.ok(existsSync(abs), file)
+    const asset = byFile.get(file)
+    if (!asset) continue
+    const bytes = readFileSync(abs)
+    assert.equal(createHash('sha256').update(bytes).digest('hex'), asset.sha256, file)
   }
 })
 

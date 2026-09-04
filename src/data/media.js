@@ -1,3 +1,15 @@
+const R2_BIO = 'https://pub-5b2b2b3b50ba46c485eeff926fa26420.r2.dev'
+
+function bioWeb(file, width, height) {
+  return {
+    src: `${R2_BIO}/bio/web/${file}`,
+    width,
+    height,
+    alt: 'Photographie DOYA — Luna Bohemia.',
+  }
+}
+
+/** Médias encore locaux (hero + album). Le reste de la bio est sur R2. */
 export const media = {
   hero: {
     src: new URL('../assets/images/doya/doya-desert-chairs-front.jpg', import.meta.url).href,
@@ -17,36 +29,37 @@ export const media = {
     alt: 'Les deux artistes de DOYA se tiennent à distance sur une crête de roche claire.',
     sourcePage: 26,
   },
-  portrait: {
-    src: new URL('../assets/images/doya/doya-portrait-02.jpg', import.meta.url).href,
-    width: 717, height: 478,
-    alt: 'Portrait de DOYA face à l’objectif devant une paroi rocheuse.',
-    sourcePage: 27,
-  },
-  about: {
-    src: new URL('../assets/images/doya/doya-portrait-03.jpg', import.meta.url).href,
-    width: 717, height: 478,
-    alt: 'DOYA face à l’objectif devant la roche claire de Luna Bohemia.',
-    sourcePage: 27,
-  },
-  desert: {
-    src: new URL('../assets/images/doya/doya-desert-03.jpg', import.meta.url).href,
-    width: 717, height: 1021,
-    alt: 'DOYA dans l’étendue des reliefs désertiques de Luna Bohemia.',
-    sourcePage: 27,
-  },
-  chairs: {
-    src: new URL('../assets/images/luna-bohemia/luna-bohemia-landscape-09.jpg', import.meta.url).href,
-    width: 717, height: 494,
-    alt: 'Deux chaises se détachent sur une crête du paysage désertique.',
-    sourcePage: 25,
-  },
-  gesture: {
-    src: new URL('../assets/images/doya/doya-portrait-05.jpg', import.meta.url).href,
-    width: 717, height: 478,
-    alt: 'Une artiste de DOYA lève les bras vers le ciel bleu.',
-    sourcePage: 29,
-  },
 }
 
-export const galleryImages = [media.portrait, media.desert, media.editorial, media.gesture, media.chairs]
+/** Galerie Bio — versions web optimisées sur Cloudflare R2 */
+export const galleryImages = [
+  bioWeb('_1460826_C.jpg', 1201, 1600),
+  bioWeb('_ENF7092_C.jpg', 1066, 1600),
+  bioWeb('_ENF7125_C.jpg', 1067, 1600),
+  bioWeb('_ENF7191_C.jpg', 1600, 1067),
+  bioWeb('_ENF7222_C.jpg', 1600, 1066),
+  bioWeb('_ENF7231_C.jpg', 1600, 1067),
+  bioWeb('_ENF7237_C.jpg', 1600, 1067),
+  bioWeb('_ENF7240_C.jpg', 1067, 1600),
+  bioWeb('_ENF7252_C.jpg', 1600, 1067),
+  bioWeb('_ENF7254_C.jpg', 1067, 1600),
+  bioWeb('_ENF7267_C.jpg', 1066, 1600),
+  bioWeb('_ENF7270_C.jpg', 1600, 1067),
+  bioWeb('_ENF7292_C.jpg', 1600, 1066),
+  bioWeb('_ENF7322_C.jpg', 1067, 1600),
+  bioWeb('_ENF7328_C.jpg', 1066, 1600),
+  bioWeb('_ENF7421_C.jpg', 1067, 1600),
+  bioWeb('_ENF7445_C.jpg', 1600, 1600),
+  bioWeb('_ENF7453_C.jpg', 1067, 1600),
+  bioWeb('_ENF7460_C.jpg', 1067, 1600),
+  bioWeb('_ENF7461_C.jpg', 1067, 1600),
+  bioWeb('_ENF7468_C.jpg', 1067, 1600),
+  bioWeb('_ENF7472_C.jpg', 1111, 1600),
+  bioWeb('_ENF7535_C.jpg', 1067, 1600),
+  bioWeb('_ENF7545_C.jpg', 1067, 1600),
+  bioWeb('_ENF7561_C.jpg', 1067, 1600),
+  bioWeb('_ENF7568_C.jpg', 1067, 1600),
+  bioWeb('_ENF7578_C.jpg', 1600, 1067),
+  bioWeb('_ENF7582_C.jpg', 1600, 1067),
+  bioWeb('_ENF7591_C.jpg', 1600, 1067),
+]

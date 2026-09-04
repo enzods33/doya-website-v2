@@ -11,5 +11,5 @@ export const contacts = [
 ]
 
 export const pressKit = {
-  href: null,
+  href: 'https://pub-5b2b2b3b50ba46c485eeff926fa26420.r2.dev/pressbook/press%20book%20Fr%20A.pdf',
 }

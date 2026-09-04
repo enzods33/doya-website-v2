@@ -65,7 +65,7 @@ function Footer() {
             <p className="eyebrow">{kit.label}</p>
             <p className="footer-contact-note">{pressReady ? kit.note : kit.pendingNote}</p>
             {pressReady ? (
-              <a className="footer-cta" href={pressKit.href} download>{kit.cta}</a>
+              <a className="footer-cta" href={pressKit.href} target="_blank" rel="noopener noreferrer">{kit.cta}</a>
             ) : (
               <span className="footer-cta is-disabled" aria-disabled="true">{kit.cta}</span>
             )}

@@ -72,6 +72,7 @@ function Shop() {
         delete next[product.id]
         return next
       })
+      unlockManual(product.id)
       resumeTimers.current[product.id] = null
     }, HOVER_RESUME_MS)
   }
@@ -80,6 +81,7 @@ function Shop() {
     setViews((current) => ({ ...current, [product.id]: next }))
     setManualLock((current) => ({ ...current, [product.id]: true }))
     clearResumeTimer(product.id)
+    // Survol : garder la pause auto, mais laisser Face/Dos piloter la vue
     if (isTshirt(product) && !reducedMotion && !finePointerHover()) {
       resumeTimers.current[product.id] = window.setTimeout(() => {
         unlockManual(product.id)
@@ -89,8 +91,8 @@ function Shop() {
   }
 
   function displayedViewFor(product, index) {
-    if (hoverPaused[product.id]) return 'front'
     if (manualLock[product.id] && views[product.id]) return views[product.id]
+    if (hoverPaused[product.id]) return 'front'
     if (!isTshirt(product) || reducedMotion) return views[product.id] ?? 'front'
     return (flipTick + index) % 2 === 0 ? 'front' : 'back'
   }
