@@ -4,12 +4,17 @@ Site de présentation indépendant, créé de zéro en React et JavaScript. L’
 
 ## État actuel
 
-- **Base technique** : React 19 + Vite 8, Tailwind 4, Motion 13. `npm run lint`, `npm test` (contenu + commerce) et `npm run build` passent.
+- **Base technique** : React 19 + Vite 8, Tailwind 4, Motion 13, carrousel Embla. Node 22. `npm run lint`, `npm test` (contenu, commerce, concerts, i18n — 23 tests) et `npm run build` passent.
+- **Internationalisation** : FR (défaut), ES, EN, PT via `src/i18n/` (détection navigateur, persistance `localStorage`, sélecteur `LanguageSwitcher`). Aucune bibliothèque i18n externe.
+- **Design** : refonte réalisée — nouveau Hero et CTA « glass », header **sticky** avec ancrage corrigé, sections re-stylées (gris chauds, titres plus calmes), chrome mobile/desktop clarifié, icônes de plateformes. Des affinages d’accessibilité/typographie issus de l’audit peuvent rester à faire.
 - **Environnement Cloud Agent** : `.cursor/environment.json` en place (voir plus bas).
 - **Polices** : `FK Display Regular Alt` et `Degular Medium` câblées via `src/styles/fonts.css` ; en attente des fichiers licenciés dans `src/assets/fonts/` (repli automatique d’ici là).
-- **Liens externes** : audités et vérifiés. Sept profils artistes au footer (dont Deezer) ; deux avances singles reliées (`Mariposa`, `Mueve`) ; album complet et dix autres titres en attente de sortie (`null`). Détails dans `reference/social-links.md`.
-- **Design** : un audit design a été réalisé (Hero et système global : contraste, tailles de texte, header, placement des étoiles). Une refonte est prévue sur une branche dédiée ; le design actuel n’a pas encore été modifié.
-- **Boutique** : non activée (Supabase/Stripe optionnels) ; le Shop reste une collection visuelle sans clés.
+- **Liens externes** : audités et vérifiés. Sept profils au footer, groupés `listen` (Spotify, Apple Music, Deezer, YouTube) et `social` (Instagram, TikTok, Facebook). Deux avances singles reliées (`Mariposa`, `Mueve`) ; album complet et dix autres titres en attente de sortie (`null`). Détails dans `reference/social-links.md`.
+- **Boutique / merch** : T-shirts (Luna Bohemia et DOYA, blanc/noir) et CD digipack Luna Bohemia. Paiement **Stripe Checkout uniquement** via Edge Functions, stock et codes promo côté Supabase. Activée dès que les clés Supabase publiques sont présentes et qu’un produit est `on_sale`.
+- **Live** : dates chargées depuis Supabase (billetterie, fenêtre passé/à venir), section « Dates ».
+- **Médias** : la galerie Bio peut être servie depuis Cloudflare R2 (`VITE_ASSETS_URL`).
+- **Déploiement** : workflow GitHub Pages (`.github/workflows/pages.yml`) avec base path Vite gérée par le routeur.
+- **Développement local de la boutique** : `src/commerce/config.js` autorise un Supabase **local** (127.0.0.1) en mode dev ; `scripts/dev-supabase.sh` et `supabase/functions/.env.example` aident à lancer base + Edge Functions. Voir plus bas.
 
 ## Lancer le site
 
@@ -35,16 +40,31 @@ Le build est généré dans `dist/`. L’aperçu du build utilise le port `4174`
 
 Le fichier `.cursor/environment.json` décrit l’environnement des Cloud Agents Cursor : `install` exécute `npm ci`, un terminal `dev` lance `npm run dev`, et le port `5174` est exposé. Il permet à un agent (ou à un aperçu cloud) de démarrer le site déjà installé et en cours d’exécution, sans configuration manuelle. Aucun secret n’y figure : la boutique (Supabase/Stripe) reste optionnelle et le site tourne sans clés.
 
+## Développement local de la boutique (Supabase + Stripe)
+
+Pour essayer le Shop et le tunnel Stripe en local, sans projet Supabase hébergé :
+
+1. Prérequis : Docker et la CLI Supabase.
+2. Copier `supabase/functions/.env.example` en `supabase/functions/.env.local` et renseigner `STRIPE_SECRET_KEY` (clé de **test** `sk_test_…`).
+3. Lancer `scripts/dev-supabase.sh` : il démarre le stack Supabase (base + migrations, qui activent le merch) et sert les Edge Functions.
+4. Créer `.env.local` du site avec `VITE_SUPABASE_URL=http://127.0.0.1:54321` et la clé anon locale.
+
+En mode dev uniquement, `src/commerce/config.js` accepte une URL Supabase locale (`127.0.0.1`/`localhost`) ; en build de production, seuls les domaines Supabase hébergés en `https` sont autorisés. Sans clé Stripe, tout le Shop fonctionne mais le paiement renvoie proprement `stripe_unavailable`.
+
+Note : les Edge Functions et l’API Stripe nécessitent un accès Internet **depuis les conteneurs Docker** ; certains environnements imbriqués le bloquent. Un environnement Docker imbriqué peut aussi requérir le driver `fuse-overlayfs` et `net.bridge.bridge-nf-call-iptables=0` (voir `scripts/dev-supabase.sh`).
+
 ## Où modifier les contenus ?
 
 | Besoin | Fichier |
 | --- | --- |
 | Titres et liens d’écoute | `src/data/album.js` |
-| Dates, villes, salles, billetterie | `src/data/live.js` |
-| Vêtements, visuels | `src/data/products.js` |
+| Dates, villes, salles, billetterie | Supabase (concerts) — repli/libellés dans `src/data/live.js` |
+| Produits (T-shirts, CD), visuels | `src/data/products.js` |
 | Prix, stock, promos, vente | Dashboard Supabase — `reference/commerce.md` |
-| Liens sociaux | `src/data/socials.js` |
+| Liens d’écoute et réseaux (groupes `listen`/`social`) | `src/data/socials.js` |
+| Contacts (booking, presse…) | `src/data/contacts.js` |
 | Biographie, année, libellés et mentions | `src/data/siteContent.js` |
+| Traductions FR/ES/EN/PT | `src/i18n/locales/*.js` |
 | Photographies, dimensions et textes alternatifs | `src/data/media.js` |
 | Couleurs, polices et espacements | `src/styles/tokens.css` |
 
@@ -61,47 +81,26 @@ doya-website-v2/
 │   ├── App.jsx             Ordre des sections, aucune logique métier
 │   ├── main.jsx            Point d’entrée React
 │   ├── assets/
-│   │   ├── images/
-│   │   │   ├── doya/
-│   │   │   ├── luna-bohemia/
-│   │   │   ├── live/        Vide : aucune photo live fournie
-│   │   │   └── shop/
-│   │   ├── logos/glyphs/    Logos natifs + lettres séparées sans redessin
-│   │   ├── icons/          Deux étoiles officielles
+│   │   ├── images/         doya, luna-bohemia, shop
+│   │   ├── hero/           luna-phases
+│   │   ├── icons/          étoiles officielles + icons/platforms (icônes plateformes)
+│   │   ├── textures/       film-grain
+│   │   ├── logos/glyphs/   Logos natifs + lettres séparées sans redessin
 │   │   └── fonts/          Vide : licences et fichiers officiels attendus
-│   ├── components/
-│   │   ├── Brand.jsx
-│   │   ├── Header.jsx
-│   │   ├── Footer.jsx
-│   │   ├── Photo.jsx
-│   │   ├── Reveal.jsx      Apparitions au défilement
-│   │   └── TransitionImage.jsx  Fondus galerie / vêtements
-│   ├── sections/
-│   │   ├── hero/Hero.jsx
-│   │   ├── music/Music.jsx
-│   │   ├── editorial/Editorial.jsx
-│   │   ├── photography/Photography.jsx
-│   │   ├── live/Live.jsx
-│   │   ├── shop/Shop.jsx
-│   │   └── about/About.jsx
+│   ├── components/         Brand, Header, Footer, Photo, Reveal, TransitionImage,
+│   │                       LanguageSwitcher, PlatformIcon, Link
+│   ├── sections/           hero, music, live, shop, about (galerie repliée dans Bio)
+│   ├── i18n/               I18nProvider, index, locales/{fr,es,en,pt}
 │   ├── pages/              Accueil, panier, compte, commande
-│   ├── commerce/           Catalogue distant, panier, auth, appels fonctions
-│   ├── data/               album, live, products, socials, siteContent, media
+│   ├── commerce/           Catalogue, panier, auth, concerts, appels Edge Functions
+│   ├── data/               album, live, products, socials, contacts, siteContent, media
 │   ├── styles/             index, fonts, tokens, base, hero, sections, motion, commerce
-│   └── utils/              Validation HTTPS, routeur léger, réglages des mouvements
-├── supabase/               Migration, RLS, Edge Functions Stripe
-├── reference/
-│   ├── direction-artistique-luna-bohemia.pdf
-│   ├── web-reference.png
-│   ├── assets-report.md
-│   ├── asset-manifest.json
-│   ├── project-notes.md
-│   ├── motion-notes.md
-│   ├── social-links.md
-│   ├── qa-report.md
-│   └── screenshots/
-├── scripts/                Audit des sources, séparation des tracés natifs
-├── tests/                  content.test.js, commerce.test.js
+│   └── utils/              Validation HTTPS, routeur léger (base path), assets, mouvements
+├── supabase/               Migrations, RLS, Edge Functions Stripe (+ functions/.env.example)
+├── reference/              PDF direction artistique, rapports, social-links, screenshots
+├── scripts/                Audit des sources + dev-supabase.sh (stack local)
+├── tests/                  content, commerce, concerts, i18n (23 tests)
+├── .github/workflows/      pages.yml (déploiement GitHub Pages)
 ├── .cursor/                environment.json (environnement Cloud Agent)
 ├── index.html              Métadonnées de base
 ├── vite.config.js
@@ -115,7 +114,7 @@ La boutique se branche via Supabase (stock, promo, compte) et Stripe Checkout (p
 
 ## Dépendances
 
-React / React DOM 19.2.8, Vite 8.2.2, Tailwind CSS / plugin Vite 4.3.3, Motion 13.1.1, plugin React Vite 6.1.0, Oxlint 1.79.0, Supabase JS 2.x. Les tests utilisent le runner natif de Node.js. Stripe n’est appelé que depuis les Edge Functions.
+React / React DOM 19.2.8, Vite 8.2.2, Tailwind CSS / plugin Vite 4.3.3, Motion 13.1.1, Embla Carousel (react + class-names) 8.6.x, plugin React Vite 6.1.0, Oxlint 1.79.0, Supabase JS 2.x. L’internationalisation est maison (aucune bibliothèque i18n). Les tests utilisent le runner natif de Node.js. Stripe n’est appelé que depuis les Edge Functions.
 
 Les scripts Python d’audit sont facultatifs pour le développement du site. Ils demandent `pypdf`, `Pillow` et Poppler (`pdftoppm`). Les résultats de provenance sont déjà conservés dans `reference/`.
 
