@@ -201,19 +201,19 @@
   right: 0.2rem;
   bottom: 0.35rem;
 }
-.menu-icon { display: flex; flex-direction: column; justify-content: space-between; width: clamp(1.62rem, 6.6vw, 1.92rem); height: clamp(1.02rem, 4.08vw, 1.2rem); }
-.menu-icon-bar { display: block; width: 100%; height: 1.75px; background: currentColor; border-radius: 0; box-shadow: none; }
+.menu-icon { display: flex; flex-direction: column; justify-content: space-between; width: 1.35rem; height: 0.85rem; }
+.menu-icon-bar { display: block; width: 100%; height: 1.5px; background: currentColor; border-radius: 0; box-shadow: none; }
 .menu-trigger:active .menu-icon { opacity: .72; }
 .mobile-menu {
   position: relative;
   margin: 0;
-  padding: 28px var(--page-gutter) clamp(28px, 5svh, 40px);
+  padding: 22px var(--page-gutter) 28px;
   border: 0;
   width: 100%;
   max-width: none;
   height: 100svh;
   max-height: none;
-  background: var(--color-sand);
+  background: var(--color-mist);
   color: var(--ink);
   box-sizing: border-box;
 }
@@ -224,28 +224,52 @@
 .mobile-menu:not([open]) {
   display: none;
 }
-.mobile-menu::backdrop { background: var(--color-taupe); }
-.mobile-menu-top { display: flex; justify-content: space-between; align-items: center; }
-.mobile-wordmark { width: 100px; }
-.mobile-menu-top button { min-height: 44px; border: 0; background: none; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
-.mobile-menu-top button span { margin-left: 16px; font-size: 26px; vertical-align: middle; }
-.mobile-menu nav { display: grid; margin-top: clamp(36px, 7svh, 88px); }
-.mobile-menu nav a { padding: 14px 0; font-family: var(--font-editorial); font-size: clamp(28px, 8vw, 42px); letter-spacing: .04em; line-height: 1.15; text-transform: uppercase; border-bottom: 1px solid var(--section-rule); }
-.mobile-menu nav a span { display: inline-block; width: 42px; font: 12px var(--font-functional); color: var(--muted); vertical-align: middle; }
+.mobile-menu::backdrop { background: rgb(44 41 38 / 42%); }
+.mobile-menu-top { display: flex; justify-content: space-between; align-items: center; padding-bottom: 18px; border-bottom: 1px solid var(--section-rule); }
+.mobile-wordmark { width: 88px; }
+.mobile-menu-top button { min-height: 44px; border: 0; background: none; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.mobile-menu-top button span { margin-left: 12px; font-size: 22px; vertical-align: middle; color: var(--ink); }
+.mobile-menu nav { display: grid; margin-top: clamp(28px, 5svh, 44px); gap: 0; }
+.mobile-menu nav a {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 15px 0;
+  font-family: var(--font-editorial);
+  font-size: clamp(22px, 6.2vw, 30px);
+  letter-spacing: .03em;
+  line-height: 1.1;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: inherit;
+  border-bottom: 1px solid rgb(44 41 38 / 14%);
+}
+.mobile-menu nav a span {
+  display: inline-block;
+  min-width: 1.6rem;
+  font: 500 11px/1 var(--font-functional);
+  letter-spacing: .08em;
+  color: var(--muted);
+  vertical-align: baseline;
+}
+.mobile-language-switcher {
+  margin-top: clamp(24px, 4svh, 36px);
+  align-self: flex-start;
+}
 .mobile-menu-bottom {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: end;
   margin-top: auto;
-  padding-bottom: 4px;
+  padding-top: 24px;
+  border-top: 1px solid rgb(44 41 38 / 14%);
 }
-.mobile-menu-bottom p { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; text-align: right; color: var(--muted); }
+.mobile-menu-bottom p { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; text-align: right; color: var(--muted); margin: 0; }
 .mobile-menu-stars {
-  position: absolute;
-  left: var(--page-gutter);
-  bottom: clamp(24px, 4.5svh, 36px);
-  width: 48px;
+  position: static;
+  width: 36px;
   height: auto;
+  flex-shrink: 0;
 }
 .hero { position: relative; isolation: isolate; width: 100%; height: calc(100svh - var(--header-height)); min-height: calc(640px - var(--header-height)); max-height: 1400px; background: var(--color-sand); overflow: hidden; }
 .hero::before, .hero::after { content: ''; position: absolute; left: 0; right: 0; pointer-events: none; z-index: 1; }
@@ -364,19 +388,19 @@
   background:
     linear-gradient(
       180deg,
-      rgb(58 55 52 / 72%) 0%,
-      rgb(44 41 38 / 78%) 52%,
-      rgb(36 33 30 / 82%) 100%
+      rgb(92 88 84 / 58%) 0%,
+      rgb(72 68 64 / 62%) 52%,
+      rgb(58 55 52 / 68%) 100%
     );
   backdrop-filter: blur(14px) saturate(1.05);
   -webkit-backdrop-filter: blur(14px) saturate(1.05);
   box-shadow:
-    0 1px 0 rgb(255 255 255 / 18%),
-    0 10px 24px rgb(0 0 0 / 32%),
-    0 3px 8px rgb(0 0 0 / 22%),
-    inset 0 1px 0 rgb(255 255 255 / 22%),
-    inset 0 -1px 0 rgb(0 0 0 / 28%);
-  text-shadow: 0 1px 1px rgb(0 0 0 / 35%);
+    0 1px 0 rgb(255 255 255 / 22%),
+    0 10px 24px rgb(0 0 0 / 26%),
+    0 3px 8px rgb(0 0 0 / 18%),
+    inset 0 1px 0 rgb(255 255 255 / 28%),
+    inset 0 -1px 0 rgb(0 0 0 / 22%);
+  text-shadow: 0 1px 1px rgb(0 0 0 / 30%);
   position: relative;
   transform: translateZ(0);
   transition:
@@ -401,22 +425,22 @@
 .hero-cta:hover,
 .hero-cta:focus-visible {
   color: #fff;
-  border-color: rgb(255 255 255 / 40%);
-  border-top-color: rgb(255 255 255 / 50%);
-  border-bottom-color: rgb(0 0 0 / 40%);
+  border-color: rgb(255 255 255 / 44%);
+  border-top-color: rgb(255 255 255 / 55%);
+  border-bottom-color: rgb(0 0 0 / 36%);
   background:
     linear-gradient(
       180deg,
-      rgb(72 68 64 / 78%) 0%,
-      rgb(52 49 46 / 84%) 52%,
-      rgb(42 39 36 / 88%) 100%
+      rgb(110 105 100 / 66%) 0%,
+      rgb(84 80 76 / 70%) 52%,
+      rgb(68 64 60 / 74%) 100%
     );
   box-shadow:
-    0 1px 0 rgb(255 255 255 / 24%),
-    0 14px 30px rgb(0 0 0 / 36%),
-    0 4px 10px rgb(0 0 0 / 24%),
-    inset 0 1px 0 rgb(255 255 255 / 28%),
-    inset 0 -1px 0 rgb(0 0 0 / 24%);
+    0 1px 0 rgb(255 255 255 / 28%),
+    0 14px 30px rgb(0 0 0 / 30%),
+    0 4px 10px rgb(0 0 0 / 20%),
+    inset 0 1px 0 rgb(255 255 255 / 32%),
+    inset 0 -1px 0 rgb(0 0 0 / 20%);
 }
 @media (hover: hover) and (pointer: fine) {
   .hero-cta:hover::after,

@@ -85,25 +85,77 @@
 .gallery-controls p { margin-right: 26px; font-size: 12px; }
 .gallery-controls button { background: none; border: 0; min-width: 44px; height: 44px; font-family: var(--font-editorial); font-size: 28px; line-height: 1; transition: color var(--motion-duration); color: inherit; }
 .gallery-controls button:hover { color: var(--color-doya-red); }
-.about-gallery-viewport {
-  overflow: hidden;
-  cursor: grab;
-  touch-action: pan-y;
-  margin-inline: calc(var(--page-gutter) * -0.35);
-  padding-inline: calc(var(--page-gutter) * 0.35);
+
+/* —— Galerie Bio —— */
+.about-gallery {
+  --about-slide: min(38vw, 480px);
+  --about-slide-gap: 18px;
+  padding-block: 0 clamp(48px, 6vw, 88px);
 }
+.about-gallery-toolbar {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: clamp(20px, 2.6vw, 32px);
+}
+.about-gallery-count {
+  margin: 0;
+  letter-spacing: .16em;
+  font-variant-numeric: tabular-nums;
+}
+.about-gallery-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+.about-gallery-nav button {
+  background: none;
+  border: 0;
+  min-width: 44px;
+  height: 44px;
+  font-family: var(--font-editorial);
+  font-size: 24px;
+  line-height: 1;
+  color: inherit;
+  cursor: pointer;
+  transition: color var(--motion-duration);
+}
+.about-gallery-nav button:hover { color: var(--color-doya-red); }
+.about-gallery-viewport {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: calc((100% - var(--about-slide)) / 2);
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  cursor: grab;
+  touch-action: pan-x;
+  scrollbar-width: none;
+}
+.about-gallery-viewport::-webkit-scrollbar { display: none; }
 .about-gallery-viewport:active { cursor: grabbing; }
 .about-gallery-track {
   display: flex;
   align-items: center;
-  will-change: transform;
+  width: max-content;
+  gap: var(--about-slide-gap);
+  padding-inline: calc((100vw - var(--about-slide)) / 2);
+  box-sizing: border-box;
 }
 .about-gallery-slide {
-  flex: 0 0 auto;
-  width: 72%;
-  min-width: 0;
-  padding-inline: clamp(6px, 1vw, 14px);
+  flex: 0 0 var(--about-slide);
+  width: var(--about-slide);
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
   box-sizing: border-box;
+  transition: opacity 480ms var(--motion-ease), transform 480ms var(--motion-ease);
+  opacity: .38;
+  transform: scale(.92);
+}
+.about-gallery-slide.is-active {
+  opacity: 1;
+  transform: scale(1);
 }
 .about-gallery-card {
   display: block;
@@ -111,10 +163,14 @@
   margin: 0;
   padding: 0;
   border: 0;
-  background: transparent;
+  background: rgb(44 41 38 / 5%);
   cursor: zoom-in;
   color: inherit;
   overflow: hidden;
+  aspect-ratio: 3 / 4;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: pan-x;
 }
 .about-gallery-card:focus-visible {
   outline: 2px solid var(--color-doya-red);
@@ -123,21 +179,42 @@
 .about-gallery-card img {
   display: block;
   width: 100%;
-  aspect-ratio: 3 / 2;
+  height: 100%;
   object-fit: cover;
+  object-position: center;
   user-select: none;
   -webkit-user-drag: none;
   pointer-events: none;
 }
-.about-gallery-caption {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  margin-top: 18px;
-  padding-inline: clamp(8px, 16vw, 18%);
-  color: var(--muted);
+.about-gallery-footer {
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+  margin-top: clamp(24px, 3.2vw, 40px);
 }
-.gallery-stars { width: 40px; margin: 44px auto 0; }
+.about-gallery-progress {
+  width: min(100%, 180px);
+  height: 1px;
+  background: rgb(44 41 38 / 14%);
+  overflow: hidden;
+}
+.about-gallery-progress span {
+  display: block;
+  height: 100%;
+  background: var(--color-doya-red);
+  transition: width 320ms var(--motion-ease);
+}
+.about-gallery-caption {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.gallery-stars { width: 32px; margin: 0; }
 
 .photo-lightbox {
   position: fixed;
@@ -411,17 +488,55 @@ a.concert-tickets:focus-visible {
   border-top: 1px solid var(--section-rule);
   padding-block: var(--section-space);
 }
-.shop-section .section-heading h2 { font-size: clamp(28px, 3.2vw, 44px); }
-.shop-promo {
-  margin-top: 10px;
-  max-width: 42ch;
+.shop-heading {
   display: grid;
-  gap: 4px;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto;
+  column-gap: clamp(20px, 3vw, 40px);
+  align-items: end;
+  margin-bottom: clamp(28px, 3.5vw, 52px);
 }
-.shop-promo .availability-note {
-  margin-top: 0;
+.shop-heading h2 {
+  grid-column: 1;
+  grid-row: 1;
+  margin: 0;
+  font-size: clamp(32px, 4.2vw, 52px);
+  letter-spacing: .06em;
+  line-height: .95;
 }
-.shop-promo strong,
+.shop-collection {
+  grid-column: 2;
+  grid-row: 1;
+  margin: 0;
+  align-self: end;
+  text-align: right;
+  letter-spacing: .14em;
+  color: var(--muted);
+}
+.shop-promo {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 28px;
+  margin: 18px 0 0;
+  padding: 16px 0 0;
+  border-top: 1px solid var(--section-rule);
+  list-style: none;
+}
+.shop-promo li {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: .04em;
+  line-height: 1.4;
+}
+@media (min-width: 768px) {
+  .shop-promo li + li {
+    padding-left: 28px;
+    border-left: 1px solid var(--section-rule);
+  }
+}
 .cart-promo-msg strong {
   font-weight: 600;
 }
@@ -564,36 +679,23 @@ a.concert-tickets:focus-visible {
   border-top: 1px solid var(--section-rule);
 }
 .about-intro {
-  padding-block: var(--section-space) clamp(28px, 3.5vw, 48px);
+  padding-block: var(--section-space) clamp(32px, 4vw, 56px);
 }
 .about-copy {
-  max-width: 42rem;
+  max-width: 36rem;
 }
 .about-title {
   font-size: clamp(28px, 3.2vw, 44px);
   letter-spacing: .04em;
   line-height: 1.05;
 }
-.about-wordmark { width: 100%; max-width: 220px; margin-top: 28px; }
-.about-album {
-  font-family: var(--font-editorial);
-  font-size: clamp(16px, 1.4vw, 22px);
-  letter-spacing: .06em;
-  line-height: 1.2;
-  text-transform: uppercase;
-  margin-top: 20px;
-  margin-bottom: 10px;
-}
-.about-biography { margin-top: 28px; max-width: 35ch; font-size: 1rem; line-height: 1.65; }
-.about-gallery {
-  padding-block: 0 clamp(48px, 6vw, 88px);
-}
-.about-gallery-controls {
-  justify-content: flex-end;
-  margin-bottom: clamp(24px, 3vw, 40px);
-}
-.about-gallery .about-gallery-caption {
-  color: var(--muted);
+.about-wordmark { width: 100%; max-width: 180px; margin-top: 20px; }
+.about-biography {
+  margin-top: 22px;
+  max-width: 34ch;
+  font-size: clamp(.95rem, 1.05vw, 1.05rem);
+  line-height: 1.7;
+  color: rgb(44 41 38 / 82%);
 }
 .site-footer {
   background: var(--color-taupe);
@@ -712,7 +814,7 @@ a.concert-tickets:focus-visible {
 .header-language-switcher .language-menu .language-option { color: var(--muted); }
 .header-language-switcher .language-menu [aria-selected="true"] .language-option { color: var(--color-doya-red); }
 .site-header.is-page .header-language-switcher .language-menu { background: var(--color-header); }
-.mobile-language-switcher { margin-top: clamp(28px, 5svh, 48px); justify-content: center; }
+.mobile-language-switcher { margin-top: clamp(24px, 4svh, 36px); justify-content: flex-start; }
 .mobile-language-switcher .language-menu {
   left: 50%;
   right: auto;
@@ -727,7 +829,8 @@ a.concert-tickets:focus-visible {
   .language-menu .language-option:hover { color: var(--color-doya-red); transform: translateY(-1px); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .about-gallery-card img { transition: none; }
+  .about-gallery-slide,
+  .about-gallery-progress span { transition: none; }
 }
 .copyright { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
 .back-to-top {
@@ -816,12 +919,30 @@ a.concert-tickets:focus-visible {
   .track-row { padding-block: 0.35rem; font-size: 13px; }
   .gallery-controls { justify-content: flex-end; width: 100%; gap: 10px; }
   .gallery-controls p { margin-right: auto; }
-  .about-gallery-controls { margin-bottom: 22px; }
-  .about-gallery-viewport { margin-inline: 0; padding-inline: 0; }
-  .about-gallery-slide { width: 84%; padding-inline: 6px; }
-  .about-gallery-card img { aspect-ratio: 4 / 5; object-position: 55% center; }
-  .about-gallery-caption { padding-inline: 6px; margin-top: 14px; }
-  .gallery-stars { margin-top: 34px; }
+  .about-intro { text-align: center; padding-block: var(--section-space) 28px; }
+  .about-copy { margin-inline: auto; }
+  .about-wordmark { margin-inline: auto; max-width: 140px; }
+  .about-biography { margin-inline: auto; margin-top: 20px; max-width: 32ch; font-size: .95rem; }
+  .about-title { font-size: clamp(26px, 7vw, 34px); }
+  .about-gallery {
+    --about-slide: min(62vw, calc(48svh * 3 / 4), 260px);
+    --about-slide-gap: 14px;
+    padding-bottom: clamp(40px, 8vw, 64px);
+  }
+  .about-gallery-toolbar { margin-bottom: 14px; }
+  .about-gallery-nav button { font-size: 22px; }
+  .about-gallery-slide {
+    opacity: .32;
+    transform: scale(.9);
+  }
+  .about-gallery-slide.is-active {
+    opacity: 1;
+    transform: scale(1);
+  }
+  .about-gallery-footer { gap: 14px; margin-top: 18px; }
+  .about-gallery-progress { width: min(100%, 140px); }
+  .about-gallery-caption { font-size: 10px; letter-spacing: .12em; }
+  .gallery-stars { width: 26px; }
   .photo-lightbox-nav { width: 42px; height: 42px; font-size: 22px; }
   .photo-lightbox-hint { display: none; }
   .live-section { padding-block: var(--section-space); }
@@ -857,8 +978,26 @@ a.concert-tickets:focus-visible {
   }
   .album-buy::after,
   .concert-tickets::after { display: none; }
-  .shop-section .section-heading { gap: 18px; }
-  .shop-section .section-heading h2 { font-size: clamp(26px, 7vw, 34px); }
+  .shop-heading {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+  .shop-heading h2,
+  .shop-collection {
+    grid-column: 1;
+    grid-row: auto;
+  }
+  .shop-heading h2 { font-size: clamp(30px, 9vw, 40px); }
+  .shop-collection { text-align: left; }
+  .shop-promo {
+    grid-column: 1;
+    grid-row: auto;
+    margin-top: 14px;
+    padding-top: 14px;
+    gap: 8px 0;
+    flex-direction: column;
+  }
   .products {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     column-gap: 18px;
@@ -873,10 +1012,6 @@ a.concert-tickets:focus-visible {
   .product-caption h3 { font-size: 19px; line-height: 1.15; }
   .product-details { font-size: 12px; }
   .shop-note { max-width: 290px; }
-  .about-wordmark { max-width: 180px; }
-  .about-title { font-size: clamp(26px, 7vw, 34px); }
-  .about-album { font-size: clamp(16px, 4vw, 18px); }
-  .about-biography { margin-top: 25px; }
   .footer-contact { grid-template-columns: 1fr; gap: 0; max-width: 280px; margin-top: 36px; padding-top: 12px; }
   .footer-contact-item { padding-block: 26px; border-bottom: 1px solid var(--section-rule); }
   .footer-contact-item:last-child { border-bottom: 0; padding-bottom: 8px; }

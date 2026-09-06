@@ -6,6 +6,7 @@ import { useCart } from '../../commerce/CartProvider.jsx'
 import { useCatalog } from '../../commerce/CatalogProvider.jsx'
 import { commerceMessage, translateProduct } from '../../commerce/messages.js'
 import { isExternalUrl } from '../../utils/links.js'
+import { siteContent } from '../../data/siteContent.js'
 import { useI18n } from '../../i18n/I18nProvider.jsx'
 import Reveal from '../../components/Reveal.jsx'
 import TransitionImage from '../../components/TransitionImage.jsx'
@@ -147,17 +148,19 @@ function Shop() {
 
   return (
     <section id="shop" className="shop-section section-shell" aria-labelledby="shop-title">
-      <Reveal as="header" className="section-heading">
-        <div>
-          <p className="eyebrow section-kicker">{t('shop.label')}</p>
-          <h2 id="shop-title" className="editorial-title">{t('shop.title')}</h2>
-          {purchasable ? (
-            <div className="shop-promo">
-              <p className="availability-note"><strong>{t('shop.promoTees')}</strong></p>
-              <p className="availability-note"><strong>{t('shop.promoCdTee')}</strong></p>
-            </div>
-          ) : null}
-        </div>
+      <Reveal as="header" className="shop-heading">
+        <h2 id="shop-title" className="editorial-title">{t('shop.title')}</h2>
+        <p className="eyebrow shop-collection">
+          <span>{t('shop.label')}</span>
+          <span className="small-separator" aria-hidden="true">/</span>
+          <span>{siteContent.albumTitle}</span>
+        </p>
+        {purchasable ? (
+          <ul className="shop-promo">
+            <li>{t('shop.promoTees')}</li>
+            <li>{t('shop.promoCdTee')}</li>
+          </ul>
+        ) : null}
       </Reveal>
       <div className="products">
         {items.map((product, index) => {

@@ -65,7 +65,7 @@ export default {
   },
   shop: {
     title: 'Merch',
-    label: 'Luna Bohemia collection',
+    label: 'Collection',
     note: 'Collection visuals. Availability, pricing and shop links to be confirmed.',
     viewGroup: 'Garment view',
     viewFront: 'Front view',

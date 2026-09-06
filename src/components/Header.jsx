@@ -147,9 +147,9 @@ function Header() {
         </m.nav>
         <LanguageSwitcher className="mobile-language-switcher" />
         <div className="mobile-menu-bottom">
+          <Stars className="mobile-menu-stars" />
           <p>{siteContent.albumTitle}<br />{siteContent.year}</p>
         </div>
-        <Stars className="mobile-menu-stars" />
       </m.dialog>
     </m.header>
   )
