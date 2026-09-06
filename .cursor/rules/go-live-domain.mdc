@@ -1,0 +1,18 @@
+---
+description: Checklist mise à jour quand le site DOYA passe sur le domaine / IP de production
+alwaysApply: true
+---
+
+# Go-live domaine DOYA
+
+Quand l’utilisateur annonce le **vrai nom de domaine** (ou nouvelle IP / mise en prod), appliquer la checklist de `reference/commerce.md` § « Checklist — passage au vrai domaine » :
+
+1. Secret Supabase `SITE_URL` → `https://domaine`
+2. Auth Supabase : Site URL + redirect `/compte`
+3. Front prod : `VITE_SITE_URL`, rebuild/deploy ; `VITE_INDEXABLE` seulement si SEO OK
+4. SPA fallback `/panier` `/compte` `/commande`
+5. DNS + HTTPS
+6. Stripe webhook **inchangé** (pointe vers Supabase) ; vérifier URLs de retour checkout
+7. Ne pas resetter clés Stripe / stocks sans demande. Tarifs zones : `supabase/functions/_shared/shipping.ts`
+
+État actuel (dev) : `SITE_URL` et Auth encore sur `http://127.0.0.1:5174`.

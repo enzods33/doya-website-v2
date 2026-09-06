@@ -356,27 +356,27 @@
   font-weight: 600;
   letter-spacing: .1em;
   text-transform: uppercase;
-  color: #000;
+  color: #fff;
   border-radius: 0.45rem;
-  border: 1px solid rgb(255 255 255 / 58%);
-  border-top-color: rgb(255 255 255 / 78%);
-  border-bottom-color: rgb(20 18 16 / 26%);
+  border: 1px solid rgb(255 255 255 / 28%);
+  border-top-color: rgb(255 255 255 / 38%);
+  border-bottom-color: rgb(0 0 0 / 45%);
   background:
     linear-gradient(
       180deg,
-      rgb(255 255 255 / 56%) 0%,
-      rgb(255 255 255 / 38%) 52%,
-      rgb(255 255 255 / 30%) 100%
+      rgb(58 55 52 / 72%) 0%,
+      rgb(44 41 38 / 78%) 52%,
+      rgb(36 33 30 / 82%) 100%
     );
-  backdrop-filter: blur(14px) saturate(1.08);
-  -webkit-backdrop-filter: blur(14px) saturate(1.08);
+  backdrop-filter: blur(14px) saturate(1.05);
+  -webkit-backdrop-filter: blur(14px) saturate(1.05);
   box-shadow:
-    0 1px 0 rgb(255 255 255 / 36%),
-    0 10px 24px rgb(0 0 0 / 26%),
-    0 3px 8px rgb(0 0 0 / 18%),
-    inset 0 1px 0 rgb(255 255 255 / 62%),
-    inset 0 -1px 0 rgb(0 0 0 / 12%);
-  text-shadow: none;
+    0 1px 0 rgb(255 255 255 / 18%),
+    0 10px 24px rgb(0 0 0 / 32%),
+    0 3px 8px rgb(0 0 0 / 22%),
+    inset 0 1px 0 rgb(255 255 255 / 22%),
+    inset 0 -1px 0 rgb(0 0 0 / 28%);
+  text-shadow: 0 1px 1px rgb(0 0 0 / 35%);
   position: relative;
   transform: translateZ(0);
   transition:
@@ -400,23 +400,23 @@
 }
 .hero-cta:hover,
 .hero-cta:focus-visible {
-  color: #000;
-  border-color: rgb(255 255 255 / 70%);
-  border-top-color: rgb(255 255 255 / 88%);
-  border-bottom-color: rgb(20 18 16 / 20%);
+  color: #fff;
+  border-color: rgb(255 255 255 / 40%);
+  border-top-color: rgb(255 255 255 / 50%);
+  border-bottom-color: rgb(0 0 0 / 40%);
   background:
     linear-gradient(
       180deg,
-      rgb(255 255 255 / 68%) 0%,
-      rgb(255 255 255 / 48%) 52%,
-      rgb(255 255 255 / 40%) 100%
+      rgb(72 68 64 / 78%) 0%,
+      rgb(52 49 46 / 84%) 52%,
+      rgb(42 39 36 / 88%) 100%
     );
   box-shadow:
-    0 1px 0 rgb(255 255 255 / 44%),
-    0 14px 30px rgb(0 0 0 / 30%),
-    0 4px 10px rgb(0 0 0 / 20%),
-    inset 0 1px 0 rgb(255 255 255 / 72%),
-    inset 0 -1px 0 rgb(0 0 0 / 10%);
+    0 1px 0 rgb(255 255 255 / 24%),
+    0 14px 30px rgb(0 0 0 / 36%),
+    0 4px 10px rgb(0 0 0 / 24%),
+    inset 0 1px 0 rgb(255 255 255 / 28%),
+    inset 0 -1px 0 rgb(0 0 0 / 24%);
 }
 @media (hover: hover) and (pointer: fine) {
   .hero-cta:hover::after,

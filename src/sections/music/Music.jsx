@@ -4,6 +4,7 @@ import { isExternalUrl } from '../../utils/links.js'
 import { useI18n } from '../../i18n/I18nProvider.jsx'
 import Photo from '../../components/Photo.jsx'
 import Reveal from '../../components/Reveal.jsx'
+import Link from '../../components/Link.jsx'
 import { PlatformIcon, TRACK_PLATFORM_ORDER } from '../../components/PlatformIcon.jsx'
 
 const PLATFORM_NAMES = { spotify: 'Spotify', apple: 'Apple Music', deezer: 'Deezer', youtube: 'YouTube' }
@@ -42,9 +43,15 @@ function Music() {
               </ul>
             )}
             {album.buyHref && (
-              <a className="album-buy" href={album.buyHref} {...(album.buyHref.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
-                {t('music.buy')}
-              </a>
+              album.buyHref.startsWith('http') ? (
+                <a className="album-buy" href={album.buyHref} target="_blank" rel="noopener noreferrer">
+                  {t('music.buy')}
+                </a>
+              ) : (
+                <Link className="album-buy" href={album.buyHref}>
+                  {t('music.buy')}
+                </Link>
+              )
             )}
           </div>
           <div className="tracklist-column">

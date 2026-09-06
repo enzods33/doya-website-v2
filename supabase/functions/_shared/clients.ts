@@ -27,11 +27,4 @@ export function userClient(accessToken: string) {
   })
 }
 
-export function shippingCents() {
-  const raw = Deno.env.get('SHIPPING_CENTS')
-  if (raw === undefined || raw === '') throw new Error('shipping_not_configured')
-  const value = Number(raw)
-  if (!Number.isInteger(value) || value < 0 || value > 50000) throw new Error('shipping_invalid')
-  return value
-}
 

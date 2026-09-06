@@ -5,6 +5,7 @@ import { isExternalUrl } from '../utils/links.js'
 import { useI18n } from '../i18n/I18nProvider.jsx'
 import { Stars, Wordmark } from './Brand.jsx'
 import LanguageSwitcher from './LanguageSwitcher.jsx'
+import Link from './Link.jsx'
 import { PlatformIcon } from './PlatformIcon.jsx'
 
 function mailto(email, subject) {
@@ -40,7 +41,7 @@ function Footer() {
     <footer id="contact" className="site-footer">
       <div className="section-shell">
         <div className="footer-brand">
-          <a href="#top" aria-label={t('a11y.footerHome')}><Wordmark className="footer-wordmark" /></a>
+          <Link href="#top" aria-label={t('a11y.footerHome')}><Wordmark className="footer-wordmark" /></Link>
           <Stars className="footer-stars" />
           <p className="footer-album">{siteContent.albumTitle} <span aria-hidden="true">·</span> {siteContent.year}</p>
         </div>
@@ -81,12 +82,12 @@ function Footer() {
         <div className="footer-meta">
           <p className="copyright">{t('footer.copyright', { year: siteContent.year })}</p>
           <LanguageSwitcher className="footer-language-switcher" />
-          <a href="#top" className="back-to-top">
+          <Link href="#top" className="back-to-top">
             {t('footer.backToTop')}
             <svg className="back-to-top-icon" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
               <path d="M6 10.25V1.75M6 1.75 2.25 5.5M6 1.75 9.75 5.5" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
-          </a>
+          </Link>
         </div>
       </div>
     </footer>

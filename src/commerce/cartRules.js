@@ -1,10 +1,32 @@
 export const CART_LIMITS = {
-  maxLineQuantity: 5,
+  maxLineQuantity: 6,
   maxLines: 8,
   maxTotalQuantity: 12,
   /** U = unique (CD / articles sans taillage) */
   sizes: ['XS', 'S', 'M', 'L', 'XL', 'U'],
   productIds: ['cd-luna-bohemia', 'luna-bohemia-white', 'luna-bohemia-black', 'doya-white', 'doya-black'],
+}
+
+/** Forfait port en ligne. Au-delà → devis (pas de Stripe). */
+export const FLAT_SHIPPING_LIMITS = {
+  maxTees: 6,
+  maxCds: 5,
+}
+
+/** Miroir des auto-promos serveur : une seule s’applique (meilleure réduction). */
+export const AUTO_PROMOS = [
+  { id: '2tees', minTees: 2, minCds: 0, amountOffCents: 800, messageKey: 'cart.promoTees', labelKey: 'cart.autoDiscountTees' },
+  { id: 'cdtee', minTees: 1, minCds: 1, amountOffCents: 500, messageKey: 'cart.promoCdTee', labelKey: 'cart.autoDiscountCdTee' },
+]
+
+export function eligibleAutoPromos(teeQty, cdQty) {
+  return AUTO_PROMOS.filter((promo) => teeQty >= promo.minTees && cdQty >= promo.minCds)
+}
+
+export function bestAutoPromo(teeQty, cdQty) {
+  const eligible = eligibleAutoPromos(teeQty, cdQty)
+  if (!eligible.length) return null
+  return eligible.reduce((best, promo) => (promo.amountOffCents > best.amountOffCents ? promo : best))
 }
 
 export function normalizePromoCode(value) {

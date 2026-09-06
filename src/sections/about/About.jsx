@@ -1,90 +1,74 @@
-import { useCallback, useEffect, useState } from 'react'
-import useEmblaCarousel from 'embla-carousel-react'
-import ClassNames from 'embla-carousel-class-names'
-import { useReducedMotion } from 'motion/react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { animate, m, useMotionValue, useReducedMotion } from 'motion/react'
 import { siteContent } from '../../data/siteContent.js'
 import { galleryImages } from '../../data/media.js'
 import { useI18n } from '../../i18n/I18nProvider.jsx'
 import { Stars, Wordmark } from '../../components/Brand.jsx'
 import Reveal from '../../components/Reveal.jsx'
+import PhotoLightbox from '../../components/PhotoLightbox.jsx'
+import { editorialEase } from '../../utils/motion.js'
+
+const SLIDE_RATIO = 0.72
 
 function About() {
   const reducedMotion = useReducedMotion()
   const { t } = useI18n()
   const total = galleryImages.length
   const [index, setIndex] = useState(0)
+  const [lightbox, setLightbox] = useState(null)
+  const [metrics, setMetrics] = useState({ width: 0, slide: 0 })
+  const viewportRef = useRef(null)
+  const x = useMotionValue(0)
 
-  const [emblaRef, emblaApi] = useEmblaCarousel(
-    {
-      loop: true,
-      align: 'center',
-      skipSnaps: false,
-      duration: reducedMotion ? 0 : 32,
-      dragFree: false,
-      watchDrag: !reducedMotion,
-    },
-    [ClassNames({ snapped: 'is-snapped', draggable: 'is-draggable', dragging: 'is-dragging' })],
-  )
+  const offsetFor = useCallback((i, width, slide) => {
+    if (!width || !slide) return 0
+    const centerPad = (width - slide) / 2
+    return -(i * slide) + centerPad
+  }, [])
 
-  const onSelect = useCallback(() => {
-    if (!emblaApi) return
-    setIndex(emblaApi.selectedScrollSnap())
-  }, [emblaApi])
+  const goTo = useCallback((nextIndex, instant = false) => {
+    const i = ((nextIndex % total) + total) % total
+    setIndex(i)
+    const target = offsetFor(i, metrics.width, metrics.slide)
+    if (instant || reducedMotion) {
+      x.set(target)
+      return
+    }
+    animate(x, target, { type: 'spring', stiffness: 280, damping: 34, mass: 0.85 })
+  }, [metrics.slide, metrics.width, offsetFor, reducedMotion, total, x])
+
+  useLayoutEffect(() => {
+    const node = viewportRef.current
+    if (!node) return undefined
+    function measure() {
+      const width = node.clientWidth
+      const slide = Math.round(width * SLIDE_RATIO)
+      setMetrics({ width, slide })
+    }
+    measure()
+    const observer = new ResizeObserver(measure)
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [])
 
   useEffect(() => {
-    if (!emblaApi) return undefined
-    onSelect()
-    emblaApi.on('select', onSelect)
-    emblaApi.on('reInit', onSelect)
-    return () => {
-      emblaApi.off('select', onSelect)
-      emblaApi.off('reInit', onSelect)
-    }
-  }, [emblaApi, onSelect])
+    if (!metrics.width) return
+    x.set(offsetFor(index, metrics.width, metrics.slide))
+    // Reposition only on resize / first measure — goTo() anime les changements d’index.
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- index volontairement omis
+  }, [metrics.width, metrics.slide, offsetFor, x])
 
-  useEffect(() => {
-    if (!emblaApi) return undefined
-    const root = emblaApi.rootNode()
-    const images = [...root.querySelectorAll('img')]
-
-    function refresh() {
-      emblaApi.reInit()
-    }
-
-    images.forEach((image) => {
-      if (image.complete) return
-      image.addEventListener('load', refresh, { once: true })
-    })
-
-    const observer = new ResizeObserver(() => emblaApi.reInit())
-    observer.observe(root)
-    return () => {
-      observer.disconnect()
-      images.forEach((image) => image.removeEventListener('load', refresh))
-    }
-  }, [emblaApi])
-
-  useEffect(() => {
-    if (!emblaApi || reducedMotion) return undefined
-    const viewport = emblaApi.rootNode()
-    let locked = 0
-
-    function onWheel(event) {
-      const horizontal = Math.abs(event.deltaX) > Math.abs(event.deltaY)
-      if (!horizontal && !event.shiftKey) return
-      const delta = horizontal ? event.deltaX : event.deltaY
-      if (Math.abs(delta) < 10) return
-      event.preventDefault()
-      const now = performance.now()
-      if (now - locked < 380) return
-      locked = now
-      if (delta > 0) emblaApi.scrollNext()
-      else emblaApi.scrollPrev()
-    }
-
-    viewport.addEventListener('wheel', onWheel, { passive: false })
-    return () => viewport.removeEventListener('wheel', onWheel)
-  }, [emblaApi, reducedMotion])
+  function onDragEnd(_, info) {
+    if (!metrics.slide) return
+    const projected = x.get() + info.velocity.x * 0.16
+    const centerPad = (metrics.width - metrics.slide) / 2
+    const raw = (-projected + centerPad) / metrics.slide
+    let nearest = Math.round(raw)
+    if (nearest < 0) nearest = total - 1
+    else if (nearest >= total) nearest = 0
+    else nearest = Math.min(total - 1, Math.max(0, nearest))
+    goTo(nearest)
+  }
 
   return (
     <section id="about" className="about-section" aria-labelledby="about-title">
@@ -104,48 +88,82 @@ function About() {
             <p className="eyebrow" aria-live="polite" aria-atomic="true">
               <span>{String(index + 1).padStart(2, '0')}</span>
               <span aria-hidden="true"> — </span>
-              <span className="sr-only">{t('photo.of')} </span>
+              <span className="visually-hidden">{t('photo.of')} </span>
               {String(total).padStart(2, '0')}
             </p>
-            <button type="button" onClick={() => emblaApi?.scrollPrev()} aria-label={t('photo.prev')} aria-controls="about-gallery-main">←</button>
-            <button type="button" onClick={() => emblaApi?.scrollNext()} aria-label={t('photo.next')} aria-controls="about-gallery-main">→</button>
+            <button type="button" onClick={() => goTo(index - 1)} aria-label={t('photo.prev')} aria-controls="about-gallery-main">←</button>
+            <button type="button" onClick={() => goTo(index + 1)} aria-label={t('photo.next')} aria-controls="about-gallery-main">→</button>
           </div>
 
           <div
             id="about-gallery-main"
-            className="gallery-embla"
-            ref={emblaRef}
+            className="about-gallery-viewport"
+            ref={viewportRef}
             role="region"
             aria-roledescription="carousel"
             aria-label={t('about.eyebrow')}
           >
-            <div className="gallery-embla-container">
-              {galleryImages.map((image, slideIndex) => (
-                <div className="gallery-embla-slide" key={image.src}>
-                  <figure className="gallery-embla-figure">
-                    <div className="gallery-embla-card">
-                      <img
+            <m.div
+              className="about-gallery-track"
+              style={{ x }}
+              drag={reducedMotion ? false : 'x'}
+              dragElastic={0.12}
+              dragMomentum={false}
+              onDragEnd={onDragEnd}
+            >
+              {galleryImages.map((image, slideIndex) => {
+                const active = slideIndex === index
+                return (
+                  <div
+                    className={`about-gallery-slide${active ? ' is-active' : ''}`}
+                    key={image.src}
+                    style={{ width: metrics.slide || undefined }}
+                  >
+                    <button
+                      type="button"
+                      className="about-gallery-card"
+                      onClick={() => {
+                        if (active) setLightbox(slideIndex)
+                        else goTo(slideIndex)
+                      }}
+                      aria-label={active ? t('photo.zoom') : t('photo.goTo', { n: slideIndex + 1 })}
+                    >
+                      <m.img
                         src={image.src}
                         width={image.width}
                         height={image.height}
-                        alt={slideIndex === index ? image.alt : ''}
-                        loading={slideIndex === 0 ? 'eager' : 'lazy'}
+                        alt={active ? image.alt : ''}
+                        loading={slideIndex < 3 ? 'eager' : 'lazy'}
                         decoding="async"
                         draggable={false}
+                        animate={reducedMotion ? undefined : {
+                          scale: active ? 1 : 0.92,
+                          opacity: active ? 1 : 0.62,
+                        }}
+                        transition={{ duration: 0.45, ease: editorialEase }}
                       />
-                    </div>
-                  </figure>
-                </div>
-              ))}
-            </div>
+                    </button>
+                  </div>
+                )
+              })}
+            </m.div>
           </div>
-          <p className="gallery-embla-caption photo-caption">
+          <p className="about-gallery-caption photo-caption">
             <span>{siteContent.name}</span>
             <span>{siteContent.albumTitle} / {siteContent.year}</span>
           </p>
           <Stars className="gallery-stars" />
         </div>
       </div>
+
+      {lightbox !== null && (
+        <PhotoLightbox
+          images={galleryImages}
+          index={lightbox}
+          onClose={() => setLightbox(null)}
+          onIndexChange={setLightbox}
+        />
+      )}
     </section>
   )
 }

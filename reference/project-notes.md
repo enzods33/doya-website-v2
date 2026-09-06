@@ -57,7 +57,7 @@ Tee-shirts Luna Bohemia A, B, C et identité DOYA : maquettes officielles des pa
 | Destinations éventuelles des 12 titres | `src/data/album.js`, `tracks` |
 | Concerts, dates, villes, salles et URLs billets | `src/data/live.js` |
 | Prix, stocks, codes promo et mise en vente | Dashboard Supabase, voir `reference/commerce.md` |
-| Frais de port | Secret de fonction `SHIPPING_CENTS` |
+| Frais de port | Zones dans `supabase/functions/_shared/shipping.ts` (choix sur Stripe Checkout) |
 | Biographie officielle et contact éventuel | `src/data/siteContent.js` |
 | Domaine officiel / indexation | `.env.local`, d’après `.env.example` |
 | Webfonts FK Display Regular Alt et Degular Medium, avec licences | `src/assets/fonts/` |

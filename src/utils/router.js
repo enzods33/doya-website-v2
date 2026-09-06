@@ -16,6 +16,26 @@ export function currentPath() {
   return stripBase(window.location.pathname)
 }
 
+/**
+ * Scroll vers une ancre en respectant `scroll-margin-top` (hauteur header).
+ * Réessaie si la cible n’est pas encore montée (ex. /panier → /#shop).
+ */
+export function scrollToHash(hash, { retries = 12 } = {}) {
+  if (!hash || hash === '#') return
+  if (hash === '#top') {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+    return
+  }
+  const target = document.querySelector(hash)
+  if (!target) {
+    if (retries > 0) {
+      requestAnimationFrame(() => scrollToHash(hash, { retries: retries - 1 }))
+    }
+    return
+  }
+  target.scrollIntoView({ block: 'start', behavior: 'auto' })
+}
+
 export function navigate(to) {
   const url = new URL(to, window.location.href)
   const path = stripBase(url.pathname)
@@ -31,18 +51,9 @@ export function navigate(to) {
         scrollToHash(url.hash)
       })
     })
-  } else {
+  } else if (next !== current) {
     window.scrollTo(0, 0)
   }
-}
-
-function scrollToHash(hash) {
-  const target = document.querySelector(hash)
-  if (!target) return
-  const header = document.querySelector('.site-header')
-  const offset = header ? header.getBoundingClientRect().height : 56
-  const top = target.getBoundingClientRect().top + window.scrollY - offset
-  window.scrollTo({ top: Math.max(0, top), left: 0, behavior: 'auto' })
 }
 
 export function useRoute() {
@@ -54,6 +65,9 @@ export function useRoute() {
   useEffect(() => {
     function onPop() {
       setRoute({ path: stripBase(window.location.pathname), search: window.location.search })
+      if (window.location.hash) {
+        requestAnimationFrame(() => scrollToHash(window.location.hash))
+      }
     }
     window.addEventListener('popstate', onPop)
     return () => window.removeEventListener('popstate', onPop)

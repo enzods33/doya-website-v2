@@ -3,6 +3,7 @@ import { media } from '../../data/media.js'
 import { siteContent } from '../../data/siteContent.js'
 import { useI18n } from '../../i18n/I18nProvider.jsx'
 import { Stars } from '../../components/Brand.jsx'
+import Link from '../../components/Link.jsx'
 import Photo from '../../components/Photo.jsx'
 import { editorialEase } from '../../utils/motion.js'
 import letterD from '../../assets/logos/glyphs/doya-d-white.svg'
@@ -55,13 +56,13 @@ function Hero() {
             transition={{ duration: reducedMotion ? 0 : 1, delay: reducedMotion ? 0 : 0.62, ease: editorialEase }}
           >
             <div className="hero-cta-primary">
-              <a href="#music" className="hero-cta hero-cta-discover">{t('hero.discover')}</a>
-              <a href="#live" className="hero-cta hero-cta-desktop-only">{t('hero.datesDesktop')}</a>
+              <Link href="#music" className="hero-cta hero-cta-discover">{t('hero.discover')}</Link>
+              <Link href="#live" className="hero-cta hero-cta-desktop-only">{t('hero.datesDesktop')}</Link>
             </div>
-            <a href="#shop" className="hero-cta hero-cta-merch hero-cta-desktop-only">{t('hero.shop')}</a>
+            <Link href="#shop" className="hero-cta hero-cta-merch hero-cta-desktop-only">{t('hero.shop')}</Link>
             <div className="hero-cta-pair">
-              <a href="#live" className="hero-cta">{t('hero.dates')}</a>
-              <a href="#shop" className="hero-cta">{t('hero.shop')}</a>
+              <Link href="#live" className="hero-cta">{t('hero.dates')}</Link>
+              <Link href="#shop" className="hero-cta">{t('hero.shop')}</Link>
             </div>
           </m.div>
         </div>

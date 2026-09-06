@@ -45,9 +45,22 @@ function OrderPage() {
             <p className="availability-note">{t('order.receiptNote', { email: state.order.email })}</p>
             <p className="cart-total"><span>{t('order.total')}</span><strong>{formatEuros(state.order.totalCents)}</strong></p>
             <ul className="order-list">
-              {(state.order.items ?? []).map((item) => (
-                <li key={`${item.product_id}-${item.size}`}>{item.quantity} × {item.product_id} · {item.size}</li>
-              ))}
+              {(state.order.items ?? []).map((item) => {
+                const nameKey = `shop.product.${item.product_id}`
+                const name = t(nameKey)
+                const label = name === nameKey ? item.product_id : name
+                const isUnique = item.size === 'U'
+                const typeKey = item.product_id.startsWith('cd-') ? 'shop.type.cd' : null
+                const typeLabel = typeKey ? t(typeKey) : ''
+                const title = isUnique
+                  ? (typeLabel ? `${typeLabel} · ${label}` : label)
+                  : `${label} · ${item.size}`
+                return (
+                  <li key={`${item.product_id}-${item.size}`}>
+                    {item.quantity} × {title}
+                  </li>
+                )
+              })}
             </ul>
           </div>
         )}

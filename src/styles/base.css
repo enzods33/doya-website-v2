@@ -1,5 +1,6 @@
 * { box-sizing: border-box; }
-html { scroll-padding-top: var(--header-height); background: var(--color-stone); }
+.visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+html { background: var(--color-stone); }
 body { margin: 0; color: var(--ink); font-family: var(--font-functional); font-size: 16px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
 button, a { -webkit-tap-highlight-color: transparent; }
 button { font: inherit; color: inherit; cursor: pointer; }

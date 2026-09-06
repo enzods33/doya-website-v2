@@ -133,9 +133,16 @@ function Header() {
         <m.nav aria-label={t('a11y.navMobile')} initial={false} animate={menuOpen ? 'open' : 'closed'}
           variants={{ open: { transition: { delayChildren: reducedMotion ? 0 : 0.08, staggerChildren: reducedMotion ? 0 : 0.055 } }, closed: {} }}>
           {[...mobileNavigation.map((item) => ({ ...item, label: t(item.labelKey) })), ...tools].map((item, index) => (
-            <m.a key={item.href} href={item.href.startsWith('#') ? sectionHref(item.href) : item.href} onClick={() => setMenuOpen(false)}
+            <m.div key={item.href}
               variants={{ open: { opacity: 1, y: 0 }, closed: { opacity: reducedMotion ? 1 : 0, y: reducedMotion ? 0 : 16 } }}
-              transition={{ duration: reducedMotion ? 0 : 0.5, ease: editorialEase }}><span>{String(index + 1).padStart(2, '0')}</span>{item.label}</m.a>
+              transition={{ duration: reducedMotion ? 0 : 0.5, ease: editorialEase }}>
+              <Link
+                href={item.href.startsWith('#') ? sectionHref(item.href) : item.href}
+                onClick={() => setMenuOpen(false)}
+              >
+                <span>{String(index + 1).padStart(2, '0')}</span>{item.label}
+              </Link>
+            </m.div>
           ))}
         </m.nav>
         <LanguageSwitcher className="mobile-language-switcher" />

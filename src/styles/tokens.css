@@ -15,7 +15,8 @@
 
 :root {
   --page-gutter: clamp(20px, 4.8vw, 92px);
-  --section-space: clamp(80px, 9vw, 160px);
+  /* Espace vertical commun des sections (music hors viewport full) */
+  --section-space: clamp(48px, 5.5vw, 88px);
   --content-width: 1728px;
   --hairline: rgb(44 41 38 / 18%);
   --section-rule: rgb(44 41 38 / 28%);

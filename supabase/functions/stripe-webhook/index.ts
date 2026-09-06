@@ -1,5 +1,6 @@
 import Stripe from 'https://esm.sh/stripe@17.4.0?target=deno'
 import { serviceClient, stripeClient } from '../_shared/clients.ts'
+import { isAllowedShippingAmount, SHIPPING_ZONES } from '../_shared/shipping.ts'
 
 Deno.serve(async (req) => {
   if (req.method !== 'POST') return new Response('method_not_allowed', { status: 405 })
@@ -37,12 +38,28 @@ Deno.serve(async (req) => {
       }
       const orderId = session.metadata?.orderId
       if (!orderId) return new Response('missing_order', { status: 400 })
+
+      const shippingCents = session.shipping_cost?.amount_total ?? 0
+      if (!isAllowedShippingAmount(shippingCents)) {
+        console.error('unexpected_shipping_amount', shippingCents, orderId)
+        return new Response('invalid_shipping_amount', { status: 400 })
+      }
+
       const address = session.shipping_details?.address ?? session.customer_details?.address
+      const country = typeof address?.country === 'string' ? address.country.toUpperCase() : ''
+      const zone = SHIPPING_ZONES.find((entry) => entry.amountCents === shippingCents)
+      if (zone && country && !zone.countries.includes(country)) {
+        console.error('shipping_country_mismatch', country, zone.id, orderId)
+        return new Response('shipping_country_mismatch', { status: 400 })
+      }
+
       const { error } = await admin.rpc('mark_order_paid_from_stripe', {
         p_order_id: orderId,
         p_payment_intent: typeof session.payment_intent === 'string' ? session.payment_intent : session.payment_intent?.id ?? null,
         p_shipping_name: session.shipping_details?.name ?? session.customer_details?.name ?? null,
         p_shipping_address: address ?? null,
+        p_shipping_cents: shippingCents,
+        p_total_cents: typeof session.amount_total === 'number' ? session.amount_total : null,
       })
       if (error) throw error
     }

@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { LazyMotion, MotionConfig, domAnimation } from 'motion/react'
 import { CartProvider } from './commerce/CartProvider.jsx'
 import { CatalogProvider } from './commerce/CatalogProvider.jsx'
@@ -8,7 +9,7 @@ import HomePage from './pages/HomePage.jsx'
 import CartPage from './pages/CartPage.jsx'
 import OrderPage from './pages/OrderPage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
-import { useRoute } from './utils/router.js'
+import { scrollToHash, useRoute } from './utils/router.js'
 
 const pages = {
   '/': HomePage,
@@ -20,6 +21,12 @@ function AppShell() {
   const { path } = useRoute()
   const { t } = useI18n()
   const Page = pages[path] ?? NotFoundPage
+
+  useEffect(() => {
+    if (window.location.hash) {
+      requestAnimationFrame(() => scrollToHash(window.location.hash))
+    }
+  }, [path])
 
   return (
     <div id="top" className={path === '/' ? undefined : 'site-page'}>

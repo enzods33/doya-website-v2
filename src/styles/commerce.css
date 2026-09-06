@@ -31,7 +31,20 @@
 .cart-actions input { width: 64px; min-height: 44px; border: 0; border-bottom: 1px solid var(--hairline); background: transparent; font: inherit; }
 .cart-actions button { border: 0; background: none; min-height: 44px; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; }
 .cart-aside { display: grid; gap: 18px; }
+.shipping-zones { display: grid; gap: 10px; border: 0; padding: 0; margin: 0; }
+.shipping-zones legend { margin-bottom: 4px; font-size: 13px; letter-spacing: .04em; text-transform: uppercase; }
+.shipping-zone-option {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 10px;
+  align-items: center;
+  font-size: 14px;
+}
+.shipping-zone-option strong { font-variant-numeric: tabular-nums; }
 .cart-total { display: flex; justify-content: space-between; gap: 16px; padding-top: 8px; border-top: 1px solid var(--hairline); text-transform: uppercase; font-size: 13px; letter-spacing: .04em; }
+.cart-promo-msg { margin: 0; }
+.cart-promo-msg strong { font-weight: 600; }
+.cart-shipping { border-top: 0; padding-top: 0; }
 .field { display: grid; gap: 8px; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; }
 .field input { min-height: 44px; border: 0; border-bottom: 1px solid var(--hairline); background: transparent; font: inherit; text-transform: none; letter-spacing: 0; }
 .field-error { color: var(--color-doya-red); font-size: 13px; }

@@ -1,10 +1,16 @@
 export const CART_LIMITS = {
-  maxLineQuantity: 5,
+  maxLineQuantity: 6,
   maxLines: 8,
   maxTotalQuantity: 12,
   /** U = unique (CD / articles sans taillage) */
   sizes: ['XS', 'S', 'M', 'L', 'XL', 'U'],
   productIdPattern: /^[a-z0-9-]+$/,
+} as const
+
+/** Miroir SQL : tee ≤ 6, CD ≤ 5 pour le forfait ; au-delà = shipping_quote_required. */
+export const FLAT_SHIPPING_LIMITS = {
+  maxTees: 6,
+  maxCds: 5,
 } as const
 
 export const LOCAL_ORIGINS = [

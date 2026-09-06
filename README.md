@@ -135,7 +135,7 @@ Les paramètres partagés sont dans `src/utils/motion.js`, les détails de survo
 ## Avant publication publique
 
 1. Faire valider la tracklist retranscrite du livret, la biographie et les liens officiels.
-2. Confirmer les modèles commercialisés, leurs prix et leurs stocks dans Supabase, plus `SHIPPING_CENTS`.
+2. Confirmer les modèles commercialisés, leurs prix et leurs stocks dans Supabase. Les forfaits livraison sont dans `supabase/functions/_shared/shipping.ts`.
 3. Remplacer les photographies utilisées en grand par les originaux HD.
 4. Ajouter les webfonts uniquement avec leur licence web.
 5. Copier `.env.example` en `.env.local`, renseigner `VITE_SITE_URL` avec le domaine vérifié, puis passer `VITE_INDEXABLE=true` seulement lorsque le site est prêt à être indexé.

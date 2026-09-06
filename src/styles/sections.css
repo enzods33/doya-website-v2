@@ -1,4 +1,4 @@
-.section-heading { display: flex; align-items: end; justify-content: space-between; gap: 28px; margin-bottom: clamp(28px, 3.2vw, 48px); }
+.section-heading { display: flex; align-items: end; justify-content: space-between; gap: 28px; margin-bottom: clamp(24px, 2.8vw, 40px); }
 .section-heading h2 {
   font-family: var(--font-editorial);
   font-size: clamp(28px, 3.2vw, 44px);
@@ -8,10 +8,19 @@
 }
 .section-kicker { margin-bottom: 20px; }
 .small-separator { margin-inline: 12px; color: var(--color-doya-red); }
+
+/* Ancres : un seul offset (= hauteur header). Pas de scroll-padding html en plus. */
+#music,
+#live,
+#shop,
+#about,
+#contact {
+  scroll-margin-top: var(--header-height);
+}
+
 .music-section {
   position: relative;
   isolation: isolate;
-  scroll-margin-top: var(--header-height);
   background: var(--color-stone);
   border-top: 1px solid var(--section-rule);
   min-height: 100svh;
@@ -76,39 +85,51 @@
 .gallery-controls p { margin-right: 26px; font-size: 12px; }
 .gallery-controls button { background: none; border: 0; min-width: 44px; height: 44px; font-family: var(--font-editorial); font-size: 28px; line-height: 1; transition: color var(--motion-duration); color: inherit; }
 .gallery-controls button:hover { color: var(--color-doya-red); }
-.gallery-embla { overflow: hidden; cursor: grab; touch-action: pan-y pinch-zoom; }
-.gallery-embla.is-dragging { cursor: grabbing; }
-.gallery-embla-container { display: flex; touch-action: pan-y pinch-zoom; }
-.gallery-embla-slide {
-  position: relative;
-  flex: 0 0 68%;
-  min-width: 0;
-  padding-inline: clamp(8px, 1.2vw, 18px);
-}
-/* Effets sur l’inner card — pas de transform sur le slide Embla (évite les glitches) */
-.gallery-embla-card {
+.about-gallery-viewport {
   overflow: hidden;
+  cursor: grab;
+  touch-action: pan-y;
+  margin-inline: calc(var(--page-gutter) * -0.35);
+  padding-inline: calc(var(--page-gutter) * 0.35);
+}
+.about-gallery-viewport:active { cursor: grabbing; }
+.about-gallery-track {
+  display: flex;
+  align-items: center;
+  will-change: transform;
+}
+.about-gallery-slide {
+  flex: 0 0 auto;
+  width: 72%;
+  min-width: 0;
+  padding-inline: clamp(6px, 1vw, 14px);
+  box-sizing: border-box;
+}
+.about-gallery-card {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
   background: transparent;
-  transform: scale(.94);
-  opacity: .72;
-  transition:
-    transform 650ms var(--motion-ease),
-    opacity 450ms var(--motion-ease);
+  cursor: zoom-in;
+  color: inherit;
+  overflow: hidden;
 }
-.gallery-embla-slide.is-snapped .gallery-embla-card {
-  transform: scale(1);
-  opacity: 1;
+.about-gallery-card:focus-visible {
+  outline: 2px solid var(--color-doya-red);
+  outline-offset: 4px;
 }
-.gallery-embla-figure { margin: 0; }
-.gallery-embla-card img {
+.about-gallery-card img {
   display: block;
   width: 100%;
   aspect-ratio: 3 / 2;
   object-fit: cover;
   user-select: none;
   -webkit-user-drag: none;
+  pointer-events: none;
 }
-.gallery-embla-caption {
+.about-gallery-caption {
   display: flex;
   justify-content: space-between;
   gap: 16px;
@@ -117,12 +138,117 @@
   color: var(--muted);
 }
 .gallery-stars { width: 40px; margin: 44px auto 0; }
+
+.photo-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  padding: clamp(12px, 3vw, 28px);
+}
+.photo-lightbox-backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgb(22 20 18 / 88%);
+  cursor: pointer;
+}
+.photo-lightbox-chrome {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 18px clamp(16px, 3vw, 32px);
+  color: #f4f0ea;
+  pointer-events: none;
+}
+.photo-lightbox-chrome * { pointer-events: auto; }
+.photo-lightbox-count {
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.photo-lightbox-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.photo-lightbox-actions button {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  min-height: 44px;
+  padding: 0 8px;
+  font-size: 12px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.photo-lightbox-close span { margin-left: 10px; font-size: 22px; vertical-align: middle; }
+.photo-lightbox-nav {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 0;
+  background: rgb(44 41 38 / 55%);
+  color: #f4f0ea;
+  width: 48px;
+  height: 48px;
+  font-family: var(--font-editorial);
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+}
+.photo-lightbox-nav.is-prev { left: clamp(8px, 2vw, 24px); }
+.photo-lightbox-nav.is-next { right: clamp(8px, 2vw, 24px); }
+.photo-lightbox-stage {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 1100px);
+  height: min(78svh, 860px);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  touch-action: none;
+}
+.photo-lightbox-image {
+  max-width: min(100%, 1100px);
+  max-height: min(78svh, 860px);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.photo-lightbox-image:active { cursor: grabbing; }
+.photo-lightbox-hint {
+  position: absolute;
+  z-index: 2;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  color: rgb(244 240 234 / 72%);
+  font-size: 11px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
 .live-section {
-  scroll-margin-top: var(--header-height);
   background: var(--color-sand);
   color: var(--ink);
   border-top: 1px solid var(--section-rule);
-  padding-block: clamp(64px, 7vw, 132px);
+  padding-block: var(--section-space);
 }
 .live-layout { display: grid; grid-template-columns: .8fr 1.4fr; align-items: start; gap: clamp(36px, 6vw, 110px); }
 .live-layout h2 {
@@ -281,12 +407,24 @@ a.concert-tickets:focus-visible {
   justify-self: end;
 }
 .shop-section {
-  scroll-margin-top: var(--header-height);
   background: var(--color-mist);
   border-top: 1px solid var(--section-rule);
   padding-block: var(--section-space);
 }
 .shop-section .section-heading h2 { font-size: clamp(28px, 3.2vw, 44px); }
+.shop-promo {
+  margin-top: 10px;
+  max-width: 42ch;
+  display: grid;
+  gap: 4px;
+}
+.shop-promo .availability-note {
+  margin-top: 0;
+}
+.shop-promo strong,
+.cart-promo-msg strong {
+  font-weight: 600;
+}
 .products {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -422,12 +560,11 @@ a.concert-tickets:focus-visible {
 .product-details { display: flex; justify-content: space-between; gap: 16px; margin-top: 10px; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; }
 .shop-note { margin-top: 42px; }
 .about-section {
-  scroll-margin-top: var(--header-height);
   background: var(--color-sand);
   border-top: 1px solid var(--section-rule);
 }
 .about-intro {
-  padding-block: var(--section-space) clamp(36px, 4vw, 64px);
+  padding-block: var(--section-space) clamp(28px, 3.5vw, 48px);
 }
 .about-copy {
   max-width: 42rem;
@@ -455,15 +592,14 @@ a.concert-tickets:focus-visible {
   justify-content: flex-end;
   margin-bottom: clamp(24px, 3vw, 40px);
 }
-.about-gallery .gallery-embla-caption {
+.about-gallery .about-gallery-caption {
   color: var(--muted);
 }
 .site-footer {
-  scroll-margin-top: var(--header-height);
   background: var(--color-taupe);
   color: var(--ink);
   border-top: 1px solid var(--section-rule);
-  padding-block: clamp(80px, 10vw, 140px) 36px;
+  padding-block: var(--section-space) 36px;
 }
 .footer-brand { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 22px; }
 .footer-wordmark { width: clamp(220px, 28vw, 420px); }
@@ -591,7 +727,7 @@ a.concert-tickets:focus-visible {
   .language-menu .language-option:hover { color: var(--color-doya-red); transform: translateY(-1px); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .gallery-embla-card { transition: none; }
+  .about-gallery-card img { transition: none; }
 }
 .copyright { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
 .back-to-top {
@@ -681,16 +817,14 @@ a.concert-tickets:focus-visible {
   .gallery-controls { justify-content: flex-end; width: 100%; gap: 10px; }
   .gallery-controls p { margin-right: auto; }
   .about-gallery-controls { margin-bottom: 22px; }
-  .gallery-embla-slide {
-    flex-basis: 84%;
-    padding-inline: 6px;
-  }
-  .gallery-embla-card { transform: scale(.96); opacity: .78; }
-  .gallery-embla-slide.is-snapped .gallery-embla-card { transform: scale(1); opacity: 1; }
-  .gallery-embla-card img { aspect-ratio: 4 / 5; object-position: 55% center; }
-  .gallery-embla-caption { padding-inline: 6px; margin-top: 14px; }
+  .about-gallery-viewport { margin-inline: 0; padding-inline: 0; }
+  .about-gallery-slide { width: 84%; padding-inline: 6px; }
+  .about-gallery-card img { aspect-ratio: 4 / 5; object-position: 55% center; }
+  .about-gallery-caption { padding-inline: 6px; margin-top: 14px; }
   .gallery-stars { margin-top: 34px; }
-  .live-section { padding-block: clamp(48px, 10vw, 72px); }
+  .photo-lightbox-nav { width: 42px; height: 42px; font-size: 22px; }
+  .photo-lightbox-hint { display: none; }
+  .live-section { padding-block: var(--section-space); }
   .live-layout { grid-template-columns: 1fr; gap: 18px; }
   .live-layout h2 { font-size: clamp(26px, 7vw, 34px); }
   .live-content { padding-top: 0; }
@@ -747,7 +881,7 @@ a.concert-tickets:focus-visible {
   .footer-contact-item { padding-block: 26px; border-bottom: 1px solid var(--section-rule); }
   .footer-contact-item:last-child { border-bottom: 0; padding-bottom: 8px; }
   .footer-cta { width: 100%; min-width: 0; }
-  .site-footer { padding-block: 56px 28px; }
+  .site-footer { padding-block: var(--section-space) 28px; }
   .footer-wordmark { width: min(68vw, 240px); }
   .footer-stars { width: 32px; }
   .footer-album { font-size: 20px; }

@@ -147,7 +147,18 @@ function Shop() {
 
   return (
     <section id="shop" className="shop-section section-shell" aria-labelledby="shop-title">
-      <Reveal as="header" className="section-heading"><div><p className="eyebrow section-kicker">{t('shop.label')}</p><h2 id="shop-title" className="editorial-title">{t('shop.title')}</h2></div></Reveal>
+      <Reveal as="header" className="section-heading">
+        <div>
+          <p className="eyebrow section-kicker">{t('shop.label')}</p>
+          <h2 id="shop-title" className="editorial-title">{t('shop.title')}</h2>
+          {purchasable ? (
+            <div className="shop-promo">
+              <p className="availability-note"><strong>{t('shop.promoTees')}</strong></p>
+              <p className="availability-note"><strong>{t('shop.promoCdTee')}</strong></p>
+            </div>
+          ) : null}
+        </div>
+      </Reveal>
       <div className="products">
         {items.map((product, index) => {
           const labels = translateProduct(t, product)

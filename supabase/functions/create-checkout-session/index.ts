@@ -1,6 +1,7 @@
 import { CART_LIMITS } from '../_shared/limits.ts'
 import { checkoutReturnOrigin, json, preflight, rejectOrigin } from '../_shared/http.ts'
-import { serviceClient, shippingCents, stripeClient, userClient } from '../_shared/clients.ts'
+import { serviceClient, stripeClient, userClient } from '../_shared/clients.ts'
+import { shippingZoneByCountry, stripeShippingOption } from '../_shared/shipping.ts'
 
 const PRODUCT_NAMES: Record<string, string> = {
   'luna-bohemia-white': 'Luna Bohemia — Blanc',
@@ -22,6 +23,7 @@ Deno.serve(async (req) => {
     items?: { productId?: string; size?: string; quantity?: number }[]
     email?: string
     promoCode?: string
+    shippingCountry?: string
   }
   try {
     body = await req.json()
@@ -59,7 +61,18 @@ Deno.serve(async (req) => {
   const authHeader = req.headers.get('authorization') ?? ''
   const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : ''
   const anon = Deno.env.get('SUPABASE_ANON_KEY') ?? ''
-  if (token && token !== anon) {
+  const tokenRole = (() => {
+    try {
+      const payload = token.split('.')[1]
+      if (!payload) return null
+      const json = atob(payload.replace(/-/g, '+').replace(/_/g, '/'))
+      return (JSON.parse(json) as { role?: string }).role ?? null
+    } catch {
+      return null
+    }
+  })()
+  // Guest checkout sends the anon JWT. Only treat real user sessions as authenticated.
+  if (token && token !== anon && tokenRole === 'authenticated') {
     const { data, error } = await userClient(token).auth.getUser(token)
     if (error || !data.user?.email) return json(401, { error: 'invalid_session' }, origin)
     userId = data.user.id
@@ -67,25 +80,23 @@ Deno.serve(async (req) => {
   }
   if (!email) return json(400, { error: 'email_required' }, origin)
 
-  let shipping: number
-  try {
-    shipping = shippingCents()
-  } catch {
-    return json(503, { error: 'shipping_not_configured' }, origin)
-  }
+  const country = typeof body.shippingCountry === 'string' ? body.shippingCountry.trim().toUpperCase() : ''
+  const zone = shippingZoneByCountry(country)
+  if (!zone) return json(400, { error: 'invalid_shipping_country' }, origin)
 
+  // Tarif dérivé du pays. Stripe ne propose que les pays de cette zone + un seul forfait.
   const { data: order, error: orderError } = await admin.rpc('create_pending_order', {
     p_email: email,
     p_user_id: userId,
     p_items: sanitized,
     p_promo_code: typeof body.promoCode === 'string' ? body.promoCode : null,
-    p_shipping_cents: shipping,
+    p_shipping_cents: zone.amountCents,
   })
 
   if (orderError || !order) {
     const message = orderError?.message ?? 'order_failed'
     console.error('create_pending_order', orderError?.code ?? '', message)
-    const known = ['invalid_email', 'empty_cart', 'too_many_lines', 'too_many_items', 'invalid_product', 'invalid_size', 'invalid_quantity', 'product_unavailable', 'out_of_stock', 'promo_invalid', 'promo_already_used', 'invalid_shipping', 'forbidden']
+    const known = ['invalid_email', 'empty_cart', 'too_many_lines', 'too_many_items', 'invalid_product', 'invalid_size', 'invalid_quantity', 'product_unavailable', 'out_of_stock', 'promo_invalid', 'promo_needs_tees', 'promo_needs_cds', 'promo_already_used', 'shipping_quote_required', 'invalid_shipping', 'forbidden']
     const code = known.find((item) => message.includes(item))
     return json(code ? 409 : 400, { error: code ?? 'order_failed' }, origin)
   }
@@ -99,7 +110,7 @@ Deno.serve(async (req) => {
       unit_amount: line.unitPriceCents,
       product_data: {
         name: PRODUCT_NAMES[line.productId] ?? line.name,
-        description: line.size === 'U' ? 'Taille unique' : `Taille ${line.size}`,
+        description: line.size === 'U' ? 'Digipack' : `Taille ${line.size}`,
         metadata: { productId: line.productId, size: line.size },
       },
     },
@@ -128,15 +139,9 @@ Deno.serve(async (req) => {
       billing_address_collection: 'required',
       phone_number_collection: { enabled: true },
       shipping_address_collection: {
-        allowed_countries: ['FR', 'BE', 'CH', 'LU', 'MC', 'DE', 'ES', 'IT', 'PT', 'NL'],
+        allowed_countries: zone.countries,
       },
-      shipping_options: [{
-        shipping_rate_data: {
-          display_name: 'Livraison',
-          type: 'fixed_amount',
-          fixed_amount: { amount: order.shippingCents, currency: 'eur' },
-        },
-      }],
+      shipping_options: [stripeShippingOption(zone)],
       line_items: lineItems,
       discounts: discounts.length ? discounts : undefined,
       metadata: { orderId: order.orderId },
