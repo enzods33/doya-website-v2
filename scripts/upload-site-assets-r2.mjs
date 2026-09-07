@@ -69,21 +69,24 @@ const jobs = [
 ]
 
 const shopDir = join(root, 'src/assets/images/shop')
-for (const name of readdirSync(shopDir)) {
-  if (!/\.(jpe?g|png)$/i.test(name)) continue
-  if (name.startsWith('.')) continue
-  const lower = name.toLowerCase()
-  // Skip debug / unused source sheets if any linger
-  if (lower.includes('extracted')) continue
-  const base = basename(name, extname(name))
-  const isCd = lower.includes('cd-')
-  const isPng = /\.png$/i.test(name)
-  jobs.push({
-    local: `src/assets/images/shop/${name}`,
-    key: isPng ? `shop/web/${base}.webp` : `shop/web/${base}.jpg`,
-    kind: isPng ? 'product' : 'photo',
-    max: isCd ? 1200 : 1400,
-  })
+// Sources locales optionnelles : le site lit déjà R2 (`shop/web/…`).
+// Re-déposer des JPG/PNG ici uniquement pour re-uploader / re-compresser.
+if (existsSync(shopDir)) {
+  for (const name of readdirSync(shopDir)) {
+    if (!/\.(jpe?g|png)$/i.test(name)) continue
+    if (name.startsWith('.')) continue
+    const lower = name.toLowerCase()
+    if (lower.includes('extracted')) continue
+    const base = basename(name, extname(name))
+    const isCd = lower.includes('cd-')
+    const isPng = /\.png$/i.test(name)
+    jobs.push({
+      local: `src/assets/images/shop/${name}`,
+      key: isPng ? `shop/web/${base}.webp` : `shop/web/${base}.jpg`,
+      kind: isPng ? 'product' : 'photo',
+      max: isCd ? 1200 : 1400,
+    })
+  }
 }
 
 const manifest = []

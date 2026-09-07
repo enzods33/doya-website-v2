@@ -138,8 +138,8 @@ export default {
     body: 'Hola,\n\n',
   },
   studio: {
-    label: 'Sitio y técnica',
-    aria: 'Contactar a Reelazura — sitio y técnica',
+    label: 'Sitio web',
+    aria: 'Contactar a Reelazura',
     subject: 'DOYA — contacto del sitio',
     body: 'Hola Reelazura,\n\n',
     menuLabel: 'Bug, idea, contacto',
@@ -361,6 +361,7 @@ export default {
     added: 'Añadido a la cesta.',
     choose_size: 'Elige una talla.',
     canceled: 'Pago cancelado. No se ha efectuado ningún cargo.',
+    rate_limited: 'Demasiados intentos. Vuelve a intentarlo en unos minutos.',
     request_failed: 'Acción imposible por el momento.',
     fallback: 'Acción imposible por el momento.',
   },

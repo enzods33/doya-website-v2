@@ -127,9 +127,17 @@ Quand le site est en ligne sur le nom de domaine définitif (nouvelle IP / DNS),
 6. **DNS / IP**  
    A/AAAA (ou CNAME) vers la nouvelle IP / l’hébergeur ; HTTPS (certificat) OK avant de tester un vrai paiement.
 
-7. **Stripe**  
-   - Webhook : **ne change pas** (il pointe vers Supabase, pas vers le domaine du site).  
-   - Après un paiement test live : vérifier success_url / cancel_url sur le bon domaine.  
+7. **Stripe — passage TEST → LIVE (très important)**  
+   - Dashboard Stripe : passer en mode **Live** (plus Test).  
+   - Secrets Supabase Edge :  
+     - `STRIPE_SECRET_KEY` → `sk_live_…` (**plus** `sk_test_…`)  
+     - `STRIPE_WEBHOOK_SECRET` → `whsec_…` du **webhook Live**  
+   - Créer / vérifier le webhook **Live** vers  
+     `https://ipphjddgeotsohplzkbo.supabase.co/functions/v1/stripe-webhook`  
+     (events : `checkout.session.completed`, `checkout.session.expired`, `charge.refunded`).  
+   - Le webhook pointe vers Supabase (pas vers le domaine du site) — l’URL ne change pas avec le DNS.  
+   - Faire **1 paiement réel de contrôle** : `/commande` OK, mails, stock, admin Ventes.  
+   - En live, la carte test `4242…` **ne marche plus** (normal).  
    - Régénérer les clés live si elles ont fuité dans un chat.
 
 8. **Brevo — expéditeur newsletter**  
@@ -137,16 +145,25 @@ Quand le site est en ligne sur le nom de domaine définitif (nouvelle IP / DNS),
    - Puis secret Supabase `BREVO_SENDER_EMAIL=doyamusicofficial@gmail.com` (et `BREVO_SENDER_NAME=DOYA` si besoin).  
    - Aujourd’hui l’envoi passe par `dasildoya@gmail.com` (seul sender actif).
 
-9. **Ne touche pas** (sauf besoin métier)  
-   `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, tables produits / stocks.  
-   Tarifs / zones : `supabase/functions/_shared/shipping.ts` (redéployer les fonctions après changement).  
-   R2 : secrets inchangés (ne dépendent pas du domaine du site).
+9. **Données boutique & stats — reset « jour J » (obligatoire avant ouverture réelle)**  
+   Remettre un état propre **prod**, sans les tests staging :
+   - **Stocks** : mettre à jour `product_variants.stock` (et `products.on_sale` / prix) avec les vrais stocks atelier.  
+   - **Ventes** : partir de **0 vente** — purger les commandes / réservations / redemptions de test (`orders`, `order_items`, `stock_reservations`, `promo_redemptions`, éventuellement `processed_stripe_events` liés aux tests).  
+   - **Stats site** : vider `site_pageviews` et `site_events` (audience admin repart de zéro).  
+   Ne pas confondre avec les **clés** Stripe / R2 : on change les clés Stripe **test→live** (point 7) ; on ne regénère pas R2 sans besoin. On reset l’**historique métier**, pas les assets.
 
-10. **Médiateur de la consommation (obligatoire avant vente live B2C)**  
+10. **Ne touche pas** (sauf besoin métier)  
+   Secrets R2.  
+   Tarifs / zones : `supabase/functions/_shared/shipping.ts` (redéployer les fonctions après changement).
+
+11. **Médiateur de la consommation (obligatoire avant vente live B2C)**  
     - Adhérer à **CM2C** (choix retenu, pas cher) : https://www.cm2c.net/  
     - Tarifs : https://www.cm2c.net/tarifs.php — ~**48 € pour 3 ans** (&lt; 10 salariés) ; ~36 € si un dossier à distance.  
     - Puis mettre dans les CGV le **nom + URL** du médiateur (remplacer la mention provisoire « coordonnées sur demande à almenaprod@gmail.com »).  
     - Liste officielle CECMC si besoin : https://www.economie.gouv.fr/mediation-conso
+
+12. **SEO post-deploy**  
+    Search Console → propriété du domaine → envoyer `https://domaine/sitemap.xml` (détail : `reference/seo.md`).
 
 ### Preview Netlify (staging)
 

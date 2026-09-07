@@ -88,11 +88,16 @@ Deno.serve(async (req) => {
     if (event.type === 'charge.refunded') {
       const charge = event.data.object as Stripe.Charge
       const paymentIntent = typeof charge.payment_intent === 'string' ? charge.payment_intent : charge.payment_intent?.id
-      if (paymentIntent) {
+      // charge.refunded === true seulement si remboursement total ; sinon partiel → pas de restock.
+      if (paymentIntent && charge.refunded) {
         const { error } = await admin.rpc('restock_order_from_refund', {
           p_payment_intent: paymentIntent,
+          p_amount_refunded: charge.amount_refunded ?? 0,
+          p_charge_amount: charge.amount ?? 0,
         })
         if (error) throw error
+      } else if (paymentIntent) {
+        console.info('partial_refund_skip_restock', paymentIntent, charge.amount_refunded, charge.amount)
       }
     }
   } catch (error) {

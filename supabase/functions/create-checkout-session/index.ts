@@ -2,6 +2,7 @@ import { CART_LIMITS } from '../_shared/limits.ts'
 import { checkoutReturnOrigin, json, preflight, rejectOrigin } from '../_shared/http.ts'
 import { serviceClient, stripeClient, userClient } from '../_shared/clients.ts'
 import { shippingZoneByCountry, stripeShippingOption } from '../_shared/shipping.ts'
+import { allowRatePersistent, clientIp } from '../_shared/rateLimit.ts'
 
 const PRODUCT_NAMES: Record<string, string> = {
   // Libellés Stripe Checkout (FR) — garder synchrones avec `src/data/products.js`
@@ -12,6 +13,10 @@ const PRODUCT_NAMES: Record<string, string> = {
   'cd-luna-bohemia': 'Luna Bohemia — CD',
 }
 
+const CHECKOUT_WINDOW_MS = 15 * 60 * 1000
+const CHECKOUT_MAX_PER_IP = 8
+const CHECKOUT_MAX_PER_EMAIL = 5
+
 Deno.serve(async (req) => {
   const origin = req.headers.get('origin')
   const options = preflight(req)
@@ -19,6 +24,12 @@ Deno.serve(async (req) => {
   const blocked = rejectOrigin(req)
   if (blocked) return blocked
   if (req.method !== 'POST') return json(405, { error: 'method_not_allowed' }, origin)
+
+  const ip = clientIp(req)
+  const admin = serviceClient()
+  if (!(await allowRatePersistent(admin, `checkout:ip:${ip}`, CHECKOUT_MAX_PER_IP, CHECKOUT_WINDOW_MS))) {
+    return json(429, { error: 'rate_limited' }, origin)
+  }
 
   let body: {
     items?: { productId?: string; size?: string; quantity?: number }[]
@@ -54,7 +65,6 @@ Deno.serve(async (req) => {
   }
   if (totalQuantity > CART_LIMITS.maxTotalQuantity) return json(400, { error: 'invalid_cart' }, origin)
 
-  const admin = serviceClient()
   await admin.rpc('release_stale_reservations')
 
   let userId: string | null = null
@@ -80,6 +90,10 @@ Deno.serve(async (req) => {
     email = data.user.email.toLowerCase()
   }
   if (!email) return json(400, { error: 'email_required' }, origin)
+
+  if (!(await allowRatePersistent(admin, `checkout:email:${email}`, CHECKOUT_MAX_PER_EMAIL, CHECKOUT_WINDOW_MS))) {
+    return json(429, { error: 'rate_limited' }, origin)
+  }
 
   const country = typeof body.shippingCountry === 'string' ? body.shippingCountry.trim().toUpperCase() : ''
   const zone = shippingZoneByCountry(country)

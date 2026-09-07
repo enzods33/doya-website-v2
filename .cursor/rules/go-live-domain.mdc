@@ -13,11 +13,12 @@ Quand l’utilisateur annonce le **vrai nom de domaine** (ou nouvelle IP / mise 
 4. Front prod : `VITE_SITE_URL=https://domaine` + `VITE_INDEXABLE=true` puis rebuild/deploy (détail SEO : `reference/seo.md`)
 5. SPA fallback `/panier` `/commande` `/admin`
 6. DNS + HTTPS
-7. Stripe webhook **inchangé** (pointe vers Supabase) ; vérifier URLs de retour checkout
+7. **Stripe TEST → LIVE (très important)** : mode Live · `STRIPE_SECRET_KEY=sk_live_…` · `STRIPE_WEBHOOK_SECRET` du webhook Live · vérifier webhook vers Supabase · **1 paiement réel de contrôle** (carte `4242` ne marche plus en live)
 8. Brevo : vérifier sender `doyamusicofficial@gmail.com` puis `BREVO_SENDER_EMAIL` (aujourd’hui `dasildoya@gmail.com`)
-9. Ne pas resetter clés Stripe / stocks sans demande. Tarifs zones : `supabase/functions/_shared/shipping.ts`
-10. **Médiateur conso (obligatoire boutique B2C)** : adhésion **CM2C** ([cm2c.net](https://www.cm2c.net/) · [tarifs](https://www.cm2c.net/tarifs.php) ≈ 48 € / 3 ans si &lt; 10 salariés) → mettre nom + lien dans les CGV (remplacer le « sur demande à almenaprod@gmail.com »)
-11. SEO post-deploy : Search Console → soumettre `https://domaine/sitemap.xml` (le reste est déjà dans le build)
+9. **Reset jour J (obligatoire)** : stocks réels (`product_variants`) · ventes à **0** (purger commandes / réservations / redemptions de test) · stats site à **0** (`site_pageviews`, `site_events`) — détail `reference/commerce.md`
+10. Ne pas resetter les **secrets R2** sans demande. Tarifs zones : `supabase/functions/_shared/shipping.ts`
+11. **Médiateur conso (obligatoire boutique B2C)** : adhésion **CM2C** ([cm2c.net](https://www.cm2c.net/) · [tarifs](https://www.cm2c.net/tarifs.php) ≈ 48 € / 3 ans si &lt; 10 salariés) → mettre nom + lien dans les CGV (remplacer le « sur demande à almenaprod@gmail.com »)
+12. SEO post-deploy : Search Console → soumettre `https://domaine/sitemap.xml` (le reste est déjà dans le build)
 
 État actuel :
 - Dev local : Auth redirects `127.0.0.1:5174` / `localhost:5174` toujours autorisés

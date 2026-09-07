@@ -1,7 +1,13 @@
 import { json, preflight, rejectOrigin } from '../_shared/http.ts'
 import { emailLogoPublicUrl } from '../_shared/emailLogo.ts'
+import { allowRatePersistent, clientIp } from '../_shared/rateLimit.ts'
+import { serviceClient } from '../_shared/clients.ts'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+/** Rate-limit : 8 req / 10 min / IP (Postgres + fallback mémoire). */
+const RATE_WINDOW_MS = 10 * 60 * 1000
+const RATE_MAX = 8
 
 async function setBrevoLang(
   apiKey: string,
@@ -113,11 +119,21 @@ Deno.serve(async (req) => {
   if (blocked) return blocked
   if (req.method !== 'POST') return json(405, { error: 'method_not_allowed' }, origin)
 
-  let body: { email?: string; locale?: string }
+  if (!(await allowRatePersistent(serviceClient(), `newsletter:ip:${clientIp(req)}`, RATE_MAX, RATE_WINDOW_MS))) {
+    return json(429, { error: 'rate_limited' }, origin)
+  }
+
+  let body: { email?: string; locale?: string; website?: string }
   try {
     body = await req.json()
   } catch {
     return json(400, { error: 'invalid_json' }, origin)
+  }
+
+  // Honeypot rempli → faux succès (ne pas tipper les bots).
+  const website = typeof body.website === 'string' ? body.website.trim() : ''
+  if (website) {
+    return json(200, { ok: true, already: false }, origin)
   }
 
   const email = typeof body.email === 'string' ? body.email.trim().toLowerCase() : ''

@@ -138,8 +138,8 @@ export default {
     body: 'Hello,\n\n',
   },
   studio: {
-    label: 'Site & tech',
-    aria: 'Contact Reelazura — website and tech',
+    label: 'Website',
+    aria: 'Contact Reelazura',
     subject: 'DOYA — site contact',
     body: 'Hi Reelazura,\n\n',
     menuLabel: 'Bug, idea, contact',
@@ -361,6 +361,7 @@ export default {
     added: 'Added to cart.',
     choose_size: 'Choose a size.',
     canceled: 'Payment canceled. Nothing was charged.',
+    rate_limited: 'Too many attempts. Try again in a few minutes.',
     request_failed: 'Action not possible right now.',
     fallback: 'Action not possible right now.',
   },

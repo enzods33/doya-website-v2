@@ -1,6 +1,6 @@
 import { assetUrl } from '../utils/assets.js'
 
-// Visuels boutique — toujours CDN R2 (versions web compressées).
+// Visuels boutique — CDN R2 uniquement (`shop/web/…`). Pas de fichiers locaux.
 function shopImage(file) {
   const base = String(file).replace(/\.[^.]+$/, '')
   const isPng = /\.png$/i.test(file)

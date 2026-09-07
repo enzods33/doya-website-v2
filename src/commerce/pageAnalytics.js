@@ -2,6 +2,9 @@
 import { commerceConfigured } from './config.js'
 
 const SKIP = /^\/admin/
+const PV_COOLDOWN_MS = 60_000
+const PV_SESSION_MAX = 40
+const PV_KEY = 'doya-pv'
 
 function pagePath() {
   const path = (window.location.pathname || '/').toLowerCase()
@@ -14,6 +17,23 @@ async function client() {
   if (!commerceConfigured) return null
   const { supabase } = await import('./supabase.js')
   return supabase
+}
+
+function pageviewBudget(path) {
+  try {
+    const raw = sessionStorage.getItem(PV_KEY)
+    const state = raw ? JSON.parse(raw) : { n: 0, paths: {} }
+    const now = Date.now()
+    const last = Number(state.paths?.[path] || 0)
+    if (last && now - last < PV_COOLDOWN_MS) return false
+    if (state.n >= PV_SESSION_MAX) return false
+    state.n = Number(state.n || 0) + 1
+    state.paths = { ...(state.paths || {}), [path]: now }
+    sessionStorage.setItem(PV_KEY, JSON.stringify(state))
+    return true
+  } catch {
+    return true
+  }
 }
 
 /** @param {string} event @param {string} place */
@@ -39,6 +59,7 @@ export function startPageAnalytics() {
     const path = pagePath()
     if (SKIP.test(path) || path === last) return
     last = path
+    if (!pageviewBudget(path)) return
     client().then((supabase) => {
       if (stopped || !supabase) return
       supabase.rpc('record_pageview', { p_path: path }).then(({ error }) => {

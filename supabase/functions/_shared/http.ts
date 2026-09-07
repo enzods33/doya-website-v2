@@ -12,7 +12,14 @@ export function siteOrigins(): string[] {
         return false
       }
     })
-  return [...new Set([...LOCAL_ORIGINS, ...configured])]
+  // En prod (Supabase Edge / Deno Deploy), ne plus accepter localhost.
+  const isProd = Boolean(
+    Deno.env.get('DENO_DEPLOYMENT_ID')
+    || Deno.env.get('SB_EXECUTION_ID')
+    || Deno.env.get('ENV') === 'production',
+  )
+  const locals = isProd ? [] : LOCAL_ORIGINS
+  return [...new Set([...locals, ...configured])]
 }
 
 export function publicSiteUrl(): string {

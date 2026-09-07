@@ -6,10 +6,30 @@ import { isValidEmail } from '../commerce/cartRules.js'
 import { useI18n } from '../i18n/I18nProvider.jsx'
 import { Stars } from './Brand.jsx'
 
+function HoneypotField({ value, onChange, disabled }) {
+  return (
+    <div className="newsletter-hp" aria-hidden="true">
+      <label>
+        <span>Website</span>
+        <input
+          type="text"
+          name="website"
+          tabIndex={-1}
+          autoComplete="off"
+          value={value}
+          disabled={disabled}
+          onChange={onChange}
+        />
+      </label>
+    </div>
+  )
+}
+
 /** @param {{ className?: string, variant?: 'default' | 'menu' }} props */
 function NewsletterSignup({ className = '', variant = 'default' }) {
   const { t, locale } = useI18n()
   const [email, setEmail] = useState('')
+  const [website, setWebsite] = useState('')
   const [busy, setBusy] = useState(false)
   const [status, setStatus] = useState(null)
   const isMenu = variant === 'menu'
@@ -25,15 +45,23 @@ function NewsletterSignup({ className = '', variant = 'default' }) {
       setStatus({ kind: 'error', message: t('newsletter.invalidEmail') })
       return
     }
+    // Bot a rempli le champ caché → faux succès, pas d’appel API.
+    if (website.trim()) {
+      setStatus({ kind: 'ok', message: t('newsletter.success') })
+      setEmail('')
+      setWebsite('')
+      return
+    }
     setBusy(true)
     try {
-      const result = await subscribeNewsletter(email, locale)
+      const result = await subscribeNewsletter(email, locale, website)
       trackEvent('newsletter_submit', isMenu ? 'menu' : 'footer')
       setStatus({
         kind: 'ok',
         message: result.already ? t('newsletter.already') : t('newsletter.success'),
       })
       setEmail('')
+      setWebsite('')
     } catch {
       setStatus({ kind: 'error', message: t('newsletter.error') })
     } finally {
@@ -51,6 +79,11 @@ function NewsletterSignup({ className = '', variant = 'default' }) {
         <p id="newsletter-menu-title" className="newsletter-menu-lead">{t('newsletter.menuLead')}</p>
         <p className="newsletter-menu-text">{t('newsletter.text')}</p>
         <form className="newsletter-signup-form" onSubmit={onSubmit}>
+          <HoneypotField
+            value={website}
+            disabled={busy}
+            onChange={(event) => setWebsite(event.target.value)}
+          />
           <label className="newsletter-signup-field">
             <span className="visually-hidden">{t('newsletter.email')}</span>
             <input
@@ -85,6 +118,11 @@ function NewsletterSignup({ className = '', variant = 'default' }) {
         <p className="newsletter-signup-text">{t('newsletter.text')}</p>
       </div>
       <form className="newsletter-signup-form" onSubmit={onSubmit}>
+        <HoneypotField
+          value={website}
+          disabled={busy}
+          onChange={(event) => setWebsite(event.target.value)}
+        />
         <label className="newsletter-signup-field">
           <span className="visually-hidden">{t('newsletter.email')}</span>
           <input

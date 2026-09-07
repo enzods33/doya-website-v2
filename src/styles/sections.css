@@ -745,11 +745,20 @@ a.concert-tickets:focus-visible {
   line-height: 1.5;
 }
 .newsletter-signup-form {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 10px;
   margin-top: 18px;
   width: 100%;
+}
+.newsletter-hp {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
 }
 .newsletter-signup-field { display: block; min-width: 0; }
 .newsletter-signup-field input {
@@ -950,10 +959,10 @@ a.concert-tickets:focus-visible {
 }
 .copyright { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
 .footer-publisher .publisher-credit-logo {
-  height: 52px;
+  height: 65px;
 }
 .footer-studio .studio-credit-logo {
-  height: 60.5px;
+  height: 52px;
   /* Logo néon un peu trop vif dans le footer — on l’atténue */
   filter: saturate(0.42) brightness(0.9) contrast(0.9);
   opacity: 0.82;
@@ -1244,10 +1253,10 @@ a.concert-tickets:focus-visible {
     text-align: center;
   }
   .footer-publisher .publisher-credit-logo {
-    height: 48px;
+    height: 60px;
   }
   .footer-studio .studio-credit-logo {
-    height: 44px;
+    height: 38px;
   }
   .footer-meta-tools {
     flex-direction: row;
