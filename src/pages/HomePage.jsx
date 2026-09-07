@@ -1,17 +1,21 @@
+import { lazy, Suspense } from 'react'
 import Hero from '../sections/hero/Hero.jsx'
-import Music from '../sections/music/Music.jsx'
-import Live from '../sections/live/Live.jsx'
-import Shop from '../sections/shop/Shop.jsx'
-import About from '../sections/about/About.jsx'
+
+const Music = lazy(() => import('../sections/music/Music.jsx'))
+const Live = lazy(() => import('../sections/live/Live.jsx'))
+const Shop = lazy(() => import('../sections/shop/Shop.jsx'))
+const About = lazy(() => import('../sections/about/About.jsx'))
 
 function HomePage() {
   return (
     <main id="main" tabIndex={-1}>
       <Hero />
-      <Music />
-      <Live />
-      <Shop />
-      <About />
+      <Suspense fallback={null}>
+        <Music />
+        <Live />
+        <Shop />
+        <About />
+      </Suspense>
     </main>
   )
 }

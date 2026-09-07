@@ -4,7 +4,7 @@ Site de présentation indépendant, créé de zéro en React et JavaScript. L’
 
 ## État actuel
 
-- **Base technique** : React 19 + Vite 8, Tailwind 4, Motion 13, carrousel Embla. Node 22. `npm run lint`, `npm test` (contenu, commerce, concerts, i18n — 23 tests) et `npm run build` passent.
+- **Base technique** : React 19 + Vite 8, Tailwind 4, Motion 13. Node 22. `npm run lint`, `npm test` et `npm run build` passent.
 - **Internationalisation** : FR (défaut), ES, EN, PT via `src/i18n/` (détection navigateur, persistance `localStorage`, sélecteur `LanguageSwitcher`). Aucune bibliothèque i18n externe.
 - **Design** : refonte réalisée — nouveau Hero et CTA « glass », header **sticky** avec ancrage corrigé, sections re-stylées (gris chauds, titres plus calmes), chrome mobile/desktop clarifié, icônes de plateformes. Des affinages d’accessibilité/typographie issus de l’audit peuvent rester à faire.
 - **Environnement Cloud Agent** : `.cursor/environment.json` en place (voir plus bas).
@@ -12,8 +12,8 @@ Site de présentation indépendant, créé de zéro en React et JavaScript. L’
 - **Liens externes** : audités et vérifiés. Sept profils au footer, groupés `listen` (Spotify, Apple Music, Deezer, YouTube) et `social` (Instagram, TikTok, Facebook). Deux avances singles reliées (`Mariposa`, `Mueve`) ; album complet et dix autres titres en attente de sortie (`null`). Détails dans `reference/social-links.md`.
 - **Boutique / merch** : T-shirts (Luna Bohemia et DOYA, blanc/noir) et CD digipack Luna Bohemia. Paiement **Stripe Checkout uniquement** via Edge Functions, stock et codes promo côté Supabase. Activée dès que les clés Supabase publiques sont présentes et qu’un produit est `on_sale`.
 - **Live** : dates chargées depuis Supabase (billetterie, fenêtre passé/à venir), section « Dates ».
-- **Médias** : la galerie Bio peut être servie depuis Cloudflare R2 (`VITE_ASSETS_URL`).
-- **Déploiement** : workflow GitHub Pages (`.github/workflows/pages.yml`) avec base path Vite gérée par le routeur.
+- **Médias** : hero / shop / cover sur Cloudflare R2 (`VITE_ASSETS_URL`, helper `src/utils/assets.js`). Galerie Bio : R2 via admin Supabase, fallback `media.js`.
+- **Déploiement** : workflow GitHub Pages (`.github/workflows/pages.yml`) avec base path Vite gérée par le routeur. SEO prêt-prod : `reference/seo.md` (il suffit de `VITE_SITE_URL` + `VITE_INDEXABLE=true` en prod).
 - **Développement local de la boutique** : `src/commerce/config.js` autorise un Supabase **local** (127.0.0.1) en mode dev ; `scripts/dev-supabase.sh` et `supabase/functions/.env.example` aident à lancer base + Edge Functions. Voir plus bas.
 
 ## Lancer le site
@@ -91,15 +91,16 @@ doya-website-v2/
 │   │                       LanguageSwitcher, PlatformIcon, Link
 │   ├── sections/           hero, music, live, shop, about (galerie repliée dans Bio)
 │   ├── i18n/               I18nProvider, index, locales/{fr,es,en,pt}
-│   ├── pages/              Accueil, panier, compte, commande
-│   ├── commerce/           Catalogue, panier, auth, concerts, appels Edge Functions
+│   ├── pages/              Accueil, panier, commande, admin, légales
+│   ├── commerce/           Catalogue, panier, concerts, analytics, appels Edge Functions
+│   ├── config/             URLs publiques (CDN, staging)
 │   ├── data/               album, live, products, socials, contacts, siteContent, media
 │   ├── styles/             index, fonts, tokens, base, hero, sections, motion, commerce
 │   └── utils/              Validation HTTPS, routeur léger (base path), assets, mouvements
 ├── supabase/               Migrations, RLS, Edge Functions Stripe (+ functions/.env.example)
 ├── reference/              PDF direction artistique, rapports, social-links, screenshots
-├── scripts/                Audit des sources + dev-supabase.sh (stack local)
-├── tests/                  content, commerce, concerts, i18n (23 tests)
+├── scripts/                One-shots R2 / PDF / glyphs + dev-supabase.sh (voir assets-report)
+├── tests/                  content, commerce, concerts, i18n
 ├── .github/workflows/      pages.yml (déploiement GitHub Pages)
 ├── .cursor/                environment.json (environnement Cloud Agent)
 ├── index.html              Métadonnées de base
@@ -110,11 +111,11 @@ doya-website-v2/
 
 Une section correspond à un fichier lisible. Les styles spécifiques restent groupés, les paramètres graphiques sont centralisés. Les quelques utilitaires Tailwind et les styles de composition utilisent le même thème. Aucune bibliothèque UI ni lecteur audio ne sont ajoutés.
 
-La boutique se branche via Supabase (stock, promo, compte) et Stripe Checkout (paiement). Sans clés et sans produit `on_sale`, le Shop reste une collection visuelle. Détail dans `reference/commerce.md`.
+La boutique se branche via Supabase (stock, promo) et Stripe Checkout (paiement). Admin Google sur `/admin`. Sans clés et sans produit `on_sale`, le Shop reste une collection visuelle. Détail dans `reference/commerce.md`.
 
 ## Dépendances
 
-React / React DOM 19.2.8, Vite 8.2.2, Tailwind CSS / plugin Vite 4.3.3, Motion 13.1.1, Embla Carousel (react + class-names) 8.6.x, plugin React Vite 6.1.0, Oxlint 1.79.0, Supabase JS 2.x. L’internationalisation est maison (aucune bibliothèque i18n). Les tests utilisent le runner natif de Node.js. Stripe n’est appelé que depuis les Edge Functions.
+React / React DOM 19.2.8, Vite 8.2.2, Tailwind CSS / plugin Vite 4.3.3, Motion 13.1.1, plugin React Vite 6.1.0, Oxlint 1.79.0, Supabase JS 2.x. L’internationalisation est maison (aucune bibliothèque i18n). Les tests utilisent le runner natif de Node.js. Stripe n’est appelé que depuis les Edge Functions.
 
 Les scripts Python d’audit sont facultatifs pour le développement du site. Ils demandent `pypdf`, `Pillow` et Poppler (`pdftoppm`). Les résultats de provenance sont déjà conservés dans `reference/`.
 

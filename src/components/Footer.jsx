@@ -7,19 +7,32 @@ import { Stars, Wordmark } from './Brand.jsx'
 import LanguageSwitcher from './LanguageSwitcher.jsx'
 import Link from './Link.jsx'
 import NewsletterSignup from './NewsletterSignup.jsx'
+import PublisherCredit from './PublisherCredit.jsx'
+import StudioCredit from './StudioCredit.jsx'
 import { PlatformIcon } from './PlatformIcon.jsx'
+import { trackEvent } from '../commerce/pageAnalytics.js'
 
 function mailto(email, subject) {
   return `mailto:${email}?subject=${encodeURIComponent(subject)}`
 }
 
-function SocialRow({ items }) {
+function SocialRow({ items, eventName }) {
   return (
     <ul className="socials">
       {items.map((social) => (
         <li key={social.name}>
           {isExternalUrl(social.url)
-            ? <a href={social.url} target="_blank" rel="noopener noreferrer" aria-label={social.name}><PlatformIcon id={social.id} /></a>
+            ? (
+              <a
+                href={social.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={social.name}
+                onClick={() => trackEvent(eventName, 'footer')}
+              >
+                <PlatformIcon id={social.id} />
+              </a>
+            )
             : <span>{social.name}</span>}
         </li>
       ))}
@@ -59,7 +72,12 @@ function Footer() {
               <article key={contact.id} className="footer-contact-item">
                 <p className="eyebrow">{label}</p>
                 <p className="footer-contact-note">{note}</p>
-                <a className="footer-cta" href={mailto(contact.email, subject)} aria-label={t('contact.ctaAria', { cta, label })}>
+                <a
+                  className="footer-cta"
+                  href={mailto(contact.email, subject)}
+                  aria-label={t('contact.ctaAria', { cta, label })}
+                  onClick={() => trackEvent('contact_mail', 'footer')}
+                >
                   {cta}
                 </a>
               </article>
@@ -69,7 +87,15 @@ function Footer() {
             <p className="eyebrow">{kit.label}</p>
             <p className="footer-contact-note">{pressReady ? kit.note : kit.pendingNote}</p>
             {pressReady ? (
-              <a className="footer-cta" href={pressKit.href} target="_blank" rel="noopener noreferrer">{kit.cta}</a>
+              <a
+                className="footer-cta"
+                href={pressKit.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => trackEvent('press_kit', 'footer')}
+              >
+                {kit.cta}
+              </a>
             ) : (
               <span className="footer-cta is-disabled" aria-disabled="true">{kit.cta}</span>
             )}
@@ -77,20 +103,37 @@ function Footer() {
         </div>
 
         <nav className="footer-socials" aria-label={t('a11y.footerSocials')}>
-          <SocialRow items={listenSocials} />
-          <SocialRow items={networkSocials} />
+          <SocialRow items={listenSocials} eventName="stream_open" />
+          <SocialRow items={networkSocials} eventName="social_open" />
           {missingLinks && <p className="footer-note">{t('footer.missingLinks')}</p>}
         </nav>
 
         <div className="footer-meta">
-          <p className="copyright">{t('footer.copyright', { year: siteContent.year })}</p>
-          <LanguageSwitcher className="footer-language-switcher" />
-          <Link href="#top" className="back-to-top">
-            {t('footer.backToTop')}
-            <svg className="back-to-top-icon" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-              <path d="M6 10.25V1.75M6 1.75 2.25 5.5M6 1.75 9.75 5.5" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </Link>
+          <div className="footer-meta-primary">
+            <p className="copyright">{t('footer.copyright', { year: siteContent.year })}</p>
+            <nav className="footer-legal" aria-label={t('a11y.footerLegal')}>
+              <Link href="/mentions-legales">{t('footer.legalMentions')}</Link>
+              <Link href="/cgv">{t('footer.legalCgv')}</Link>
+              <Link href="/confidentialite">{t('footer.legalPrivacy')}</Link>
+            </nav>
+          </div>
+          <div className="footer-credits">
+            <PublisherCredit className="footer-publisher" />
+            <span className="footer-credits-sep" aria-hidden="true" />
+            <StudioCredit className="footer-studio" />
+          </div>
+          <div className="footer-meta-tools">
+            <LanguageSwitcher className="footer-language-switcher" />
+            <Link href="#top" className="back-to-top">
+              <span className="back-to-top-label">{t('footer.backToTop')}</span>
+              <span className="back-to-top-mark" aria-hidden="true">
+                <svg className="back-to-top-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path d="M8 12.5V3.5" stroke="currentColor" strokeWidth="1.35" strokeLinecap="round" />
+                  <path d="M4.25 7.25 8 3.5l3.75 3.75" stroke="currentColor" strokeWidth="1.35" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </span>
+            </Link>
+          </div>
         </div>
       </div>
     </footer>

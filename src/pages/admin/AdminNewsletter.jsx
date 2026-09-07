@@ -92,14 +92,14 @@ function AdminNewsletter() {
 
   function campaignStatusLabel(campaign) {
     const status = String(campaign.status || '')
-    const tag = String(campaign.tag || '')
-    if (tag === 'doya-immediate' || /\bimmediat/i.test(String(campaign.name || ''))) {
-      return t('admin.campaignStatusImmediate')
-    }
     if (status === 'sent') return t('admin.campaignStatusSent')
     if (status === 'queued') return t('admin.campaignStatusQueued')
     if (status === 'scheduled') return t('admin.campaignStatusScheduled')
     if (status === 'draft') return t('admin.campaignStatusDraft')
+    const tag = String(campaign.tag || '')
+    if (tag === 'doya-immediate' || /\bimmediat/i.test(String(campaign.name || ''))) {
+      return t('admin.campaignStatusImmediate')
+    }
     return status || t('admin.campaignStatusUnknown')
   }
 

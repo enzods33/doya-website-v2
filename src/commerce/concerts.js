@@ -1,5 +1,4 @@
 import { concerts as localConcerts } from '../data/live.js'
-import { supabase } from './supabase.js'
 
 export { isPastDate, windowConcerts, concertTicketMode } from './concertWindow.js'
 
@@ -14,11 +13,13 @@ function normalizeTicketing(row, ticketUrl) {
   return 'none'
 }
 
+function httpsUrl(value) {
+  return typeof value === 'string' && value.startsWith('https://') ? value : null
+}
+
 function normalizeConcert(row) {
   const country = typeof row.country === 'string' ? row.country.trim().toUpperCase() : ''
-  const ticketUrl = typeof row.ticket_url === 'string' && row.ticket_url.startsWith('https://')
-    ? row.ticket_url
-    : (typeof row.ticketUrl === 'string' && row.ticketUrl.startsWith('https://') ? row.ticketUrl : null)
+  const ticketUrl = httpsUrl(row.ticket_url) ?? httpsUrl(row.ticketUrl)
 
   return {
     id: row.id,
@@ -33,6 +34,7 @@ function normalizeConcert(row) {
 
 /** Charge les dates publiées depuis Supabase ; sinon fallback local (`src/data/live.js`). */
 export async function loadConcerts() {
+  const { supabase } = await import('./supabase.js')
   if (!supabase) return localConcerts.map(normalizeConcert)
 
   const { data, error } = await supabase

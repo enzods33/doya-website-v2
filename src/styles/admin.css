@@ -269,6 +269,27 @@
   font-size: 13px;
   color: var(--muted);
 }
+.admin-period-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 18px;
+}
+.admin-period-btn {
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid rgb(44 41 38 / 14%);
+  background: rgb(255 255 255 / 55%);
+  color: var(--ink);
+  font-size: 12px;
+  letter-spacing: .04em;
+  cursor: pointer;
+}
+.admin-period-btn.is-active {
+  border-color: var(--accent, #c43b2e);
+  color: var(--accent, #c43b2e);
+  background: rgb(255 255 255 / 85%);
+}
 .admin-bars-scroller {
   overflow-x: auto;
   overflow-y: hidden;

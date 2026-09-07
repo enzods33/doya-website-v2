@@ -71,12 +71,12 @@ test('aucun faux lien ou prix inventé', () => {
 
 test('les médias déclarés existent et ont des dimensions explicites', () => {
   for (const image of Object.values(media)) {
-    assert.ok(existsSync(fileURLToPath(image.src)), image.src)
+    assert.ok(String(image.src).startsWith('https://'), image.src)
     assert.ok(image.width > 0 && image.height > 0 && image.alt.length > 10)
   }
   for (const product of products) {
-    assert.ok(existsSync(fileURLToPath(product.front)))
-    assert.ok(existsSync(fileURLToPath(product.back)))
+    assert.ok(String(product.front).startsWith('https://'), product.front)
+    assert.ok(String(product.back).startsWith('https://'), product.back)
   }
   assert.equal(new Set(galleryImages.map((image) => image.src)).size, galleryImages.length)
   assert.ok(galleryImages.length > 0)
@@ -103,7 +103,7 @@ test('les profils officiels sont distincts et prêts pour le footer', () => {
   assert.deepEqual(album.platforms.map((platform) => platform.id), ['spotify', 'apple', 'deezer'])
   assert.ok(album.platforms.every((platform) => isExternalUrl(platform.url)), 'liens album temporaires = profils artistes jusqu’à la sortie')
   assert.equal(album.buyHref, '#shop')
-  assert.equal(album.buyLabel, 'Merch')
+  assert.equal(album.buyLabel, 'Boutique')
 })
 
 test('la navigation et le contact officiels sont en place', () => {

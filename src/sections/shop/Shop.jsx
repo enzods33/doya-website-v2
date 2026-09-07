@@ -5,6 +5,7 @@ import { availableFor } from '../../commerce/catalog.js'
 import { useCart } from '../../commerce/CartProvider.jsx'
 import { useCatalog } from '../../commerce/CatalogProvider.jsx'
 import { commerceMessage, translateProduct } from '../../commerce/messages.js'
+import { trackEvent } from '../../commerce/pageAnalytics.js'
 import { isExternalUrl } from '../../utils/links.js'
 import { siteContent } from '../../data/siteContent.js'
 import { useI18n } from '../../i18n/I18nProvider.jsx'
@@ -114,6 +115,7 @@ function Shop() {
     }
     const result = addItem(product.id, size, 1, availableFor(product, size))
     if (result.ok) {
+      trackEvent('add_to_cart', 'shop')
       setFeedback({ kind: 'added', message: commerceMessage('added', t) })
       return
     }

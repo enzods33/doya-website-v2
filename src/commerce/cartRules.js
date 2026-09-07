@@ -1,10 +1,12 @@
+import { products } from '../data/products.js'
+
 export const CART_LIMITS = {
   maxLineQuantity: 6,
   maxLines: 8,
   maxTotalQuantity: 12,
   /** U = unique (CD / articles sans taillage) */
   sizes: ['XS', 'S', 'M', 'L', 'XL', 'U'],
-  productIds: ['cd-luna-bohemia', 'luna-bohemia-white', 'luna-bohemia-black', 'doya-white', 'doya-black'],
+  productIds: products.map((product) => product.id),
 }
 
 /** Forfait port en ligne. Au-delà → devis (pas de Stripe). */
@@ -19,7 +21,7 @@ export const AUTO_PROMOS = [
   { id: 'cdtee', minTees: 1, minCds: 1, amountOffCents: 500, messageKey: 'cart.promoCdTee', labelKey: 'cart.autoDiscountCdTee' },
 ]
 
-export function eligibleAutoPromos(teeQty, cdQty) {
+function eligibleAutoPromos(teeQty, cdQty) {
   return AUTO_PROMOS.filter((promo) => teeQty >= promo.minTees && cdQty >= promo.minCds)
 }
 

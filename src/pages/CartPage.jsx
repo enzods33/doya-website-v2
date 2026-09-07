@@ -5,6 +5,7 @@ import { startCheckout } from '../commerce/checkout.js'
 import { subscribeNewsletter } from '../commerce/newsletter.js'
 import { CART_LIMITS, FLAT_SHIPPING_LIMITS, bestAutoPromo, formatEuros, isValidEmail, normalizePromoCode } from '../commerce/cartRules.js'
 import { commerceConfigured } from '../commerce/config.js'
+import { trackEvent } from '../commerce/pageAnalytics.js'
 import { commerceMessage, translateProduct } from '../commerce/messages.js'
 import { availableFor } from '../commerce/catalog.js'
 import { SHIPPING_ZONES, zoneForCountry } from '../commerce/shippingZones.js'
@@ -18,6 +19,7 @@ function CartPage() {
   const { locale, t } = useI18n()
   const [email, setEmail] = useState('')
   const [newsletter, setNewsletter] = useState(false)
+  const [acceptCgv, setAcceptCgv] = useState(false)
   const [promoCode, setPromoCode] = useState('')
   const [shippingCountry, setShippingCountry] = useState('FR')
   const [busy, setBusy] = useState(false)
@@ -55,6 +57,7 @@ function CartPage() {
   const shippingZone = zoneForCountry(shippingCountry)
   const shippingCents = shippingZone?.amountCents ?? 0
   const canPay = commerceConfigured
+    && acceptCgv
     && !needsShippingQuote
     && lines.length > 0
     && lines.every((line) => line.product?.sale && line.available >= line.quantity)
@@ -84,7 +87,12 @@ function CartPage() {
       setError(commerceMessage('invalid_shipping_country', t))
       return
     }
+    if (!acceptCgv) {
+      setError(t('cart.acceptCgvRequired'))
+      return
+    }
     setBusy(true)
+    trackEvent('checkout_start', 'cart')
     try {
       if (newsletter) {
         try {
@@ -162,9 +170,26 @@ function CartPage() {
                   type="checkbox"
                   checked={newsletter}
                   disabled={busy}
-                  onChange={(event) => setNewsletter(event.target.checked)}
+                  onChange={(event) => {
+                    const checked = event.target.checked
+                    setNewsletter(checked)
+                    if (checked) trackEvent('newsletter_optin', 'cart')
+                  }}
                 />
                 <span>{t('cart.newsletter')}</span>
+              </label>
+              <label className="cart-newsletter">
+                <input
+                  type="checkbox"
+                  required
+                  checked={acceptCgv}
+                  disabled={busy}
+                  onChange={(event) => setAcceptCgv(event.target.checked)}
+                />
+                <span>
+                  {t('cart.acceptCgv')}{' '}
+                  <Link href="/cgv" className="text-link">{t('cart.acceptCgvLink')}</Link>
+                </span>
               </label>
               <label className="field">
                 <span>{t('cart.promo')}</span>

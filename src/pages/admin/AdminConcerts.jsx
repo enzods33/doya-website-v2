@@ -95,8 +95,8 @@ function AdminConcerts() {
       await refresh()
       reset()
       setOk(t('admin.saved'))
-    } catch (caught) {
-      setError(caught.message || t('admin.error'))
+    } catch {
+      setError(t('admin.error'))
     } finally {
       setBusy(false)
     }

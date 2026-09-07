@@ -12,8 +12,9 @@
 .gallery-controls button { transition: color 240ms, transform 400ms var(--motion-ease); }
 .gallery-controls button:first-of-type:hover { transform: translateX(-4px); }
 .gallery-controls button:last-of-type:hover { transform: translateX(4px); }
-.back-to-top { transition: transform 400ms var(--motion-ease), color 240ms; }
-.back-to-top:hover { transform: translateY(-3px); color: var(--color-doya-red); }
+.back-to-top { transition: color 240ms var(--motion-ease); }
+.back-to-top:hover { color: var(--ink); }
+.back-to-top-label { transition: color 280ms var(--motion-ease); }
 .header-brand { transition: opacity 350ms var(--motion-ease); }
 .desktop-navigation a { transition: color .35s var(--motion-ease), opacity .35s var(--motion-ease); }
 .text-link { position: relative; }
@@ -52,6 +53,7 @@
   .product:hover::after { transform: scaleX(1); transform-origin: left; }
   .product-view-controls button:hover::after { transform: scaleX(1); transform-origin: left; }
   .mobile-menu nav a:hover { color: var(--color-doya-red); }
+  .studio-credit:hover .studio-credit-label { color: var(--ink); }
   .footer-cta:hover { color: var(--ink); border-color: var(--ink); background: rgb(44 41 38 / 6%); }
   a.concert-tickets:hover { transform: translateY(-1px); }
 }

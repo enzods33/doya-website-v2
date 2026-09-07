@@ -4,6 +4,7 @@ import { serviceClient, stripeClient, userClient } from '../_shared/clients.ts'
 import { shippingZoneByCountry, stripeShippingOption } from '../_shared/shipping.ts'
 
 const PRODUCT_NAMES: Record<string, string> = {
+  // Libellés Stripe Checkout (FR) — garder synchrones avec `src/data/products.js`
   'luna-bohemia-white': 'Luna Bohemia — Blanc',
   'luna-bohemia-black': 'Luna Bohemia — Noir',
   'doya-white': 'DOYA — Blanc',
@@ -123,7 +124,7 @@ Deno.serve(async (req) => {
       currency: 'eur',
       duration: 'once',
       max_redemptions: 1,
-      metadata: { orderId: order.orderId },
+      metadata: { orderId: order.orderId, orderNumber: order.orderNumber ?? '' },
     })
     discounts.push({ coupon: coupon.id })
   }
@@ -132,7 +133,7 @@ Deno.serve(async (req) => {
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
       customer_email: email,
-      client_reference_id: userId ?? undefined,
+      client_reference_id: order.orderNumber ?? order.orderId,
       success_url: `${site}/commande?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${site}/panier?canceled=1`,
       expires_at: Math.floor(Date.now() / 1000) + 30 * 60,
@@ -144,8 +145,16 @@ Deno.serve(async (req) => {
       shipping_options: [stripeShippingOption(zone)],
       line_items: lineItems,
       discounts: discounts.length ? discounts : undefined,
-      metadata: { orderId: order.orderId },
-      payment_intent_data: { metadata: { orderId: order.orderId } },
+      metadata: {
+        orderId: order.orderId,
+        orderNumber: order.orderNumber ?? '',
+      },
+      payment_intent_data: {
+        metadata: {
+          orderId: order.orderId,
+          orderNumber: order.orderNumber ?? '',
+        },
+      },
     })
 
     await admin.rpc('attach_stripe_session', {

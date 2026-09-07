@@ -1,17 +1,44 @@
 import fr from './locales/fr.js'
-import es from './locales/es.js'
-import en from './locales/en.js'
-import pt from './locales/pt.js'
 
 export const LOCALES = ['fr', 'es', 'en', 'pt']
 export const DEFAULT_LOCALE = 'fr'
 export const STORAGE_KEY = 'doya-locale'
 
-export const localeCatalog = {
-  fr: { messages: fr, intl: 'fr-FR', label: 'FR' },
-  es: { messages: es, intl: 'es-ES', label: 'ES' },
-  en: { messages: en, intl: 'en-GB', label: 'EN' },
-  pt: { messages: pt, intl: 'pt-PT', label: 'PT' },
+const LOCALE_META = {
+  fr: { intl: 'fr-FR', label: 'FR' },
+  es: { intl: 'es-ES', label: 'ES' },
+  en: { intl: 'en-GB', label: 'EN' },
+  pt: { intl: 'pt-PT', label: 'PT' },
+}
+
+/** Métadonnées légères (labels / BCP47) — messages chargés à la demande. */
+export const localeCatalog = Object.fromEntries(
+  LOCALES.map((code) => [code, { ...LOCALE_META[code], messages: code === 'fr' ? fr : null }]),
+)
+
+const localeLoaders = {
+  fr: () => Promise.resolve(fr),
+  es: () => import('./locales/es.js').then((m) => m.default),
+  en: () => import('./locales/en.js').then((m) => m.default),
+  pt: () => import('./locales/pt.js').then((m) => m.default),
+}
+
+const localeCache = new Map([['fr', fr]])
+
+export function loadLocaleMessages(locale) {
+  if (localeCache.has(locale)) return Promise.resolve(localeCache.get(locale))
+  const loader = localeLoaders[locale]
+  if (!loader) return Promise.resolve(fr)
+  return loader().then((messages) => {
+    localeCache.set(locale, messages)
+    localeCatalog[locale].messages = messages
+    return messages
+  })
+}
+
+/** Messages déjà en mémoire (ex. après boot `main.jsx`), sinon null. */
+export function peekLocaleMessages(locale) {
+  return localeCache.get(locale) ?? null
 }
 
 export function getByPath(object, path) {

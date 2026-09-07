@@ -1,4 +1,6 @@
 // Emails / ids stables. Labels, notes, sujets, CTAs → i18n (contact.<id>.*)
+import { assetUrl } from '../utils/assets.js'
+
 export const contacts = [
   {
     id: 'booking',
@@ -14,5 +16,5 @@ export const contacts = [
 export const shippingQuoteEmails = contacts.map((contact) => contact.email)
 
 export const pressKit = {
-  href: 'https://pub-5b2b2b3b50ba46c485eeff926fa26420.r2.dev/pressbook/press%20book%20Fr%20A.pdf',
+  href: assetUrl('pressbook/press book Fr A.pdf'),
 }

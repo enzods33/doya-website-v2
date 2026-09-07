@@ -25,7 +25,11 @@ export function CartProvider({ children }) {
   const [items, setItems] = useState(readCart)
 
   useEffect(() => {
-    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(items))
+    try {
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(items))
+    } catch {
+      /* private mode / quota */
+    }
   }, [items])
 
   const value = useMemo(() => ({
@@ -43,8 +47,9 @@ export function CartProvider({ children }) {
     },
     setQuantity(productId, size, quantity, available) {
       if (quantity <= 0) {
-        setItems(items.filter((item) => !(item.productId === productId && item.size === size)))
-        return { ok: true, items: [] }
+        const next = items.filter((item) => !(item.productId === productId && item.size === size))
+        setItems(next)
+        return { ok: true, items: next }
       }
       const next = items.map((item) => (item.productId === productId && item.size === size ? { ...item, quantity } : item))
       const result = validateCartItems(next)

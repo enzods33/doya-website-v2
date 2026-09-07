@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { m, useReducedMotion } from 'motion/react'
 import { media } from '../../data/media.js'
 import { siteContent } from '../../data/siteContent.js'
@@ -12,10 +12,23 @@ import letterD from '../../assets/logos/glyphs/doya-d-white.svg'
 import letterO from '../../assets/logos/glyphs/doya-o-white.svg'
 import letterY from '../../assets/logos/glyphs/doya-y-white.svg'
 import letterA from '../../assets/logos/glyphs/doya-a-white.svg'
-import lunaPhases from '../../assets/hero/luna-phases.png'
+import lunaPhases from '../../assets/hero/luna-phases.webp'
+
+function useUltraWideHero() {
+  const [enabled, setEnabled] = useState(false)
+  useEffect(() => {
+    const query = window.matchMedia('(min-aspect-ratio: 2/1)')
+    const sync = () => setEnabled(query.matches)
+    sync()
+    query.addEventListener('change', sync)
+    return () => query.removeEventListener('change', sync)
+  }, [])
+  return enabled
+}
 
 function Hero() {
   const reducedMotion = useReducedMotion()
+  const showBackdrop = useUltraWideHero()
   const { t } = useI18n()
   const letters = [{ src: letterD, name: 'd' }, { src: letterO, name: 'o' }, { src: letterY, name: 'y' }, { src: letterA, name: 'a' }]
   const starsClicks = useRef({ count: 0, timer: 0 })
@@ -36,7 +49,9 @@ function Hero() {
 
   return (
     <section className="hero" aria-labelledby="hero-title">
-      <Photo image={media.hero} className="hero-backdrop" fetchPriority="high" eager aria-hidden="true" />
+      {showBackdrop ? (
+        <Photo image={media.hero} className="hero-backdrop" fetchPriority="low" eager aria-hidden="true" />
+      ) : null}
       <div className="hero-photo-frame">
         <Photo image={media.hero} className="hero-photo" fetchPriority="high" eager />
       </div>

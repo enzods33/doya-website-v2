@@ -1,7 +1,8 @@
 node_modules/
 dist/
 tmp/
-tmp-bio-web/
+tmp-*/
+tmp-*.json
 .env
 .env.local
 *.log

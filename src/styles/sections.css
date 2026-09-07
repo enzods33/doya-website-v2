@@ -796,7 +796,49 @@ a.concert-tickets:focus-visible {
 .socials .platform-icon-instagram { width: 42px; height: 42px; }
 .socials span { color: var(--muted); }
 .footer-note { color: var(--muted); font-size: 13px; margin-top: 12px; text-align: center; }
-.footer-meta { margin-top: 48px; padding-top: 28px; border-top: 1px solid var(--section-rule); display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; }
+.footer-meta {
+  margin-top: 48px;
+  padding-top: 28px;
+  border-top: 1px solid var(--section-rule);
+  display: grid;
+  gap: 22px;
+}
+.footer-meta-primary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px 24px;
+  flex-wrap: wrap;
+}
+.footer-legal { display: flex; flex-wrap: wrap; gap: 12px 18px; }
+.footer-credits {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: stretch;
+  gap: 1.5rem;
+}
+.footer-credits-sep {
+  display: block;
+  width: 1px;
+  align-self: stretch;
+  min-height: 2.75rem;
+  margin-block: 0.2rem;
+  background: var(--section-rule);
+  flex-shrink: 0;
+  opacity: .8;
+}
+.footer-meta-tools {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding-top: 6px;
+  border-top: 1px solid var(--section-rule);
+  margin-top: 2px;
+}
+.footer-legal a { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); text-decoration: none; }
+.footer-legal a:hover { color: var(--ink); }
 .language-switcher { position: relative; display: inline-flex; align-items: center; }
 .language-trigger {
   position: relative;
@@ -888,15 +930,15 @@ a.concert-tickets:focus-visible {
 .header-language-switcher .language-menu .language-option { color: var(--muted); }
 .header-language-switcher .language-menu [aria-selected="true"] .language-option { color: var(--color-doya-red); }
 .site-header.is-page .header-language-switcher .language-menu { background: var(--color-header); }
-.mobile-language-switcher { margin-top: clamp(24px, 4svh, 36px); justify-content: flex-start; }
+.mobile-language-switcher { margin-top: 0; }
 .mobile-language-switcher .language-menu {
-  left: 50%;
-  right: auto;
-  bottom: auto;
-  top: calc(100% + 0.45rem);
-  transform: translate(-50%, -0.4rem);
+  left: auto;
+  right: 0;
+  top: auto;
+  bottom: calc(100% + 0.45rem);
+  transform: translateY(0.35rem);
 }
-.mobile-language-switcher.is-open .language-menu { transform: translate(-50%, 0); }
+.mobile-language-switcher.is-open .language-menu { transform: translateY(0); }
 @media (hover: hover) and (pointer: fine) {
   .language-trigger:hover { transform: translateY(-2px); }
   .language-trigger:hover::after { transform: scaleX(1); transform-origin: left; }
@@ -907,22 +949,75 @@ a.concert-tickets:focus-visible {
   .about-gallery-progress span { transition: none; }
 }
 .copyright { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.footer-publisher .publisher-credit-logo {
+  height: 52px;
+}
+.footer-studio .studio-credit-logo {
+  height: 60.5px;
+  /* Logo néon un peu trop vif dans le footer — on l’atténue */
+  filter: saturate(0.42) brightness(0.9) contrast(0.9);
+  opacity: 0.82;
+  transition: filter 0.35s ease, opacity 0.35s ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .footer-studio:hover .studio-credit-logo {
+    filter: saturate(0.62) brightness(0.95) contrast(0.94);
+    opacity: 0.95;
+  }
+}
 .back-to-top {
   display: inline-flex;
   align-items: center;
-  gap: 0.55rem;
+  gap: 0.7rem;
   min-height: 44px;
-  font-size: 12px;
-  letter-spacing: .08em;
+  padding: 0;
+  font-size: 11px;
+  letter-spacing: .1em;
   text-transform: uppercase;
   line-height: 1;
+  color: var(--muted);
+  text-decoration: none;
+}
+.back-to-top-label {
+  order: 0;
+}
+.back-to-top-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.05rem;
+  height: 2.05rem;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+  color: var(--ink);
+  transition: border-color 320ms var(--motion-ease);
 }
 .back-to-top-icon {
   display: block;
-  width: 0.7rem;
-  height: 0.7rem;
+  width: 0.85rem;
+  height: 0.85rem;
   flex-shrink: 0;
-  translate: 0 -0.02em;
+  will-change: transform;
+}
+@media (hover: hover) and (pointer: fine) {
+  .back-to-top:hover .back-to-top-mark {
+    border-color: color-mix(in srgb, var(--ink) 40%, transparent);
+  }
+  .back-to-top:hover .back-to-top-label {
+    color: var(--ink);
+  }
+  .back-to-top:hover .back-to-top-icon {
+    animation: back-to-top-rise 680ms var(--motion-ease);
+  }
+}
+@keyframes back-to-top-rise {
+  0% { transform: translateY(0); opacity: 1; }
+  42% { transform: translateY(-115%); opacity: 0; }
+  43% { transform: translateY(115%); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .back-to-top:hover .back-to-top-icon { animation: none; }
 }
 @media (max-width: 1199px) {
   .concerts li { align-items: center; }
@@ -1108,5 +1203,68 @@ a.concert-tickets:focus-visible {
   .footer-album { font-size: 20px; }
   .footer-socials { margin-top: 36px; }
   .socials { gap: 8px 10px; justify-content: center; }
-  .footer-meta { flex-direction: column; gap: 12px; text-align: center; margin-top: 36px; padding-top: 22px; }
+  .footer-meta { gap: 18px; text-align: center; margin-top: 36px; padding-top: 22px; }
+  .footer-meta-primary {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+  .footer-legal { justify-content: center; }
+  .footer-credits {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: stretch;
+    align-items: stretch;
+    gap: 0;
+    width: 100%;
+  }
+  .footer-credits-sep {
+    min-height: 3.25rem;
+    margin-block: 0.15rem;
+    align-self: stretch;
+  }
+  .footer-publisher,
+  .footer-studio {
+    flex-direction: column;
+    gap: 6px;
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: none;
+    margin: 0;
+    padding: 4px 10px;
+    align-items: center;
+    text-align: center;
+  }
+  .footer-publisher .studio-credit-label,
+  .footer-studio .studio-credit-label {
+    font-size: 9px;
+    letter-spacing: .1em;
+    width: 100%;
+    text-align: center;
+  }
+  .footer-publisher .publisher-credit-logo {
+    height: 48px;
+  }
+  .footer-studio .studio-credit-logo {
+    height: 44px;
+  }
+  .footer-meta-tools {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding-top: 10px;
+    margin-top: 4px;
+  }
+  .back-to-top {
+    gap: 0.55rem;
+  }
+  .back-to-top-label {
+    font-size: 10px;
+  }
+  .back-to-top-mark {
+    width: 2.15rem;
+    height: 2.15rem;
+  }
 }

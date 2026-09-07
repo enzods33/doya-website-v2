@@ -1,13 +1,14 @@
-/** Base CDN R2 (sans slash final). Ex. https://pub-….r2.dev */
-export const assetsBaseUrl = String(import.meta.env?.VITE_ASSETS_URL ?? '').replace(/\/$/, '')
+import { DEFAULT_ASSETS_BASE_URL } from '../config/publicUrls.js'
 
-/** URL publique d’un objet R2, ex. assetUrl('shop/cd-luna-bohemia-front.jpg') */
+/** Base CDN R2 (sans slash final). Préfère `VITE_ASSETS_URL`, sinon défaut. */
+export const assetsBaseUrl = String(
+  (typeof import.meta !== 'undefined' && import.meta.env?.VITE_ASSETS_URL) || DEFAULT_ASSETS_BASE_URL,
+).replace(/\/$/, '')
+
+/** URL publique d’un objet R2, ex. assetUrl('shop/web/cd-front.jpg') */
 export function assetUrl(path) {
   const clean = String(path ?? '').replace(/^\/+/, '')
   if (!assetsBaseUrl || !clean) return ''
-  return `${assetsBaseUrl}/${clean}`
-}
-
-export function hasRemoteAssets() {
-  return Boolean(assetsBaseUrl)
+  const encoded = clean.split('/').map((segment) => encodeURIComponent(segment)).join('/')
+  return `${assetsBaseUrl}/${encoded}`
 }

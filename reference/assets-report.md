@@ -123,3 +123,18 @@ Les fichiers `doya-wordmark-*`, `doya-logo-*`, `doya-monogram-*` et `doya-stars-
 - Polices techniquement incorporées au PDF pour la présentation : `FKDisplay-RegularAlt` et `Degular-Medium`. Cela ne prouve pas que leurs fichiers sont les fontes officielles à utiliser sur le site.
 - Couleurs des tracés d’identité isolés : noir `#000000`, blanc `#FFFFFF` et rouge `#E30613` (valeur arrondie du flux vectoriel du PDF).
 - Aucun CSS du projet n’a été modifié.
+
+## Scripts one-shot (hors `npm run`)
+
+Sous `scripts/` — outils locaux, pas requis pour le build Netlify :
+
+| Script | Rôle | Deps éventuelles |
+| --- | --- | --- |
+| `dev-supabase.sh` | Stack Supabase local + Edge Functions | Docker, CLI Supabase |
+| `upload-site-assets-r2.mjs` | Upload hero/shop/cover vers R2 | `@aws-sdk/client-s3`, secrets R2 |
+| `optimize-bio-r2.mjs` | Optimise / pousse photos bio | `sharp`, R2 |
+| `extract-cd-pdf.mjs` / `extract-merch-pdf.mjs` | Extraction assets PDF merch | `sharp` / outils locaux |
+| `debug-cd-colors.mjs` | Debug couleurs CD (chemins machine) | one-shot |
+| `audit-assets.py` / `extract-glyphs.py` | Audit PDF / glyphs | Python + Poppler |
+
+Les constantes CDN publiques : `src/config/publicUrls.js` (`DEFAULT_ASSETS_BASE_URL`).

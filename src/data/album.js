@@ -67,7 +67,7 @@ export const album = {
   ],
   listeningNote: 'Liens d’écoute officiels de l’album à renseigner à la sortie.',
   buyHref: '#shop',
-  buyLabel: 'Merch',
+  buyLabel: 'Boutique',
 }
 
 /** Première URL d’écoute disponible pour un titre (compat tests / liens principaux). */

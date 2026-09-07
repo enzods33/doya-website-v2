@@ -27,18 +27,19 @@ Deno.serve(async (req) => {
     const admin = serviceClient()
     const { data: order, error } = await admin
       .from('orders')
-      .select('id, status, email, subtotal_cents, discount_cents, shipping_cents, total_cents, promo_code, paid_at, shipping_name, order_items (product_id, size, quantity, unit_price_cents)')
+      .select('id, order_number, status, email, subtotal_cents, discount_cents, shipping_cents, total_cents, promo_code, paid_at, shipping_name, order_items (product_id, size, quantity, unit_price_cents)')
       .eq('stripe_checkout_session_id', session.id)
       .maybeSingle()
 
     if (error || !order) return json(404, { error: 'not_found' }, origin)
     if (session.payment_status !== 'paid' && order.status !== 'paid') {
-      return json(200, { status: order.status, paid: false }, origin)
+      return json(200, { status: order.status, paid: false, orderNumber: order.order_number }, origin)
     }
 
     return json(200, {
       status: order.status,
       paid: order.status === 'paid',
+      orderNumber: order.order_number,
       email: order.email,
       subtotalCents: order.subtotal_cents,
       discountCents: order.discount_cents,

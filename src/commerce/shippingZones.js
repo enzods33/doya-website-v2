@@ -21,7 +21,3 @@ export function zoneForCountry(country) {
   const code = String(country ?? '').trim().toUpperCase()
   return SHIPPING_ZONES.find((zone) => zone.countries.includes(code)) ?? null
 }
-
-export function shippingCountries() {
-  return SHIPPING_ZONES.flatMap((zone) => zone.countries.map((code) => ({ code, zoneId: zone.id, amountCents: zone.amountCents })))
-}

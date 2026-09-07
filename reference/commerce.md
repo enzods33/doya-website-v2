@@ -1,12 +1,12 @@
 # Boutique DOYA — Supabase + Stripe
 
-Le Shop reste une collection visuelle tant qu’aucun produit n’est passé `on_sale` avec un prix et du stock. Les JPEG et mockups restent dans l’app. Supabase ne stocke que l’état commercial.
+Le Shop reste une collection visuelle tant qu’aucun produit n’est passé `on_sale` avec un prix et du stock. Les JPEG et mockups restent hors du panier critique (CDN R2). Supabase ne stocke que l’état commercial.
 
 ## Activer
 
-1. Créer un projet Supabase. Auth : e-mail / magic link uniquement. Dans Authentication → URL configuration, ajouter `http://127.0.0.1:5174/compte` et l’URL HTTPS de production `/compte`.
-2. Appliquer `supabase/migrations/20260903120000_init_commerce.sql`.
-3. Déployer les fonctions `create-checkout-session`, `stripe-webhook`, `get-order`. `verify_jwt` reste faux : l’auth utilisateur est optionnelle, le webhook utilise la signature Stripe.
+1. Créer un projet Supabase. Auth admin : **Google OAuth** vers `/admin` (voir `reference/admin.md`). Dans Authentication → URL configuration, ajouter `http://127.0.0.1:5174/admin` et l’URL HTTPS de production `/admin` (plus `/panier`, `/commande` pour les retours Stripe).
+2. Appliquer les migrations sous `supabase/migrations/` (dans l’ordre chronologique).
+3. Déployer les Edge Functions (`create-checkout-session`, `stripe-webhook`, `get-order`, admin-*, newsletter, etc.). `verify_jwt` reste faux sur le checkout/webhook : le webhook utilise la signature Stripe ; l’admin vérifie la session Google côté fonction.
 4. Secrets des fonctions (jamais dans git) :
 
 ```text
@@ -15,7 +15,7 @@ STRIPE_SECRET_KEY=sk_test_ou_sk_live
 STRIPE_WEBHOOK_SECRET=whsec_...
 ```
 
-Les frais de port sont des **forfaits par zone** dans le code (`supabase/functions/_shared/shipping.ts`), choisis par le client sur Stripe Checkout :
+Les frais de port sont des **forfaits par zone** dans le code (`supabase/functions/_shared/shipping.ts`), choisis par le client sur Stripe Checkout. Miroir front : `src/commerce/shippingZones.js` (garder alignés ; test dans `tests/commerce.test.js`).
 
 | Zone | Tarif | Pays |
 | --- | --- | --- |
@@ -38,17 +38,26 @@ Forfait valable pour **≤ 6 tee-shirts** et **≤ 5 CD**. Au-delà : pas de pai
 ```text
 VITE_SUPABASE_URL=https://xxxx.supabase.co
 VITE_SUPABASE_ANON_KEY=eyJ...
+VITE_ASSETS_URL=https://pub-….r2.dev
 ```
 
-7. L’hébergement statique doit renvoyer `index.html` pour `/panier`, `/compte` et `/commande`.
+7. L’hébergement statique doit renvoyer `index.html` pour `/panier`, `/commande` et `/admin`.
 
-## Article test
+## Imports Supabase (front)
 
-Un SKU `test` (« Article test », 1,00 €, 5 pièces par taille) sert uniquement aux paiements Stripe en mode test. Le passer `on_sale = false` avant toute ouverture publique.
+- **Pages publiques** : import dynamique `await import('./supabase.js')` (catalogue, analytics, concerts, bio) pour ne pas bloquer le LCP.
+- **Admin** (`/admin`) : import statique OK — la route est déjà en `lazy()`.
+
+## Article / stocks
+
+SKU catalogue : `cd-luna-bohemia`, `luna-bohemia-white`, `luna-bohemia-black`, `doya-white`, `doya-black` (`src/data/products.js`).  
+Tailles : `XS` … `XL` pour les tees ; `U` (unique) pour le CD. Pas de `XXL`.
 
 Dans la table `products` : renseigner `price_cents` (ex. `4500` = 45 €), puis `on_sale = true`.  
-Dans `product_variants` : stock par taille (`XS` … `XXL`).  
+Dans `product_variants` : stock par taille.  
 Le bouton « Ajouter » n’apparaît que si ces deux conditions sont vraies.
+
+Un SKU `test` éventuel sert uniquement aux paiements Stripe en mode test. Le passer `on_sale = false` avant toute ouverture publique.
 
 ## Code promo
 
@@ -59,7 +68,7 @@ Table `promo_codes` :
 - `active = true`
 - optionnel : dates, `min_subtotal_cents`, `max_redemptions`, `one_per_customer`, `min_tee_qty` (≥ N tee-shirts `type = T-shirt`, comptés en base)
 
-Offres auto (une seule, la meilleure, pas de cumul) :
+Offres auto (une seule, la meilleure, pas de cumul) — miroir front `AUTO_PROMOS` dans `cartRules.js` :
 - `2TEES` = −8 € si ≥ 2 tee-shirts
 - `CDTEE` = −5 € si ≥ 1 CD et ≥ 1 tee-shirt  
 Exemple : 1 CD + 2 tees → −8 € (pas −13 €).
@@ -74,9 +83,15 @@ Stripe Checkout héberge la carte. Le site ne voit jamais le numéro.
 Au clic, une fonction réserve le stock 30 minutes, crée la session, puis le webhook confirme ou libère.  
 Les prix affichés dans le panier sont indicatifs ; le montant Stripe est recalculé en base.
 
-## Ce que le dashboard suffit à gérer
+Chaque commande reçoit un **n° humain** `DOYA-XXXXX` (colonne `orders.order_number`) dès la création pending. Il apparaît :
+- page `/commande` après paiement
+- métadonnées Stripe (`orderNumber` / `client_reference_id`)
+- e-mail de confirmation client + notification atelier (`ORDER_NOTIFY_EMAIL`, défaut `almenaprod@gmail.com`) via Brevo
+- liste « commandes récentes » dans l’admin Ventes
 
-Prix, activation, stocks, codes promo. Pas d’admin dans le site pour cette passe : moins de surface d’attaque. Le rôle `admin` existe sur `profiles` pour plus tard, sans politique d’écriture client.
+## Admin
+
+Back-office **Backstage** sur `/admin` (Google OAuth, rôle `admin` sur `profiles`). Concerts, bio, audience, newsletter Brevo, ventes — détail dans `reference/admin.md`. Prix / stocks / promos restent aussi gérables via le dashboard Supabase.
 
 ## Checklist — passage au vrai domaine (HTTPS)
 
@@ -88,11 +103,12 @@ Quand le site est en ligne sur le nom de domaine définitif (nouvelle IP / DNS),
 2. **Supabase Auth → URL configuration**  
    - Site URL = `https://domaine-officiel`  
    - Redirect URLs : garder le local si besoin + ajouter  
-     `https://domaine-officiel/admin` (back-office VIP)  
-     et `https://domaine-officiel/compte` si la page compte est utilisée  
+     `https://domaine-officiel/admin`  
+     `https://domaine-officiel/panier`  
+     `https://domaine-officiel/commande`  
      (ou `https://domaine-officiel/**` en wildcard).
 
-3. **Google Cloud OAuth** (si provider Google activé)  
+3. **Google Cloud OAuth** (provider Google activé)  
    - Authorized JavaScript origins : `https://domaine-officiel`  
    - Authorized redirect URIs : l’URL de callback Supabase  
      `https://ipphjddgeotsohplzkbo.supabase.co/auth/v1/callback`  
@@ -102,10 +118,11 @@ Quand le site est en ligne sur le nom de domaine définitif (nouvelle IP / DNS),
    - `VITE_SITE_URL=https://domaine-officiel`  
    - `VITE_INDEXABLE=true` seulement quand le SEO est voulu  
    - `VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY` (déjà OK si mêmes valeurs)  
+   - `VITE_ASSETS_URL` (CDN R2)  
    - Rebuild + redeploy du site après changement.
 
 5. **Hébergeur (SPA)**  
-   Fallback `index.html` pour `/panier`, `/commande`, `/admin` (et `/compte` si présent).
+   Fallback `index.html` pour `/panier`, `/commande`, `/admin`.
 
 6. **DNS / IP**  
    A/AAAA (ou CNAME) vers la nouvelle IP / l’hébergeur ; HTTPS (certificat) OK avant de tester un vrai paiement.
@@ -122,12 +139,19 @@ Quand le site est en ligne sur le nom de domaine définitif (nouvelle IP / DNS),
 
 9. **Ne touche pas** (sauf besoin métier)  
    `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, tables produits / stocks.  
-   Tarifs / zones : `supabase/functions/_shared/shipping.ts` (redéployer les fonctions après changement).
+   Tarifs / zones : `supabase/functions/_shared/shipping.ts` (redéployer les fonctions après changement).  
    R2 : secrets inchangés (ne dépendent pas du domaine du site).
+
+10. **Médiateur de la consommation (obligatoire avant vente live B2C)**  
+    - Adhérer à **CM2C** (choix retenu, pas cher) : https://www.cm2c.net/  
+    - Tarifs : https://www.cm2c.net/tarifs.php — ~**48 € pour 3 ans** (&lt; 10 salariés) ; ~36 € si un dossier à distance.  
+    - Puis mettre dans les CGV le **nom + URL** du médiateur (remplacer la mention provisoire « coordonnées sur demande à almenaprod@gmail.com »).  
+    - Liste officielle CECMC si besoin : https://www.economie.gouv.fr/mediation-conso
 
 ### Preview Netlify (staging)
 
-URL actuelle : `https://harmonious-hamster-bac94a.netlify.app`
+URL actuelle : `https://harmonious-hamster-bac94a.netlify.app`  
+(constante front : `STAGING_SITE_URL` dans `src/config/publicUrls.js`)
 
 Déjà côté Supabase (en plus du local) :
 - Secret `SITE_URL` → cette URL (CORS Edge + retours Stripe)
@@ -141,4 +165,5 @@ Netlify (build) — variables :
 - `VITE_SITE_URL=https://harmonious-hamster-bac94a.netlify.app`
 - `VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY` (mêmes valeurs que `.env.local`)
 - `VITE_INDEXABLE=false`
+- `VITE_ASSETS_URL` (voir `netlify.toml`)
 - `netlify.toml` : SPA fallback `/* → /index.html`

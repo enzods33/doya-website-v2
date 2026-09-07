@@ -6,6 +6,7 @@
 [build.environment]
   NODE_VERSION = "22"
   VITE_INDEXABLE = "false"
+  VITE_ASSETS_URL = "https://pub-5b2b2b3b50ba46c485eeff926fa26420.r2.dev"
 
 # Fallback SPA : /panier, /commande, /admin, etc.
 [[redirects]]

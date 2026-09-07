@@ -2,6 +2,13 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { adminStats } from '../../commerce/admin.js'
 import { useI18n } from '../../i18n/I18nProvider.jsx'
 
+const PERIODS = [
+  { days: 7, labelKey: 'admin.audiencePeriod7' },
+  { days: 30, labelKey: 'admin.audiencePeriod30' },
+  { days: 90, labelKey: 'admin.audiencePeriod90' },
+  { days: 365, labelKey: 'admin.audiencePeriod365' },
+]
+
 function normalizePath(path) {
   let value = String(path || '/').trim().toLowerCase()
   if (!value || value === '/#top') return '/'
@@ -32,8 +39,19 @@ function pageLabel(path, t) {
   }
 }
 
+function actionLabel(event, place, t) {
+  const eventKey = `admin.event.${event}`
+  const placeKey = `admin.place.${place}`
+  const eventText = t(eventKey)
+  const placeText = t(placeKey)
+  const eventSafe = eventText === eventKey ? event : eventText
+  const placeSafe = placeText === placeKey ? place : placeText
+  return `${eventSafe} · ${placeSafe}`
+}
+
 function AdminAudience() {
   const { t, intlLocale } = useI18n()
+  const [periodDays, setPeriodDays] = useState(90)
   const [data, setData] = useState(null)
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(true)
@@ -41,11 +59,12 @@ function AdminAudience() {
 
   useEffect(() => {
     setBusy(true)
-    adminStats('audience')
+    setError('')
+    adminStats('audience', { days: periodDays })
       .then(setData)
       .catch(() => setError(t('admin.error')))
       .finally(() => setBusy(false))
-  }, [t])
+  }, [t, periodDays])
 
   useEffect(() => {
     const el = barsRef.current
@@ -64,6 +83,14 @@ function AdminAudience() {
       .sort((a, b) => b.views - a.views)
   }, [data, t])
 
+  const topActions = useMemo(() => {
+    return (data?.topActions ?? []).map((row) => ({
+      key: `${row.event}|${row.place}`,
+      label: actionLabel(row.event, row.place, t),
+      count: Number(row.count || 0),
+    }))
+  }, [data, t])
+
   const maxDay = useMemo(
     () => Math.max(1, ...(data?.daily ?? []).map((row) => row.views)),
     [data],
@@ -72,6 +99,13 @@ function AdminAudience() {
     () => Math.max(1, ...topPages.map((row) => row.views)),
     [topPages],
   )
+  const maxAction = useMemo(
+    () => Math.max(1, ...topActions.map((row) => row.count)),
+    [topActions],
+  )
+
+  const periodLabelKey = PERIODS.find((row) => row.days === periodDays)?.labelKey
+    ?? 'admin.audiencePeriod90'
 
   function scrollBars(direction) {
     const el = barsRef.current
@@ -90,13 +124,27 @@ function AdminAudience() {
         <h2>{t('admin.audienceTitle')}</h2>
       </header>
 
+      <div className="admin-period-nav" role="group" aria-label={t('admin.audiencePeriod')}>
+        {PERIODS.map((period) => (
+          <button
+            key={period.days}
+            type="button"
+            className={`admin-period-btn${periodDays === period.days ? ' is-active' : ''}`}
+            aria-pressed={periodDays === period.days}
+            onClick={() => setPeriodDays(period.days)}
+          >
+            {t(period.labelKey)}
+          </button>
+        ))}
+      </div>
+
       <div className="admin-stat-grid">
         <article className="admin-stat-card">
           <p className="admin-stat-label">{t('admin.audienceToday')}</p>
           <p className="admin-stat-value">{data.todayViews}</p>
         </article>
         <article className="admin-stat-card">
-          <p className="admin-stat-label">{t('admin.audienceDays')}</p>
+          <p className="admin-stat-label">{t('admin.audienceDays', { period: t(periodLabelKey) })}</p>
           <p className="admin-stat-value">{data.totalViews}</p>
         </article>
       </div>
@@ -148,6 +196,25 @@ function AdminAudience() {
               </div>
               <div className="admin-sales-bar" aria-hidden="true">
                 <span style={{ width: `${Math.round((row.views / maxPage) * 100)}%` }} />
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <h3 className="admin-subtitle admin-subtitle-compact">{t('admin.audienceTopActions')}</h3>
+      {topActions.length === 0 ? (
+        <p className="admin-empty">{t('admin.audienceActionsEmpty')}</p>
+      ) : (
+        <ul className="admin-sales-list">
+          {topActions.map((row) => (
+            <li key={row.key}>
+              <div className="admin-sales-row">
+                <p className="admin-list-title">{row.label}</p>
+                <strong>{row.count}</strong>
+              </div>
+              <div className="admin-sales-bar" aria-hidden="true">
+                <span style={{ width: `${Math.round((row.count / maxAction) * 100)}%` }} />
               </div>
             </li>
           ))}

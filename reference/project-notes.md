@@ -82,7 +82,7 @@ Les photos plein écran sont agrandies à l’affichage CSS ; aucun fichier agra
 
 ## Préparation développeur
 
-- Aucun backend, achat, panier, collecte de données ou outil de suivi.
+- Boutique optionnelle : Supabase (stock, promos, concerts, bio) + Stripe Checkout ; admin Google `/admin`.
 - HTML sémantique, un seul h1, navigation par ancres, images légendées et dimensions explicites.
 - Menu natif `dialog`, focus initial, boucle Tab, Escape, restauration du focus, verrouillage du défilement et fermeture au passage desktop.
 - Boutons réservés aux actions ; liens réservés aux vraies destinations.

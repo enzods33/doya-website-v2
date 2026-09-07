@@ -23,5 +23,4 @@ export function PlatformIcon({ id, className = '' }) {
   )
 }
 
-export const ALBUM_PLATFORM_ORDER = ['spotify', 'apple', 'deezer']
 export const TRACK_PLATFORM_ORDER = ['spotify', 'apple', 'deezer', 'youtube']

@@ -6,6 +6,7 @@ import { useCart } from '../commerce/CartProvider.jsx'
 import { useI18n } from '../i18n/I18nProvider.jsx'
 import { Stars, Wordmark, MenuIcon, CartIcon, HomeIcon } from './Brand.jsx'
 import LanguageSwitcher from './LanguageSwitcher.jsx'
+import NewsletterSignup from './NewsletterSignup.jsx'
 import Link from './Link.jsx'
 import { editorialEase } from '../utils/motion.js'
 import { useRoute } from '../utils/router.js'
@@ -65,7 +66,7 @@ function Header() {
 
   function keepFocusInMenu(event) {
     if (event.key !== 'Tab') return
-    const controls = [...dialogRef.current.querySelectorAll('button, a[href]')]
+    const controls = [...dialogRef.current.querySelectorAll('button, a[href], input, select, textarea')]
     const first = controls[0]
     const last = controls[controls.length - 1]
     if (event.shiftKey && document.activeElement === first) {
@@ -80,8 +81,6 @@ function Header() {
   function sectionHref(href) {
     return path === '/' ? href : `/${href}`
   }
-
-  const tools = []
 
   return (
     <m.header className={`site-header${path === '/' ? '' : ' is-page'}`} initial={reducedMotion ? false : { opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
@@ -127,12 +126,17 @@ function Header() {
         initial={false} animate={{ opacity: menuOpen ? 1 : 0 }} transition={{ duration: reducedMotion ? 0 : 0.28 }}
         onAnimationComplete={finishClosingMenu}>
         <div className="mobile-menu-top">
-          <Wordmark className="mobile-wordmark" />
-          <button type="button" autoFocus onClick={() => setMenuOpen(false)} aria-label={t('a11y.menuClose')}>{t('nav.menuClose')} <span aria-hidden="true">×</span></button>
+          <div className="mobile-menu-brand">
+            <Wordmark className="mobile-wordmark" />
+            <Stars className="mobile-menu-stars" />
+          </div>
+          <button type="button" className="mobile-menu-close" autoFocus onClick={() => setMenuOpen(false)} aria-label={t('a11y.menuClose')}>
+            {t('nav.menuClose')} <span aria-hidden="true">×</span>
+          </button>
         </div>
         <m.nav aria-label={t('a11y.navMobile')} initial={false} animate={menuOpen ? 'open' : 'closed'}
           variants={{ open: { transition: { delayChildren: reducedMotion ? 0 : 0.08, staggerChildren: reducedMotion ? 0 : 0.055 } }, closed: {} }}>
-          {[...mobileNavigation.map((item) => ({ ...item, label: t(item.labelKey) })), ...tools].map((item, index) => (
+          {mobileNavigation.map((item) => (
             <m.div key={item.href}
               variants={{ open: { opacity: 1, y: 0 }, closed: { opacity: reducedMotion ? 1 : 0, y: reducedMotion ? 0 : 16 } }}
               transition={{ duration: reducedMotion ? 0 : 0.5, ease: editorialEase }}>
@@ -140,15 +144,19 @@ function Header() {
                 href={item.href.startsWith('#') ? sectionHref(item.href) : item.href}
                 onClick={() => setMenuOpen(false)}
               >
-                <span>{String(index + 1).padStart(2, '0')}</span>{item.label}
+                {t(item.labelKey)}
               </Link>
             </m.div>
           ))}
         </m.nav>
-        <LanguageSwitcher className="mobile-language-switcher" />
-        <div className="mobile-menu-bottom">
-          <Stars className="mobile-menu-stars" />
-          <p>{siteContent.albumTitle}<br />{siteContent.year}</p>
+        <div className="mobile-menu-foot">
+          <div className="mobile-menu-mid">
+            <NewsletterSignup variant="menu" className="mobile-menu-newsletter" />
+          </div>
+          <div className="mobile-menu-foot-bar">
+            <p className="mobile-menu-meta">{siteContent.name} {siteContent.year}</p>
+            <LanguageSwitcher className="mobile-language-switcher" />
+          </div>
         </div>
       </m.dialog>
     </m.header>

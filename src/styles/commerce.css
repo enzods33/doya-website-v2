@@ -21,6 +21,33 @@
   gap: 4px;
   justify-items: start;
 }
+.legal-shell { max-width: 44rem; }
+.legal-header { margin-bottom: 36px; padding-bottom: 28px; border-bottom: 1px solid var(--hairline); }
+.legal-updated { margin: -8px 0 18px; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.legal-intro { margin: 0; font-size: 16px; line-height: 1.55; max-width: 38rem; }
+.legal-section { margin-bottom: 32px; }
+.legal-section h2 {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin: 0 0 14px;
+  font-family: var(--font-editorial);
+  font-size: clamp(18px, 2vw, 22px);
+  letter-spacing: .02em;
+  text-transform: uppercase;
+}
+.legal-article-num {
+  flex: 0 0 auto;
+  font-size: 12px;
+  letter-spacing: .12em;
+  color: var(--muted);
+}
+.legal-section p {
+  margin: 0 0 12px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink);
+}
 .cart-form { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(220px, .7fr); gap: clamp(32px, 5vw, 80px); align-items: start; }
 .cart-list { display: grid; gap: 28px; }
 .cart-line { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 20px; padding-bottom: 22px; border-bottom: 1px solid var(--hairline); }

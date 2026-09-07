@@ -43,8 +43,9 @@ Deno.serve(async (req) => {
     try {
       publicUrl = await r2PutObject(key, bytes, storeMime)
     } catch (error) {
-      console.error(error)
-      return json(502, { error: 'r2_upload_failed' }, origin)
+      const detail = error instanceof Error ? error.message : String(error)
+      console.error('r2_upload_failed', detail)
+      return json(502, { error: 'r2_upload_failed', detail: detail.slice(0, 200) }, origin)
     }
 
     const width = Number(form.get('width') || 1200)

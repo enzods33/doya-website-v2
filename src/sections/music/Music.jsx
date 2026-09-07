@@ -6,6 +6,7 @@ import Photo from '../../components/Photo.jsx'
 import Reveal from '../../components/Reveal.jsx'
 import Link from '../../components/Link.jsx'
 import { PlatformIcon, TRACK_PLATFORM_ORDER } from '../../components/PlatformIcon.jsx'
+import { trackEvent } from '../../commerce/pageAnalytics.js'
 
 const PLATFORM_NAMES = { spotify: 'Spotify', apple: 'Apple Music', deezer: 'Deezer', youtube: 'YouTube' }
 
@@ -35,7 +36,13 @@ function Music() {
               <ul className="album-platforms" aria-label={t('music.listenAlbum')}>
                 {albumPlatforms.map((platform) => (
                   <li key={platform.id}>
-                    <a href={platform.url} target="_blank" rel="noopener noreferrer" aria-label={t('music.listenOn', { platform: platform.name })}>
+                    <a
+                      href={platform.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={t('music.listenOn', { platform: platform.name })}
+                      onClick={() => trackEvent('stream_open', 'music')}
+                    >
                       <PlatformIcon id={platform.id} />
                     </a>
                   </li>
@@ -63,7 +70,15 @@ function Music() {
                     <span className="track-title" lang={track.number === '03' ? 'fr' : 'es'}>{track.title}</span>
                     {trackPlatformSlots(track).map((link) => (
                       isExternalUrl(link.url) ? (
-                        <a key={link.id} href={link.url} target="_blank" rel="noopener noreferrer" aria-label={t('music.trackOn', { title: track.title, platform: link.name })} className="track-platform-link">
+                        <a
+                          key={link.id}
+                          href={link.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={t('music.trackOn', { title: track.title, platform: link.name })}
+                          className="track-platform-link"
+                          onClick={() => trackEvent('stream_open', 'music')}
+                        >
                           <PlatformIcon id={link.id} />
                         </a>
                       ) : (

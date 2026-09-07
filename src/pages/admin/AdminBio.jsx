@@ -52,6 +52,7 @@ function AdminBio() {
     if (code === 'invalid_image_type') return t('admin.invalidImageType')
     if (code === 'image_decode_failed' || code === 'image_prepare_failed') return t('admin.imagePrepareFailed')
     if (code === 'file_too_large') return t('admin.fileTooLarge')
+    if (code === 'r2_upload_failed') return t('admin.r2UploadFailed')
     return t('admin.error')
   }
 

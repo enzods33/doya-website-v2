@@ -1,5 +1,4 @@
 import { products } from '../data/products.js'
-import { supabase } from './supabase.js'
 
 function normalizeDefaultView(value, fallback = 'front') {
   return value === 'back' || value === 'front' ? value : fallback
@@ -17,6 +16,8 @@ export async function loadCatalog() {
       },
     ]),
   )
+
+  const { supabase } = await import('./supabase.js')
   if (!supabase) return { items: [...local.values()], purchasable: false }
 
   const [{ data: remoteProducts, error: productError }, { data: remoteVariants, error: variantError }] = await Promise.all([

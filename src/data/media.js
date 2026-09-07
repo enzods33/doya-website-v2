@@ -1,31 +1,34 @@
-const R2_BIO = 'https://pub-5b2b2b3b50ba46c485eeff926fa26420.r2.dev'
+import { assetUrl } from '../utils/assets.js'
 
 function bioWeb(file, width, height) {
   return {
-    src: `${R2_BIO}/bio/web/${file}`,
+    src: assetUrl(`bio/web/${file}`),
     width,
     height,
     alt: 'Photographie DOYA — Luna Bohemia.',
   }
 }
 
-/** Médias encore locaux (hero + album). Le reste de la bio est sur R2. */
+/** Hero / album — versions web sur Cloudflare R2 (`VITE_ASSETS_URL`). */
 export const media = {
   hero: {
-    src: new URL('../assets/images/doya/doya-desert-chairs-front.jpg', import.meta.url).href,
-    width: 1024, height: 1024,
+    src: assetUrl('site/hero.jpg'),
+    width: 1024,
+    height: 1024,
     alt: 'DOYA assises de face sur des chaises dans le désert, l’une en noir, l’autre en blanc.',
     sourcePage: 9,
   },
   cover: {
-    src: new URL('../assets/images/luna-bohemia/luna-bohemia-cover.jpg', import.meta.url).href,
-    width: 1004, height: 1004,
+    src: assetUrl('site/cover.jpg'),
+    width: 1004,
+    height: 1004,
     alt: 'Pochette officielle de Luna Bohemia : DOYA assises dans le désert, entourées des lettres D O Y A.',
     sourcePage: 9,
   },
   editorial: {
-    src: new URL('../assets/images/doya/doya-desert-02.jpg', import.meta.url).href,
-    width: 717, height: 478,
+    src: assetUrl('site/editorial.jpg'),
+    width: 717,
+    height: 478,
     alt: 'Les deux artistes de DOYA se tiennent à distance sur une crête de roche claire.',
     sourcePage: 26,
   },

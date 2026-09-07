@@ -42,6 +42,9 @@ function OrderPage() {
         {state.order?.paid && (
           <div>
             <p className="live-empty-title">{t('order.thanks')}</p>
+            {state.order.orderNumber ? (
+              <p className="availability-note"><strong>{t('order.orderNumber', { number: state.order.orderNumber })}</strong></p>
+            ) : null}
             <p className="availability-note">{t('order.receiptNote', { email: state.order.email })}</p>
             <p className="cart-total"><span>{t('order.total')}</span><strong>{formatEuros(state.order.totalCents)}</strong></p>
             <ul className="order-list">

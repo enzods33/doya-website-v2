@@ -11,9 +11,7 @@ async function adminInvoke(path, body, { formData } = {}) {
     apikey: supabaseAnonKey,
     Authorization: `Bearer ${token}`,
   }
-  let payload = body
   if (!formData) headers['Content-Type'] = 'application/json'
-  else payload = formData
 
   const response = await fetch(`${supabaseUrl}/functions/v1/${path}`, {
     method: 'POST',

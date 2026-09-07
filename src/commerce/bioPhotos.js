@@ -1,5 +1,4 @@
 import { galleryImages as fallbackGallery } from '../data/media.js'
-import { supabase } from './supabase.js'
 
 function normalizePhoto(row) {
   return {
@@ -12,6 +11,7 @@ function normalizePhoto(row) {
 
 /** Galerie bio publiée (Supabase) ; fallback `media.js` si vide / indisponible. */
 export async function loadBioGallery() {
+  const { supabase } = await import('./supabase.js')
   if (!supabase) return fallbackGallery
 
   const { data, error } = await supabase

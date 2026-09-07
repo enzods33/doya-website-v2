@@ -51,6 +51,25 @@ function AdminSales() {
         </article>
       </div>
 
+      <h3 className="admin-subtitle admin-subtitle-compact">{t('admin.salesRecent')}</h3>
+      {(data.recentOrders ?? []).length === 0 ? (
+        <p className="admin-empty">{t('admin.salesEmpty')}</p>
+      ) : (
+        <ul className="admin-list">
+          {(data.recentOrders ?? []).map((row) => (
+            <li key={row.id}>
+              <p className="admin-list-title">{row.orderNumber}</p>
+              <p className="admin-list-meta">
+                {row.email}
+                {' · '}
+                {formatEuro(row.totalCents, intlLocale)}
+                {row.paidAt ? ` · ${new Date(row.paidAt).toLocaleString(intlLocale)}` : ''}
+              </p>
+            </li>
+          ))}
+        </ul>
+      )}
+
       <h3 className="admin-subtitle admin-subtitle-compact">{t('admin.salesByProduct')}</h3>
       {(data.products ?? []).length === 0 ? (
         <p className="admin-empty">{t('admin.salesEmpty')}</p>

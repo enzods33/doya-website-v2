@@ -23,20 +23,29 @@ export function r2Bucket(): string {
   return Deno.env.get('R2_BUCKET') ?? 'doya-assets'
 }
 
+/** Endpoint S3 R2 sans slash final ni nom de bucket collé par erreur. */
 export function r2Endpoint(): string {
-  return required('R2_S3_ENDPOINT').replace(/\/$/, '')
+  let endpoint = required('R2_S3_ENDPOINT').replace(/\/$/, '')
+  const bucket = r2Bucket()
+  if (endpoint.endsWith(`/${bucket}`)) {
+    endpoint = endpoint.slice(0, -(bucket.length + 1))
+  }
+  return endpoint
 }
 
 export async function r2PutObject(key: string, body: Uint8Array, contentType: string) {
   const client = r2Client()
   const url = `${r2Endpoint()}/${r2Bucket()}/${key}`
+  // Blob + content-length : aws4fetch signe correctement le body en Deno Edge.
+  const blob = new Blob([body], { type: contentType })
   const response = await client.fetch(url, {
     method: 'PUT',
     headers: {
       'content-type': contentType,
+      'content-length': String(body.byteLength),
       'cache-control': 'public, max-age=31536000, immutable',
     },
-    body,
+    body: blob,
   })
   if (!response.ok) {
     const text = await response.text()
@@ -46,6 +55,8 @@ export async function r2PutObject(key: string, body: Uint8Array, contentType: st
 }
 
 export async function r2DeleteObject(key: string) {
+  // Ne pas tenter de supprimer les imports « site » hors clés uploadées bio/web/timestamp-
+  if (!key || key.includes('..')) return
   const client = r2Client()
   const url = `${r2Endpoint()}/${r2Bucket()}/${key}`
   const response = await client.fetch(url, { method: 'DELETE' })

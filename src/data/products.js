@@ -1,7 +1,11 @@
-// Visuels merch P224 — noms / types / couleurs → i18n (shop.product.*, shop.type.*, shop.color.*)
+import { assetUrl } from '../utils/assets.js'
 
+// Visuels boutique — toujours CDN R2 (versions web compressées).
 function shopImage(file) {
-  return new URL(`../assets/images/shop/${file}`, import.meta.url).href
+  const base = String(file).replace(/\.[^.]+$/, '')
+  const isPng = /\.png$/i.test(file)
+  const remoteName = isPng ? `${base}.webp` : `${base}.jpg`
+  return assetUrl(`shop/web/${remoteName}`)
 }
 
 export const products = [
@@ -11,7 +15,7 @@ export const products = [
     colorKey: 'digipack',
     defaultView: 'front',
     front: shopImage('cd-luna-bohemia-front.jpg'),
-    back: shopImage('cd-luna-bohemia-back.png'),
+    back: shopImage('cd-luna-bohemia-back.jpg'),
     width: 1024,
     height: 1024,
     price: null,
@@ -24,8 +28,8 @@ export const products = [
     defaultView: 'front',
     front: shopImage('luna-bohemia-white-front.png'),
     back: shopImage('luna-bohemia-white-back.png'),
-    width: 1600,
-    height: 1600,
+    width: 1400,
+    height: 1400,
     price: null,
     url: null,
   },
@@ -36,8 +40,8 @@ export const products = [
     defaultView: 'front',
     front: shopImage('luna-bohemia-black-front.png'),
     back: shopImage('luna-bohemia-black-back.png'),
-    width: 1600,
-    height: 1600,
+    width: 1070,
+    height: 1070,
     price: null,
     url: null,
   },
@@ -48,8 +52,8 @@ export const products = [
     defaultView: 'front',
     front: shopImage('doya-white-front.png'),
     back: shopImage('doya-white-back.png'),
-    width: 1600,
-    height: 1600,
+    width: 1400,
+    height: 1400,
     price: null,
     url: null,
   },
@@ -60,8 +64,8 @@ export const products = [
     defaultView: 'front',
     front: shopImage('doya-black-front.png'),
     back: shopImage('doya-black-back.png'),
-    width: 1600,
-    height: 1600,
+    width: 1070,
+    height: 1070,
     price: null,
     url: null,
   },

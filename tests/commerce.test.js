@@ -2,10 +2,27 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { products } from '../src/data/products.js'
-import { CART_LIMITS, formatEuros, isValidEmail, mergeCartLine, normalizePromoCode, validateCartItems } from '../src/commerce/cartRules.js'
+import {
+  AUTO_PROMOS,
+  CART_LIMITS,
+  FLAT_SHIPPING_LIMITS,
+  bestAutoPromo,
+  formatEuros,
+  isValidEmail,
+  mergeCartLine,
+  normalizePromoCode,
+  validateCartItems,
+} from '../src/commerce/cartRules.js'
+import { SHIPPING_ZONES, zoneForCountry } from '../src/commerce/shippingZones.js'
+import { DEFAULT_ASSETS_BASE_URL } from '../src/config/publicUrls.js'
+import { assetUrl, assetsBaseUrl } from '../src/utils/assets.js'
 
 test('le catalogue local n’invente ni prix ni lien boutique', () => {
   assert.ok(products.every((product) => product.price === null && product.url === null))
+})
+
+test('les IDs panier suivent le catalogue produits', () => {
+  assert.deepEqual(CART_LIMITS.productIds, products.map((product) => product.id))
 })
 
 test('les limites du panier restent alignées avec les fonctions', () => {
@@ -13,9 +30,38 @@ test('les limites du panier restent alignées avec les fonctions', () => {
   assert.match(deno, new RegExp(`maxLineQuantity: ${CART_LIMITS.maxLineQuantity}`))
   assert.match(deno, new RegExp(`maxLines: ${CART_LIMITS.maxLines}`))
   assert.match(deno, new RegExp(`maxTotalQuantity: ${CART_LIMITS.maxTotalQuantity}`))
+  assert.match(deno, new RegExp(`maxTees: ${FLAT_SHIPPING_LIMITS.maxTees}`))
+  assert.match(deno, new RegExp(`maxCds: ${FLAT_SHIPPING_LIMITS.maxCds}`))
   for (const size of CART_LIMITS.sizes) assert.match(deno, new RegExp(`'${size}'`))
   assert.match(deno, /http:\/\/localhost:5174/)
   assert.match(deno, /http:\/\/localhost:5173/)
+})
+
+test('les zones de port front restent alignées avec Deno', () => {
+  const deno = readFileSync(new URL('../supabase/functions/_shared/shipping.ts', import.meta.url), 'utf8')
+  for (const zone of SHIPPING_ZONES) {
+    assert.match(deno, new RegExp(`id: '${zone.id}'`))
+    assert.match(deno, new RegExp(`amountCents: ${zone.amountCents}`))
+    for (const country of zone.countries) assert.match(deno, new RegExp(`'${country}'`))
+  }
+  assert.equal(zoneForCountry('FR')?.id, 'fr')
+  assert.equal(zoneForCountry('re')?.id, 'dom')
+  assert.equal(zoneForCountry('XX'), null)
+})
+
+test('auto-promos : meilleure offre seule', () => {
+  assert.equal(bestAutoPromo(1, 0), null)
+  assert.equal(bestAutoPromo(2, 0)?.id, '2tees')
+  assert.equal(bestAutoPromo(1, 1)?.id, 'cdtee')
+  assert.equal(bestAutoPromo(2, 1)?.id, '2tees')
+  assert.equal(AUTO_PROMOS.find((p) => p.id === '2tees')?.amountOffCents, 800)
+  assert.equal(AUTO_PROMOS.find((p) => p.id === 'cdtee')?.amountOffCents, 500)
+})
+
+test('URLs assets CDN stables', () => {
+  assert.equal(assetsBaseUrl, DEFAULT_ASSETS_BASE_URL)
+  assert.equal(assetUrl('site/hero.jpg'), `${DEFAULT_ASSETS_BASE_URL}/site/hero.jpg`)
+  assert.equal(assetUrl('pressbook/press book Fr A.pdf'), `${DEFAULT_ASSETS_BASE_URL}/pressbook/press%20book%20Fr%20A.pdf`)
 })
 
 test('validation du panier et fusion des lignes', () => {
@@ -55,10 +101,16 @@ test('aucune clé secrète n’est embarquée dans le client', () => {
   const pendingFix = readFileSync(new URL('../supabase/migrations/20260903141000_fix_pending_order_ambiguity.sql', import.meta.url), 'utf8')
   assert.match(pendingFix, /v_product_id/)
   assert.match(pendingFix, /create or replace function public.create_pending_order/)
+  const orderNumbers = readFileSync(new URL('../supabase/migrations/20260907192030_order_numbers.sql', import.meta.url), 'utf8')
+  assert.match(orderNumbers, /order_number/)
+  assert.match(orderNumbers, /orderNumber/)
+  assert.match(orderNumbers, /DOYA-/)
   const checkoutFn = readFileSync(new URL('../supabase/functions/create-checkout-session/index.ts', import.meta.url), 'utf8')
   assert.match(checkoutFn, /checkoutReturnOrigin/)
-  assert.match(checkoutFn, /'luna-bohemia-black': 'Luna Bohemia — Noir'/)
-  assert.match(checkoutFn, /'doya-white': 'DOYA — Blanc'/)
+  assert.match(checkoutFn, /orderNumber/)
+  for (const product of products) {
+    assert.match(checkoutFn, new RegExp(`'${product.id}':`))
+  }
   assert.match(checkoutFn, /shippingCountry/)
   assert.match(checkoutFn, /shippingZoneByCountry/)
   assert.match(checkoutFn, /stripeShippingOption/)
