@@ -829,7 +829,7 @@ a.concert-tickets:focus-visible {
   flex-wrap: nowrap;
   justify-content: center;
   align-items: stretch;
-  gap: 1.5rem;
+  gap: 3.25rem;
 }
 .footer-credits-sep {
   display: block;
@@ -840,6 +840,20 @@ a.concert-tickets:focus-visible {
   background: var(--section-rule);
   flex-shrink: 0;
   opacity: .8;
+}
+.footer-publisher,
+.footer-studio {
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  text-align: center;
+  margin: 0;
+  padding: 4px 8px;
+}
+.footer-publisher .studio-credit-label,
+.footer-studio .studio-credit-label {
+  width: 100%;
+  text-align: center;
 }
 .footer-meta-tools {
   display: flex;
@@ -1239,22 +1253,15 @@ a.concert-tickets:focus-visible {
   }
   .footer-publisher,
   .footer-studio {
-    flex-direction: column;
-    gap: 6px;
     flex: 1 1 0;
     min-width: 0;
     max-width: none;
-    margin: 0;
     padding: 4px 10px;
-    align-items: center;
-    text-align: center;
   }
   .footer-publisher .studio-credit-label,
   .footer-studio .studio-credit-label {
     font-size: 9px;
     letter-spacing: .1em;
-    width: 100%;
-    text-align: center;
   }
   .footer-publisher .publisher-credit-logo {
     height: 72px;
