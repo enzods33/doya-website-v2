@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { adminStats } from '../../commerce/admin.js'
 import { useI18n } from '../../i18n/I18nProvider.jsx'
+import AdminStatCard from './AdminStatCard.jsx'
 
 const PERIODS = [
   { days: 7, labelKey: 'admin.audiencePeriod7' },
@@ -68,7 +69,7 @@ function AdminAudience() {
 
   useEffect(() => {
     const el = barsRef.current
-    if (!el) return
+    if (!el || !data) return
     el.scrollLeft = el.scrollWidth
   }, [data])
 
@@ -114,10 +115,6 @@ function AdminAudience() {
     el.scrollBy({ left: direction * step, behavior: 'smooth' })
   }
 
-  if (busy) return <p className="admin-status">{t('admin.loading')}</p>
-  if (error) return <p className="admin-error">{error}</p>
-  if (!data) return null
-
   return (
     <section className="admin-section">
       <header className="admin-section-head">
@@ -131,6 +128,7 @@ function AdminAudience() {
             type="button"
             className={`admin-period-btn${periodDays === period.days ? ' is-active' : ''}`}
             aria-pressed={periodDays === period.days}
+            disabled={busy}
             onClick={() => setPeriodDays(period.days)}
           >
             {t(period.labelKey)}
@@ -138,53 +136,63 @@ function AdminAudience() {
         ))}
       </div>
 
-      <div className="admin-stat-grid">
-        <article className="admin-stat-card">
-          <p className="admin-stat-label">{t('admin.audienceToday')}</p>
-          <p className="admin-stat-value">{data.todayViews}</p>
-        </article>
-        <article className="admin-stat-card">
-          <p className="admin-stat-label">{t('admin.audienceDays', { period: t(periodLabelKey) })}</p>
-          <p className="admin-stat-value">{data.totalViews}</p>
-        </article>
+      {error ? <p className="admin-error">{error}</p> : null}
+
+      <div className="admin-stat-grid" aria-busy={busy || undefined}>
+        <AdminStatCard label={t('admin.audienceToday')} value={data?.todayViews ?? '—'} loading={busy && !data} />
+        <AdminStatCard
+          label={t('admin.audienceDays', { period: t(periodLabelKey) })}
+          value={data?.totalViews ?? '—'}
+          loading={busy && !data}
+        />
       </div>
 
       <div className="admin-chart-head">
         <h3 className="admin-subtitle admin-subtitle-compact">{t('admin.audienceDaily')}</h3>
         <div className="admin-chart-nav">
-          <button type="button" className="admin-chart-nav-btn" onClick={() => scrollBars(-1)} aria-label={t('admin.audienceOlder')}>
+          <button type="button" className="admin-chart-nav-btn" disabled={busy || !data} onClick={() => scrollBars(-1)} aria-label={t('admin.audienceOlder')}>
             ←
           </button>
-          <button type="button" className="admin-chart-nav-btn" onClick={() => scrollBars(1)} aria-label={t('admin.audienceNewer')}>
+          <button type="button" className="admin-chart-nav-btn" disabled={busy || !data} onClick={() => scrollBars(1)} aria-label={t('admin.audienceNewer')}>
             →
           </button>
         </div>
       </div>
       <p className="admin-chart-hint">{t('admin.audienceScrollHint')}</p>
-      <div
-        className="admin-bars-scroller"
-        ref={barsRef}
-        role="img"
-        aria-label={t('admin.audienceDaily')}
-      >
-        <div className="admin-bars">
-          {(data.daily ?? []).map((row) => {
-            const label = new Intl.DateTimeFormat(intlLocale, { weekday: 'short', day: 'numeric' }).format(new Date(`${row.day}T12:00:00Z`))
-            return (
-              <div key={row.day} className="admin-bar-col" title={`${label}: ${row.views}`}>
-                <div className="admin-bar-track">
-                  <span style={{ height: `${Math.round((row.views / maxDay) * 100)}%` }} />
+      {busy && !data ? (
+        <div className="admin-bars-skeleton" aria-hidden="true" />
+      ) : (
+        <div
+          className="admin-bars-scroller"
+          ref={barsRef}
+          role="img"
+          aria-label={t('admin.audienceDaily')}
+        >
+          <div className="admin-bars">
+            {(data?.daily ?? []).map((row) => {
+              const label = new Intl.DateTimeFormat(intlLocale, { weekday: 'short', day: 'numeric' }).format(new Date(`${row.day}T12:00:00Z`))
+              return (
+                <div key={row.day} className="admin-bar-col" title={`${label}: ${row.views}`}>
+                  <div className="admin-bar-track">
+                    <span style={{ height: `${Math.round((row.views / maxDay) * 100)}%` }} />
+                  </div>
+                  <span className="admin-bar-label">{label}</span>
+                  <span className="admin-bar-count">{row.views}</span>
                 </div>
-                <span className="admin-bar-label">{label}</span>
-                <span className="admin-bar-count">{row.views}</span>
-              </div>
-            )
-          })}
+              )
+            })}
+          </div>
         </div>
-      </div>
+      )}
 
       <h3 className="admin-subtitle admin-subtitle-compact">{t('admin.audienceTopPages')}</h3>
-      {topPages.length === 0 ? (
+      {busy && !data ? (
+        <div className="admin-list-skeleton" aria-hidden="true">
+          <div className="admin-skeleton-line" />
+          <div className="admin-skeleton-line" />
+          <div className="admin-skeleton-line is-short" />
+        </div>
+      ) : topPages.length === 0 ? (
         <p className="admin-empty">{t('admin.audienceEmpty')}</p>
       ) : (
         <ul className="admin-sales-list">
@@ -203,7 +211,12 @@ function AdminAudience() {
       )}
 
       <h3 className="admin-subtitle admin-subtitle-compact">{t('admin.audienceTopActions')}</h3>
-      {topActions.length === 0 ? (
+      {busy && !data ? (
+        <div className="admin-list-skeleton" aria-hidden="true">
+          <div className="admin-skeleton-line" />
+          <div className="admin-skeleton-line" />
+        </div>
+      ) : topActions.length === 0 ? (
         <p className="admin-empty">{t('admin.audienceActionsEmpty')}</p>
       ) : (
         <ul className="admin-sales-list">

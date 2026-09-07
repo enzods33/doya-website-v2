@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { adminStats } from '../../commerce/admin.js'
 import { useI18n } from '../../i18n/I18nProvider.jsx'
+import AdminStatCard from './AdminStatCard.jsx'
 
 function formatEuro(cents, locale) {
   return new Intl.NumberFormat(locale, { style: 'currency', currency: 'EUR' }).format((cents || 0) / 100)
@@ -14,6 +15,7 @@ function AdminSales() {
 
   useEffect(() => {
     setBusy(true)
+    setError('')
     adminStats('sales')
       .then(setData)
       .catch(() => setError(t('admin.error')))
@@ -25,10 +27,6 @@ function AdminSales() {
     [data],
   )
 
-  if (busy) return <p className="admin-status">{t('admin.loading')}</p>
-  if (error) return <p className="admin-error">{error}</p>
-  if (!data) return null
-
   return (
     <section className="admin-section">
       <header className="admin-section-head">
@@ -36,23 +34,26 @@ function AdminSales() {
         <p>{t('admin.salesLead')}</p>
       </header>
 
-      <div className="admin-stat-grid">
-        <article className="admin-stat-card">
-          <p className="admin-stat-label">{t('admin.salesOrders')}</p>
-          <p className="admin-stat-value">{data.paidOrders}</p>
-        </article>
-        <article className="admin-stat-card">
-          <p className="admin-stat-label">{t('admin.salesUnits')}</p>
-          <p className="admin-stat-value">{data.unitsSold}</p>
-        </article>
-        <article className="admin-stat-card">
-          <p className="admin-stat-label">{t('admin.salesRevenue')}</p>
-          <p className="admin-stat-value">{formatEuro(data.revenueCents, intlLocale)}</p>
-        </article>
+      {error ? <p className="admin-error">{error}</p> : null}
+
+      <div className="admin-stat-grid" aria-busy={busy || undefined}>
+        <AdminStatCard label={t('admin.salesOrders')} value={data?.paidOrders ?? '—'} loading={busy && !data} />
+        <AdminStatCard label={t('admin.salesUnits')} value={data?.unitsSold ?? '—'} loading={busy && !data} />
+        <AdminStatCard
+          label={t('admin.salesRevenue')}
+          value={data ? formatEuro(data.revenueCents, intlLocale) : '—'}
+          loading={busy && !data}
+        />
       </div>
 
       <h3 className="admin-subtitle admin-subtitle-compact">{t('admin.salesRecent')}</h3>
-      {(data.recentOrders ?? []).length === 0 ? (
+      {busy && !data ? (
+        <div className="admin-list-skeleton" aria-hidden="true">
+          <div className="admin-skeleton-line" />
+          <div className="admin-skeleton-line" />
+          <div className="admin-skeleton-line is-short" />
+        </div>
+      ) : (data?.recentOrders ?? []).length === 0 ? (
         <p className="admin-empty">{t('admin.salesEmpty')}</p>
       ) : (
         <ul className="admin-list">
@@ -71,7 +72,12 @@ function AdminSales() {
       )}
 
       <h3 className="admin-subtitle admin-subtitle-compact">{t('admin.salesByProduct')}</h3>
-      {(data.products ?? []).length === 0 ? (
+      {busy && !data ? (
+        <div className="admin-list-skeleton" aria-hidden="true">
+          <div className="admin-skeleton-line" />
+          <div className="admin-skeleton-line" />
+        </div>
+      ) : (data?.products ?? []).length === 0 ? (
         <p className="admin-empty">{t('admin.salesEmpty')}</p>
       ) : (
         <ul className="admin-sales-list">

@@ -7,6 +7,7 @@ import {
   resolvePreviewText,
 } from '../../commerce/newsletterHtml.js'
 import { useI18n } from '../../i18n/I18nProvider.jsx'
+import AdminStatCard from './AdminStatCard.jsx'
 
 const STORAGE_SIGNATURE = 'doya-newsletter-signature'
 
@@ -24,6 +25,7 @@ function AdminNewsletter() {
   const [campaigns, setCampaigns] = useState([])
   const [subscribers, setSubscribers] = useState(null)
   const [langStats, setLangStats] = useState(null)
+  const [statsBusy, setStatsBusy] = useState(true)
   const [subject, setSubject] = useState('')
   const [signature, setSignature] = useState(DEFAULT_NEWSLETTER_SIGNATURE)
   const [bodyText, setBodyText] = useState('')
@@ -103,20 +105,28 @@ function AdminNewsletter() {
     return status || t('admin.campaignStatusUnknown')
   }
 
-  async function refresh() {
-    const payload = await adminBrevo('list')
-    const rows = [...(payload.campaigns ?? [])].sort((a, b) => {
-      const ta = Date.parse(campaignWhen(a) || '') || 0
-      const tb = Date.parse(campaignWhen(b) || '') || 0
-      return tb - ta
-    })
-    setCampaigns(rows)
-    setSubscribers(typeof payload.subscribers === 'number' ? payload.subscribers : null)
-    setLangStats(payload.langStats && typeof payload.langStats === 'object' ? payload.langStats : null)
+  async function refresh({ soft = false } = {}) {
+    if (!soft) setStatsBusy(true)
+    try {
+      const payload = await adminBrevo('list')
+      const rows = [...(payload.campaigns ?? [])].sort((a, b) => {
+        const ta = Date.parse(campaignWhen(a) || '') || 0
+        const tb = Date.parse(campaignWhen(b) || '') || 0
+        return tb - ta
+      })
+      setCampaigns(rows)
+      setSubscribers(typeof payload.subscribers === 'number' ? payload.subscribers : null)
+      setLangStats(payload.langStats && typeof payload.langStats === 'object' ? payload.langStats : null)
+    } finally {
+      setStatsBusy(false)
+    }
   }
 
   useEffect(() => {
-    refresh().catch(() => setError(t('admin.error')))
+    refresh().catch(() => {
+      setError(t('admin.error'))
+      setStatsBusy(false)
+    })
   }, [t])
 
   async function openCampaignPreview(campaign) {
@@ -154,7 +164,7 @@ function AdminNewsletter() {
         payload.scheduledAt = local.toISOString()
       }
       const result = await adminBrevo(mode, payload)
-      await refresh()
+      await refresh({ soft: true })
       if (mode === 'send') {
         setSentModal({
           subject,
@@ -208,30 +218,17 @@ function AdminNewsletter() {
         <p>{t('admin.newsletterLead')}</p>
       </header>
 
-      {subscribers != null ? (
-        <div className="admin-stat-grid admin-stat-grid-langs">
-          <article className="admin-stat-card">
-            <p className="admin-stat-label">{t('admin.newsletterSubscribers')}</p>
-            <p className="admin-stat-value">{subscribers}</p>
-          </article>
-          <article className="admin-stat-card">
-            <p className="admin-stat-label">{t('admin.sendLangFr')}</p>
-            <p className="admin-stat-value">{langStats?.fr ?? '—'}</p>
-          </article>
-          <article className="admin-stat-card">
-            <p className="admin-stat-label">{t('admin.sendLangEs')}</p>
-            <p className="admin-stat-value">{langStats?.es ?? '—'}</p>
-          </article>
-          <article className="admin-stat-card">
-            <p className="admin-stat-label">{t('admin.sendLangPt')}</p>
-            <p className="admin-stat-value">{langStats?.pt ?? '—'}</p>
-          </article>
-          <article className="admin-stat-card">
-            <p className="admin-stat-label">{t('admin.sendLangEn')}</p>
-            <p className="admin-stat-value">{langStats?.en ?? '—'}</p>
-          </article>
-        </div>
-      ) : null}
+      <div className="admin-stat-grid admin-stat-grid-langs" aria-busy={statsBusy || undefined}>
+        <AdminStatCard
+          label={t('admin.newsletterSubscribers')}
+          value={subscribers ?? '—'}
+          loading={statsBusy}
+        />
+        <AdminStatCard label={t('admin.sendLangFr')} value={langStats?.fr ?? '—'} loading={statsBusy} />
+        <AdminStatCard label={t('admin.sendLangEs')} value={langStats?.es ?? '—'} loading={statsBusy} />
+        <AdminStatCard label={t('admin.sendLangPt')} value={langStats?.pt ?? '—'} loading={statsBusy} />
+        <AdminStatCard label={t('admin.sendLangEn')} value={langStats?.en ?? '—'} loading={statsBusy} />
+      </div>
 
       <div className="admin-newsletter-layout">
         <form

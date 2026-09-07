@@ -193,6 +193,62 @@
   font-size: clamp(28px, 3.5vw, 40px);
   letter-spacing: .02em;
   line-height: 1;
+  min-height: 1em;
+}
+.admin-stat-value.is-skeleton {
+  color: transparent;
+  background: linear-gradient(
+    90deg,
+    rgb(44 41 38 / 7%) 0%,
+    rgb(44 41 38 / 14%) 50%,
+    rgb(44 41 38 / 7%) 100%
+  );
+  background-size: 200% 100%;
+  animation: admin-skeleton-shine 1.25s ease-in-out infinite;
+}
+.admin-list-skeleton {
+  display: grid;
+  gap: 12px;
+  margin: 0 0 22px;
+  min-height: 5.5rem;
+}
+.admin-skeleton-line {
+  height: 14px;
+  border-radius: 2px;
+  background: linear-gradient(
+    90deg,
+    rgb(44 41 38 / 7%) 0%,
+    rgb(44 41 38 / 14%) 50%,
+    rgb(44 41 38 / 7%) 100%
+  );
+  background-size: 200% 100%;
+  animation: admin-skeleton-shine 1.25s ease-in-out infinite;
+}
+.admin-skeleton-line.is-short { width: 58%; }
+.admin-bars-skeleton {
+  height: 168px;
+  margin: 0 0 22px;
+  border-radius: 2px;
+  background: linear-gradient(
+    90deg,
+    rgb(44 41 38 / 6%) 0%,
+    rgb(44 41 38 / 12%) 50%,
+    rgb(44 41 38 / 6%) 100%
+  );
+  background-size: 200% 100%;
+  animation: admin-skeleton-shine 1.25s ease-in-out infinite;
+}
+@keyframes admin-skeleton-shine {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .admin-stat-value.is-skeleton,
+  .admin-skeleton-line,
+  .admin-bars-skeleton {
+    animation: none;
+    background: rgb(44 41 38 / 8%);
+  }
 }
 .admin-sales-list {
   list-style: none;
