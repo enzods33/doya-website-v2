@@ -6,6 +6,7 @@ import { useI18n } from '../i18n/I18nProvider.jsx'
 import { Stars, Wordmark } from './Brand.jsx'
 import LanguageSwitcher from './LanguageSwitcher.jsx'
 import Link from './Link.jsx'
+import NewsletterSignup from './NewsletterSignup.jsx'
 import { PlatformIcon } from './PlatformIcon.jsx'
 
 function mailto(email, subject) {
@@ -45,6 +46,8 @@ function Footer() {
           <Stars className="footer-stars" />
           <p className="footer-album">{siteContent.albumTitle} <span aria-hidden="true">·</span> {siteContent.year}</p>
         </div>
+
+        <NewsletterSignup className="footer-newsletter" />
 
         <div className="footer-contact" aria-label={t('a11y.footerContact')}>
           {contacts.map((contact) => {

@@ -107,21 +107,33 @@
 .about-gallery-nav {
   display: inline-flex;
   align-items: center;
-  gap: 2px;
+  gap: 8px;
 }
 .about-gallery-nav button {
-  background: none;
-  border: 0;
-  min-width: 44px;
-  height: 44px;
-  font-family: var(--font-editorial);
-  font-size: 24px;
-  line-height: 1;
-  color: inherit;
+  display: inline-grid;
+  place-items: center;
+  background: rgb(255 255 255 / 72%);
+  border: 1px solid rgb(44 41 38 / 28%);
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  padding: 0;
+  color: #2c2926;
   cursor: pointer;
-  transition: color var(--motion-duration);
+  transition: color var(--motion-duration), border-color var(--motion-duration), background var(--motion-duration);
 }
-.about-gallery-nav button:hover { color: var(--color-doya-red); }
+.about-gallery-nav button svg {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+.about-gallery-nav button:hover,
+.about-gallery-nav button:focus-visible {
+  color: var(--color-doya-red);
+  border-color: var(--color-doya-red);
+  background: #fff;
+  outline: none;
+}
 .about-gallery-viewport {
   overflow-x: auto;
   overflow-y: hidden;
@@ -708,6 +720,68 @@ a.concert-tickets:focus-visible {
 .footer-stars { width: 44px; }
 .footer-album { font-family: var(--font-editorial); font-size: clamp(18px, 1.8vw, 26px); letter-spacing: .04em; text-transform: uppercase; }
 .footer-album span { margin-inline: 10px; color: var(--color-doya-red); }
+.footer-newsletter {
+  width: min(100%, 560px);
+  margin: clamp(36px, 5vw, 56px) auto 0;
+  padding: clamp(22px, 3vw, 32px);
+  border: 1px solid var(--section-rule);
+  background: rgb(255 255 255 / 42%);
+  text-align: center;
+}
+.newsletter-signup-copy { display: grid; gap: 8px; justify-items: center; }
+.newsletter-signup-title {
+  margin: 0;
+  font-family: var(--font-editorial);
+  font-size: clamp(22px, 2.4vw, 30px);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  line-height: 1.1;
+}
+.newsletter-signup-text {
+  margin: 0;
+  max-width: 36ch;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+.newsletter-signup-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  margin-top: 18px;
+  width: 100%;
+}
+.newsletter-signup-field { display: block; min-width: 0; }
+.newsletter-signup-field input {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 14px;
+  border: 1px solid rgb(44 41 38 / 28%);
+  background: var(--color-mist);
+  color: var(--ink);
+  font: inherit;
+  box-sizing: border-box;
+}
+.newsletter-signup-submit {
+  min-height: 48px;
+  padding: 0 22px;
+  border: 0;
+  background: var(--ink);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.newsletter-signup-submit:disabled { opacity: .55; cursor: wait; }
+.newsletter-signup-status {
+  margin: 12px 0 0;
+  font-size: 13px;
+}
+.newsletter-signup-status.is-ok { color: var(--ink); }
+.newsletter-signup-status.is-error { color: var(--color-doya-red); }
 .footer-contact { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(24px, 4vw, 56px); margin-top: clamp(48px, 6vw, 80px); padding-top: clamp(36px, 4.5vw, 52px); border-top: 1px solid var(--section-rule); align-items: stretch; justify-items: center; max-width: 920px; margin-inline: auto; }
 .footer-contact-item { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; min-width: 0; width: 100%; }
 .footer-contact-note { font-size: 13px; line-height: 1.45; color: var(--muted); max-width: 24ch; }
@@ -930,7 +1004,16 @@ a.concert-tickets:focus-visible {
     padding-bottom: clamp(40px, 8vw, 64px);
   }
   .about-gallery-toolbar { margin-bottom: 14px; }
-  .about-gallery-nav button { font-size: 22px; }
+  .about-gallery-nav { gap: 6px; }
+  .about-gallery-nav button {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+  }
+  .about-gallery-nav button svg {
+    width: 20px;
+    height: 20px;
+  }
   .about-gallery-slide {
     opacity: .32;
     transform: scale(.9);
@@ -1013,6 +1096,9 @@ a.concert-tickets:focus-visible {
   .product-details { font-size: 12px; }
   .shop-note { max-width: 290px; }
   .footer-contact { grid-template-columns: 1fr; gap: 0; max-width: 280px; margin-top: 36px; padding-top: 12px; }
+  .footer-newsletter { margin-top: 28px; padding: 20px 16px; }
+  .newsletter-signup-form { grid-template-columns: 1fr; }
+  .newsletter-signup-submit { width: 100%; }
   .footer-contact-item { padding-block: 26px; border-bottom: 1px solid var(--section-rule); }
   .footer-contact-item:last-child { border-bottom: 0; padding-bottom: 8px; }
   .footer-cta { width: 100%; min-width: 0; }

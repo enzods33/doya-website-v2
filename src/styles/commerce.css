@@ -31,6 +31,28 @@
 .cart-actions input { width: 64px; min-height: 44px; border: 0; border-bottom: 1px solid var(--hairline); background: transparent; font: inherit; }
 .cart-actions button { border: 0; background: none; min-height: 44px; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; }
 .cart-aside { display: grid; gap: 18px; }
+.cart-newsletter {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 0;
+  padding: 14px 14px 14px 12px;
+  border: 1px solid rgb(44 41 38 / 22%);
+  background: rgb(255 255 255 / 55%);
+  font-size: 13px;
+  letter-spacing: .02em;
+  line-height: 1.4;
+  text-transform: none;
+  cursor: pointer;
+}
+.cart-newsletter input {
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  flex-shrink: 0;
+  accent-color: var(--color-doya-red);
+  cursor: pointer;
+}
 .shipping-zones { display: grid; gap: 10px; border: 0; padding: 0; margin: 0; }
 .shipping-zones legend { margin-bottom: 4px; font-size: 13px; letter-spacing: .04em; text-transform: uppercase; }
 .shipping-zone-option {

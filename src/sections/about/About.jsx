@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useReducedMotion } from 'motion/react'
 import { siteContent } from '../../data/siteContent.js'
-import { galleryImages } from '../../data/media.js'
+import { galleryImages as fallbackGallery } from '../../data/media.js'
+import { loadBioGallery } from '../../commerce/bioPhotos.js'
 import { useI18n } from '../../i18n/I18nProvider.jsx'
 import { Stars, Wordmark } from '../../components/Brand.jsx'
 import Reveal from '../../components/Reveal.jsx'
@@ -10,12 +11,24 @@ import PhotoLightbox from '../../components/PhotoLightbox.jsx'
 function About() {
   const reducedMotion = useReducedMotion()
   const { t } = useI18n()
-  const total = galleryImages.length
+  const [images, setImages] = useState(fallbackGallery)
+  const total = images.length
   const [index, setIndex] = useState(0)
   const [lightbox, setLightbox] = useState(null)
   const viewportRef = useRef(null)
   const slideRefs = useRef([])
   const pointerRef = useRef({ x: 0, y: 0, moved: false })
+
+  useEffect(() => {
+    let cancelled = false
+    loadBioGallery().then((next) => {
+      if (!cancelled && Array.isArray(next) && next.length) {
+        setImages(next)
+        setIndex(0)
+      }
+    })
+    return () => { cancelled = true }
+  }, [])
 
   const scrollToIndex = useCallback((nextIndex, behavior = 'smooth') => {
     const i = ((nextIndex % total) + total) % total
@@ -80,7 +93,7 @@ function About() {
       viewport.removeEventListener('touchend', onSettle)
       viewport.removeEventListener('pointerup', onSettle)
     }
-  }, [])
+  }, [images])
 
   function onPointerDown(event) {
     pointerRef.current = { x: event.clientX, y: event.clientY, moved: false }
@@ -97,6 +110,8 @@ function About() {
     if (slideIndex === index) setLightbox(slideIndex)
     else scrollToIndex(slideIndex)
   }
+
+  if (!total) return null
 
   return (
     <section id="about" className="about-section" aria-labelledby="about-title">
@@ -118,8 +133,16 @@ function About() {
             <span>{String(total).padStart(2, '0')}</span>
           </p>
           <div className="about-gallery-nav" role="group" aria-label={t('about.eyebrow')}>
-            <button type="button" onClick={() => scrollToIndex(index - 1)} aria-label={t('photo.prev')} aria-controls="about-gallery-main">←</button>
-            <button type="button" onClick={() => scrollToIndex(index + 1)} aria-label={t('photo.next')} aria-controls="about-gallery-main">→</button>
+            <button type="button" onClick={() => scrollToIndex(index - 1)} aria-label={t('photo.prev')} aria-controls="about-gallery-main">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M15.5 4.5 8 12l7.5 7.5" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="square" />
+              </svg>
+            </button>
+            <button type="button" onClick={() => scrollToIndex(index + 1)} aria-label={t('photo.next')} aria-controls="about-gallery-main">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M8.5 4.5 16 12l-7.5 7.5" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="square" />
+              </svg>
+            </button>
           </div>
         </div>
 
@@ -134,13 +157,13 @@ function About() {
           onPointerMove={onPointerMove}
         >
           <div className="about-gallery-track">
-            {galleryImages.map((image, slideIndex) => {
+            {images.map((image, slideIndex) => {
               const active = slideIndex === index
               const portrait = image.height >= image.width
               return (
                 <div
                   className={`about-gallery-slide${active ? ' is-active' : ''}${portrait ? ' is-portrait' : ' is-landscape'}`}
-                  key={image.src}
+                  key={`${image.src}-${slideIndex}`}
                   ref={(node) => { slideRefs.current[slideIndex] = node }}
                 >
                   <button
@@ -180,7 +203,7 @@ function About() {
 
       {lightbox !== null && (
         <PhotoLightbox
-          images={galleryImages}
+          images={images}
           index={lightbox}
           onClose={() => setLightbox(null)}
           onIndexChange={setLightbox}

@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { useCart } from '../commerce/CartProvider.jsx'
 import { useCatalog } from '../commerce/CatalogProvider.jsx'
 import { startCheckout } from '../commerce/checkout.js'
+import { subscribeNewsletter } from '../commerce/newsletter.js'
 import { CART_LIMITS, FLAT_SHIPPING_LIMITS, bestAutoPromo, formatEuros, isValidEmail, normalizePromoCode } from '../commerce/cartRules.js'
 import { commerceConfigured } from '../commerce/config.js'
 import { commerceMessage, translateProduct } from '../commerce/messages.js'
@@ -16,6 +17,7 @@ function CartPage() {
   const { items: catalog } = useCatalog()
   const { locale, t } = useI18n()
   const [email, setEmail] = useState('')
+  const [newsletter, setNewsletter] = useState(false)
   const [promoCode, setPromoCode] = useState('')
   const [shippingCountry, setShippingCountry] = useState('FR')
   const [busy, setBusy] = useState(false)
@@ -84,6 +86,13 @@ function CartPage() {
     }
     setBusy(true)
     try {
+      if (newsletter) {
+        try {
+          await subscribeNewsletter(email.trim(), locale)
+        } catch {
+          // Ne bloque pas le paiement si Brevo échoue.
+        }
+      }
       const { url } = await startCheckout({
         items: lines.map(({ productId, size, quantity }) => ({ productId, size, quantity })),
         email: email.trim(),
@@ -147,6 +156,15 @@ function CartPage() {
               <label className="field">
                 <span>{t('cart.email')}</span>
                 <input type="email" autoComplete="email" required value={email} onChange={(event) => setEmail(event.target.value)} />
+              </label>
+              <label className="cart-newsletter">
+                <input
+                  type="checkbox"
+                  checked={newsletter}
+                  disabled={busy}
+                  onChange={(event) => setNewsletter(event.target.checked)}
+                />
+                <span>{t('cart.newsletter')}</span>
               </label>
               <label className="field">
                 <span>{t('cart.promo')}</span>

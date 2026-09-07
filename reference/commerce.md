@@ -83,29 +83,62 @@ Prix, activation, stocks, codes promo. Pas d’admin dans le site pour cette pas
 Quand le site est en ligne sur le nom de domaine définitif (nouvelle IP / DNS), mettre à jour **tout** ceci :
 
 1. **Secret Edge Function `SITE_URL`**  
-   → `https://domaine-officiel` (sans slash final). Sert aux redirections succès / annulation Stripe Checkout et au contrôle d’origine.
+   → `https://domaine-officiel` (sans slash final). Sert aux redirections succès / annulation Stripe Checkout et au contrôle d’origine (CORS Edge).
 
 2. **Supabase Auth → URL configuration**  
    - Site URL = `https://domaine-officiel`  
-   - Redirect URLs : garder le local si besoin + ajouter `https://domaine-officiel/compte` (et `/**` si tu utilises le wildcard).
+   - Redirect URLs : garder le local si besoin + ajouter  
+     `https://domaine-officiel/admin` (back-office VIP)  
+     et `https://domaine-officiel/compte` si la page compte est utilisée  
+     (ou `https://domaine-officiel/**` en wildcard).
 
-3. **Build / hébergement front** (`.env` de prod ou variables CI)  
+3. **Google Cloud OAuth** (si provider Google activé)  
+   - Authorized JavaScript origins : `https://domaine-officiel`  
+   - Authorized redirect URIs : l’URL de callback Supabase  
+     `https://ipphjddgeotsohplzkbo.supabase.co/auth/v1/callback`  
+     (ne change **pas** avec le domaine du site).
+
+4. **Build / hébergement front** (`.env` de prod ou variables CI)  
    - `VITE_SITE_URL=https://domaine-officiel`  
    - `VITE_INDEXABLE=true` seulement quand le SEO est voulu  
    - `VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY` (déjà OK si mêmes valeurs)  
    - Rebuild + redeploy du site après changement.
 
-4. **Hébergeur (SPA)**  
-   Fallback `index.html` pour `/panier`, `/compte`, `/commande` (et le reste des routes client).
+5. **Hébergeur (SPA)**  
+   Fallback `index.html` pour `/panier`, `/commande`, `/admin` (et `/compte` si présent).
 
-5. **DNS / IP**  
+6. **DNS / IP**  
    A/AAAA (ou CNAME) vers la nouvelle IP / l’hébergeur ; HTTPS (certificat) OK avant de tester un vrai paiement.
 
-6. **Stripe**  
+7. **Stripe**  
    - Webhook : **ne change pas** (il pointe vers Supabase, pas vers le domaine du site).  
    - Après un paiement test live : vérifier success_url / cancel_url sur le bon domaine.  
    - Régénérer les clés live si elles ont fuité dans un chat.
 
-7. **Ne touche pas** (sauf besoin métier)  
+8. **Brevo — expéditeur newsletter**  
+   - Ajouter et **vérifier** `doyamusicofficial@gmail.com` dans Brevo → Senders.  
+   - Puis secret Supabase `BREVO_SENDER_EMAIL=doyamusicofficial@gmail.com` (et `BREVO_SENDER_NAME=DOYA` si besoin).  
+   - Aujourd’hui l’envoi passe par `dasildoya@gmail.com` (seul sender actif).
+
+9. **Ne touche pas** (sauf besoin métier)  
    `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, tables produits / stocks.  
    Tarifs / zones : `supabase/functions/_shared/shipping.ts` (redéployer les fonctions après changement).
+   R2 : secrets inchangés (ne dépendent pas du domaine du site).
+
+### Preview Netlify (staging)
+
+URL actuelle : `https://harmonious-hamster-bac94a.netlify.app`
+
+Déjà côté Supabase (en plus du local) :
+- Secret `SITE_URL` → cette URL (CORS Edge + retours Stripe)
+- Auth redirects : `…/**`, `/admin`, `/panier`, `/commande`
+
+À faire côté Google Cloud (client OAuth **DOYA Web**) :
+- Authorized JavaScript origins → ajouter `https://harmonious-hamster-bac94a.netlify.app`
+- Redirect URI Supabase inchangé : `https://ipphjddgeotsohplzkbo.supabase.co/auth/v1/callback`
+
+Netlify (build) — variables :
+- `VITE_SITE_URL=https://harmonious-hamster-bac94a.netlify.app`
+- `VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY` (mêmes valeurs que `.env.local`)
+- `VITE_INDEXABLE=false`
+- `netlify.toml` : SPA fallback `/* → /index.html`

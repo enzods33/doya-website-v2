@@ -284,7 +284,20 @@
 .letter-y, .letter-a { bottom: 13%; }
 .letter-d, .letter-y { left: 8.5%; }
 .letter-o, .letter-a { right: 7.5%; }
-.hero-stars { width: clamp(2.85rem, 4vw + 0.6svh, 4.25rem); margin: clamp(0.65rem, 1.4svh, 1.1rem) auto 0; opacity: .95; }
+.hero-stars {
+  display: block;
+  width: clamp(2.85rem, 4vw + 0.6svh, 4.25rem);
+  margin: clamp(0.65rem, 1.4svh, 1.1rem) auto 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  opacity: .95;
+  cursor: default;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.hero-stars img { display: block; width: 100%; height: auto; pointer-events: none; }
+
 .hero-copy {
   position: absolute;
   z-index: 3;

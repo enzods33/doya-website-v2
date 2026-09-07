@@ -8,11 +8,18 @@ alwaysApply: true
 Quand l’utilisateur annonce le **vrai nom de domaine** (ou nouvelle IP / mise en prod), appliquer la checklist de `reference/commerce.md` § « Checklist — passage au vrai domaine » :
 
 1. Secret Supabase `SITE_URL` → `https://domaine`
-2. Auth Supabase : Site URL + redirect `/compte`
-3. Front prod : `VITE_SITE_URL`, rebuild/deploy ; `VITE_INDEXABLE` seulement si SEO OK
-4. SPA fallback `/panier` `/compte` `/commande`
-5. DNS + HTTPS
-6. Stripe webhook **inchangé** (pointe vers Supabase) ; vérifier URLs de retour checkout
-7. Ne pas resetter clés Stripe / stocks sans demande. Tarifs zones : `supabase/functions/_shared/shipping.ts`
+2. Auth Supabase : Site URL + redirect `/admin` (et `/compte` si utilisé)
+3. Google Cloud OAuth : origin `https://domaine` (callback Supabase inchangé)
+4. Front prod : `VITE_SITE_URL`, rebuild/deploy ; `VITE_INDEXABLE` seulement si SEO OK
+5. SPA fallback `/panier` `/commande` `/admin`
+6. DNS + HTTPS
+7. Stripe webhook **inchangé** (pointe vers Supabase) ; vérifier URLs de retour checkout
+8. Brevo : vérifier sender `doyamusicofficial@gmail.com` puis `BREVO_SENDER_EMAIL` (aujourd’hui `dasildoya@gmail.com`)
+9. Ne pas resetter clés Stripe / stocks sans demande. Tarifs zones : `supabase/functions/_shared/shipping.ts`
 
-État actuel (dev) : `SITE_URL` et Auth encore sur `http://127.0.0.1:5174`.
+État actuel :
+- Dev local : Auth redirects `127.0.0.1:5174` / `localhost:5174` toujours autorisés
+- Preview Netlify : `https://harmonious-hamster-bac94a.netlify.app` — `SITE_URL` + Auth redirects `/admin` `/panier` `/commande` configurés
+- Google OAuth : **ajouter l’origin** `https://harmonious-hamster-bac94a.netlify.app` dans Google Cloud (client DOYA Web) si pas déjà fait
+- Brevo newsletter : sender actif = `dasildoya@gmail.com` ; **avant live** vérifier `doyamusicofficial@gmail.com` dans Senders
+- Au vrai domaine final : remplacer / compléter cette URL preview partout (checklist ci-dessus)

@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { m, useReducedMotion } from 'motion/react'
 import { media } from '../../data/media.js'
 import { siteContent } from '../../data/siteContent.js'
@@ -6,6 +7,7 @@ import { Stars } from '../../components/Brand.jsx'
 import Link from '../../components/Link.jsx'
 import Photo from '../../components/Photo.jsx'
 import { editorialEase } from '../../utils/motion.js'
+import { navigate } from '../../utils/router.js'
 import letterD from '../../assets/logos/glyphs/doya-d-white.svg'
 import letterO from '../../assets/logos/glyphs/doya-o-white.svg'
 import letterY from '../../assets/logos/glyphs/doya-y-white.svg'
@@ -16,6 +18,22 @@ function Hero() {
   const reducedMotion = useReducedMotion()
   const { t } = useI18n()
   const letters = [{ src: letterD, name: 'd' }, { src: letterO, name: 'o' }, { src: letterY, name: 'y' }, { src: letterA, name: 'a' }]
+  const starsClicks = useRef({ count: 0, timer: 0 })
+
+  function onStarsActivate() {
+    const state = starsClicks.current
+    window.clearTimeout(state.timer)
+    state.count += 1
+    if (state.count >= 3) {
+      state.count = 0
+      navigate('/admin')
+      return
+    }
+    state.timer = window.setTimeout(() => {
+      state.count = 0
+    }, 900)
+  }
+
   return (
     <section className="hero" aria-labelledby="hero-title">
       <Photo image={media.hero} className="hero-backdrop" fetchPriority="high" eager aria-hidden="true" />
@@ -45,7 +63,14 @@ function Hero() {
           >
             <p className="hero-subtitle">{t('hero.label')}</p>
             <h1 id="hero-title">{siteContent.albumTitle}</h1>
-            <div className="hero-stars"><Stars color="white" /></div>
+            <button
+              type="button"
+              className="hero-stars"
+              onClick={onStarsActivate}
+              aria-label={t('hero.label')}
+            >
+              <Stars color="white" />
+            </button>
           </m.div>
         </div>
         <div className="hero-cta-group">

@@ -14,3 +14,24 @@ verify_jwt = false
 
 [functions.get-order]
 verify_jwt = false
+
+[functions.subscribe-newsletter]
+verify_jwt = false
+
+[functions.admin-auth-check]
+verify_jwt = false
+
+[functions.admin-concerts]
+verify_jwt = false
+
+[functions.admin-bio-photos]
+verify_jwt = false
+
+[functions.admin-brevo-campaign]
+verify_jwt = false
+
+[functions.admin-stats]
+verify_jwt = false
+
+[functions.email-logo]
+verify_jwt = false
