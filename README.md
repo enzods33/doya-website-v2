@@ -8,7 +8,7 @@ Site de présentation indépendant, créé de zéro en React et JavaScript. L’
 - **Internationalisation** : FR (défaut), ES, EN, PT via `src/i18n/` (détection navigateur, persistance `localStorage`, sélecteur `LanguageSwitcher`). Aucune bibliothèque i18n externe.
 - **Design** : Hero / CTA glass, header sticky, sections en gris chauds, crédits footer (Almena Prod + Reelazura). Polices FK Display / Degular câblées mais fichiers absents → fallbacks `tokens.css`.
 - **Boutique** : T-shirts + CD digipack. Stripe Checkout + Edge Functions, stock / promos / forfaits zones côté Supabase. Visuels shop **uniquement CDN R2** (`VITE_ASSETS_URL`). N° de commande humain `DOYA-XXXXX` + mails Brevo.
-- **Sécurité** : rate-limits Postgres (checkout / newsletter / get-order), honeypot newsletter, CSP / HSTS (`public/_headers`, `netlify.toml`), origins localhost coupés en prod Edge, restock seulement sur remboursement total.
+- **Sécurité** : rate-limits Postgres (checkout / newsletter / get-order), honeypot newsletter, CSP / HSTS (`public/_headers`, `netlify.toml`), CORS limité à `SITE_URL` + localhost de dev, restock seulement sur remboursement total.
 - **Live** : dates Supabase (billetterie, passé / à venir).
 - **Admin** : `/admin` Google OAuth + allowlist (`reference/admin.md`) — concerts, bio, audience, newsletter, ventes.
 - **Médias** : hero / cover / shop sur R2 ; galerie Bio via admin (fallback `media.js`).

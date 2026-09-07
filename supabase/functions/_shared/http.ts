@@ -12,14 +12,8 @@ export function siteOrigins(): string[] {
         return false
       }
     })
-  // En prod (Supabase Edge / Deno Deploy), ne plus accepter localhost.
-  const isProd = Boolean(
-    Deno.env.get('DENO_DEPLOYMENT_ID')
-    || Deno.env.get('SB_EXECUTION_ID')
-    || Deno.env.get('ENV') === 'production',
-  )
-  const locals = isProd ? [] : LOCAL_ORIGINS
-  return [...new Set([...locals, ...configured])]
+  // Dev local toujours autorisé (CORS navigateur uniquement — sans JWT admin ça ne donne rien).
+  return [...new Set([...LOCAL_ORIGINS, ...configured])]
 }
 
 export function publicSiteUrl(): string {
@@ -38,15 +32,15 @@ export function checkoutReturnOrigin(requestOrigin: string | null): string {
 }
 
 export function corsHeaders(origin: string | null): HeadersInit {
-  const allowed = origin && siteOrigins().includes(origin.replace(/\/$/, ''))
-    ? origin.replace(/\/$/, '')
-    : siteOrigins()[0]
-  return {
-    'Access-Control-Allow-Origin': allowed,
+  const normalized = (origin ?? '').replace(/\/$/, '')
+  const allowed = normalized && siteOrigins().includes(normalized) ? normalized : null
+  const headers: Record<string, string> = {
     'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Vary': 'Origin',
   }
+  if (allowed) headers['Access-Control-Allow-Origin'] = allowed
+  return headers
 }
 
 export function json(status: number, body: Record<string, unknown>, origin: string | null) {
