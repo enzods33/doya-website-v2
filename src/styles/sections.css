@@ -63,6 +63,10 @@
 }
 .platform-icon { display: block; width: 40px; height: 40px; object-fit: contain; }
 .platform-icon-instagram { width: 46px; height: 46px; }
+.platform-icon-apple {
+  transform: translateY(-2px);
+  opacity: 0.78;
+}
 .tracklist-column { width: max-content; max-width: min(560px, 46vw); min-width: 0; display: flex; flex-direction: column; min-height: 0; justify-self: center; align-self: center; }
 .tracklist { display: grid; grid-template-columns: 22px minmax(max-content, 1fr) repeat(4, 32px); grid-template-rows: repeat(12, auto); column-gap: 10px; min-height: 0; }
 .tracklist li { display: grid; grid-template-columns: subgrid; grid-column: 1 / -1; min-height: 0; }
@@ -959,7 +963,7 @@ a.concert-tickets:focus-visible {
 }
 .copyright { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
 .footer-publisher .publisher-credit-logo {
-  height: 65px;
+  height: 80px;
 }
 .footer-studio .studio-credit-logo {
   height: 52px;
@@ -1253,7 +1257,7 @@ a.concert-tickets:focus-visible {
     text-align: center;
   }
   .footer-publisher .publisher-credit-logo {
-    height: 60px;
+    height: 72px;
   }
   .footer-studio .studio-credit-logo {
     height: 38px;
