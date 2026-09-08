@@ -53,7 +53,12 @@ function Hero() {
         <Photo image={media.hero} className="hero-backdrop" fetchPriority="low" eager aria-hidden="true" />
       ) : null}
       <div className="hero-photo-frame">
-        <Photo image={media.hero} className="hero-photo" fetchPriority="high" eager />
+        <Photo
+          image={media.hero}
+          className={`hero-photo${reducedMotion ? '' : ' hero-photo-cinematic'}`}
+          fetchPriority="high"
+          eager
+        />
       </div>
       <div className="hero-letters" aria-hidden="true">
         {letters.map((letter, index) => (
@@ -62,9 +67,13 @@ function Hero() {
             src={letter.src}
             alt=""
             className={`hero-letter letter-${letter.name}`}
-            initial={reducedMotion ? false : { opacity: 0, y: 26 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: reducedMotion ? 0 : 1.1, delay: reducedMotion ? 0 : 0.12 + index * 0.11, ease: editorialEase }}
+            initial={reducedMotion ? false : { opacity: 0, y: 28, filter: 'blur(6px)' }}
+            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            transition={{
+              duration: reducedMotion ? 0 : 1.15,
+              delay: reducedMotion ? 0 : 0.18 + index * 0.13,
+              ease: editorialEase,
+            }}
           />
         ))}
       </div>
@@ -72,9 +81,9 @@ function Hero() {
         <div className="hero-caption">
           <img src={lunaPhases} alt="" aria-hidden="true" className="hero-luna" />
           <m.div
-            initial={reducedMotion ? false : { opacity: 0, y: 20 }}
+            initial={reducedMotion ? false : { opacity: 0, y: 22 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: reducedMotion ? 0 : 1, delay: reducedMotion ? 0 : 0.5, ease: editorialEase }}
+            transition={{ duration: reducedMotion ? 0 : 1.05, delay: reducedMotion ? 0 : 0.58, ease: editorialEase }}
           >
             <p className="hero-subtitle">{t('hero.label')}</p>
             <h1 id="hero-title">{siteContent.albumTitle}</h1>
@@ -89,22 +98,25 @@ function Hero() {
           </m.div>
         </div>
         <div className="hero-cta-group">
-          <m.div
-            className="hero-cta-inner"
-            initial={reducedMotion ? false : { opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: reducedMotion ? 0 : 1, delay: reducedMotion ? 0 : 0.62, ease: editorialEase }}
-          >
-            <div className="hero-cta-primary">
+          <div className="hero-cta-inner">
+            <m.div
+              className="hero-cta-lead"
+              initial={reducedMotion ? false : { opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: reducedMotion ? 0 : 0.85, delay: reducedMotion ? 0 : 0.88, ease: editorialEase }}
+            >
               <Link href="#music" className="hero-cta hero-cta-discover">{t('hero.discover')}</Link>
-              <Link href="#live" className="hero-cta hero-cta-desktop-only">{t('hero.datesDesktop')}</Link>
-            </div>
-            <Link href="#shop" className="hero-cta hero-cta-merch hero-cta-desktop-only">{t('hero.shop')}</Link>
-            <div className="hero-cta-pair">
-              <Link href="#live" className="hero-cta">{t('hero.dates')}</Link>
-              <Link href="#shop" className="hero-cta">{t('hero.shop')}</Link>
-            </div>
-          </m.div>
+            </m.div>
+            <m.div
+              className="hero-cta-pair"
+              initial={reducedMotion ? false : { opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: reducedMotion ? 0 : 0.8, delay: reducedMotion ? 0 : 1.08, ease: editorialEase }}
+            >
+              <Link href="#live" className="hero-cta hero-cta-secondary">{t('hero.dates')}</Link>
+              <Link href="#shop" className="hero-cta hero-cta-secondary">{t('hero.shop')}</Link>
+            </m.div>
+          </div>
         </div>
       </div>
     </section>
