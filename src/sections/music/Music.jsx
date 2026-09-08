@@ -1,3 +1,4 @@
+import { useEffect, useId, useState } from 'react'
 import { album } from '../../data/album.js'
 import { media } from '../../data/media.js'
 import { isExternalUrl } from '../../utils/links.js'
@@ -8,19 +9,101 @@ import Link from '../../components/Link.jsx'
 import { PlatformIcon, TRACK_PLATFORM_ORDER } from '../../components/PlatformIcon.jsx'
 import { trackEvent } from '../../commerce/pageAnalytics.js'
 
-const PLATFORM_NAMES = { spotify: 'Spotify', apple: 'Apple Music', deezer: 'Deezer', youtube: 'YouTube' }
+const PLATFORM_NAMES = {
+  spotify: 'Spotify',
+  apple: 'Apple Music',
+  deezer: 'Deezer',
+  youtube: 'YouTube',
+}
 
-function trackPlatformSlots(track) {
+function trackListenLinks(track) {
   return TRACK_PLATFORM_ORDER.map((id) => ({
     id,
     url: track.links?.[id] ?? null,
     name: PLATFORM_NAMES[id],
-  }))
+  })).filter((link) => isExternalUrl(link.url))
+}
+
+function PlayGlyph() {
+  return (
+    <svg className="track-play-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M8.2 5.6v12.8L19 12 8.2 5.6Z" fill="currentColor" />
+    </svg>
+  )
+}
+
+function TrackListen({ track, open, onToggle }) {
+  const { t } = useI18n()
+  const reactId = useId()
+  const panelId = `${reactId}-panel`
+  const links = trackListenLinks(track)
+  if (!links.length) return <span className="track-listen-slot" aria-hidden="true" />
+
+  return (
+      <div className={`track-listen${open ? ' is-open' : ''}`}>
+      <div
+        id={panelId}
+        className={`track-listen-panel${open ? ' is-open' : ''}`}
+        role="group"
+        aria-label={t('music.listenTrackMenu', { title: track.title })}
+        aria-hidden={!open}
+        inert={open ? undefined : true}
+      >
+        {links.map((link) => (
+          <a
+            key={link.id}
+            href={link.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="track-listen-link"
+            tabIndex={open ? 0 : -1}
+            aria-label={t('music.trackOn', { title: track.title, platform: link.name })}
+            onClick={() => trackEvent('stream_open', 'music')}
+          >
+            <PlatformIcon id={link.id} />
+          </a>
+        ))}
+      </div>
+      <button
+        type="button"
+        className="track-play"
+        aria-expanded={open}
+        aria-controls={panelId}
+        aria-label={t('music.listenTrack', { title: track.title })}
+        onClick={() => onToggle(track.number)}
+      >
+        <PlayGlyph />
+      </button>
+    </div>
+  )
 }
 
 function Music() {
   const { t } = useI18n()
+  const [openTrack, setOpenTrack] = useState(null)
   const albumPlatforms = album.platforms.filter((platform) => isExternalUrl(platform.url))
+
+  useEffect(() => {
+    if (!openTrack) return undefined
+    function onKeyDown(event) {
+      if (event.key === 'Escape') setOpenTrack(null)
+    }
+    function onPointerDown(event) {
+      if (event.target.closest?.('.track-listen')) return
+      setOpenTrack(null)
+    }
+    document.addEventListener('keydown', onKeyDown)
+    document.addEventListener('pointerdown', onPointerDown)
+    return () => {
+      document.removeEventListener('keydown', onKeyDown)
+      document.removeEventListener('pointerdown', onPointerDown)
+    }
+  }, [openTrack])
+
+  function toggleTrack(number) {
+    setOpenTrack((current) => (current === number ? null : number))
+  }
+
   return (
     <section id="music" className="music-section" aria-labelledby="music-title">
       <div className="music-shell section-shell">
@@ -65,26 +148,14 @@ function Music() {
             <ol className="tracklist">
               {album.tracks.map((track) => (
                 <li key={track.number}>
-                  <div className="track-row">
+                  <div className={`track-row${openTrack === track.number ? ' is-open' : ''}`}>
                     <span className="track-number">{track.number}</span>
                     <span className="track-title" lang={track.number === '03' ? 'fr' : 'es'}>{track.title}</span>
-                    {trackPlatformSlots(track).map((link) => (
-                      isExternalUrl(link.url) ? (
-                        <a
-                          key={link.id}
-                          href={link.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label={t('music.trackOn', { title: track.title, platform: link.name })}
-                          className="track-platform-link"
-                          onClick={() => trackEvent('stream_open', 'music')}
-                        >
-                          <PlatformIcon id={link.id} />
-                        </a>
-                      ) : (
-                        <span key={link.id} className="track-platform-slot" aria-hidden="true" />
-                      )
-                    ))}
+                    <TrackListen
+                      track={track}
+                      open={openTrack === track.number}
+                      onToggle={toggleTrack}
+                    />
                   </div>
                 </li>
               ))}

@@ -5,10 +5,6 @@
 .product-image { aspect-ratio: 1; }
 .product-image > img { width: 100%; aspect-ratio: 1; object-fit: contain; }
 .track-row { position: relative; }
-.track-row::after { content: ''; position: absolute; bottom: -1px; left: 0; width: 100%; height: 1px; background: var(--color-doya-red); transform: scaleX(0); transform-origin: right; transition: transform 450ms var(--motion-ease); }
-.track-row:hover::after, .track-row:focus-visible::after { transform: scaleX(1); transform-origin: left; }
-.track-row > :nth-child(2) { transition: transform 450ms var(--motion-ease); }
-.track-row:hover > :nth-child(2) { transform: translateX(5px); }
 .gallery-controls button { transition: color 240ms, transform 400ms var(--motion-ease); }
 .gallery-controls button:first-of-type:hover { transform: translateX(-4px); }
 .gallery-controls button:last-of-type:hover { transform: translateX(4px); }
@@ -58,7 +54,7 @@
   a.concert-tickets:hover { transform: translateY(-1px); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .track-row:hover > :nth-child(2), .gallery-controls button:hover, .back-to-top:hover,
+  .gallery-controls button:hover, .back-to-top:hover,
   .header-brand:hover, .desktop-navigation a:hover, .header-home:hover, .header-cart:hover, .product:hover .product-image { transform: none; }
   .header-brand:hover, .desktop-navigation a:hover, .header-home:hover, .header-cart:hover { opacity: 1; }
   .header-cart.is-pulse .header-cart-icon,

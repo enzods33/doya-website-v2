@@ -45,6 +45,8 @@ export default {
     tracksMeta: '{n} titres',
     listenAlbum: 'Écouter l’album',
     listenOn: 'Écouter sur {platform}',
+    listenTrack: 'Écouter {title}',
+    listenTrackMenu: 'Plateformes pour {title}',
     trackOn: '{title} sur {platform}',
     buy: 'Boutique',
   },
