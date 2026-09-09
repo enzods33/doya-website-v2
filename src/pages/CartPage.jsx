@@ -10,7 +10,7 @@ import { commerceConfigured } from '../commerce/config.js'
 import { trackEvent } from '../commerce/pageAnalytics.js'
 import { commerceMessage, translateProduct } from '../commerce/messages.js'
 import { availableFor, productImageSrc, resolveProductView } from '../commerce/catalog.js'
-import { DEFAULT_SHIPPING_ZONES, fetchShippingZones, zoneForCountry } from '../commerce/shippingZones.js'
+import { DEFAULT_SHIPPING_ZONES, detectShippingCountry, fetchShippingZones, rememberShippingCountry, zoneForCountry } from '../commerce/shippingZones.js'
 import { shippingQuoteEmails } from '../data/contacts.js'
 import { useI18n } from '../i18n/I18nProvider.jsx'
 import Link from '../components/Link.jsx'
@@ -25,7 +25,7 @@ function CartPage() {
   const [newsletter, setNewsletter] = useState(false)
   const [acceptCgv, setAcceptCgv] = useState(false)
   const [promoCode, setPromoCode] = useState('')
-  const [shippingCountry, setShippingCountry] = useState('FR')
+  const [shippingCountry, setShippingCountry] = useState(() => detectShippingCountry())
   const [shippingZones, setShippingZones] = useState(DEFAULT_SHIPPING_ZONES)
   const [autoPromos, setAutoPromos] = useState(DEFAULT_AUTO_PROMOS)
   const [quoteMessage, setQuoteMessage] = useState('')
@@ -39,7 +39,11 @@ function CartPage() {
   useEffect(() => {
     let active = true
     fetchShippingZones().then((zones) => {
-      if (active) setShippingZones(zones)
+      if (!active) return
+      setShippingZones(zones)
+      setShippingCountry((current) => (
+        zoneForCountry(current, zones) ? current : detectShippingCountry(zones)
+      ))
     })
     fetchAutoPromos().then((promos) => {
       if (active) setAutoPromos(promos)
@@ -447,7 +451,11 @@ function CartPage() {
                       required
                       value={shippingCountry}
                       disabled={busy || quoteSent}
-                      onChange={(event) => setShippingCountry(event.target.value)}
+                      onChange={(event) => {
+                        const next = event.target.value
+                        setShippingCountry(next)
+                        rememberShippingCountry(next)
+                      }}
                     >
                       {shippingZones.map((zone) => (
                         <optgroup

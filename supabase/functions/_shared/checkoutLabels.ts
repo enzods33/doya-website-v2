@@ -111,3 +111,14 @@ export function stripeLineDescription(size: string, locale: CheckoutLocale): str
 export function stripeShippingDisplayName(zoneId: string, locale: CheckoutLocale, fallback: string): string {
   return SHIPPING_NAME[locale][zoneId] ?? fallback
 }
+
+/** Note sous l’adresse Stripe : changer de pays = annuler pour revenir au panier (même onglet). */
+export function stripeShippingCountryHint(locale: CheckoutLocale, _cartUrl?: string): string {
+  const messages: Record<CheckoutLocale, string> = {
+    fr: 'Le pays est limité à la zone choisie. Pour un autre pays, annule ce paiement : tu reviens au panier dans le même onglet (aucun débit).',
+    en: 'Shipping is limited to the zone you chose. For another country, cancel this payment to return to the cart in the same tab (nothing is charged).',
+    es: 'El envío está limitado a la zona elegida. Para otro país, cancela este pago y volverás al carrito en la misma pestaña (sin cargo).',
+    pt: 'O envio está limitado à zona escolhida. Para outro país, cancela este pagamento e voltas ao carrinho no mesmo separador (sem débito).',
+  }
+  return messages[locale] ?? messages.fr
+}

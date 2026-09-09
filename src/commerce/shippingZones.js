@@ -19,9 +19,65 @@ export const DEFAULT_SHIPPING_ZONES = [
 
 export const SHIPPING_ZONES = DEFAULT_SHIPPING_ZONES
 
+const SHIPPING_COUNTRY_KEY = 'doya-shipping-country'
+
+/** Si la langue n’a pas de région (ex. `fr`), pays par défaut dans les zones couvertes. */
+const LANG_DEFAULT_COUNTRY = {
+  fr: 'FR',
+  es: 'ES',
+  pt: 'PT',
+  en: 'IE',
+}
+
 export function zoneForCountry(country, zones = DEFAULT_SHIPPING_ZONES) {
   const code = String(country ?? '').trim().toUpperCase()
   return zones.find((zone) => zone.countries.includes(code)) ?? null
+}
+
+function countriesInZones(zones) {
+  return new Set(
+    zones.flatMap((zone) => (Array.isArray(zone.countries) ? zone.countries : [])),
+  )
+}
+
+/** Pays de livraison suggéré : choix mémorisé → région navigateur → langue → FR. */
+export function detectShippingCountry(zones = DEFAULT_SHIPPING_ZONES) {
+  const allowed = countriesInZones(zones)
+  if (!allowed.size) return 'FR'
+
+  try {
+    const stored = String(localStorage.getItem(SHIPPING_COUNTRY_KEY) || '').trim().toUpperCase()
+    if (stored && allowed.has(stored)) return stored
+  } catch {
+    /* private mode */
+  }
+
+  const languages = typeof navigator !== 'undefined'
+    ? (navigator.languages?.length ? navigator.languages : [navigator.language])
+    : []
+
+  for (const raw of languages) {
+    if (!raw) continue
+    const parts = String(raw).replace(/_/g, '-').split('-').filter(Boolean)
+    if (parts.length >= 2) {
+      const region = parts[parts.length - 1].toUpperCase()
+      if (/^[A-Z]{2}$/.test(region) && allowed.has(region)) return region
+    }
+    const langDefault = LANG_DEFAULT_COUNTRY[parts[0].toLowerCase()]
+    if (langDefault && allowed.has(langDefault)) return langDefault
+  }
+
+  return allowed.has('FR') ? 'FR' : [...allowed][0]
+}
+
+export function rememberShippingCountry(country) {
+  const code = String(country ?? '').trim().toUpperCase()
+  if (!/^[A-Z]{2}$/.test(code)) return
+  try {
+    localStorage.setItem(SHIPPING_COUNTRY_KEY, code)
+  } catch {
+    /* private mode */
+  }
 }
 
 export async function fetchShippingZones() {

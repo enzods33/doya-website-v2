@@ -533,7 +533,7 @@ export default {
     commerce_disabled: 'La boutique n’est pas encore connectée.',
     added: 'Ajouté au panier.',
     choose_size: 'Choisir une taille.',
-    canceled: 'Paiement annulé. Aucun débit n’a été effectué.',
+    canceled: 'Retour au panier. Aucun débit n’a été effectué.',
     rate_limited: 'Trop de tentatives. Réessaie dans quelques minutes.',
     request_failed: 'Action impossible pour le moment.',
     fallback: 'Action impossible pour le moment.',

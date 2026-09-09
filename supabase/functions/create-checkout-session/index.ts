@@ -8,6 +8,7 @@ import {
   stripeCheckoutLocale,
   stripeLineDescription,
   stripeProductName,
+  stripeShippingCountryHint,
   stripeShippingDisplayName,
 } from '../_shared/checkoutLabels.ts'
 
@@ -158,6 +159,11 @@ Deno.serve(async (req) => {
       phone_number_collection: { enabled: true },
       shipping_address_collection: {
         allowed_countries: zone.countries,
+      },
+      custom_text: {
+        shipping_address: {
+          message: stripeShippingCountryHint(locale, `${site}/panier`),
+        },
       },
       shipping_options: [
         stripeShippingOption(

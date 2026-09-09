@@ -533,7 +533,7 @@ export default {
     commerce_disabled: 'A loja ainda não está ligada.',
     added: 'Adicionado ao carrinho.',
     choose_size: 'Escolhe um tamanho.',
-    canceled: 'Pagamento cancelado. Nenhum débito foi efetuado.',
+    canceled: 'Regresso ao carrinho. Nenhum débito foi efetuado.',
     rate_limited: 'Demasiadas tentativas. Tenta de novo dentro de alguns minutos.',
     request_failed: 'Ação impossível de momento.',
     fallback: 'Ação impossível de momento.',

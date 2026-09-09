@@ -533,7 +533,7 @@ export default {
     commerce_disabled: 'The shop is not connected yet.',
     added: 'Added to cart.',
     choose_size: 'Choose a size.',
-    canceled: 'Payment canceled. Nothing was charged.',
+    canceled: 'Back to cart. Nothing was charged.',
     rate_limited: 'Too many attempts. Try again in a few minutes.',
     request_failed: 'Action not possible right now.',
     fallback: 'Action not possible right now.',

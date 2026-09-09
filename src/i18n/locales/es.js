@@ -533,7 +533,7 @@ export default {
     commerce_disabled: 'La tienda aún no está conectada.',
     added: 'Añadido a la cesta.',
     choose_size: 'Elige una talla.',
-    canceled: 'Pago cancelado. No se ha efectuado ningún cargo.',
+    canceled: 'Vuelta al carrito. No se ha efectuado ningún cargo.',
     rate_limited: 'Demasiados intentos. Vuelve a intentarlo en unos minutos.',
     request_failed: 'Acción imposible por el momento.',
     fallback: 'Acción imposible por el momento.',
