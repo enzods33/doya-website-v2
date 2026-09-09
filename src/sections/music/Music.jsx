@@ -7,7 +7,9 @@ import Photo from '../../components/Photo.jsx'
 import Reveal from '../../components/Reveal.jsx'
 import Link from '../../components/Link.jsx'
 import { PlatformIcon, TRACK_PLATFORM_ORDER } from '../../components/PlatformIcon.jsx'
+import { Stars } from '../../components/Brand.jsx'
 import { trackEvent } from '../../commerce/pageAnalytics.js'
+import lunaPhases from '../../assets/music/luna-phases.png'
 
 const PLATFORM_NAMES = {
   spotify: 'Spotify',
@@ -132,19 +134,35 @@ function Music() {
                 ))}
               </ul>
             )}
-            {album.buyHref && (
-              album.buyHref.startsWith('http') ? (
-                <a className="album-buy" href={album.buyHref} target="_blank" rel="noopener noreferrer">
-                  {t('music.buy')}
-                </a>
-              ) : (
-                <Link className="album-buy" href={album.buyHref}>
-                  {t('music.buy')}
-                </Link>
-              )
-            )}
+            {album.buyHref ? (
+              <div className="music-buy-stage">
+                <img
+                  src={lunaPhases}
+                  alt=""
+                  aria-hidden="true"
+                  className="music-luna music-luna--cover"
+                  draggable="false"
+                />
+                {album.buyHref.startsWith('http') ? (
+                  <a className="album-buy" href={album.buyHref} target="_blank" rel="noopener noreferrer">
+                    {t('music.buy')}
+                  </a>
+                ) : (
+                  <Link className="album-buy" href={album.buyHref}>
+                    {t('music.buy')}
+                  </Link>
+                )}
+              </div>
+            ) : null}
           </div>
           <div className="tracklist-column">
+            <img
+              src={lunaPhases}
+              alt=""
+              aria-hidden="true"
+              className="music-luna music-luna--tracklist"
+              draggable="false"
+            />
             <ol className="tracklist">
               {album.tracks.map((track) => (
                 <li key={track.number}>
@@ -162,6 +180,7 @@ function Music() {
             </ol>
           </div>
           <figure className="music-aside">
+            <Stars color="black" className="music-aside-stars" />
             <Photo image={media.editorial} className="music-aside-photo" />
           </figure>
         </div>
