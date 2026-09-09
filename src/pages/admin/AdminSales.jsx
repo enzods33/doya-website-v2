@@ -7,25 +7,113 @@ function formatEuro(cents, locale) {
   return new Intl.NumberFormat(locale, { style: 'currency', currency: 'EUR' }).format((cents || 0) / 100)
 }
 
+function formatAddressLines(address) {
+  if (!address) return []
+  return [
+    address.line1,
+    address.line2,
+    [address.postalCode, address.city].filter(Boolean).join(' '),
+    address.state,
+    address.country,
+  ].map((part) => String(part || '').trim()).filter(Boolean)
+}
+
 function AdminSales() {
   const { t, intlLocale } = useI18n()
   const [data, setData] = useState(null)
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(true)
+  const [filter, setFilter] = useState('to_ship')
+  const [openId, setOpenId] = useState(null)
+  const [trackingDrafts, setTrackingDrafts] = useState({})
+  const [shipBusyId, setShipBusyId] = useState(null)
+  const [shipMessage, setShipMessage] = useState('')
 
-  useEffect(() => {
+  async function loadSales() {
     setBusy(true)
     setError('')
-    adminStats('sales')
-      .then(setData)
-      .catch(() => setError(t('admin.error')))
-      .finally(() => setBusy(false))
+    try {
+      const next = await adminStats('sales')
+      setData(next)
+    } catch {
+      setError(t('admin.error'))
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  useEffect(() => {
+    loadSales()
   }, [t])
 
   const maxQty = useMemo(
     () => Math.max(1, ...(data?.products ?? []).map((row) => row.quantity)),
     [data],
   )
+
+  const orders = data?.orders ?? []
+  const filteredOrders = useMemo(() => {
+    if (filter === 'shipped') return orders.filter((row) => row.fulfillmentStatus === 'shipped')
+    if (filter === 'to_ship') return orders.filter((row) => row.fulfillmentStatus !== 'shipped')
+    return orders
+  }, [filter, orders])
+
+  async function markShipped(order) {
+    const trackingNumber = String(trackingDrafts[order.id] ?? '').trim()
+    if (!trackingNumber) {
+      setShipMessage(t('admin.salesTrackingRequired'))
+      setOpenId(order.id)
+      return
+    }
+    setShipBusyId(order.id)
+    setShipMessage('')
+    setError('')
+    try {
+      const result = await adminStats('mark_shipped', {
+        orderId: order.id,
+        trackingNumber,
+      })
+      setData((current) => {
+        if (!current?.orders) return current
+        const nextOrders = current.orders.map((row) => (
+          row.id === order.id
+            ? {
+              ...row,
+              fulfillmentStatus: 'shipped',
+              trackingNumber: result.trackingNumber,
+              shippedAt: result.shippedAt,
+            }
+            : row
+        ))
+        return {
+          ...current,
+          orders: nextOrders,
+          toShipCount: nextOrders.filter((row) => row.fulfillmentStatus !== 'shipped').length,
+          recentOrders: nextOrders.slice(0, 25).map((row) => ({
+            id: row.id,
+            orderNumber: row.orderNumber,
+            email: row.email,
+            totalCents: row.totalCents,
+            paidAt: row.paidAt,
+            fulfillmentStatus: row.fulfillmentStatus,
+          })),
+        }
+      })
+      setShipMessage(result.emailSent ? t('admin.salesShippedMailOk') : t('admin.salesShippedMailFail'))
+      setTrackingDrafts((current) => {
+        const next = { ...current }
+        delete next[order.id]
+        return next
+      })
+    } catch (caught) {
+      const code = caught?.message
+      if (code === 'invalid_tracking') setShipMessage(t('admin.salesTrackingRequired'))
+      else if (code === 'already_shipped') setShipMessage(t('admin.salesAlreadyShipped'))
+      else setError(t('admin.error'))
+    } finally {
+      setShipBusyId(null)
+    }
+  }
 
   return (
     <section className="admin-section">
@@ -35,9 +123,11 @@ function AdminSales() {
       </header>
 
       {error ? <p className="admin-error">{error}</p> : null}
+      {shipMessage ? <p className="admin-ok" role="status">{shipMessage}</p> : null}
 
       <div className="admin-stat-grid" aria-busy={busy || undefined}>
         <AdminStatCard label={t('admin.salesOrders')} value={data?.paidOrders ?? '—'} loading={busy && !data} />
+        <AdminStatCard label={t('admin.salesToShip')} value={data?.toShipCount ?? '—'} loading={busy && !data} />
         <AdminStatCard label={t('admin.salesUnits')} value={data?.unitsSold ?? '—'} loading={busy && !data} />
         <AdminStatCard
           label={t('admin.salesRevenue')}
@@ -46,28 +136,146 @@ function AdminSales() {
         />
       </div>
 
-      <h3 className="admin-subtitle admin-subtitle-compact">{t('admin.salesRecent')}</h3>
+      <div className="admin-sales-toolbar">
+        <h3 className="admin-subtitle admin-subtitle-compact">{t('admin.salesHistory')}</h3>
+        <div className="admin-sales-filters" role="group" aria-label={t('admin.salesFilterAria')}>
+          {[
+            ['to_ship', t('admin.salesFilterToShip')],
+            ['shipped', t('admin.salesFilterShipped')],
+            ['all', t('admin.salesFilterAll')],
+          ].map(([id, label]) => (
+            <button
+              key={id}
+              type="button"
+              className="admin-sales-filter"
+              aria-pressed={filter === id}
+              onClick={() => setFilter(id)}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {busy && !data ? (
         <div className="admin-list-skeleton" aria-hidden="true">
           <div className="admin-skeleton-line" />
           <div className="admin-skeleton-line" />
           <div className="admin-skeleton-line is-short" />
         </div>
-      ) : (data?.recentOrders ?? []).length === 0 ? (
-        <p className="admin-empty">{t('admin.salesEmpty')}</p>
+      ) : filteredOrders.length === 0 ? (
+        <p className="admin-empty">{t('admin.salesEmptyFilter')}</p>
       ) : (
-        <ul className="admin-list">
-          {(data.recentOrders ?? []).map((row) => (
-            <li key={row.id}>
-              <p className="admin-list-title">{row.orderNumber}</p>
-              <p className="admin-list-meta">
-                {row.email}
-                {' · '}
-                {formatEuro(row.totalCents, intlLocale)}
-                {row.paidAt ? ` · ${new Date(row.paidAt).toLocaleString(intlLocale)}` : ''}
-              </p>
-            </li>
-          ))}
+        <ul className="admin-order-list">
+          {filteredOrders.map((order) => {
+            const open = openId === order.id
+            const addressLines = formatAddressLines(order.shippingAddress)
+            const shipped = order.fulfillmentStatus === 'shipped'
+            return (
+              <li key={order.id} className={`admin-order-card${shipped ? ' is-shipped' : ' is-to-ship'}`}>
+                <button
+                  type="button"
+                  className="admin-order-toggle"
+                  aria-expanded={open}
+                  onClick={() => setOpenId((current) => (current === order.id ? null : order.id))}
+                >
+                  <div>
+                    <p className="admin-list-title">{order.orderNumber}</p>
+                    <p className="admin-list-meta">
+                      {order.shippingName || order.email}
+                      {' · '}
+                      {formatEuro(order.totalCents, intlLocale)}
+                      {order.paidAt ? ` · ${new Date(order.paidAt).toLocaleString(intlLocale)}` : ''}
+                    </p>
+                  </div>
+                  <span className={`admin-fulfillment-badge is-${shipped ? 'shipped' : 'to-ship'}`}>
+                    {shipped ? t('admin.salesStatusShipped') : t('admin.salesStatusToShip')}
+                  </span>
+                </button>
+
+                {open ? (
+                  <div className="admin-order-detail">
+                    <div className="admin-order-grid">
+                      <div>
+                        <p className="admin-order-label">{t('admin.salesShipTo')}</p>
+                        <p className="admin-order-value">{order.shippingName || '—'}</p>
+                        <p className="admin-order-value">{order.email}</p>
+                        {order.shippingPhone ? <p className="admin-order-value">{order.shippingPhone}</p> : null}
+                        {addressLines.length ? (
+                          <p className="admin-order-address">
+                            {addressLines.map((line) => (
+                              <span key={line}>{line}</span>
+                            ))}
+                          </p>
+                        ) : (
+                          <p className="admin-order-value">{t('admin.salesNoAddress')}</p>
+                        )}
+                      </div>
+                      <div>
+                        <p className="admin-order-label">{t('admin.salesItems')}</p>
+                        <ul className="admin-order-lines">
+                          {order.lines.map((line) => (
+                            <li key={`${line.productId}-${line.size}`}>
+                              {line.quantity} × {line.name}
+                              {line.size === 'U' ? '' : ` · ${line.size}`}
+                              {' · '}
+                              {formatEuro(line.unitPriceCents * line.quantity, intlLocale)}
+                            </li>
+                          ))}
+                        </ul>
+                        <p className="admin-order-value">
+                          {t('admin.salesTotal')} · {formatEuro(order.totalCents, intlLocale)}
+                          {order.promoCode ? ` · ${order.promoCode}` : ''}
+                        </p>
+                      </div>
+                    </div>
+
+                    {shipped ? (
+                      <div className="admin-order-shipped">
+                        <p className="admin-order-label">{t('admin.salesTracking')}</p>
+                        <p className="admin-order-value"><strong>{order.trackingNumber}</strong></p>
+                        {order.shippedAt ? (
+                          <p className="admin-list-meta">
+                            {t('admin.salesShippedAt', {
+                              date: new Date(order.shippedAt).toLocaleString(intlLocale),
+                            })}
+                          </p>
+                        ) : null}
+                      </div>
+                    ) : (
+                      <div className="admin-order-ship-form">
+                        <label className="admin-order-tracking-field">
+                          <span>{t('admin.salesTracking')}</span>
+                          <input
+                            className="admin-control"
+                            type="text"
+                            autoComplete="off"
+                            spellCheck="false"
+                            value={trackingDrafts[order.id] ?? ''}
+                            disabled={shipBusyId === order.id}
+                            placeholder={t('admin.salesTrackingPlaceholder')}
+                            onChange={(event) => setTrackingDrafts((current) => ({
+                              ...current,
+                              [order.id]: event.target.value,
+                            }))}
+                          />
+                        </label>
+                        <button
+                          type="button"
+                          className="admin-primary"
+                          disabled={shipBusyId === order.id}
+                          onClick={() => markShipped(order)}
+                        >
+                          {shipBusyId === order.id ? t('admin.saving') : t('admin.salesMarkShipped')}
+                        </button>
+                        <p className="admin-hint">{t('admin.salesMarkShippedHelp')}</p>
+                      </div>
+                    )}
+                  </div>
+                ) : null}
+              </li>
+            )
+          })}
         </ul>
       )}
 

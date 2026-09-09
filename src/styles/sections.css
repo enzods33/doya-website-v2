@@ -1429,14 +1429,17 @@ a.concert-tickets:focus-visible {
   justify-content: center;
 }
 .studio-credit-text {
-  font-size: 11px;
+  font-size: 12px;
+  font-weight: 500;
   letter-spacing: .1em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--ink);
+  opacity: .72;
   line-height: 1.4;
 }
 .footer-studio:hover .studio-credit-text {
-  color: var(--ink);
+  opacity: 1;
+  color: var(--color-doya-red);
 }
 .footer-meta-tools {
   display: flex;
@@ -1956,8 +1959,8 @@ a.concert-tickets:focus-visible {
     padding-top: 2px;
   }
   .studio-credit-text {
-    font-size: 10px;
-    letter-spacing: .09em;
+    font-size: 11px;
+    letter-spacing: .1em;
   }
   .footer-meta-tools {
     flex-direction: row;

@@ -46,10 +46,8 @@ export function CartProvider({ children }) {
       return merged
     },
     setQuantity(productId, size, quantity, available) {
-      if (quantity <= 0) {
-        const next = items.filter((item) => !(item.productId === productId && item.size === size))
-        setItems(next)
-        return { ok: true, items: next }
+      if (!Number.isInteger(quantity) || quantity < 1) {
+        return { ok: false, error: 'invalid_quantity' }
       }
       const next = items.map((item) => (item.productId === productId && item.size === size ? { ...item, quantity } : item))
       const result = validateCartItems(next)

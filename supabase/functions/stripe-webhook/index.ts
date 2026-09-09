@@ -65,6 +65,7 @@ Deno.serve(async (req) => {
         p_shipping_address: address ?? null,
         p_shipping_cents: shippingCents,
         p_total_cents: typeof session.amount_total === 'number' ? session.amount_total : null,
+        p_shipping_phone: session.customer_details?.phone ?? null,
       })
       if (error) throw error
 
@@ -117,7 +118,7 @@ async function notifyPaidOrder(
 ) {
   const { data: order, error } = await admin
     .from('orders')
-    .select('order_number, email, shipping_name, shipping_address, subtotal_cents, discount_cents, shipping_cents, total_cents, promo_code, order_items (product_id, size, quantity, unit_price_cents)')
+    .select('order_number, email, shipping_name, shipping_phone, shipping_address, subtotal_cents, discount_cents, shipping_cents, total_cents, promo_code, order_items (product_id, size, quantity, unit_price_cents)')
     .eq('id', orderId)
     .maybeSingle()
 
@@ -148,6 +149,7 @@ async function notifyPaidOrder(
     orderNumber: order.order_number,
     email: order.email,
     shippingName: order.shipping_name,
+    shippingPhone: order.shipping_phone ?? null,
     shippingAddress: (order.shipping_address as Record<string, unknown> | null) ?? null,
     subtotalCents: order.subtotal_cents,
     discountCents: order.discount_cents,

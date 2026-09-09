@@ -12,6 +12,7 @@ import {
 import fr from './locales/fr.js'
 
 const I18nContext = createContext(null)
+export { I18nContext }
 
 function useLocaleMessages(locale) {
   const cached = peekLocaleMessages(locale)

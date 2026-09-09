@@ -86,8 +86,9 @@ Les prix affichés dans le panier sont indicatifs ; le montant Stripe est recalc
 Chaque commande reçoit un **n° humain** `DOYA-XXXXX` (colonne `orders.order_number`) dès la création pending. Il apparaît :
 - page `/commande` après paiement
 - métadonnées Stripe (`orderNumber` / `client_reference_id`)
-- e-mail de confirmation client + notification atelier (`ORDER_NOTIFY_EMAIL`, défaut `almenaprod@gmail.com`) via Brevo
-- liste « commandes récentes » dans l’admin Ventes
+- e-mail de confirmation client + notification atelier (`ORDER_NOTIFY_EMAIL`, défaut `almenaprod@gmail.com`) via Brevo  
+  (n°, e-mail, nom, **téléphone**, adresse, lignes, totaux)
+- liste « commandes récentes » dans l’admin Ventes (historique complet + statut d’expédition + n° de suivi ; e-mail client à l’expédition)
 
 ## Admin
 

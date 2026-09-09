@@ -13,7 +13,10 @@ export const contacts = [
 ]
 
 /** Destinataires des demandes de devis port (gros volumes). */
-export const shippingQuoteEmails = contacts.map((contact) => contact.email)
+export const shippingQuoteEmails = [
+  'almenaprod@gmail.com',
+  'stephanedasil@gmail.com',
+]
 
 export const pressKit = {
   href: assetUrl('pressbook/press book Fr A.pdf'),
