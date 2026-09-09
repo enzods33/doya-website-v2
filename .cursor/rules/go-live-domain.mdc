@@ -14,7 +14,7 @@ Quand l’utilisateur annonce le **vrai nom de domaine** (ou nouvelle IP / mise 
 5. SPA fallback `/panier` `/commande` `/admin`
 6. DNS + HTTPS
 7. **Stripe TEST → LIVE (très important)** : mode Live · `STRIPE_SECRET_KEY=sk_live_…` · `STRIPE_WEBHOOK_SECRET` du webhook Live · vérifier webhook vers Supabase · **1 paiement réel de contrôle** (carte `4242` ne marche plus en live)
-8. Brevo : sender vérifié `almenaprod@gmail.com` · secret `BREVO_SENDER_EMAIL=almenaprod@gmail.com`
+8. **Brevo / mails — domaine pro (obligatoire)** : acheter le domaine (idéalement = site) · boîte `hello@` / `boutique@` · vérifier sender + DKIM/DMARC dans Brevo · `BREVO_SENDER_EMAIL=…@domaine` — *staging actuel : `almenaprod@gmail.com` (à remplacer)*
 9. **Reset jour J (obligatoire)** : stocks réels (`product_variants`) · ventes à **0** (purger commandes / réservations / redemptions de test) · stats site à **0** (`site_pageviews`, `site_events`) — détail `reference/commerce.md`
 10. Ne pas resetter les **secrets R2** sans demande. Tarifs zones : `supabase/functions/_shared/shipping.ts`
 11. **Médiateur conso (obligatoire boutique B2C)** : adhésion **CM2C** ([cm2c.net](https://www.cm2c.net/) · [tarifs](https://www.cm2c.net/tarifs.php) ≈ 48 € / 3 ans si &lt; 10 salariés) → mettre nom + lien dans les CGV (remplacer le « sur demande à almenaprod@gmail.com »)
@@ -24,5 +24,5 @@ Quand l’utilisateur annonce le **vrai nom de domaine** (ou nouvelle IP / mise 
 - Dev local : Auth redirects `127.0.0.1:5174` / `localhost:5174` toujours autorisés
 - Preview Netlify : `https://harmonious-hamster-bac94a.netlify.app` — `SITE_URL` + Auth redirects `/admin` `/panier` `/commande` configurés
 - Google OAuth : **ajouter l’origin** `https://harmonious-hamster-bac94a.netlify.app` dans Google Cloud (client DOYA Web) si pas déjà fait
-- Brevo newsletter / transactionnel : sender actif vérifié = `almenaprod@gmail.com` (`BREVO_SENDER_EMAIL`)
+- Brevo : sender staging = `almenaprod@gmail.com` ; **avant live** passer à un `@domaine` pro (checklist §8)
 - Au vrai domaine final : remplacer / compléter cette URL preview partout (checklist ci-dessus)

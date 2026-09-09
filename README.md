@@ -97,7 +97,7 @@ Checklist détaillée : **`reference/commerce.md`** § passage au vrai domaine, 
 2. `VITE_SITE_URL` + `VITE_INDEXABLE=true` + rebuild  
 3. **Stripe TEST → LIVE** (`sk_live`, webhook live, 1 paiement réel)  
 4. Reset stocks / ventes à 0 / stats site  
-5. Brevo sender `almenaprod@gmail.com` (vérifié)  
+5. **Brevo** : domaine pro pour les mails (pas Gmail en live) + sender vérifié / DKIM — staging : `almenaprod@gmail.com`  
 6. Médiateur CM2C dans les CGV  
 7. Search Console + `sitemap.xml`
 

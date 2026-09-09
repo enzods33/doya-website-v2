@@ -141,9 +141,12 @@ Quand le site est en ligne sur le nom de domaine définitif (nouvelle IP / DNS),
    - En live, la carte test `4242…` **ne marche plus** (normal).  
    - Régénérer les clés live si elles ont fuité dans un chat.
 
-8. **Brevo — expéditeur**  
-   - Sender vérifié : `almenaprod@gmail.com`.  
-   - Secret Supabase `BREVO_SENDER_EMAIL=almenaprod@gmail.com` (et `BREVO_SENDER_NAME=DOYA`).
+8. **Brevo / e-mails — domaine pro (obligatoire avant live)**  
+   - **Acheter un vrai domaine** (idéalement **le même** que le site) pour les mails — **pas** rester sur `@gmail.com` en prod (délivrabilité Gmail/Yahoo + image marque).  
+   - Créer une boîte d’envoi du type `hello@domaine`, `contact@domaine` ou `boutique@domaine`.  
+   - Dans Brevo → Senders : ajouter / vérifier cet expéditeur ; **authentifier le domaine** (DKIM / DMARC) si proposé.  
+   - Secret Supabase `BREVO_SENDER_EMAIL=…@domaine` (+ `BREVO_SENDER_NAME=DOYA`).  
+   - **Transitoire actuel** (staging) : sender vérifié `almenaprod@gmail.com` — à remplacer par `@domaine` avant ouverture publique.
 
 9. **Données boutique & stats — reset « jour J » (obligatoire avant ouverture réelle)**  
    Remettre un état propre **prod**, sans les tests staging :

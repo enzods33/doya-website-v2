@@ -47,7 +47,8 @@ npx supabase secrets set --project-ref ipphjddgeotsohplzkbo \
 ```
 
 L’expéditeur Brevo doit être **vérifié** dans Brevo (Senders).
-Sender actif : `almenaprod@gmail.com` (`BREVO_SENDER_EMAIL`).
+**Avant live** : domaine pro (`hello@` / `boutique@` sur le domaine du site) + DKIM/DMARC — voir `reference/commerce.md` §8.
+**Staging actuel** : `almenaprod@gmail.com` (`BREVO_SENDER_EMAIL`).
 
 ## Modules
 
