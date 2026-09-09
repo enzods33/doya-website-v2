@@ -450,7 +450,13 @@ function CartPage() {
                       onChange={(event) => setShippingCountry(event.target.value)}
                     >
                       {shippingZones.map((zone) => (
-                        <optgroup key={zone.id} label={t(`cart.zone.${zone.id}`)}>
+                        <optgroup
+                          key={zone.id}
+                          label={t('cart.zoneWithAmount', {
+                            name: t(`cart.zone.${zone.id}`),
+                            amount: formatEuros(zone.amountCents),
+                          })}
+                        >
                           {zone.countries.map((code) => (
                             <option key={code} value={code}>
                               {regionNames.of(code) ?? code}
