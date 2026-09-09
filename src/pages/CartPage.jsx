@@ -12,6 +12,7 @@ import { SHIPPING_ZONES, zoneForCountry } from '../commerce/shippingZones.js'
 import { shippingQuoteEmails } from '../data/contacts.js'
 import { useI18n } from '../i18n/I18nProvider.jsx'
 import Link from '../components/Link.jsx'
+import { Stars } from '../components/Brand.jsx'
 
 function CartPage() {
   const { items, setQuantity, removeItem } = useCart()
@@ -116,17 +117,27 @@ function CartPage() {
   }
 
   return (
-    <main id="main" className="page-main" tabIndex={-1}>
-      <div className="page-shell">
-        <p className="eyebrow section-kicker">{t('cart.kicker')}</p>
-        <h1 className="editorial-title page-title">{t('cart.title')}</h1>
+    <main id="main" className="page-main cart-page" tabIndex={-1}>
+      <div className="page-shell cart-shell">
+        <header className="cart-header">
+          <p className="eyebrow section-kicker">{t('cart.kicker')}</p>
+          <h1 className="editorial-title page-title cart-title">{t('cart.title')}</h1>
+        </header>
         {!commerceConfigured && <p className="availability-note">{t('shop.note')}</p>}
         {lines.length === 0 ? (
-          <div className="page-empty">
-            <p className="page-empty-text">{t('cart.empty')}</p>
-            <div className="page-empty-links">
-              <Link href="/" className="text-link">{t('cart.backHome')} <span aria-hidden="true">↗</span></Link>
-              <Link href="/#shop" className="text-link">{t('cart.seeCollection')} <span aria-hidden="true">↗</span></Link>
+          <div className="cart-empty">
+            <Stars color="black" className="cart-empty-stars" />
+            <div className="cart-empty-copy">
+              <p className="cart-empty-status">{t('cart.empty')}</p>
+              <p className="cart-empty-hint">{t('cart.emptyHint')}</p>
+            </div>
+            <div className="cart-empty-actions">
+              <Link href="/#shop" className="commerce-button cart-empty-primary">
+                {t('cart.seeCollection')}
+              </Link>
+              <Link href="/" className="text-link cart-empty-secondary">
+                {t('cart.backHome')} <span aria-hidden="true">↗</span>
+              </Link>
             </div>
           </div>
         ) : (
@@ -161,6 +172,7 @@ function CartPage() {
               })}
             </ul>
             <div className="cart-aside">
+              <p className="eyebrow cart-aside-kicker">{t('cart.summary')}</p>
               <label className="field">
                 <span>{t('cart.email')}</span>
                 <input type="email" autoComplete="email" required value={email} onChange={(event) => setEmail(event.target.value)} />

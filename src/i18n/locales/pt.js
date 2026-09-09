@@ -91,10 +91,10 @@ export default {
     type: { tshirt: 'T-shirt', cd: 'CD' },
     color: { black: 'Preto', white: 'Branco', digipack: 'Digipack' },
     product: {
-      'luna-bohemia-white': 'Luna Bohemia',
-      'luna-bohemia-black': 'Luna Bohemia',
-      'doya-white': 'DOYA',
-      'doya-black': 'DOYA',
+      'luna-bohemia-white': 'Estrelas',
+      'luna-bohemia-black': 'Estrelas',
+      'doya-white': 'Fases',
+      'doya-black': 'Fases',
       'cd-luna-bohemia': 'Luna Bohemia',
     },
     zoom: 'Ampliar',
@@ -102,7 +102,10 @@ export default {
   },
   about: {
     eyebrow: 'Bio',
-    biographyPlaceholder: 'Biografia oficial a completar.',
+    biographyLead:
+      'DOYA são Marina e Melissa.',
+    biographyBody:
+      'Um duo que canta entre o espanhol e o francês, sem escolher só uma margem.\n\nDe Mariposa a Mueve, de Lo vi venir a No anda sola, o seu caminho já se escreve em refrões — canções que se aguentam sozinhas, mesmo antes do álbum.\n\nLuna Bohemia (2026) é o capítulo: doze faixas, luz de deserto, uma identidade nítida.\n\nDuas vozes, uma mesma linha. O preto e o branco. O calor da areia, o vermelho das estrelas.\n\nA DOYA não inventa uma lenda: cria um universo e deixa a música levá-lo.',
   },
   contact: {
     booking: {
@@ -135,12 +138,14 @@ export default {
   },
   publisher: {
     label: 'Produção',
+    credit: 'ALMENA PROD',
     aria: 'Contactar ALMENA PROD',
     subject: 'DOYA — contacto ALMENA PROD',
     body: 'Olá,\n\n',
   },
   studio: {
     label: 'Site',
+    credit: 'Site · Reelazura',
     aria: 'Contactar Reelazura',
     subject: 'DOYA — contacto do site',
     body: 'Olá Reelazura,\n\n',
@@ -371,8 +376,10 @@ export default {
     kicker: 'Loja',
     title: 'Carrinho',
     empty: 'O carrinho está vazio.',
+    emptyHint: 'A coleção Luna Bohemia espera-te na loja.',
     backHome: 'Voltar ao início',
     seeCollection: 'Ver a coleção',
+    summary: 'Resumo',
     lineMeta: '{color} · tamanho {size}',
     lineMetaUnique: '{color}',
     quantity: 'Quantidade',

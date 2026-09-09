@@ -9,8 +9,8 @@
   --color-mist: #e3dfd8;
   --color-taupe: #c4bfb7;
   --color-header: #f4f0ea;
-  --font-editorial: 'FK Display Regular Alt', 'Iowan Old Style', 'Baskerville', 'Times New Roman', serif;
-  --font-functional: 'Degular Medium', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  --font-editorial: 'Iowan Old Style', 'Palatino Linotype', Palatino, 'Book Antiqua', 'Times New Roman', serif;
+  --font-functional: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 :root {

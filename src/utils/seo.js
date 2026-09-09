@@ -130,6 +130,7 @@ export function applyDocumentSeo({ path, locale, intlLocale, t, indexable }) {
 /** Graphe JSON-LD (injecté au build). */
 export function buildJsonLd(origin = siteOrigin()) {
   const sameAs = socials.map((entry) => entry.url).filter(Boolean)
+  const cover = `${origin}/luna-bohemia-cover.jpg`
   return {
     '@context': 'https://schema.org',
     '@graph': [
@@ -140,13 +141,26 @@ export function buildJsonLd(origin = siteOrigin()) {
         url: `${origin}/`,
         genre: ['Latin', 'Pop', 'World'],
         sameAs,
-        album: {
-          '@type': 'MusicAlbum',
-          name: album.title,
+        member: [
+          { '@type': 'Person', name: 'Marina' },
+          { '@type': 'Person', name: 'Melissa' },
+        ],
+        album: { '@id': `${origin}/#album` },
+      },
+      {
+        '@type': 'MusicAlbum',
+        '@id': `${origin}/#album`,
+        name: album.title,
+        byArtist: { '@id': `${origin}/#artist` },
+        datePublished: String(album.year),
+        numTracks: album.tracks?.length ?? 12,
+        image: cover,
+        track: (album.tracks ?? []).map((track, index) => ({
+          '@type': 'MusicRecording',
+          name: track.title,
+          position: index + 1,
           byArtist: { '@id': `${origin}/#artist` },
-          datePublished: String(album.year),
-          image: `${origin}/luna-bohemia-cover.jpg`,
-        },
+        })),
       },
       {
         '@type': 'WebSite',
@@ -170,7 +184,7 @@ export function buildJsonLd(origin = siteOrigin()) {
         about: { '@id': `${origin}/#artist` },
         primaryImageOfPage: {
           '@type': 'ImageObject',
-          url: `${origin}/luna-bohemia-cover.jpg`,
+          url: cover,
         },
       },
     ],

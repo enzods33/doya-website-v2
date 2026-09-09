@@ -91,10 +91,10 @@ export default {
     type: { tshirt: 'Camiseta', cd: 'CD' },
     color: { black: 'Negro', white: 'Blanco', digipack: 'Digipack' },
     product: {
-      'luna-bohemia-white': 'Luna Bohemia',
-      'luna-bohemia-black': 'Luna Bohemia',
-      'doya-white': 'DOYA',
-      'doya-black': 'DOYA',
+      'luna-bohemia-white': 'Estrellas',
+      'luna-bohemia-black': 'Estrellas',
+      'doya-white': 'Fases',
+      'doya-black': 'Fases',
       'cd-luna-bohemia': 'Luna Bohemia',
     },
     zoom: 'Ampliar',
@@ -102,7 +102,10 @@ export default {
   },
   about: {
     eyebrow: 'Bio',
-    biographyPlaceholder: 'Biografía oficial por completar.',
+    biographyLead:
+      'DOYA son Marina y Melissa.',
+    biographyBody:
+      'Un dúo que canta entre el español y el francés, sin elegir una sola orilla.\n\nDe Mariposa a Mueve, de Lo vi venir a No anda sola, su camino ya se escribe en estribillos — canciones que se sostienen solas, incluso antes del álbum.\n\nLuna Bohemia (2026) es el capítulo: doce temas, luz de desierto, una identidad nítida.\n\nDos voces, una misma línea. El negro y el blanco. El calor de la arena, el rojo de las estrellas.\n\nDOYA no inventa una leyenda: plantea un universo y deja que la música lo lleve.',
   },
   contact: {
     booking: {
@@ -135,12 +138,14 @@ export default {
   },
   publisher: {
     label: 'Producción',
+    credit: 'ALMENA PROD',
     aria: 'Contactar a ALMENA PROD',
     subject: 'DOYA — contacto ALMENA PROD',
     body: 'Hola,\n\n',
   },
   studio: {
     label: 'Sitio web',
+    credit: 'Sitio web · Reelazura',
     aria: 'Contactar a Reelazura',
     subject: 'DOYA — contacto del sitio',
     body: 'Hola Reelazura,\n\n',
@@ -371,8 +376,10 @@ export default {
     kicker: 'Tienda',
     title: 'Cesta',
     empty: 'La cesta está vacía.',
+    emptyHint: 'La colección Luna Bohemia te espera en la tienda.',
     backHome: 'Volver al inicio',
     seeCollection: 'Ver la colección',
+    summary: 'Resumen',
     lineMeta: '{color} · talla {size}',
     lineMetaUnique: '{color}',
     quantity: 'Cantidad',

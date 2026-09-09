@@ -5,11 +5,11 @@ import { shippingZoneByCountry, stripeShippingOption } from '../_shared/shipping
 import { allowRatePersistent, clientIp } from '../_shared/rateLimit.ts'
 
 const PRODUCT_NAMES: Record<string, string> = {
-  // Libellés Stripe Checkout (FR) — garder synchrones avec `src/data/products.js`
-  'luna-bohemia-white': 'Luna Bohemia — Blanc',
-  'luna-bohemia-black': 'Luna Bohemia — Noir',
-  'doya-white': 'DOYA — Blanc',
-  'doya-black': 'DOYA — Noir',
+  // Libellés Stripe Checkout (FR) — garder synchrones avec `shop.product.*` i18n
+  'luna-bohemia-white': 'Étoiles — Blanc',
+  'luna-bohemia-black': 'Étoiles — Noir',
+  'doya-white': 'Phases — Blanc',
+  'doya-black': 'Phases — Noir',
   'cd-luna-bohemia': 'Luna Bohemia — CD',
 }
 

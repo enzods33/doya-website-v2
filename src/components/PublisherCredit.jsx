@@ -1,4 +1,3 @@
-import almenaLogo from '../assets/logos/almena-prod-clear.webp'
 import { trackEvent } from '../commerce/pageAnalytics.js'
 import { useI18n } from '../i18n/I18nProvider.jsx'
 
@@ -14,22 +13,12 @@ function PublisherCredit({ className = '' }) {
 
   return (
     <a
-      className={`studio-credit publisher-credit ${className}`.trim()}
+      className={`studio-credit publisher-credit publisher-credit--text ${className}`.trim()}
       href={publisherMailto(t)}
       aria-label={t('publisher.aria')}
       onClick={() => trackEvent('contact_mail', 'footer')}
     >
-      <span className="studio-credit-label">{t('publisher.label')}</span>
-      <img
-        className="studio-credit-logo publisher-credit-logo"
-        src={almenaLogo}
-        alt=""
-        width={637}
-        height={368}
-        loading="lazy"
-        decoding="async"
-        draggable="false"
-      />
+      <span className="publisher-credit-text">{t('publisher.credit')}</span>
     </a>
   )
 }

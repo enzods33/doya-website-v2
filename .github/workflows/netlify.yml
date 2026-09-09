@@ -1,0 +1,67 @@
+# Build + contrôles SPA, puis déploiement Netlify si les secrets sont présents.
+# Secrets repo : NETLIFY_AUTH_TOKEN, NETLIFY_SITE_ID
+# Sans secrets : le job vérifie seulement le build (évite un Drop oubliant _redirects).
+
+name: Netlify
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+concurrency:
+  group: netlify-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+        env:
+          VITE_INDEXABLE: 'false'
+      - name: Verify SPA + SEO artifacts
+        run: |
+          set -e
+          test -f dist/index.html
+          test -f dist/404.html
+          test -f dist/_redirects
+          test -f dist/_headers
+          test -f dist/robots.txt
+          test -f dist/sitemap.xml
+          grep -q 'index.html' dist/_redirects
+          echo "SPA artifacts OK"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+          retention-days: 7
+
+  deploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+      - name: Deploy to Netlify
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        run: |
+          if [ -z "$NETLIFY_AUTH_TOKEN" ] || [ -z "$NETLIFY_SITE_ID" ]; then
+            echo "Secrets Netlify absents — build vérifié, deploy ignoré."
+            echo "Ajouter NETLIFY_AUTH_TOKEN + NETLIFY_SITE_ID pour activer le deploy Git."
+            exit 0
+          fi
+          npx --yes netlify-cli deploy --prod --dir=dist --site="$NETLIFY_SITE_ID" --auth="$NETLIFY_AUTH_TOKEN"

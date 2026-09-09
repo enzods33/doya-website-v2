@@ -16,11 +16,11 @@ function mailto(email, subject) {
   return `mailto:${email}?subject=${encodeURIComponent(subject)}`
 }
 
-function SocialRow({ items, eventName }) {
+function SocialRow({ items, eventName, startIndex = 0 }) {
   return (
     <ul className="socials">
-      {items.map((social) => (
-        <li key={social.name}>
+      {items.map((social, index) => (
+        <li key={social.name} style={{ '--social-i': startIndex + index }}>
           {isExternalUrl(social.url)
             ? (
               <a
@@ -103,36 +103,34 @@ function Footer() {
         </div>
 
         <nav className="footer-socials" aria-label={t('a11y.footerSocials')}>
-          <SocialRow items={listenSocials} eventName="stream_open" />
-          <SocialRow items={networkSocials} eventName="social_open" />
+          <SocialRow items={listenSocials} eventName="stream_open" startIndex={0} />
+          <SocialRow items={networkSocials} eventName="social_open" startIndex={listenSocials.length} />
           {missingLinks && <p className="footer-note">{t('footer.missingLinks')}</p>}
         </nav>
 
         <div className="footer-meta">
           <div className="footer-meta-primary">
-            <p className="copyright">{t('footer.copyright', { year: siteContent.year })}</p>
+            <PublisherCredit className="footer-publisher" />
             <nav className="footer-legal" aria-label={t('a11y.footerLegal')}>
               <Link href="/mentions-legales">{t('footer.legalMentions')}</Link>
               <Link href="/cgv">{t('footer.legalCgv')}</Link>
               <Link href="/confidentialite">{t('footer.legalPrivacy')}</Link>
             </nav>
           </div>
-          <div className="footer-credits">
-            <PublisherCredit className="footer-publisher" />
-            <span className="footer-credits-sep" aria-hidden="true" />
-            <StudioCredit className="footer-studio" />
-          </div>
           <div className="footer-meta-tools">
             <LanguageSwitcher className="footer-language-switcher" />
             <Link href="#top" className="back-to-top">
               <span className="back-to-top-label">{t('footer.backToTop')}</span>
               <span className="back-to-top-mark" aria-hidden="true">
-                <svg className="back-to-top-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <svg className="back-to-top-icon" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" fill="none">
                   <path d="M8 12.5V3.5" stroke="currentColor" strokeWidth="1.35" strokeLinecap="round" />
                   <path d="M4.25 7.25 8 3.5l3.75 3.75" stroke="currentColor" strokeWidth="1.35" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </span>
             </Link>
+          </div>
+          <div className="footer-studio-line">
+            <StudioCredit className="footer-studio" />
           </div>
         </div>
       </div>

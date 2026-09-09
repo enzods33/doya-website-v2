@@ -116,11 +116,16 @@ function About() {
   return (
     <section id="about" className="about-section" aria-labelledby="about-title">
       <div className="section-shell about-intro">
+        <Stars color="black" className="about-intro-stars" />
         <Reveal className="about-copy" delay={0.1}>
-          <p className="eyebrow section-kicker">{siteContent.albumTitle} · {siteContent.year}</p>
           <h2 id="about-title" className="editorial-title about-title">{t('about.eyebrow')}</h2>
           <Wordmark decorative className="about-wordmark" />
-          {siteContent.biography && <p className="about-biography">{siteContent.biography}</p>}
+          <div className="about-biography">
+            <p className="about-biography-lead">{t('about.biographyLead')}</p>
+            {t('about.biographyBody').split(/\n\n+/).map((paragraph) => (
+              <p key={paragraph.slice(0, 24)} className="about-biography-body">{paragraph}</p>
+            ))}
+          </div>
         </Reveal>
       </div>
 

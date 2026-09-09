@@ -13,9 +13,9 @@ export function Stars({ color = 'red', className = '' }) {
   return <img src={sources[color]} width="36" height="45" alt="" aria-hidden="true" className={className} />
 }
 
-export function MenuIcon({ className = '' }) {
+export function MenuIcon({ className = '', open = false }) {
   return (
-    <span className={`menu-icon${className ? ` ${className}` : ''}`} aria-hidden="true">
+    <span className={`menu-icon${open ? ' is-open' : ''}${className ? ` ${className}` : ''}`} aria-hidden="true">
       <span className="menu-icon-bar" />
       <span className="menu-icon-bar" />
       <span className="menu-icon-bar" />

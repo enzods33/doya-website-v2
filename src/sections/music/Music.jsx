@@ -7,15 +7,39 @@ import Photo from '../../components/Photo.jsx'
 import Reveal from '../../components/Reveal.jsx'
 import Link from '../../components/Link.jsx'
 import { PlatformIcon, TRACK_PLATFORM_ORDER } from '../../components/PlatformIcon.jsx'
-import { Stars } from '../../components/Brand.jsx'
 import { trackEvent } from '../../commerce/pageAnalytics.js'
-import lunaPhases from '../../assets/music/luna-phases.png'
+import monogramWhite from '../../assets/logos/doya-monogram-white.svg'
 
 const PLATFORM_NAMES = {
   spotify: 'Spotify',
   apple: 'Apple Music',
   deezer: 'Deezer',
   youtube: 'YouTube',
+}
+
+const VINYL_GROOVES = [42, 48, 54, 60, 66, 72, 78, 84, 90]
+
+function VinylDisc({ className = '' }) {
+  return (
+    <div className={className} aria-hidden="true">
+      <svg className="music-tracklist-vinyl-disc" viewBox="0 0 200 200" focusable="false">
+        <circle cx="100" cy="100" r="98" fill="currentColor" />
+        <g fill="none" stroke="var(--color-doya-white)" strokeWidth="0.9" opacity="0.22">
+          {VINYL_GROOVES.map((r) => (
+            <circle key={r} cx="100" cy="100" r={r} />
+          ))}
+        </g>
+        <circle cx="100" cy="100" r="34" fill="currentColor" opacity="0.92" />
+        <circle cx="100" cy="100" r="32" fill="none" stroke="var(--color-doya-white)" strokeWidth="0.7" opacity="0.2" />
+      </svg>
+      <img
+        src={monogramWhite}
+        alt=""
+        className="music-tracklist-vinyl-mark"
+        draggable="false"
+      />
+    </div>
+  )
 }
 
 function trackListenLinks(track) {
@@ -34,6 +58,25 @@ function PlayGlyph() {
   )
 }
 
+function ShopBuy({ className = '' }) {
+  const { t } = useI18n()
+  if (!album.buyHref) return null
+  const label = t('music.buy')
+  const classes = `album-buy${className ? ` ${className}` : ''}`
+  if (album.buyHref.startsWith('http')) {
+    return (
+      <a className={classes} href={album.buyHref} target="_blank" rel="noopener noreferrer">
+        {label}
+      </a>
+    )
+  }
+  return (
+    <Link className={classes} href={album.buyHref}>
+      {label}
+    </Link>
+  )
+}
+
 function TrackListen({ track, open, onToggle }) {
   const { t } = useI18n()
   const reactId = useId()
@@ -42,7 +85,7 @@ function TrackListen({ track, open, onToggle }) {
   if (!links.length) return <span className="track-listen-slot" aria-hidden="true" />
 
   return (
-      <div className={`track-listen${open ? ' is-open' : ''}`}>
+    <div className={`track-listen${open ? ' is-open' : ''}`}>
       <div
         id={panelId}
         className={`track-listen-panel${open ? ' is-open' : ''}`}
@@ -117,52 +160,31 @@ function Music() {
         <div className="music-layout">
           <div className="music-cover-column">
             <Photo image={media.cover} className="album-cover" />
-            {albumPlatforms.length > 0 && (
-              <ul className="album-platforms" aria-label={t('music.listenAlbum')}>
-                {albumPlatforms.map((platform) => (
-                  <li key={platform.id}>
-                    <a
-                      href={platform.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={t('music.listenOn', { platform: platform.name })}
-                      onClick={() => trackEvent('stream_open', 'music')}
-                    >
-                      <PlatformIcon id={platform.id} />
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            )}
-            {album.buyHref ? (
-              <div className="music-buy-stage">
-                <img
-                  src={lunaPhases}
-                  alt=""
-                  aria-hidden="true"
-                  className="music-luna music-luna--cover"
-                  draggable="false"
-                />
-                {album.buyHref.startsWith('http') ? (
-                  <a className="album-buy" href={album.buyHref} target="_blank" rel="noopener noreferrer">
-                    {t('music.buy')}
-                  </a>
-                ) : (
-                  <Link className="album-buy" href={album.buyHref}>
-                    {t('music.buy')}
-                  </Link>
-                )}
+            <div className="music-cover-foot">
+              {albumPlatforms.length > 0 && (
+                <ul className="album-platforms" aria-label={t('music.listenAlbum')}>
+                  {albumPlatforms.map((platform) => (
+                    <li key={platform.id}>
+                      <a
+                        href={platform.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={t('music.listenOn', { platform: platform.name })}
+                        onClick={() => trackEvent('stream_open', 'music')}
+                      >
+                        <PlatformIcon id={platform.id} />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <div className="music-buy-under">
+                <ShopBuy />
               </div>
-            ) : null}
+            </div>
           </div>
           <div className="tracklist-column">
-            <img
-              src={lunaPhases}
-              alt=""
-              aria-hidden="true"
-              className="music-luna music-luna--tracklist"
-              draggable="false"
-            />
+            <VinylDisc className="music-tracklist-vinyl" />
             <ol className="tracklist">
               {album.tracks.map((track) => (
                 <li key={track.number}>
@@ -180,7 +202,6 @@ function Music() {
             </ol>
           </div>
           <figure className="music-aside">
-            <Stars color="black" className="music-aside-stars" />
             <Photo image={media.editorial} className="music-aside-photo" />
           </figure>
         </div>

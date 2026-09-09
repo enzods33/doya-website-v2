@@ -1,4 +1,3 @@
-import reelazuraLogo from '../assets/logos/reelazura-clear.webp'
 import { useI18n } from '../i18n/I18nProvider.jsx'
 
 export const REELAZURA_EMAIL = 'reelazura@gmail.com'
@@ -13,21 +12,11 @@ function StudioCredit({ className = '' }) {
 
   return (
     <a
-      className={`studio-credit ${className}`.trim()}
+      className={`studio-credit studio-credit--text ${className}`.trim()}
       href={studioMailto(t)}
       aria-label={t('studio.aria')}
     >
-      <span className="studio-credit-label">{t('studio.label')}</span>
-      <img
-        className="studio-credit-logo"
-        src={reelazuraLogo}
-        alt=""
-        width={872}
-        height={294}
-        loading="lazy"
-        decoding="async"
-        draggable="false"
-      />
+      <span className="studio-credit-text">{t('studio.credit')}</span>
     </a>
   )
 }

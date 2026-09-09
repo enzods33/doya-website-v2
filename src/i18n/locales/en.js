@@ -91,10 +91,10 @@ export default {
     type: { tshirt: 'T-shirt', cd: 'CD' },
     color: { black: 'Black', white: 'White', digipack: 'Digipack' },
     product: {
-      'luna-bohemia-white': 'Luna Bohemia',
-      'luna-bohemia-black': 'Luna Bohemia',
-      'doya-white': 'DOYA',
-      'doya-black': 'DOYA',
+      'luna-bohemia-white': 'Stars',
+      'luna-bohemia-black': 'Stars',
+      'doya-white': 'Phases',
+      'doya-black': 'Phases',
       'cd-luna-bohemia': 'Luna Bohemia',
     },
     zoom: 'Zoom',
@@ -102,7 +102,10 @@ export default {
   },
   about: {
     eyebrow: 'Bio',
-    biographyPlaceholder: 'Official biography to be completed.',
+    biographyLead:
+      'DOYA is Marina and Melissa.',
+    biographyBody:
+      'A duo singing between Spanish and French, never choosing only one shore.\n\nFrom Mariposa to Mueve, from Lo vi venir to No anda sola, their path is already written in choruses — songs that stand on their own, even before the album.\n\nLuna Bohemia (2026) is the next chapter: twelve tracks, desert light, a clear identity.\n\nTwo voices, one line. Black and white. The warmth of sand, the red of the stars.\n\nDOYA does not invent a legend: it sets an universe, and lets the music carry it.',
   },
   contact: {
     booking: {
@@ -135,12 +138,14 @@ export default {
   },
   publisher: {
     label: 'Production',
+    credit: 'ALMENA PROD',
     aria: 'Contact ALMENA PROD',
     subject: 'DOYA — ALMENA PROD contact',
     body: 'Hello,\n\n',
   },
   studio: {
     label: 'Website',
+    credit: 'Website · Reelazura',
     aria: 'Contact Reelazura',
     subject: 'DOYA — site contact',
     body: 'Hi Reelazura,\n\n',
@@ -371,8 +376,10 @@ export default {
     kicker: 'Shop',
     title: 'Cart',
     empty: 'Your cart is empty.',
+    emptyHint: 'The Luna Bohemia collection is waiting in the shop.',
     backHome: 'Back to home',
     seeCollection: 'See the collection',
+    summary: 'Summary',
     lineMeta: '{color} · size {size}',
     lineMetaUnique: '{color}',
     quantity: 'Quantity',

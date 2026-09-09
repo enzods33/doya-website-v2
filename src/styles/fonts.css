@@ -1,7 +1,8 @@
-/* Polices licenciées du site. Déposer les fichiers correspondants dans
-   src/assets/fonts/ (formats .woff2 puis .woff) pour qu'elles se chargent.
-   Sans ces fichiers, les piles de repli de tokens.css restent utilisées. */
+/* Webfonts licenciées — à activer quand les fichiers sont dans src/assets/fonts/
+   (FKDisplay-RegularAlt + Degular-Medium, .woff2 puis .woff).
+   Sans fichiers, tokens.css utilise des piles système élégantes (pas de 404 réseau). */
 
+/*
 @font-face {
   font-family: 'FK Display Regular Alt';
   src: url('../assets/fonts/FKDisplay-RegularAlt.woff2') format('woff2'),
@@ -19,3 +20,4 @@
   font-style: normal;
   font-display: swap;
 }
+*/

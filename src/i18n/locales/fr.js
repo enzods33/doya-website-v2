@@ -91,10 +91,10 @@ export default {
     type: { tshirt: 'T-shirt', cd: 'CD' },
     color: { black: 'Noir', white: 'Blanc', digipack: 'Digipack' },
     product: {
-      'luna-bohemia-white': 'Luna Bohemia',
-      'luna-bohemia-black': 'Luna Bohemia',
-      'doya-white': 'DOYA',
-      'doya-black': 'DOYA',
+      'luna-bohemia-white': 'Étoiles',
+      'luna-bohemia-black': 'Étoiles',
+      'doya-white': 'Phases',
+      'doya-black': 'Phases',
       'cd-luna-bohemia': 'Luna Bohemia',
     },
     zoom: 'Agrandir',
@@ -102,7 +102,10 @@ export default {
   },
   about: {
     eyebrow: 'Bio',
-    biographyPlaceholder: 'Biographie officielle à compléter.',
+    biographyLead:
+      'DOYA, c’est Marina et Melissa.',
+    biographyBody:
+      'Un duo qui chante entre l’espagnol et le français, sans choisir un seul rivage.\n\nDe Mariposa à Mueve, de Lo vi venir à No anda sola, leur trajectoire s’écrit déjà en refrains — des chansons qui tiennent debout seules, avant même l’album.\n\nLuna Bohemia (2026) en est le chapitre : douze titres, une lumière de désert, une identité nette.\n\nDeux voix, une même ligne. Le noir et le blanc. La chaleur du sable, le rouge des étoiles.\n\nDOYA ne raconte pas une légende inventée : elle pose un univers, et laisse la musique le porter.',
   },
   contact: {
     booking: {
@@ -135,12 +138,14 @@ export default {
   },
   publisher: {
     label: 'Production',
+    credit: 'ALMENA PROD',
     aria: 'Contacter ALMENA PROD',
     subject: 'DOYA — contact ALMENA PROD',
     body: 'Bonjour,\n\n',
   },
   studio: {
     label: 'Site web',
+    credit: 'Site web · Reelazura',
     aria: 'Contacter Reelazura',
     subject: 'DOYA — contact site',
     body: 'Bonjour Reelazura,\n\n',
@@ -371,8 +376,10 @@ export default {
     kicker: 'Boutique',
     title: 'Panier',
     empty: 'Le panier est vide.',
+    emptyHint: 'La collection Luna Bohemia t’attend en boutique.',
     backHome: 'Retour à l’accueil',
     seeCollection: 'Voir la collection',
+    summary: 'Récapitulatif',
     lineMeta: '{color} · taille {size}',
     lineMetaUnique: '{color}',
     quantity: 'Quantité',

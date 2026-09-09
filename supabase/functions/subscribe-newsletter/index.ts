@@ -139,6 +139,10 @@ Deno.serve(async (req) => {
   const email = typeof body.email === 'string' ? body.email.trim().toLowerCase() : ''
   if (!EMAIL_RE.test(email)) return json(400, { error: 'invalid_email' }, origin)
 
+  if (!(await allowRatePersistent(serviceClient(), `newsletter:email:${email}`, RATE_MAX, RATE_WINDOW_MS))) {
+    return json(429, { error: 'rate_limited' }, origin)
+  }
+
   const localeRaw = typeof body.locale === 'string' ? body.locale.trim().toLowerCase() : 'fr'
   const locale = (localeRaw in WELCOME ? localeRaw : 'fr') as keyof typeof WELCOME
 

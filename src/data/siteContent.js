@@ -14,6 +14,6 @@ export const siteContent = {
   name: 'DOYA',
   year: 2026,
   albumTitle: 'Luna Bohemia',
-  biography: null,
+  biography: null, // texte i18n : about.biographyLead / about.biographyBody
   contactUrl: '#contact',
 }
