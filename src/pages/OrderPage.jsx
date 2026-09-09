@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { fetchOrder } from '../commerce/checkout.js'
-import { formatEuros } from '../commerce/cartRules.js'
+import { formatEuros, isUniqueSize } from '../commerce/cartRules.js'
 import { commerceMessage } from '../commerce/messages.js'
 import { useCart } from '../commerce/CartProvider.jsx'
 import { useI18n } from '../i18n/I18nProvider.jsx'
@@ -52,12 +52,14 @@ function OrderPage() {
                 const nameKey = `shop.product.${item.product_id}`
                 const name = t(nameKey)
                 const label = name === nameKey ? item.product_id : name
-                const isUnique = item.size === 'U'
+                const isUnique = isUniqueSize(item.size)
                 const typeKey = item.product_id.startsWith('cd-') ? 'shop.type.cd' : null
                 const typeLabel = typeKey ? t(typeKey) : ''
+                const sizeKey = `shop.size.${item.size}`
+                const sizeLabel = t(sizeKey)
                 const title = isUnique
                   ? (typeLabel ? `${typeLabel} · ${label}` : label)
-                  : `${label} · ${item.size}`
+                  : `${label} · ${sizeLabel === sizeKey ? item.size : sizeLabel}`
                 return (
                   <li key={`${item.product_id}-${item.size}`}>
                     {item.quantity} × {title}

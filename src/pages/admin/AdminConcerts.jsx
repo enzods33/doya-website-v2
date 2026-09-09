@@ -181,7 +181,7 @@ function AdminConcerts() {
   }
 
   return (
-    <section className="admin-section">
+    <section className="admin-section admin-concerts">
       <header className="admin-section-head">
         <h2>{t('admin.datesTitle')}</h2>
         <p>{t('admin.datesLead')}</p>

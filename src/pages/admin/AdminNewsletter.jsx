@@ -212,7 +212,7 @@ function AdminNewsletter() {
   }
 
   return (
-    <section className="admin-section">
+    <section className="admin-section admin-newsletter">
       <header className="admin-section-head">
         <h2>{t('admin.newsletterTitle')}</h2>
         <p>{t('admin.newsletterLead')}</p>

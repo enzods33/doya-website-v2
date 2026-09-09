@@ -2,10 +2,27 @@ import { json, preflight, rejectOrigin } from '../_shared/http.ts'
 import { requireAdmin } from '../_shared/admin.ts'
 import { serviceClient } from '../_shared/clients.ts'
 import { sendShippedOrderEmail, type OrderEmailLine } from '../_shared/orderEmail.ts'
+import { loadShippingZones } from '../_shared/shipping.ts'
+import { r2PutObject } from '../_shared/r2.ts'
 
 const MAX_DAYS = 366
 const DEFAULT_DAYS = 90
 const TRACKING_MAX = 64
+const MAX_IMAGE_BYTES = 4_500_000
+const TSHIRT_SIZES = ['ENF', 'XS', 'S', 'M', 'L', 'XL'] as const
+
+function slugFile(name: string) {
+  const base = name.replace(/\.[^.]+$/, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+  return base || 'photo'
+}
+
+function slugProductId(value: string) {
+  return value.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 64)
+}
+
+function normalizePromoCode(value: string) {
+  return value.trim().toUpperCase().replace(/\s+/g, '')
+}
 
 function dayKeys(count: number) {
   const days: string[] = []
@@ -218,7 +235,11 @@ async function buildSales(db: ReturnType<typeof serviceClient>) {
 
 async function buildInventory(db: ReturnType<typeof serviceClient>) {
   const [{ data: products, error: productsError }, { data: variants, error: variantsError }] = await Promise.all([
-    db.from('products').select('id, name, type, color, on_sale').neq('type', 'Test').order('type').order('name'),
+    db.from('products')
+      .select('id, name, type, color, on_sale, price_cents, sort_order, image_front_url, image_back_url, image_width, image_height, type_key, color_key, default_view')
+      .neq('type', 'Test')
+      .order('sort_order')
+      .order('name'),
     db.from('product_variants').select('id, product_id, size, stock, reserved').order('size'),
   ])
 
@@ -228,7 +249,7 @@ async function buildInventory(db: ReturnType<typeof serviceClient>) {
   }
 
   const sizeRank = (size: string) => {
-    const order = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'U']
+    const order = ['ENF', 'XS', 'S', 'M', 'L', 'XL', 'CD', 'VINYL', 'U', 'XXL']
     const index = order.indexOf(size)
     return index === -1 ? 99 : index
   }
@@ -239,6 +260,15 @@ async function buildInventory(db: ReturnType<typeof serviceClient>) {
     type: string | null
     color: string | null
     onSale: boolean
+    priceCents: number | null
+    sortOrder: number
+    typeKey: string | null
+    colorKey: string | null
+    defaultView: string
+    imageFrontUrl: string | null
+    imageBackUrl: string | null
+    imageWidth: number | null
+    imageHeight: number | null
     variants: {
       variantId: string
       size: string
@@ -255,6 +285,15 @@ async function buildInventory(db: ReturnType<typeof serviceClient>) {
       type: product.type ?? null,
       color: product.color ?? null,
       onSale: Boolean(product.on_sale),
+      priceCents: Number.isInteger(product.price_cents) ? product.price_cents : null,
+      sortOrder: Number.isInteger(product.sort_order) ? product.sort_order : 100,
+      typeKey: typeof product.type_key === 'string' ? product.type_key : null,
+      colorKey: typeof product.color_key === 'string' ? product.color_key : null,
+      defaultView: product.default_view === 'back' ? 'back' : 'front',
+      imageFrontUrl: typeof product.image_front_url === 'string' ? product.image_front_url : null,
+      imageBackUrl: typeof product.image_back_url === 'string' ? product.image_back_url : null,
+      imageWidth: Number.isInteger(product.image_width) ? product.image_width : null,
+      imageHeight: Number.isInteger(product.image_height) ? product.image_height : null,
       variants: [],
     })
   }
@@ -279,6 +318,38 @@ async function buildInventory(db: ReturnType<typeof serviceClient>) {
       variants: row.variants.sort((a, b) => sizeRank(a.size) - sizeRank(b.size)),
     }))
     .filter((row) => row.variants.length > 0)
+    .sort((a, b) => a.sortOrder - b.sortOrder || a.name.localeCompare(b.name))
+}
+
+async function buildPromos(db: ReturnType<typeof serviceClient>) {
+  const { data, error } = await db
+    .from('promo_codes')
+    .select('id, code, percent_off, amount_off_cents, min_subtotal_cents, max_redemptions, redeemed, held, starts_at, ends_at, active, one_per_customer, auto_apply, min_tee_qty, min_cd_qty, created_at')
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    console.error('admin_stats_promos_failed', error)
+    throw new Error('stats_promos_failed')
+  }
+
+  return (data ?? []).map((row) => ({
+    id: row.id,
+    code: row.code,
+    percentOff: row.percent_off == null ? null : Number(row.percent_off),
+    amountOffCents: row.amount_off_cents == null ? null : Number(row.amount_off_cents),
+    minSubtotalCents: Number(row.min_subtotal_cents) || 0,
+    maxRedemptions: row.max_redemptions == null ? null : Number(row.max_redemptions),
+    redeemed: Number(row.redeemed) || 0,
+    held: Number(row.held) || 0,
+    startsAt: row.starts_at,
+    endsAt: row.ends_at,
+    active: Boolean(row.active),
+    onePerCustomer: Boolean(row.one_per_customer),
+    autoApply: Boolean(row.auto_apply),
+    minTeeQty: row.min_tee_qty == null ? null : Number(row.min_tee_qty),
+    minCdQty: row.min_cd_qty == null ? null : Number(row.min_cd_qty),
+    createdAt: row.created_at,
+  }))
 }
 
 Deno.serve(async (req) => {
@@ -292,12 +363,85 @@ Deno.serve(async (req) => {
   const admin = await requireAdmin(req, origin)
   if (admin instanceof Response) return admin
 
+  const contentType = req.headers.get('content-type') ?? ''
+  const db = serviceClient()
+
+  if (contentType.includes('multipart/form-data')) {
+    const form = await req.formData()
+    const file = form.get('file')
+    if (!(file instanceof File)) return json(400, { error: 'invalid_file' }, origin)
+    if (file.size <= 0 || file.size > MAX_IMAGE_BYTES) return json(400, { error: 'file_too_large' }, origin)
+    const mime = (file.type || '').toLowerCase()
+    if (mime !== 'image/jpeg' && mime !== 'image/jpg') {
+      return json(400, { error: 'invalid_image_type' }, origin)
+    }
+
+    const sideRaw = String(form.get('side') || 'front').toLowerCase()
+    const side = sideRaw === 'back' ? 'back' : 'front'
+    const productHint = slugProductId(String(form.get('productId') || 'product')) || 'product'
+    const bytes = new Uint8Array(await file.arrayBuffer())
+    const key = `shop/web/${productHint}-${side}-${Date.now()}-${slugFile(file.name)}.jpg`
+    let publicUrl = ''
+    try {
+      publicUrl = await r2PutObject(key, bytes, 'image/jpeg')
+    } catch (error) {
+      const detail = error instanceof Error ? error.message : String(error)
+      console.error('shop_r2_upload_failed', detail)
+      return json(502, { error: 'r2_upload_failed', detail: detail.slice(0, 200) }, origin)
+    }
+
+    const width = Number(form.get('width') || 1200)
+    const height = Number(form.get('height') || 1200)
+    return json(200, {
+      publicUrl,
+      storageKey: key,
+      side,
+      width: Number.isFinite(width) && width > 0 ? Math.round(width) : 1200,
+      height: Number.isFinite(height) && height > 0 ? Math.round(height) : 1200,
+    }, origin)
+  }
+
   let body: {
     action?: string
     days?: number
     orderId?: string
     trackingNumber?: string
     updates?: { variantId?: string; stock?: number }[]
+    productId?: string
+    priceCents?: number
+    onSale?: boolean
+    sortOrder?: number
+    order?: { productId?: string; sortOrder?: number }[]
+    shipping?: { id?: string; amountCents?: number }[]
+    promo?: {
+      code?: string
+      amountOffCents?: number
+      percentOff?: number
+      maxRedemptions?: number | null
+      active?: boolean
+      onePerCustomer?: boolean
+      startsAt?: string | null
+      endsAt?: string | null
+    }
+    promoId?: string
+    active?: boolean
+    amountOffCents?: number
+    product?: {
+      id?: string
+      name?: string
+      type?: string
+      color?: string
+      typeKey?: string
+      colorKey?: string
+      priceCents?: number
+      onSale?: boolean
+      sortOrder?: number
+      imageFrontUrl?: string
+      imageBackUrl?: string | null
+      imageWidth?: number
+      imageHeight?: number
+      stocks?: Record<string, number>
+    }
   } = {}
   try {
     body = await req.json()
@@ -307,7 +451,6 @@ Deno.serve(async (req) => {
 
   const action = typeof body.action === 'string' ? body.action : 'overview'
   const rangeDays = parseDays(body.days)
-  const db = serviceClient()
 
   if (action === 'update_stocks') {
     const rawUpdates = Array.isArray(body.updates) ? body.updates : []
@@ -367,6 +510,363 @@ Deno.serve(async (req) => {
     } catch {
       return json(200, { ok: true }, origin)
     }
+  }
+
+  if (action === 'update_price') {
+    const productId = typeof body.productId === 'string' ? body.productId.trim() : ''
+    const priceCents = Number(body.priceCents)
+    const onSale = body.onSale !== false
+    if (!/^[a-z0-9-]+$/.test(productId)) return json(400, { error: 'invalid_product' }, origin)
+    if (!Number.isInteger(priceCents) || priceCents < 50 || priceCents > 500000) {
+      return json(400, { error: 'invalid_price' }, origin)
+    }
+
+    const { error } = await db
+      .from('products')
+      .update({
+        price_cents: priceCents,
+        on_sale: onSale,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', productId)
+
+    if (error) {
+      console.error('admin_update_price_failed', error)
+      return json(500, { error: 'price_update_failed' }, origin)
+    }
+
+    const inventory = await buildInventory(db)
+    return json(200, { ok: true, inventory }, origin)
+  }
+
+  if (action === 'update_sort_order') {
+    const rawOrder = Array.isArray(body.order) ? body.order : []
+    if (!rawOrder.length || rawOrder.length > 80) {
+      return json(400, { error: 'invalid_sort_order' }, origin)
+    }
+
+    const rows: { productId: string; sortOrder: number }[] = []
+    for (const entry of rawOrder) {
+      const productId = typeof entry.productId === 'string' ? entry.productId.trim() : ''
+      const sortOrder = Number(entry.sortOrder)
+      if (!/^[a-z0-9-]+$/.test(productId)) return json(400, { error: 'invalid_product' }, origin)
+      if (!Number.isInteger(sortOrder) || sortOrder < 0 || sortOrder > 100000) {
+        return json(400, { error: 'invalid_sort_order' }, origin)
+      }
+      rows.push({ productId, sortOrder })
+    }
+
+    for (const row of rows) {
+      const { error } = await db
+        .from('products')
+        .update({ sort_order: row.sortOrder, updated_at: new Date().toISOString() })
+        .eq('id', row.productId)
+      if (error) {
+        console.error('admin_update_sort_failed', error)
+        return json(500, { error: 'sort_update_failed' }, origin)
+      }
+    }
+
+    const inventory = await buildInventory(db)
+    return json(200, { ok: true, inventory }, origin)
+  }
+
+  if (action === 'list_shipping' || action === 'inventory') {
+    try {
+      const [inventory, shipping] = await Promise.all([
+        buildInventory(db),
+        loadShippingZones(db),
+      ])
+      return json(200, {
+        inventory,
+        shipping: shipping.map((zone) => ({
+          id: zone.id,
+          displayName: zone.displayName,
+          amountCents: zone.amountCents,
+          countries: zone.countries,
+        })),
+      }, origin)
+    } catch (error) {
+      const code = error instanceof Error ? error.message : 'stats_inventory_failed'
+      return json(500, { error: code }, origin)
+    }
+  }
+
+  if (action === 'update_shipping') {
+    const raw = Array.isArray(body.shipping) ? body.shipping : []
+    if (!raw.length || raw.length > 20) return json(400, { error: 'invalid_shipping' }, origin)
+
+    for (const row of raw) {
+      const id = typeof row.id === 'string' ? row.id.trim() : ''
+      const amountCents = Number(row.amountCents)
+      if (!id) return json(400, { error: 'invalid_shipping' }, origin)
+      if (!Number.isInteger(amountCents) || amountCents < 0 || amountCents > 50000) {
+        return json(400, { error: 'invalid_shipping_amount' }, origin)
+      }
+      const { error } = await db
+        .from('shipping_zones')
+        .update({ amount_cents: amountCents, updated_at: new Date().toISOString() })
+        .eq('id', id)
+      if (error) {
+        console.error('admin_update_shipping_failed', error)
+        return json(500, { error: 'shipping_update_failed' }, origin)
+      }
+    }
+
+    const shipping = await loadShippingZones(db)
+    return json(200, {
+      ok: true,
+      shipping: shipping.map((zone) => ({
+        id: zone.id,
+        displayName: zone.displayName,
+        amountCents: zone.amountCents,
+        countries: zone.countries,
+      })),
+    }, origin)
+  }
+
+  if (action === 'list_promos') {
+    try {
+      const promos = await buildPromos(db)
+      return json(200, { promos }, origin)
+    } catch {
+      return json(500, { error: 'stats_promos_failed' }, origin)
+    }
+  }
+
+  if (action === 'create_promo') {
+    const promo = body.promo ?? {}
+    const code = normalizePromoCode(typeof promo.code === 'string' ? promo.code : '')
+    if (!code || code.length < 3 || code.length > 32 || !/^[A-Z0-9_-]+$/.test(code)) {
+      return json(400, { error: 'invalid_promo_code' }, origin)
+    }
+
+    const amountOffCents = promo.amountOffCents == null ? null : Number(promo.amountOffCents)
+    const percentOff = promo.percentOff == null ? null : Number(promo.percentOff)
+    const hasAmount = Number.isInteger(amountOffCents) && (amountOffCents as number) > 0
+    const hasPercent = Number.isFinite(percentOff) && (percentOff as number) > 0 && (percentOff as number) <= 100
+    if (hasAmount === hasPercent) {
+      return json(400, { error: 'invalid_promo_discount' }, origin)
+    }
+    if (hasAmount && ((amountOffCents as number) < 50 || (amountOffCents as number) > 50000)) {
+      return json(400, { error: 'invalid_promo_discount' }, origin)
+    }
+
+    let maxRedemptions: number | null = null
+    if (promo.maxRedemptions != null && promo.maxRedemptions !== '') {
+      const max = Number(promo.maxRedemptions)
+      if (!Number.isInteger(max) || max < 1 || max > 100000) {
+        return json(400, { error: 'invalid_promo_cap' }, origin)
+      }
+      maxRedemptions = max
+    }
+
+    let startsAt: string | null = null
+    if (typeof promo.startsAt === 'string' && promo.startsAt.trim()) {
+      const parsed = new Date(promo.startsAt)
+      if (Number.isNaN(parsed.getTime())) return json(400, { error: 'invalid_promo_starts' }, origin)
+      startsAt = parsed.toISOString()
+    }
+
+    let endsAt: string | null = null
+    if (typeof promo.endsAt === 'string' && promo.endsAt.trim()) {
+      const parsed = new Date(promo.endsAt)
+      if (Number.isNaN(parsed.getTime())) return json(400, { error: 'invalid_promo_ends' }, origin)
+      endsAt = parsed.toISOString()
+    }
+
+    if (startsAt && endsAt && new Date(startsAt) > new Date(endsAt)) {
+      return json(400, { error: 'invalid_promo_range' }, origin)
+    }
+
+    const { data, error } = await db
+      .from('promo_codes')
+      .insert({
+        code,
+        amount_off_cents: hasAmount ? amountOffCents : null,
+        percent_off: hasPercent ? Math.round((percentOff as number) * 100) / 100 : null,
+        max_redemptions: maxRedemptions,
+        active: promo.active !== false,
+        one_per_customer: promo.onePerCustomer !== false,
+        auto_apply: false,
+        starts_at: startsAt,
+        ends_at: endsAt,
+      })
+      .select('id, code, percent_off, amount_off_cents, max_redemptions, redeemed, held, starts_at, ends_at, active, one_per_customer, auto_apply, created_at')
+      .single()
+
+    if (error) {
+      console.error('admin_create_promo_failed', error)
+      if (String(error.message || '').includes('duplicate') || error.code === '23505') {
+        return json(409, { error: 'promo_exists' }, origin)
+      }
+      return json(500, { error: 'promo_create_failed' }, origin)
+    }
+
+    return json(200, {
+      ok: true,
+      promo: {
+        id: data.id,
+        code: data.code,
+        percentOff: data.percent_off == null ? null : Number(data.percent_off),
+        amountOffCents: data.amount_off_cents == null ? null : Number(data.amount_off_cents),
+        maxRedemptions: data.max_redemptions == null ? null : Number(data.max_redemptions),
+        redeemed: Number(data.redeemed) || 0,
+        held: Number(data.held) || 0,
+        startsAt: data.starts_at,
+        endsAt: data.ends_at,
+        active: Boolean(data.active),
+        onePerCustomer: Boolean(data.one_per_customer),
+        autoApply: Boolean(data.auto_apply),
+        createdAt: data.created_at,
+      },
+    }, origin)
+  }
+
+  if (action === 'update_promo') {
+    const promoId = typeof body.promoId === 'string' ? body.promoId.trim() : ''
+    if (!/^[0-9a-f-]{36}$/i.test(promoId)) return json(400, { error: 'invalid_promo' }, origin)
+
+    const patch: {
+      active?: boolean
+      amount_off_cents?: number
+    } = {}
+
+    if (typeof body.active === 'boolean') patch.active = body.active
+
+    if (body.amountOffCents != null || (body.promo && body.promo.amountOffCents != null)) {
+      const amountOffCents = Number(
+        body.amountOffCents != null ? body.amountOffCents : body.promo?.amountOffCents,
+      )
+      if (!Number.isInteger(amountOffCents) || amountOffCents < 50 || amountOffCents > 50000) {
+        return json(400, { error: 'invalid_promo_discount' }, origin)
+      }
+      patch.amount_off_cents = amountOffCents
+    }
+
+    if (!Object.keys(patch).length) {
+      return json(400, { error: 'invalid_promo_update' }, origin)
+    }
+
+    const { error } = await db
+      .from('promo_codes')
+      .update(patch)
+      .eq('id', promoId)
+
+    if (error) {
+      console.error('admin_update_promo_failed', error)
+      return json(500, { error: 'promo_update_failed' }, origin)
+    }
+
+    const promos = await buildPromos(db)
+    return json(200, { ok: true, promos }, origin)
+  }
+
+  if (action === 'upsert_product') {
+    const product = body.product ?? {}
+    const productId = slugProductId(typeof product.id === 'string' ? product.id : '')
+    const name = typeof product.name === 'string' ? product.name.trim() : ''
+    const typeKey = typeof product.typeKey === 'string' ? product.typeKey.trim() : 'tshirt'
+    const colorRaw = typeof product.color === 'string' ? product.color.trim() : ''
+    const colorKeyRaw = typeof product.colorKey === 'string' ? product.colorKey.trim().toLowerCase() : ''
+    const colorKey = colorKeyRaw || (colorRaw
+      ? colorRaw.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+      : 'default')
+    const priceCents = Number(product.priceCents)
+    const onSale = product.onSale !== false
+    const sortOrder = Number.isInteger(Number(product.sortOrder)) ? Number(product.sortOrder) : 100
+    const imageFrontUrl = typeof product.imageFrontUrl === 'string' ? product.imageFrontUrl.trim() : ''
+    const imageBackUrl = typeof product.imageBackUrl === 'string' && product.imageBackUrl.trim()
+      ? product.imageBackUrl.trim()
+      : null
+    const imageWidth = Number(product.imageWidth)
+    const imageHeight = Number(product.imageHeight)
+
+    if (!productId || !/^[a-z0-9-]+$/.test(productId)) return json(400, { error: 'invalid_product' }, origin)
+    if (!name || name.length > 80) return json(400, { error: 'invalid_product_name' }, origin)
+    if (!['tshirt', 'cd', 'other'].includes(typeKey)) return json(400, { error: 'invalid_product_type' }, origin)
+    if (!colorKey || colorKey.length > 32 || !/^[a-z0-9-]+$/.test(colorKey)) {
+      return json(400, { error: 'invalid_product_color' }, origin)
+    }
+    if (!Number.isInteger(priceCents) || priceCents < 50 || priceCents > 500000) {
+      return json(400, { error: 'invalid_price' }, origin)
+    }
+    if (!imageFrontUrl || !/^https:\/\//i.test(imageFrontUrl)) {
+      return json(400, { error: 'invalid_product_image' }, origin)
+    }
+    if (imageBackUrl && !/^https:\/\//i.test(imageBackUrl)) {
+      return json(400, { error: 'invalid_product_image' }, origin)
+    }
+
+    const typeLabel = typeof product.type === 'string' && product.type.trim()
+      ? product.type.trim()
+      : (typeKey === 'cd' ? 'CD' : typeKey === 'tshirt' ? 'T-shirt' : 'Article')
+    const colorLabel = colorRaw || colorKey
+
+    const { error: productError } = await db.from('products').upsert({
+      id: productId,
+      name,
+      type: typeLabel,
+      color: colorLabel,
+      type_key: typeKey,
+      color_key: colorKey,
+      price_cents: priceCents,
+      currency: 'eur',
+      on_sale: onSale,
+      sort_order: sortOrder,
+      image_front_url: imageFrontUrl,
+      image_back_url: imageBackUrl,
+      image_width: Number.isInteger(imageWidth) && imageWidth > 0 ? imageWidth : 1200,
+      image_height: Number.isInteger(imageHeight) && imageHeight > 0 ? imageHeight : 1200,
+      default_view: 'front',
+      updated_at: new Date().toISOString(),
+    }, { onConflict: 'id' })
+
+    if (productError) {
+      console.error('admin_upsert_product_failed', productError)
+      return json(500, { error: 'product_upsert_failed' }, origin)
+    }
+
+    const stocks = product.stocks && typeof product.stocks === 'object' ? product.stocks : {}
+    const sizes = typeKey === 'cd' ? (['CD'] as const) : TSHIRT_SIZES
+    for (const size of sizes) {
+      const stock = Number((stocks as Record<string, number>)[size] ?? 0)
+      if (!Number.isInteger(stock) || stock < 0 || stock > 100000) {
+        return json(400, { error: 'invalid_stock' }, origin)
+      }
+      const { data: existing } = await db
+        .from('product_variants')
+        .select('id, reserved')
+        .eq('product_id', productId)
+        .eq('size', size)
+        .maybeSingle()
+
+      if (existing) {
+        const reserved = Math.max(0, Number(existing.reserved) || 0)
+        if (stock < reserved) {
+          return json(400, { error: 'stock_below_reserved', size, reserved }, origin)
+        }
+        const { error } = await db.from('product_variants').update({ stock }).eq('id', existing.id)
+        if (error) {
+          console.error('admin_upsert_variant_failed', error)
+          return json(500, { error: 'product_upsert_failed' }, origin)
+        }
+      } else {
+        const { error } = await db.from('product_variants').insert({
+          product_id: productId,
+          size,
+          stock,
+          reserved: 0,
+        })
+        if (error) {
+          console.error('admin_insert_variant_failed', error)
+          return json(500, { error: 'product_upsert_failed' }, origin)
+        }
+      }
+    }
+
+    const inventory = await buildInventory(db)
+    return json(200, { ok: true, inventory, productId }, origin)
   }
 
   if (action === 'mark_shipped') {

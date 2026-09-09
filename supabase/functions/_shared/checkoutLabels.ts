@@ -94,7 +94,17 @@ export function stripeProductName(productId: string, locale: CheckoutLocale, fal
 }
 
 export function stripeLineDescription(size: string, locale: CheckoutLocale): string {
-  if (size === 'U') return COLOR[locale].digipack
+  if (size === 'CD' || size === 'U') return COLOR[locale].digipack
+  if (size === 'VINYL') return SIZE_LABEL[locale] === 'Size' ? 'Vinyl' : 'Vinyle'
+  if (size === 'ENF') {
+    const labels: Record<CheckoutLocale, string> = {
+      fr: 'Taille enfant',
+      en: 'Kids size',
+      es: 'Talla infantil',
+      pt: 'Tamanho criança',
+    }
+    return labels[locale]
+  }
   return `${SIZE_LABEL[locale]} ${size}`
 }
 

@@ -1,7 +1,7 @@
 import Stripe from 'https://esm.sh/stripe@17.4.0?target=deno'
 import { serviceClient, stripeClient } from '../_shared/clients.ts'
 import { sendPaidOrderEmails, type OrderEmailLine } from '../_shared/orderEmail.ts'
-import { isAllowedShippingAmount, SHIPPING_ZONES } from '../_shared/shipping.ts'
+import { isAllowedShippingAmount, loadShippingZones } from '../_shared/shipping.ts'
 
 Deno.serve(async (req) => {
   if (req.method !== 'POST') return new Response('method_not_allowed', { status: 405 })
@@ -45,14 +45,15 @@ Deno.serve(async (req) => {
       }
 
       const shippingCents = session.shipping_cost?.amount_total ?? 0
-      if (!isAllowedShippingAmount(shippingCents)) {
+      const shippingZones = await loadShippingZones(admin)
+      if (!isAllowedShippingAmount(shippingCents, shippingZones)) {
         console.error('unexpected_shipping_amount', shippingCents, orderId)
         return new Response('invalid_shipping_amount', { status: 400 })
       }
 
       const address = session.shipping_details?.address ?? session.customer_details?.address
       const country = typeof address?.country === 'string' ? address.country.toUpperCase() : ''
-      const zone = SHIPPING_ZONES.find((entry) => entry.amountCents === shippingCents)
+      const zone = shippingZones.find((entry) => entry.amountCents === shippingCents)
       if (zone && country && !zone.countries.includes(country)) {
         console.error('shipping_country_mismatch', country, zone.id, orderId)
         return new Response('shipping_country_mismatch', { status: 400 })

@@ -1,7 +1,7 @@
 import { CART_LIMITS } from '../_shared/limits.ts'
 import { checkoutReturnOrigin, json, preflight, rejectOrigin } from '../_shared/http.ts'
 import { serviceClient, stripeClient, userClient } from '../_shared/clients.ts'
-import { shippingZoneByCountry, stripeShippingOption } from '../_shared/shipping.ts'
+import { loadShippingZones, shippingZoneByCountry, stripeShippingOption } from '../_shared/shipping.ts'
 import { allowRatePersistent, clientIp } from '../_shared/rateLimit.ts'
 import {
   normalizeCheckoutLocale,
@@ -97,7 +97,8 @@ Deno.serve(async (req) => {
   }
 
   const country = typeof body.shippingCountry === 'string' ? body.shippingCountry.trim().toUpperCase() : ''
-  const zone = shippingZoneByCountry(country)
+  const shippingZones = await loadShippingZones(admin)
+  const zone = shippingZoneByCountry(shippingZones, country)
   if (!zone) return json(400, { error: 'invalid_shipping_country' }, origin)
 
   // Tarif dérivé du pays. Stripe ne propose que les pays de cette zone + un seul forfait.

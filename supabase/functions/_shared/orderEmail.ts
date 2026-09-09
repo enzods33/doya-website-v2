@@ -49,7 +49,13 @@ function formatAddress(address: Record<string, unknown> | null) {
 
 function linesHtml(lines: OrderEmailLine[]) {
   return lines.map((line) => {
-    const size = line.size === 'U' ? 'Digipack' : `Taille ${line.size}`
+    const size = line.size === 'CD' || line.size === 'U'
+      ? 'Digipack'
+      : line.size === 'VINYL'
+        ? 'Vinyle'
+        : line.size === 'ENF'
+          ? 'Taille enfant'
+          : `Taille ${line.size}`
     return `<tr>
 <td style="padding:8px 0;border-bottom:1px solid #eee;font-size:15px;color:#2c2926;">
 ${escapeHtml(String(line.quantity))} × ${escapeHtml(line.name)} <span style="color:#7a736c;">(${escapeHtml(size)})</span>

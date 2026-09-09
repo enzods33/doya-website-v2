@@ -14,9 +14,18 @@ export function commerceMessage(code, t) {
 
 export function translateProduct(t, product) {
   if (!product) return { name: '', type: '', color: '' }
+  const nameKey = `shop.product.${product.id}`
+  const typeKey = `shop.type.${product.typeKey}`
+  const colorKey = `shop.color.${product.colorKey}`
+  const name = t(nameKey)
+  const type = t(typeKey)
+  const color = t(colorKey)
+  const customType = product.typeKey === 'other' && product.type
+    ? product.type
+    : null
   return {
-    name: t(`shop.product.${product.id}`),
-    type: t(`shop.type.${product.typeKey}`),
-    color: t(`shop.color.${product.colorKey}`),
+    name: name === nameKey ? (product.displayName || product.name || product.id) : name,
+    type: customType || (type === typeKey ? (product.type || product.typeKey || '') : type),
+    color: color === colorKey ? (product.color || product.colorKey || '') : color,
   }
 }

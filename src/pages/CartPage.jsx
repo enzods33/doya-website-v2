@@ -4,12 +4,13 @@ import { useCatalog } from '../commerce/CatalogProvider.jsx'
 import { startCheckout, releaseCheckout } from '../commerce/checkout.js'
 import { subscribeNewsletter } from '../commerce/newsletter.js'
 import { requestShippingQuote } from '../commerce/shippingQuote.js'
-import { CART_LIMITS, FLAT_SHIPPING_LIMITS, bestAutoPromo, formatEuros, isValidEmail, normalizePromoCode } from '../commerce/cartRules.js'
+import { CART_LIMITS, FLAT_SHIPPING_LIMITS, bestAutoPromo, fetchAutoPromos, formatEuros, isUniqueSize, isValidEmail, normalizePromoCode } from '../commerce/cartRules.js'
+import { DEFAULT_AUTO_PROMOS } from '../commerce/autoPromos.js'
 import { commerceConfigured } from '../commerce/config.js'
 import { trackEvent } from '../commerce/pageAnalytics.js'
 import { commerceMessage, translateProduct } from '../commerce/messages.js'
 import { availableFor } from '../commerce/catalog.js'
-import { SHIPPING_ZONES, zoneForCountry } from '../commerce/shippingZones.js'
+import { DEFAULT_SHIPPING_ZONES, fetchShippingZones, zoneForCountry } from '../commerce/shippingZones.js'
 import { shippingQuoteEmails } from '../data/contacts.js'
 import { useI18n } from '../i18n/I18nProvider.jsx'
 import Link from '../components/Link.jsx'
@@ -25,6 +26,8 @@ function CartPage() {
   const [acceptCgv, setAcceptCgv] = useState(false)
   const [promoCode, setPromoCode] = useState('')
   const [shippingCountry, setShippingCountry] = useState('FR')
+  const [shippingZones, setShippingZones] = useState(DEFAULT_SHIPPING_ZONES)
+  const [autoPromos, setAutoPromos] = useState(DEFAULT_AUTO_PROMOS)
   const [quoteMessage, setQuoteMessage] = useState('')
   const [quoteSent, setQuoteSent] = useState(false)
   const [busy, setBusy] = useState(false)
@@ -32,6 +35,17 @@ function CartPage() {
   const [emailTouched, setEmailTouched] = useState(false)
   const [cgvError, setCgvError] = useState(false)
   const [error, setError] = useState(() => (new URLSearchParams(window.location.search).get('canceled') ? commerceMessage('canceled', t) : ''))
+
+  useEffect(() => {
+    let active = true
+    fetchShippingZones().then((zones) => {
+      if (active) setShippingZones(zones)
+    })
+    fetchAutoPromos().then((promos) => {
+      if (active) setAutoPromos(promos)
+    })
+    return () => { active = false }
+  }, [])
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
@@ -100,9 +114,9 @@ function CartPage() {
   ), 0)
   const needsShippingQuote = teeQty > FLAT_SHIPPING_LIMITS.maxTees || cdQty > FLAT_SHIPPING_LIMITS.maxCds
   const manualPromo = Boolean(normalizePromoCode(promoCode))
-  const appliedPromo = manualPromo ? null : bestAutoPromo(teeQty, cdQty)
+  const appliedPromo = manualPromo ? null : bestAutoPromo(teeQty, cdQty, autoPromos)
   const autoDiscountCents = appliedPromo?.amountOffCents ?? 0
-  const shippingZone = zoneForCountry(shippingCountry)
+  const shippingZone = zoneForCountry(shippingCountry, shippingZones)
   const shippingCents = shippingZone?.amountCents ?? 0
   const emailValid = isValidEmail(email)
   const emailError = emailTouched
@@ -291,9 +305,16 @@ function CartPage() {
                       <p className="eyebrow">{labels.type}</p>
                       <h2>{labels.name || line.productId}</h2>
                       <p className="cart-meta">
-                        {line.size === 'U'
-                          ? t('cart.lineMetaUnique', { color: labels.color || '—' })
-                          : t('cart.lineMeta', { color: labels.color || '—', size: line.size })}
+                        {isUniqueSize(line.size)
+                          ? t('cart.lineMetaUnique', { color: labels.color || labels.type || '—' })
+                          : t('cart.lineMeta', {
+                            color: labels.color || '—',
+                            size: (() => {
+                              const key = `shop.size.${line.size}`
+                              const label = t(key)
+                              return label === key ? line.size : label
+                            })(),
+                          })}
                         {line.priceCents ? ` · ${formatEuros(line.priceCents)}` : ''}
                       </p>
                       <div className="cart-actions">
@@ -427,7 +448,7 @@ function CartPage() {
                       disabled={busy || quoteSent}
                       onChange={(event) => setShippingCountry(event.target.value)}
                     >
-                      {SHIPPING_ZONES.map((zone) => (
+                      {shippingZones.map((zone) => (
                         <optgroup key={zone.id} label={t(`cart.zone.${zone.id}`)}>
                           {zone.countries.map((code) => (
                             <option key={code} value={code}>
@@ -442,7 +463,7 @@ function CartPage() {
 
                 {appliedPromo ? (
                   <p className="cart-promo-msg" role="status">
-                    <strong>{t(appliedPromo.messageKey)}</strong>
+                    <strong>{t(appliedPromo.messageKey, { amount: formatEuros(appliedPromo.amountOffCents) })}</strong>
                   </p>
                 ) : null}
               </div>

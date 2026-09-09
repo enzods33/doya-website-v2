@@ -193,7 +193,7 @@ function AdminBio() {
   const bioDraft = bioByLocale[bioLocale] ?? { lead: '', body: '' }
 
   return (
-    <section className="admin-section">
+    <section className="admin-section admin-bio">
       <header className="admin-section-head">
         <h2>{t('admin.photosTitle')}</h2>
         <p>{t('admin.photosLead')}</p>

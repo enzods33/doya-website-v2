@@ -56,6 +56,16 @@ export function adminStats(action = 'overview', payload = {}) {
   return adminInvoke('admin-stats', { action, ...payload })
 }
 
+export function adminShopUpload(file, { width, height, side = 'front', productId = 'product' } = {}) {
+  const form = new FormData()
+  form.append('file', file)
+  form.append('side', side)
+  form.append('productId', productId)
+  if (width) form.append('width', String(width))
+  if (height) form.append('height', String(height))
+  return adminInvoke('admin-stats', null, { formData: form })
+}
+
 export async function signInAdminGoogle() {
   if (!supabase) throw new Error('commerce_disabled')
   const redirectTo = `${window.location.origin}/admin`

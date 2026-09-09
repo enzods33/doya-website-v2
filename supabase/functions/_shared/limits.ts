@@ -2,8 +2,8 @@ export const CART_LIMITS = {
   maxLineQuantity: 6,
   maxLines: 8,
   maxTotalQuantity: 12,
-  /** U = unique (CD / articles sans taillage) */
-  sizes: ['XS', 'S', 'M', 'L', 'XL', 'U'],
+  /** ENF = tee enfant · CD / VINYL = formats · U = legacy */
+  sizes: ['ENF', 'XS', 'S', 'M', 'L', 'XL', 'CD', 'VINYL', 'U'],
   productIdPattern: /^[a-z0-9-]+$/,
 } as const
 

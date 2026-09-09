@@ -67,7 +67,7 @@ test('URLs assets CDN stables', () => {
 test('validation du panier et fusion des lignes', () => {
   assert.equal(validateCartItems([]).ok, false)
   assert.equal(validateCartItems([{ productId: 'doya-black', size: 'M', quantity: 1 }]).ok, true)
-  assert.equal(validateCartItems([{ productId: 'unknown', size: 'M', quantity: 1 }]).ok, false)
+  assert.equal(validateCartItems([{ productId: '!!!', size: 'M', quantity: 1 }]).ok, false)
   assert.equal(validateCartItems([{ productId: 'doya-black', size: 'M', quantity: 6 }]).ok, true)
   assert.equal(validateCartItems([{ productId: 'doya-black', size: 'M', quantity: 7 }]).ok, false)
   assert.equal(validateCartItems([{ productId: 'doya-black', size: 'XXL', quantity: 1 }]).ok, false)

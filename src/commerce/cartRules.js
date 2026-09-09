@@ -1,11 +1,22 @@
 import { products } from '../data/products.js'
 
+export const APPAREL_SIZES = ['ENF', 'XS', 'S', 'M', 'L', 'XL']
+/** Formats uniques (CD maintenant, VINYL plus tard). U = legacy. */
+export const MEDIA_SIZES = ['CD', 'VINYL']
+export const UNIQUE_SIZES = ['CD', 'VINYL', 'U']
+
+export function isUniqueSize(size) {
+  return UNIQUE_SIZES.includes(String(size || '').toUpperCase())
+}
+
+export { AUTO_PROMOS, DEFAULT_AUTO_PROMOS, bestAutoPromo, fetchAutoPromos } from './autoPromos.js'
+
 export const CART_LIMITS = {
   maxLineQuantity: 6,
   maxLines: 8,
   maxTotalQuantity: 12,
-  /** U = unique (CD / articles sans taillage) */
-  sizes: ['XS', 'S', 'M', 'L', 'XL', 'U'],
+  sizes: [...APPAREL_SIZES, ...MEDIA_SIZES, 'U'],
+  productIdPattern: /^[a-z0-9-]+$/,
   productIds: products.map((product) => product.id),
 }
 
@@ -13,22 +24,6 @@ export const CART_LIMITS = {
 export const FLAT_SHIPPING_LIMITS = {
   maxTees: 6,
   maxCds: 5,
-}
-
-/** Miroir des auto-promos serveur : une seule s’applique (meilleure réduction). */
-export const AUTO_PROMOS = [
-  { id: '2tees', minTees: 2, minCds: 0, amountOffCents: 800, messageKey: 'cart.promoTees', labelKey: 'cart.autoDiscountTees' },
-  { id: 'cdtee', minTees: 1, minCds: 1, amountOffCents: 500, messageKey: 'cart.promoCdTee', labelKey: 'cart.autoDiscountCdTee' },
-]
-
-function eligibleAutoPromos(teeQty, cdQty) {
-  return AUTO_PROMOS.filter((promo) => teeQty >= promo.minTees && cdQty >= promo.minCds)
-}
-
-export function bestAutoPromo(teeQty, cdQty) {
-  const eligible = eligibleAutoPromos(teeQty, cdQty)
-  if (!eligible.length) return null
-  return eligible.reduce((best, promo) => (promo.amountOffCents > best.amountOffCents ? promo : best))
 }
 
 export function normalizePromoCode(value) {
@@ -54,7 +49,7 @@ export function validateCartItems(items) {
     const quantity = Number(item?.quantity)
     const key = `${productId}:${size}`
 
-    if (!CART_LIMITS.productIds.includes(productId) || !CART_LIMITS.sizes.includes(size)) {
+    if (!CART_LIMITS.productIdPattern.test(productId) || !CART_LIMITS.sizes.includes(size)) {
       return { ok: false, error: 'invalid_cart' }
     }
     if (!Number.isInteger(quantity) || quantity < 1 || quantity > CART_LIMITS.maxLineQuantity) {

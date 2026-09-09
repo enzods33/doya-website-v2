@@ -12,20 +12,57 @@ import AdminConcerts from './AdminConcerts.jsx'
 import AdminBio from './AdminBio.jsx'
 import AdminNewsletter from './AdminNewsletter.jsx'
 import AdminSales from './AdminSales.jsx'
+import AdminStocks from './AdminStocks.jsx'
+import AdminPromos from './AdminPromos.jsx'
 import AdminAudience from './AdminAudience.jsx'
 import lunaPhases from '../../assets/hero/luna-phases.webp'
 
-const TAB_ROWS = [
-  [
-    { id: 'dates', labelKey: 'admin.tabDates' },
-    { id: 'photos', labelKey: 'admin.tabPhotos' },
-    { id: 'newsletter', labelKey: 'admin.tabNewsletter' },
-  ],
-  [
-    { id: 'sales', labelKey: 'admin.tabSales' },
-    { id: 'audience', labelKey: 'admin.tabAudience' },
-  ],
+const TAB_STORAGE_KEY = 'doya-admin-tab'
+
+/** Site = contenu public · Boutique = opérations commerce. */
+const TAB_GROUPS = [
+  {
+    id: 'site',
+    labelKey: 'admin.groupSite',
+    tabs: [
+      { id: 'concerts', labelKey: 'admin.tabConcerts' },
+      { id: 'bio', labelKey: 'admin.tabBio' },
+      { id: 'newsletter', labelKey: 'admin.tabNewsletter' },
+    ],
+  },
+  {
+    id: 'shop',
+    labelKey: 'admin.groupShop',
+    tabs: [
+      { id: 'orders', labelKey: 'admin.tabOrders' },
+      { id: 'catalog', labelKey: 'admin.tabCatalog' },
+      { id: 'promos', labelKey: 'admin.tabPromos' },
+      { id: 'stats', labelKey: 'admin.tabStats' },
+    ],
+  },
 ]
+
+const ALL_TAB_IDS = TAB_GROUPS.flatMap((group) => group.tabs.map((tab) => tab.id))
+
+/** Anciens ids → nouveaux (favoris / session). */
+const TAB_ALIASES = {
+  dates: 'concerts',
+  photos: 'bio',
+  sales: 'orders',
+  stocks: 'catalog',
+  audience: 'stats',
+}
+
+function readStoredTab() {
+  try {
+    const raw = sessionStorage.getItem(TAB_STORAGE_KEY)
+    if (!raw) return 'orders'
+    const mapped = TAB_ALIASES[raw] || raw
+    return ALL_TAB_IDS.includes(mapped) ? mapped : 'orders'
+  } catch {
+    return 'orders'
+  }
+}
 
 function GoogleButton({ disabled, onClick, label }) {
   return (
@@ -72,7 +109,16 @@ function AdminPage() {
   const [forbidden, setForbidden] = useState(false)
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
-  const [tab, setTab] = useState('dates')
+  const [tab, setTab] = useState(readStoredTab)
+
+  function selectTab(next) {
+    setTab(next)
+    try {
+      sessionStorage.setItem(TAB_STORAGE_KEY, next)
+    } catch {
+      /* private mode */
+    }
+  }
 
   useEffect(() => {
     let cancelled = false
@@ -200,27 +246,38 @@ function AdminPage() {
       ) : (
         <>
           <nav className="admin-tabs" aria-label={t('admin.nav')}>
-            {TAB_ROWS.map((row, rowIndex) => (
-              <div key={rowIndex} className="admin-tabs-row" style={{ '--admin-tabs-cols': row.length }}>
-                {row.map((item) => (
-                  <button
-                    key={item.id}
-                    type="button"
-                    className={tab === item.id ? 'is-active' : undefined}
-                    onClick={() => setTab(item.id)}
-                  >
-                    {t(item.labelKey)}
-                  </button>
-                ))}
+            {TAB_GROUPS.map((group) => (
+              <div key={group.id} className="admin-tabs-group">
+                <p className="admin-tabs-group-label">{t(group.labelKey)}</p>
+                <div
+                  className="admin-tabs-row"
+                  role="tablist"
+                  aria-label={t(group.labelKey)}
+                >
+                  {group.tabs.map((item) => (
+                    <button
+                      key={item.id}
+                      type="button"
+                      role="tab"
+                      aria-selected={tab === item.id}
+                      className={tab === item.id ? 'is-active' : undefined}
+                      onClick={() => selectTab(item.id)}
+                    >
+                      {t(item.labelKey)}
+                    </button>
+                  ))}
+                </div>
               </div>
             ))}
           </nav>
           <div className="admin-panel">
-            {tab === 'dates' ? <AdminConcerts /> : null}
-            {tab === 'photos' ? <AdminBio /> : null}
+            {tab === 'concerts' ? <AdminConcerts /> : null}
+            {tab === 'bio' ? <AdminBio /> : null}
             {tab === 'newsletter' ? <AdminNewsletter /> : null}
-            {tab === 'sales' ? <AdminSales /> : null}
-            {tab === 'audience' ? <AdminAudience /> : null}
+            {tab === 'orders' ? <AdminSales /> : null}
+            {tab === 'catalog' ? <AdminStocks /> : null}
+            {tab === 'promos' ? <AdminPromos /> : null}
+            {tab === 'stats' ? <AdminAudience /> : null}
           </div>
         </>
       )}

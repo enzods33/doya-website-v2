@@ -541,7 +541,13 @@
 .size-list { display: flex; flex-wrap: wrap; gap: 6px; min-height: 40px; align-items: center; }
 .size-list button { min-width: 40px; min-height: 40px; border: 0; background: transparent; font-size: 12px; letter-spacing: .06em; position: relative; }
 .size-list button[aria-pressed='true']::after { content: ''; position: absolute; left: 4px; right: 4px; bottom: 6px; height: 1px; background: var(--color-doya-red); }
-.size-list button:disabled { color: var(--muted); }
+.size-list button:disabled {
+  color: var(--ink);
+  opacity: 0.72;
+  text-decoration: line-through;
+  text-decoration-color: rgb(44 41 38 / 55%);
+  text-decoration-thickness: 1px;
+}
 .size-unique-note {
   margin: 0;
   min-height: 40px;
@@ -556,6 +562,11 @@
   letter-spacing: .04em;
   text-transform: none;
   line-height: 1.35;
+}
+.product-out-note {
+  color: var(--muted);
+  letter-spacing: .08em;
+  text-transform: uppercase;
 }
 .shop-feedback {
   display: flex;

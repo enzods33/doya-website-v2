@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import { useReducedMotion } from 'motion/react'
-import { CART_LIMITS, formatEuros } from '../../commerce/cartRules.js'
+import { CART_LIMITS, formatEuros, isUniqueSize } from '../../commerce/cartRules.js'
+import { DEFAULT_AUTO_PROMOS, fetchAutoPromos } from '../../commerce/autoPromos.js'
 import { availableFor } from '../../commerce/catalog.js'
 import { useCart } from '../../commerce/CartProvider.jsx'
 import { useCatalog } from '../../commerce/CatalogProvider.jsx'
@@ -29,12 +30,21 @@ function Shop() {
   const [selectedSizes, setSelectedSizes] = useState({})
   const [feedback, setFeedback] = useState(null)
   const [zoom, setZoom] = useState(null)
+  const [autoPromos, setAutoPromos] = useState(DEFAULT_AUTO_PROMOS)
   const resumeTimers = useRef({})
   const { items, purchasable } = useCatalog()
   const { addItem } = useCart()
   const { t, intlLocale } = useI18n()
   const zoomTitleId = useId()
   const reducedMotion = useReducedMotion()
+
+  useEffect(() => {
+    let active = true
+    fetchAutoPromos().then((promos) => {
+      if (active) setAutoPromos(promos)
+    })
+    return () => { active = false }
+  }, [])
 
   function isTshirt(product) {
     return product.typeKey === 'tshirt'
@@ -103,7 +113,13 @@ function Shop() {
     if (product.variants?.length) {
       return CART_LIMITS.sizes.filter((size) => product.variants.some((variant) => variant.size === size))
     }
-    return CART_LIMITS.sizes.filter((size) => size !== 'U')
+    return CART_LIMITS.sizes.filter((size) => !isUniqueSize(size))
+  }
+
+  function sizeLabel(size) {
+    const key = `shop.size.${size}`
+    const label = t(key)
+    return label === key ? size : label
   }
 
   function addProduct(product) {
@@ -159,8 +175,11 @@ function Shop() {
         </p>
         {purchasable ? (
           <ul className="shop-promo">
-            <li>{t('shop.promoTees')}</li>
-            <li>{t('shop.promoCdTee')}</li>
+            {autoPromos.map((promo) => (
+              <li key={promo.id}>
+                {t(promo.shopMessageKey, { amount: formatEuros(promo.amountOffCents) })}
+              </li>
+            ))}
           </ul>
         ) : null}
       </Reveal>
@@ -170,8 +189,14 @@ function Shop() {
           const displayedView = displayedViewFor(product, index)
           const sale = product.sale
           const sizes = sizesFor(product)
-          const uniqueOnly = sizes.length === 1 && sizes[0] === 'U'
-          const alt = t('shop.productAlt', { type: labels.type, name: labels.name, color: labels.color.toLowerCase(), view: displayedView === 'front' ? t('shop.viewFrontWord') : t('shop.viewBackWord') })
+          const uniqueOnly = sizes.length === 1 && isUniqueSize(sizes[0])
+          const hasAnyStock = sizes.some((size) => availableFor(product, size) > 0)
+          const alt = t('shop.productAlt', {
+            type: labels.type,
+            name: labels.name,
+            color: String(labels.color || labels.type).toLowerCase(),
+            view: displayedView === 'front' ? t('shop.viewFrontWord') : t('shop.viewBackWord'),
+          })
           return <Reveal as="article" className="product" key={product.id} delay={(index % 2) * 0.08}
             onPointerEnter={() => pauseAutoOnHover(product)}
             onPointerLeave={() => scheduleAutoResume(product)}>
@@ -190,25 +215,38 @@ function Shop() {
           </div>
           <div className="product-caption"><p className="eyebrow">{labels.type}</p><h3>{labels.name}</h3>
             <div className="product-details">
-              <span>{labels.color}</span>
+              {labels.color ? <span>{labels.color}</span> : null}
               {sale ? <span>{formatEuros(sale.priceCents)}</span> : product.price !== null && <span>{new Intl.NumberFormat(intlLocale, { style: 'currency', currency: 'EUR' }).format(product.price)}</span>}
             </div>
             {sale && (
               <div className="product-buy">
-                {uniqueOnly ? (
-                  <p className="size-unique-note product-cd-note">{t('shop.cdSignedNote')}</p>
+                {hasAnyStock ? (
+                  <>
+                    {uniqueOnly ? (
+                      <p className="size-unique-note product-cd-note">{t('shop.cdSignedNote')}</p>
+                    ) : (
+                      <div className="size-list" role="group" aria-label={t('shop.sizesAria', { name: labels.name })}>
+                        {sizes.map((size) => {
+                          const available = availableFor(product, size)
+                          return (
+                            <button
+                              key={size}
+                              type="button"
+                              disabled={available < 1}
+                              aria-pressed={selectedSizes[product.id] === size}
+                              onClick={() => setSelectedSizes((current) => ({ ...current, [product.id]: size }))}
+                            >
+                              {sizeLabel(size)}
+                            </button>
+                          )
+                        })}
+                      </div>
+                    )}
+                    <button type="button" className="commerce-button commerce-button-small" onClick={() => addProduct(product)}>{t('shop.add')}</button>
+                  </>
                 ) : (
-                  <div className="size-list" role="group" aria-label={t('shop.sizesAria', { name: labels.name })}>
-                    {sizes.map((size) => {
-                      const available = availableFor(product, size)
-                      return (
-                        <button key={size} type="button" disabled={available < 1} aria-pressed={selectedSizes[product.id] === size}
-                          onClick={() => setSelectedSizes((current) => ({ ...current, [product.id]: size }))}>{size}</button>
-                      )
-                    })}
-                  </div>
+                  <p className="size-unique-note product-out-note">{t('shop.soldOut')}</p>
                 )}
-                <button type="button" className="commerce-button commerce-button-small" onClick={() => addProduct(product)}>{t('shop.add')}</button>
               </div>
             )}
             {isExternalUrl(product.url) && <a className="text-link" href={product.url} target="_blank" rel="noopener noreferrer">{t('shop.viewPiece')} <span aria-hidden="true">↗</span></a>}

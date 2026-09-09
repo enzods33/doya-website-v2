@@ -140,7 +140,13 @@ Deno.serve(async (req) => {
     'stephanedasil@gmail.com',
   ].filter((email, index, list) => list.indexOf(email) === index)
   const linesHtml = priced.map((item) => {
-    const size = item.size === 'U' ? 'unique' : `taille ${item.size}`
+    const size = item.size === 'CD' || item.size === 'U'
+      ? 'CD'
+      : item.size === 'VINYL'
+        ? 'vinyle'
+        : item.size === 'ENF'
+          ? 'enfant'
+          : `taille ${item.size}`
     return `<tr>
 <td style="padding:8px 0;border-bottom:1px solid #eee;font-size:15px;color:#2c2926;">
 ${escapeHtml(String(item.quantity))} × ${escapeHtml(item.name)} <span style="color:#7a736c;">(${escapeHtml(size)})</span>

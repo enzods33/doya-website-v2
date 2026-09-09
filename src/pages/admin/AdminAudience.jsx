@@ -116,7 +116,7 @@ function AdminAudience() {
   }
 
   return (
-    <section className="admin-section">
+    <section className="admin-section admin-stats">
       <header className="admin-section-head">
         <h2>{t('admin.audienceTitle')}</h2>
       </header>
