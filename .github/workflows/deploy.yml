@@ -39,7 +39,8 @@ jobs:
         run: npm run build
         env:
           VITE_SITE_URL: ${{ secrets.VITE_SITE_URL }}
-          VITE_INDEXABLE: ${{ secrets.VITE_INDEXABLE }}
+          # Staging Hetzner temporaire : jamais indexer. Au go-live (vrai domaine), passer à true.
+          VITE_INDEXABLE: 'false'
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
           VITE_ASSETS_URL: ${{ secrets.VITE_ASSETS_URL }}
