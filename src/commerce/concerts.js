@@ -35,13 +35,18 @@ function normalizeConcert(row) {
   }
 }
 
+/** Hors ligne / erreur : dernier cache (même vide) ; sinon seed `live.js` (dev sans Supabase). */
 function localFallback() {
   const cached = readCache(CACHE_KEY)
-  if (Array.isArray(cached) && cached.length) return cached.map(normalizeConcert)
+  if (Array.isArray(cached)) return cached.map(normalizeConcert)
   return localConcerts.map(normalizeConcert)
 }
 
-/** Charge les dates publiées depuis Supabase ; sinon cache / fallback local (`src/data/live.js`). */
+/**
+ * Charge les dates publiées depuis Supabase.
+ * Liste vide = empty state (pas de seed `live.js`).
+ * Cache / `live.js` uniquement si Supabase absent ou en erreur.
+ */
 export async function loadConcerts() {
   try {
     const { supabase } = await import('./supabase.js')
@@ -53,7 +58,7 @@ export async function loadConcerts() {
       .eq('published', true)
       .order('date', { ascending: true })
 
-    if (error || !Array.isArray(data) || data.length === 0) return localFallback()
+    if (error || !Array.isArray(data)) return localFallback()
 
     const next = data.map(normalizeConcert)
     writeCache(CACHE_KEY, next)

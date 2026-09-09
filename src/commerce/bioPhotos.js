@@ -10,13 +10,18 @@ function normalizePhoto(row) {
   }
 }
 
+/** Hors ligne / erreur : dernier cache (même vide) ; sinon seed `media.js`. */
 function galleryFallback() {
   const cached = readCache('bio-gallery')
-  if (Array.isArray(cached) && cached.length) return cached.map(normalizePhoto)
+  if (Array.isArray(cached)) return cached.map(normalizePhoto)
   return fallbackGallery
 }
 
-/** Galerie bio publiée (Supabase) ; fallback cache / `media.js` si vide / hors ligne. */
+/**
+ * Galerie bio publiée (Supabase).
+ * Liste vide = pas de galerie (pas de seed `media.js`).
+ * Cache / `media.js` uniquement si Supabase absent ou en erreur.
+ */
 export async function loadBioGallery() {
   try {
     const { supabase } = await import('./supabase.js')
@@ -29,7 +34,7 @@ export async function loadBioGallery() {
       .order('sort_order', { ascending: true })
       .order('created_at', { ascending: true })
 
-    if (error || !Array.isArray(data) || data.length === 0) return galleryFallback()
+    if (error || !Array.isArray(data)) return galleryFallback()
 
     const next = data.map(normalizePhoto)
     writeCache('bio-gallery', next)
@@ -55,10 +60,19 @@ export async function loadBioCopy(locale) {
       .eq('locale', code)
       .maybeSingle()
 
-    if (error || !data) return readCache(cacheKey)
+    if (error) return readCache(cacheKey)
+    if (!data) {
+      writeCache(cacheKey, null)
+      return null
+    }
+
     const lead = typeof data.lead === 'string' ? data.lead.trim() : ''
     const body = typeof data.body === 'string' ? data.body.trim() : ''
-    if (!lead || !body) return readCache(cacheKey)
+    if (!lead && !body) {
+      writeCache(cacheKey, null)
+      return null
+    }
+
     const next = { lead, body }
     writeCache(cacheKey, next)
     return next

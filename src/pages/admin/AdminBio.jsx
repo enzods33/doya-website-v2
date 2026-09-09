@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { adminBioPhotos, adminBioUpload } from '../../commerce/admin.js'
 import { prepareBioImage } from '../../commerce/prepareBioImage.js'
-import { galleryImages } from '../../data/media.js'
 import { useI18n } from '../../i18n/I18nProvider.jsx'
 import { LocaleFlag } from '../../components/LocaleFlag.jsx'
 
@@ -33,21 +32,8 @@ function AdminBio() {
   }
 
   async function refreshPhotos() {
-    let payload = await adminBioPhotos('list')
-    let next = payload.photos ?? []
-    if (next.length === 0 && galleryImages.length > 0) {
-      payload = await adminBioPhotos('import_site', {
-        photos: galleryImages.map((image, index) => ({
-          public_url: image.src,
-          width: image.width,
-          height: image.height,
-          alt: image.alt,
-          sort_order: (index + 1) * 10,
-        })),
-      })
-      next = payload.photos ?? []
-      if (payload.imported > 0) setOk(t('admin.photosImported', { count: payload.imported }))
-    }
+    const payload = await adminBioPhotos('list')
+    const next = payload.photos ?? []
     setPhotos(next)
     syncDrafts(next)
   }
