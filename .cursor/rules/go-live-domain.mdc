@@ -8,21 +8,22 @@ alwaysApply: true
 Quand l’utilisateur annonce le **vrai nom de domaine** (ou nouvelle IP / mise en prod), appliquer la checklist de `reference/commerce.md` § « Checklist — passage au vrai domaine » :
 
 1. Secret Supabase `SITE_URL` → `https://domaine`
-2. Auth Supabase : Site URL + redirect `/admin` (et `/panier` `/commande` pour Stripe)
+2. Auth Supabase : Site URL + redirect `/admin` `/panier` `/commande`
 3. Google Cloud OAuth : origin `https://domaine` (callback Supabase inchangé)
-4. Front prod : `VITE_SITE_URL=https://domaine` + `VITE_INDEXABLE=true` puis rebuild/deploy (détail SEO : `reference/seo.md`)
-5. SPA fallback `/panier` `/commande` `/admin`
-6. DNS + HTTPS
-7. **Stripe TEST → LIVE (très important)** : mode Live · `STRIPE_SECRET_KEY=sk_live_…` · `STRIPE_WEBHOOK_SECRET` du webhook Live · vérifier webhook vers Supabase · **1 paiement réel de contrôle** (carte `4242` ne marche plus en live)
-8. **Brevo / mails — domaine pro (obligatoire)** : acheter le domaine (idéalement = site) · boîte `hello@` / `boutique@` · vérifier sender + DKIM/DMARC dans Brevo · `BREVO_SENDER_EMAIL=…@domaine` — *staging actuel : `almenaprod@gmail.com` (à remplacer)*
-9. **Reset jour J (obligatoire)** : stocks réels (`product_variants`) · ventes à **0** (purger commandes / réservations / redemptions de test) · stats site à **0** (`site_pageviews`, `site_events`) — détail `reference/commerce.md`
-10. Ne pas resetter les **secrets R2** sans demande. Tarifs zones : `supabase/functions/_shared/shipping.ts`
-11. **Médiateur conso (obligatoire boutique B2C)** : adhésion **CM2C** ([cm2c.net](https://www.cm2c.net/) · [tarifs](https://www.cm2c.net/tarifs.php) ≈ 48 € / 3 ans si &lt; 10 salariés) → mettre nom + lien dans les CGV (remplacer le « sur demande à almenaprod@gmail.com »)
-12. SEO post-deploy : Search Console → soumettre `https://domaine/sitemap.xml` (le reste est déjà dans le build)
+4. Front / CI : `VITE_SITE_URL=https://domaine` + **`VITE_INDEXABLE=true`** dans `deploy.yml` (aujourd’hui forcé `false` pour le staging) + secrets GitHub à jour → rebuild/deploy
+5. **VPS Hetzner** : DNS domaine → `46.224.50.133` · Caddy (bloc domaine, `try_files` SPA) · **retirer** `X-Robots-Tag noindex` du bloc Caddy staging si on sert le vrai domaine · `sudo systemctl reload caddy` · vérifier `/var/www/doya` servi
+6. SPA fallback `/panier` `/commande` `/admin` (Caddy `try_files`)
+7. HTTPS OK (certificat Caddy / Let’s Encrypt)
+8. **Stripe TEST → LIVE** : `sk_live_…` · webhook Live · 1 paiement réel (plus de `4242`)
+9. **Brevo** : sender `@domaine` + DKIM/DMARC (remplacer `almenaprod@gmail.com`)
+10. **Reset jour J** : stocks réels · ventes / commandes test à 0 · stats à 0 — détail `reference/commerce.md`
+11. Ne pas resetter les **secrets R2** sans demande. Zones port : admin Catalogue / `shipping_zones`
+12. **CM2C** médiateur conso → CGV
+13. SEO : Search Console → `https://domaine/sitemap.xml` · vérifier `robots.txt` Allow (plus Disallow /)
 
-État actuel :
-- Dev local : Auth redirects `127.0.0.1:5174` / `localhost:5174` toujours autorisés
-- Preview Netlify : `https://harmonious-hamster-bac94a.netlify.app` — `SITE_URL` + Auth redirects `/admin` `/panier` `/commande` configurés
-- Google OAuth : **ajouter l’origin** `https://harmonious-hamster-bac94a.netlify.app` dans Google Cloud (client DOYA Web) si pas déjà fait
-- Brevo : sender staging = `almenaprod@gmail.com` ; **avant live** passer à un `@domaine` pro (checklist §8)
-- Au vrai domaine final : remplacer / compléter cette URL preview partout (checklist ci-dessus)
+État actuel (staging) :
+- Front prod cible : VPS Hetzner `/var/www/doya` · workflow `Deploy to VPS` · URL temp `doya.guzzler-bot.cloud` (**noindex** : `VITE_INDEXABLE=false` + header Caddy)
+- Preview Netlify encore dispo : `https://harmonious-hamster-bac94a.netlify.app`
+- Dev local : Auth `127.0.0.1:5174` / `localhost:5174`
+- Brevo staging : `almenaprod@gmail.com`
+- Infra détaillée : `.cursor/rules/hetzner-deploy.mdc`

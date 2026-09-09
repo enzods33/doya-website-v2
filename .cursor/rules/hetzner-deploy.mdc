@@ -22,7 +22,7 @@ Même schéma qu’**Alegria Gipsy** et **DojoKai** (pas Netlify en prod).
 - Caddy DOYA : header `X-Robots-Tag "noindex, nofollow"`
 - Build : meta robots + `robots.txt` Disallow `/` si pas indexable
 
-Au **go-live domaine final** : `VITE_INDEXABLE=true`, `VITE_SITE_URL=https://domaine`, checklist `reference/commerce.md` + go-live-domain rule ; retirer / adapter le header noindex Caddy si besoin.
+Au **go-live domaine final** : appliquer toute la checklist `reference/commerce.md` § « Checklist — passage au vrai domaine » (dont points VPS / Caddy / `VITE_INDEXABLE=true` / retrait noindex). Rule miroir : `go-live-domain.mdc`.
 
 ## Secrets GitHub (Actions)
 

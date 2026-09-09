@@ -115,18 +115,23 @@ Quand le site est en ligne sur le nom de domaine définitif (nouvelle IP / DNS),
      `https://ipphjddgeotsohplzkbo.supabase.co/auth/v1/callback`  
      (ne change **pas** avec le domaine du site).
 
-4. **Build / hébergement front** (`.env` de prod ou variables CI)  
-   - `VITE_SITE_URL=https://domaine-officiel`  
-   - `VITE_INDEXABLE=true` seulement quand le SEO est voulu  
-   - `VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY` (déjà OK si mêmes valeurs)  
-   - `VITE_ASSETS_URL` (CDN R2)  
-   - Rebuild + redeploy du site après changement.
+4. **Build / GitHub Actions (VPS)**  
+   - Secrets : `VITE_SITE_URL=https://domaine-officiel`  
+   - **`VITE_INDEXABLE`** : passer à **`true`** dans `.github/workflows/deploy.yml` (aujourd’hui forcé `false` pour le staging Hetzner)  
+   - `VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY` + `VITE_ASSETS_URL`  
+   - Push `master` (ou relancer *Deploy to VPS*) → `dist/` rsync vers `/var/www/doya`.
 
-5. **Hébergeur (SPA)**  
-   Fallback `index.html` pour `/panier`, `/commande`, `/admin`.
+5. **VPS Hetzner / Caddy (comme Alegria & Dojo)** — à vérifier  
+   - DNS A/AAAA du **domaine officiel** → `46.224.50.133`  
+   - Bloc Caddy pour le domaine (root `/var/www/doya`, `try_files` → `/index.html`, cache assets)  
+   - **Retirer** le header `X-Robots-Tag "noindex, nofollow"` s’il était sur le seul host staging `doya.guzzler-bot.cloud` et que le vrai domaine a son propre bloc **sans** noindex  
+   - `sudo caddy validate --config /etc/caddy/Caddyfile` puis `sudo systemctl reload caddy`  
+   - HTTPS Let’s Encrypt OK sur le domaine  
+   - Ne pas casser les autres sites (`alegria`, `karate`, etc.)  
+   - Détail infra : `.cursor/rules/hetzner-deploy.mdc` + README § Déploiement VPS.
 
-6. **DNS / IP**  
-   A/AAAA (ou CNAME) vers la nouvelle IP / l’hébergeur ; HTTPS (certificat) OK avant de tester un vrai paiement.
+6. **SPA**  
+   Fallback `index.html` pour `/panier`, `/commande`, `/admin` (Caddy `try_files`).
 
 7. **Stripe — passage TEST → LIVE (très important)**  
    - Dashboard Stripe : passer en mode **Live** (plus Test).  
@@ -157,7 +162,7 @@ Quand le site est en ligne sur le nom de domaine définitif (nouvelle IP / DNS),
 
 10. **Ne touche pas** (sauf besoin métier)  
    Secrets R2.  
-   Tarifs / zones : `supabase/functions/_shared/shipping.ts` (redéployer les fonctions après changement).
+   Tarifs zones : gérés en admin Catalogue (`shipping_zones`) + miroir edge ; redéployer les fonctions si le code tarifs change.
 
 11. **Médiateur de la consommation (obligatoire avant vente live B2C)**  
     - Adhérer à **CM2C** (choix retenu, pas cher) : https://www.cm2c.net/  
@@ -166,9 +171,18 @@ Quand le site est en ligne sur le nom de domaine définitif (nouvelle IP / DNS),
     - Liste officielle CECMC si besoin : https://www.economie.gouv.fr/mediation-conso
 
 12. **SEO post-deploy**  
-    Search Console → propriété du domaine → envoyer `https://domaine/sitemap.xml` (détail : `reference/seo.md`).
+    - Vérifier `robots.txt` = Allow (plus `Disallow: /`) et meta `index,follow`  
+    - Search Console → propriété du domaine → envoyer `https://domaine/sitemap.xml` (détail : `reference/seo.md`).
 
-### Preview Netlify (staging)
+### Staging Hetzner (avant le vrai domaine)
+
+- URL : `https://doya.guzzler-bot.cloud` → `/var/www/doya`  
+- **Non indexable** (obligatoire) : `VITE_INDEXABLE=false` dans `deploy.yml` + header Caddy `X-Robots-Tag: noindex, nofollow`  
+- DNS : `doya.guzzler-bot.cloud` → `46.224.50.133`  
+- Secrets Actions : `SSH_PRIVATE_KEY`, `REMOTE_HOST`, `REMOTE_USER`, `REMOTE_TARGET=/var/www/doya`, `VITE_*`  
+- Reload Caddy après edit : `sudo systemctl reload caddy` (mot de passe sudo requis)
+
+### Preview Netlify (staging historique)
 
 URL actuelle : `https://harmonious-hamster-bac94a.netlify.app`  
 (constante front : `STAGING_SITE_URL` dans `src/config/publicUrls.js`)
@@ -180,7 +194,7 @@ Déjà côté Supabase (en plus du local) :
 - Auth redirects : `…/**`, `/admin`, `/panier`, `/commande`
 
 À faire côté Google Cloud (client OAuth **DOYA Web**) :
-- Authorized JavaScript origins → ajouter `https://harmonious-hamster-bac94a.netlify.app`
+- Authorized JavaScript origins → ajouter `https://harmonious-hamster-bac94a.netlify.app` (et plus tard `doya.guzzler-bot.cloud` / domaine final)
 - Redirect URI Supabase inchangé : `https://ipphjddgeotsohplzkbo.supabase.co/auth/v1/callback`
 
 Netlify (build) — variables :
