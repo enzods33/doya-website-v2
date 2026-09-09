@@ -151,7 +151,7 @@ Deno.serve(async (req) => {
       customer_email: email,
       client_reference_id: order.orderNumber ?? order.orderId,
       success_url: `${site}/commande?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${site}/panier?canceled=1`,
+      cancel_url: `${site}/panier?canceled=1&session_id={CHECKOUT_SESSION_ID}`,
       expires_at: Math.floor(Date.now() / 1000) + 30 * 60,
       billing_address_collection: 'required',
       phone_number_collection: { enabled: true },

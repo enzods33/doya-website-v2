@@ -1,7 +1,7 @@
 import { useEffect, useId, useMemo, useState } from 'react'
 import { useCart } from '../commerce/CartProvider.jsx'
 import { useCatalog } from '../commerce/CatalogProvider.jsx'
-import { startCheckout } from '../commerce/checkout.js'
+import { startCheckout, releaseCheckout } from '../commerce/checkout.js'
 import { subscribeNewsletter } from '../commerce/newsletter.js'
 import { requestShippingQuote } from '../commerce/shippingQuote.js'
 import { CART_LIMITS, FLAT_SHIPPING_LIMITS, bestAutoPromo, formatEuros, isValidEmail, normalizePromoCode } from '../commerce/cartRules.js'
@@ -32,6 +32,28 @@ function CartPage() {
   const [emailTouched, setEmailTouched] = useState(false)
   const [cgvError, setCgvError] = useState(false)
   const [error, setError] = useState(() => (new URLSearchParams(window.location.search).get('canceled') ? commerceMessage('canceled', t) : ''))
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    if (!params.get('canceled')) return undefined
+    const sessionId = params.get('session_id') ?? ''
+    if (!/^cs_(test|live)_[A-Za-z0-9]+$/.test(sessionId)) return undefined
+    let cancelled = false
+    releaseCheckout(sessionId)
+      .then(() => {
+        if (!cancelled) setError(commerceMessage('canceled', t))
+      })
+      .catch(() => {
+        /* webhook / cron libéreront sous 30–35 min */
+      })
+      .finally(() => {
+        if (cancelled) return
+        params.delete('session_id')
+        const next = `${window.location.pathname}${params.toString() ? `?${params}` : ''}${window.location.hash}`
+        window.history.replaceState({}, '', next)
+      })
+    return () => { cancelled = true }
+  }, [t])
 
   useEffect(() => {
     setQuoteSent(false)

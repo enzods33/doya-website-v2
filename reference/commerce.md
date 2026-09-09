@@ -80,7 +80,7 @@ Le client n’a aucun accès en lecture à cette table. Le code est vérifié au
 ## Paiement
 
 Stripe Checkout héberge la carte. Le site ne voit jamais le numéro.  
-Au clic, une fonction réserve le stock 30 minutes, crée la session, puis le webhook confirme ou libère.  
+Au clic, une fonction réserve le stock **30 minutes** (session Stripe `expires_at`), crée la session, puis le webhook confirme ou libère. Un job **pg_cron** (`release_stale_reservations`, toutes les 5 min) libère aussi les pending > 35 min. Annulation Stripe → retour `/panier?canceled=1&session_id=…` appelle `release-checkout`.
 Les prix affichés dans le panier sont indicatifs ; le montant Stripe est recalculé en base.
 
 Chaque commande reçoit un **n° humain** `DOYA-XXXXX` (colonne `orders.order_number`) dès la création pending. Il apparaît :

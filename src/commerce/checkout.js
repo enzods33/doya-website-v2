@@ -27,3 +27,8 @@ export function startCheckout({ items, email, promoCode, shippingCountry, locale
 export function fetchOrder(sessionId) {
   return invoke('get-order', { sessionId })
 }
+
+/** Libère la réservation stock après annulation Stripe Checkout. */
+export function releaseCheckout(sessionId) {
+  return invoke('release-checkout', { sessionId })
+}

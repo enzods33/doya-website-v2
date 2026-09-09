@@ -36,5 +36,8 @@ verify_jwt = false
 [functions.request-shipping-quote]
 verify_jwt = false
 
+[functions.release-checkout]
+verify_jwt = false
+
 [functions.email-logo]
 verify_jwt = false
