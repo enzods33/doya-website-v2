@@ -1247,8 +1247,15 @@ a.concert-tickets:focus-visible {
 }
 .footer-brand { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 18px; }
 .footer-wordmark { width: clamp(200px, 26vw, 380px); height: auto; }
-.footer-album { font-family: var(--font-editorial); font-size: clamp(18px, 1.8vw, 26px); letter-spacing: .04em; text-transform: uppercase; }
-.footer-album span { margin-inline: 10px; color: var(--color-doya-red); }
+.luna-bohemia-mark {
+  margin: 0;
+  display: block;
+  width: clamp(146px, 21vw, 259px);
+  height: auto;
+}
+.footer-album-mark {
+  width: clamp(146px, 21vw, 259px);
+}
 .footer-newsletter {
   width: min(100%, 560px);
   margin: clamp(36px, 5vw, 56px) auto 0;
@@ -1930,7 +1937,7 @@ a.concert-tickets:focus-visible {
   .footer-cta { width: 100%; min-width: 0; }
   .site-footer { padding-block: var(--section-space) 28px; }
   .footer-wordmark { width: min(68vw, 240px); }
-  .footer-album { font-size: 20px; }
+  .footer-album-mark { width: min(58vw, 211px); }
   .footer-socials { margin-top: 36px; }
   .socials { gap: 8px 10px; justify-content: center; }
   .footer-meta { gap: 18px; text-align: center; margin-top: 36px; padding-top: 22px; }

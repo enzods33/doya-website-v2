@@ -6,6 +6,7 @@ import { useI18n } from '../i18n/I18nProvider.jsx'
 import { Lockup } from './Brand.jsx'
 import LanguageSwitcher from './LanguageSwitcher.jsx'
 import Link from './Link.jsx'
+import LunaBohemiaMark from './LunaBohemiaMark.jsx'
 import NewsletterSignup from './NewsletterSignup.jsx'
 import PublisherCredit from './PublisherCredit.jsx'
 import StudioCredit from './StudioCredit.jsx'
@@ -58,7 +59,7 @@ function Footer() {
           <Link href="#top" aria-label={t('a11y.footerHome')}>
             <Lockup className="footer-wordmark" />
           </Link>
-          <p className="footer-album">{siteContent.albumTitle} <span aria-hidden="true">·</span> {siteContent.year}</p>
+          <LunaBohemiaMark className="footer-album-mark" />
         </div>
 
         <NewsletterSignup className="footer-newsletter" />
