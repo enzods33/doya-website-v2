@@ -100,7 +100,7 @@ export default {
     viewFrontWord: 'de face',
     viewBackWord: 'de dos',
     type: { tshirt: 'T-shirt', cd: 'CD', other: 'Article' },
-    size: { ENF: 'Enf.', CD: 'CD', VINYL: 'Vinyle', U: 'CD' },
+    size: { ENF: 'Enfant', CD: 'CD', VINYL: 'Vinyle', U: 'CD' },
     color: { black: 'Noir', white: 'Blanc', digipack: 'Digipack', default: '' },
     product: {
       'luna-bohemia-white': 'Étoiles',
