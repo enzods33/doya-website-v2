@@ -470,7 +470,7 @@ export default {
     quoteAside: 'We’ll email you the shipping rate — no payment yet.',
     quoteSubject: 'DOYA shop shipping quote',
     quoteBody: 'Hello,\n\nI would like a shipping quote for:\n- T-shirts: {tees}\n- CDs: {cds}\n- Country: {country}\n\nEmail: {email}\n\nMessage:\n{message}\n\nThank you.',
-    pay: 'Pay with Stripe',
+    pay: 'Pay',
     redirecting: 'Redirecting…',
   },
   order: {

@@ -470,7 +470,7 @@ export default {
     quoteAside: 'On te répond par e-mail avec le tarif de port — aucun paiement pour l’instant.',
     quoteSubject: 'Devis livraison boutique DOYA',
     quoteBody: 'Bonjour,\n\nJe souhaite un devis de livraison pour :\n- Tee-shirts : {tees}\n- CD : {cds}\n- Pays : {country}\n\nE-mail : {email}\n\nMessage :\n{message}\n\nMerci.',
-    pay: 'Payer avec Stripe',
+    pay: 'Payer',
     redirecting: 'Redirection…',
   },
     order: {
