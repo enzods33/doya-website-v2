@@ -7,8 +7,8 @@ function publisherMailto(t) {
   return `mailto:${ALMENA_EMAIL}?subject=${encodeURIComponent(t('publisher.subject'))}&body=${encodeURIComponent(t('publisher.body'))}`
 }
 
-/** @param {{ className?: string }} props */
-function PublisherCredit({ className = '' }) {
+/** @param {{ className?: string, children?: import('react').ReactNode, source?: string }} props */
+function PublisherCredit({ className = '', children, source = 'footer' }) {
   const { t } = useI18n()
 
   return (
@@ -16,9 +16,12 @@ function PublisherCredit({ className = '' }) {
       className={`studio-credit publisher-credit publisher-credit--text ${className}`.trim()}
       href={publisherMailto(t)}
       aria-label={t('publisher.aria')}
-      onClick={() => trackEvent('contact_mail', 'footer')}
+      onClick={() => trackEvent('contact_mail', source)}
     >
-      <span className="publisher-credit-text">{t('publisher.credit')}</span>
+      <span className="publisher-credit-text">
+        {t('publisher.credit')}
+        {children}
+      </span>
     </a>
   )
 }

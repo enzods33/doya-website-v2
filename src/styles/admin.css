@@ -411,6 +411,42 @@
   text-transform: uppercase;
 }
 .admin-section-head p { margin: 0; color: var(--muted); max-width: 52ch; line-height: 1.5; }
+.admin-bio-copy { margin-bottom: 28px; }
+.admin-bio-locales {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.admin-bio-locale {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  min-width: 3.6rem;
+  min-height: 2.4rem;
+  padding: 0 12px;
+  border: 1px solid rgb(44 41 38 / 22%);
+  background: transparent;
+  font-size: 12px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.admin-bio-locale-flag {
+  width: 0.95rem;
+  height: 0.64rem;
+  opacity: 0.9;
+}
+.admin-bio-locale.is-active {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: #f4f0ea;
+}
+.admin-bio-body {
+  min-height: 14rem;
+  resize: vertical;
+  line-height: 1.45;
+}
 .admin-card,
 .admin-form {
   display: grid;

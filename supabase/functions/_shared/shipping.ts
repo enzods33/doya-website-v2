@@ -46,10 +46,10 @@ export function isAllowedShippingAmount(cents: number): boolean {
   return shippingAmounts().includes(cents)
 }
 
-export function stripeShippingOption(zone: ShippingZone) {
+export function stripeShippingOption(zone: ShippingZone, displayName = zone.displayName) {
   return {
     shipping_rate_data: {
-      display_name: zone.displayName,
+      display_name: displayName,
       type: 'fixed_amount' as const,
       fixed_amount: { amount: zone.amountCents, currency: 'eur' },
       metadata: { zone: zone.id },

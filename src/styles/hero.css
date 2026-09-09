@@ -405,11 +405,21 @@
 }
 .mobile-menu-meta {
   margin: 0;
-  padding-top: 0;
+  padding: 4px 0;
   font-size: 11px;
   letter-spacing: .1em;
   text-transform: uppercase;
   color: var(--muted);
+  text-decoration: none;
+}
+.mobile-menu-meta .publisher-credit-text {
+  font-size: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
+}
+.mobile-menu-meta:hover .publisher-credit-text {
+  color: var(--ink);
 }
 .mobile-menu-studio {
   display: flex;

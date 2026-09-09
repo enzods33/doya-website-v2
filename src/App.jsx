@@ -4,6 +4,8 @@ import { CartProvider } from './commerce/CartProvider.jsx'
 import { CatalogProvider } from './commerce/CatalogProvider.jsx'
 import { startPageAnalytics } from './commerce/pageAnalytics.js'
 import { I18nProvider, useI18n } from './i18n/I18nProvider.jsx'
+import ErrorBoundary from './components/ErrorBoundary.jsx'
+import OfflineBanner from './components/OfflineBanner.jsx'
 import Header from './components/Header.jsx'
 import Footer from './components/Footer.jsx'
 import HomePage from './pages/HomePage.jsx'
@@ -52,9 +54,12 @@ function AppShell() {
     <div id="top" className={path === '/' || isAdmin ? undefined : 'site-page'}>
       <a className="skip-link" href="#main">{t('a11y.skipToContent')}</a>
       {!isAdmin ? <Header /> : null}
-      <Suspense fallback={<main id="main" className="page-main" tabIndex={-1} />}>
-        <Page />
-      </Suspense>
+      <OfflineBanner />
+      <ErrorBoundary resetKey={path}>
+        <Suspense fallback={<main id="main" className="page-main" tabIndex={-1} />}>
+          <Page />
+        </Suspense>
+      </ErrorBoundary>
       {!isAdmin ? <Footer /> : null}
     </div>
   )
@@ -65,11 +70,13 @@ function App() {
     <LazyMotion features={domAnimation} strict>
       <MotionConfig reducedMotion="user">
         <I18nProvider>
-          <CartProvider>
-            <CatalogProvider>
-              <AppShell />
-            </CatalogProvider>
-          </CartProvider>
+          <ErrorBoundary resetKey="app-root">
+            <CartProvider>
+              <CatalogProvider>
+                <AppShell />
+              </CatalogProvider>
+            </CartProvider>
+          </ErrorBoundary>
         </I18nProvider>
       </MotionConfig>
     </LazyMotion>

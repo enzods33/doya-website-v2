@@ -1,6 +1,18 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import { localeCatalog } from '../i18n/index.js'
 import { useI18n } from '../i18n/I18nProvider.jsx'
+import { LocaleFlag } from './LocaleFlag.jsx'
+
+function LocaleMark({ code }) {
+  const meta = localeCatalog[code]
+  if (!meta) return null
+  return (
+    <span className="language-mark">
+      <LocaleFlag code={code} />
+      <span className="language-code">{meta.label}</span>
+    </span>
+  )
+}
 
 function LanguageSwitcher({ className = '' }) {
   const { locale, locales, setLocale, t } = useI18n()
@@ -40,7 +52,7 @@ function LanguageSwitcher({ className = '' }) {
         aria-controls={listId}
         onClick={() => setOpen((value) => !value)}
       >
-        <span>{localeCatalog[locale].label}</span>
+        <LocaleMark code={locale} />
       </button>
       <ul
         id={listId}
@@ -53,7 +65,7 @@ function LanguageSwitcher({ className = '' }) {
         {locales.map((code) => (
           <li key={code} role="option" aria-selected={locale === code}>
             <button type="button" className="language-option" tabIndex={open ? 0 : -1} onClick={() => choose(code)}>
-              {localeCatalog[code].label}
+              <LocaleMark code={code} />
             </button>
           </li>
         ))}

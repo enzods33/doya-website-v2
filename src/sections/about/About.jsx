@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useReducedMotion } from 'motion/react'
 import { siteContent } from '../../data/siteContent.js'
 import { galleryImages as fallbackGallery } from '../../data/media.js'
-import { loadBioGallery } from '../../commerce/bioPhotos.js'
+import { loadBioGallery, loadBioCopy } from '../../commerce/bioPhotos.js'
 import { useI18n } from '../../i18n/I18nProvider.jsx'
 import { Stars, Wordmark } from '../../components/Brand.jsx'
 import Reveal from '../../components/Reveal.jsx'
@@ -10,8 +10,9 @@ import PhotoLightbox from '../../components/PhotoLightbox.jsx'
 
 function About() {
   const reducedMotion = useReducedMotion()
-  const { t } = useI18n()
+  const { t, locale } = useI18n()
   const [images, setImages] = useState(fallbackGallery)
+  const [bioCopy, setBioCopy] = useState(null)
   const total = images.length
   const [index, setIndex] = useState(0)
   const [lightbox, setLightbox] = useState(null)
@@ -29,6 +30,18 @@ function About() {
     })
     return () => { cancelled = true }
   }, [])
+
+  useEffect(() => {
+    let cancelled = false
+    setBioCopy(null)
+    loadBioCopy(locale).then((next) => {
+      if (!cancelled) setBioCopy(next)
+    })
+    return () => { cancelled = true }
+  }, [locale])
+
+  const biographyLead = bioCopy?.lead || t('about.biographyLead')
+  const biographyBody = bioCopy?.body || t('about.biographyBody')
 
   const scrollToIndex = useCallback((nextIndex, behavior = 'smooth') => {
     const i = ((nextIndex % total) + total) % total
@@ -121,8 +134,8 @@ function About() {
           <h2 id="about-title" className="editorial-title about-title">{t('about.eyebrow')}</h2>
           <Wordmark decorative className="about-wordmark" />
           <div className="about-biography">
-            <p className="about-biography-lead">{t('about.biographyLead')}</p>
-            {t('about.biographyBody').split(/\n\n+/).map((paragraph) => (
+            <p className="about-biography-lead">{biographyLead}</p>
+            {biographyBody.split(/\n\n+/).map((paragraph) => (
               <p key={paragraph.slice(0, 24)} className="about-biography-body">{paragraph}</p>
             ))}
           </div>

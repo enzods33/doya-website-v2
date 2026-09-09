@@ -3,15 +3,13 @@ import { checkoutReturnOrigin, json, preflight, rejectOrigin } from '../_shared/
 import { serviceClient, stripeClient, userClient } from '../_shared/clients.ts'
 import { shippingZoneByCountry, stripeShippingOption } from '../_shared/shipping.ts'
 import { allowRatePersistent, clientIp } from '../_shared/rateLimit.ts'
-
-const PRODUCT_NAMES: Record<string, string> = {
-  // Libellés Stripe Checkout (FR) — garder synchrones avec `shop.product.*` i18n
-  'luna-bohemia-white': 'Étoiles — Blanc',
-  'luna-bohemia-black': 'Étoiles — Noir',
-  'doya-white': 'Phases — Blanc',
-  'doya-black': 'Phases — Noir',
-  'cd-luna-bohemia': 'Luna Bohemia — CD',
-}
+import {
+  normalizeCheckoutLocale,
+  stripeCheckoutLocale,
+  stripeLineDescription,
+  stripeProductName,
+  stripeShippingDisplayName,
+} from '../_shared/checkoutLabels.ts'
 
 const CHECKOUT_WINDOW_MS = 15 * 60 * 1000
 const CHECKOUT_MAX_PER_IP = 8
@@ -36,12 +34,15 @@ Deno.serve(async (req) => {
     email?: string
     promoCode?: string
     shippingCountry?: string
+    locale?: string
   }
   try {
     body = await req.json()
   } catch {
     return json(400, { error: 'invalid_json' }, origin)
   }
+
+  const locale = normalizeCheckoutLocale(body.locale)
 
   const items = Array.isArray(body.items) ? body.items : []
   if (!items.length || items.length > CART_LIMITS.maxLines) {
@@ -124,8 +125,8 @@ Deno.serve(async (req) => {
       currency: 'eur',
       unit_amount: line.unitPriceCents,
       product_data: {
-        name: PRODUCT_NAMES[line.productId] ?? line.name,
-        description: line.size === 'U' ? 'Digipack' : `Taille ${line.size}`,
+        name: stripeProductName(line.productId, locale, line.name),
+        description: stripeLineDescription(line.size, locale),
         metadata: { productId: line.productId, size: line.size },
       },
     },
@@ -146,6 +147,7 @@ Deno.serve(async (req) => {
   try {
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
+      locale: stripeCheckoutLocale(locale),
       customer_email: email,
       client_reference_id: order.orderNumber ?? order.orderId,
       success_url: `${site}/commande?session_id={CHECKOUT_SESSION_ID}`,
@@ -156,17 +158,24 @@ Deno.serve(async (req) => {
       shipping_address_collection: {
         allowed_countries: zone.countries,
       },
-      shipping_options: [stripeShippingOption(zone)],
+      shipping_options: [
+        stripeShippingOption(
+          zone,
+          stripeShippingDisplayName(zone.id, locale, zone.displayName),
+        ),
+      ],
       line_items: lineItems,
       discounts: discounts.length ? discounts : undefined,
       metadata: {
         orderId: order.orderId,
         orderNumber: order.orderNumber ?? '',
+        locale,
       },
       payment_intent_data: {
         metadata: {
           orderId: order.orderId,
           orderNumber: order.orderNumber ?? '',
+          locale,
         },
       },
     })

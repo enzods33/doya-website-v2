@@ -107,6 +107,7 @@ function CartPage() {
         email: email.trim(),
         promoCode: normalizePromoCode(promoCode) || undefined,
         shippingCountry,
+        locale,
       })
       if (typeof url !== 'string' || !url.startsWith('https://')) throw new Error('stripe_unavailable')
       window.location.assign(url)

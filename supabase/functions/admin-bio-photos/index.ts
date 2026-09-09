@@ -73,6 +73,9 @@ Deno.serve(async (req) => {
     published?: boolean
     sort_order?: number
     alt?: string
+    locale?: string
+    lead?: string
+    body?: string
     order?: { id: string; sort_order: number }[]
     photos?: {
       public_url?: string
@@ -197,6 +200,43 @@ Deno.serve(async (req) => {
     const { error } = await db.from('bio_photos').delete().eq('id', id)
     if (error) return json(500, { error: 'bio_delete_failed' }, origin)
     return json(200, { ok: true }, origin)
+  }
+
+  if (action === 'get_bio') {
+    const { data, error } = await db
+      .from('site_bio')
+      .select('locale, lead, body, updated_at')
+      .order('locale', { ascending: true })
+    if (error) return json(500, { error: 'bio_copy_list_failed', detail: error.message }, origin)
+    return json(200, { bio: data ?? [] }, origin)
+  }
+
+  if (action === 'save_bio') {
+    const locale = typeof body.locale === 'string' ? body.locale.trim().toLowerCase() : ''
+    if (!['fr', 'es', 'en', 'pt'].includes(locale)) {
+      return json(400, { error: 'invalid_locale' }, origin)
+    }
+    const lead = typeof body.lead === 'string' ? body.lead.trim() : ''
+    const copy = typeof body.body === 'string' ? body.body.trim() : ''
+    if (!lead || !copy) return json(400, { error: 'invalid_bio_copy' }, origin)
+    if (lead.length > 400 || copy.length > 6000) {
+      return json(400, { error: 'bio_copy_too_long' }, origin)
+    }
+    const { data, error } = await db
+      .from('site_bio')
+      .upsert(
+        {
+          locale,
+          lead,
+          body: copy,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: 'locale' },
+      )
+      .select('locale, lead, body, updated_at')
+      .single()
+    if (error) return json(500, { error: 'bio_copy_save_failed', detail: error.message }, origin)
+    return json(200, { row: data }, origin)
   }
 
   return new Response(JSON.stringify({ error: 'invalid_action' }), {

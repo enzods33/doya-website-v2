@@ -18,9 +18,13 @@ export function CatalogProvider({ children }) {
   useEffect(() => {
     if (!commerceConfigured) return undefined
     let active = true
-    loadCatalog().then((next) => {
-      if (active) setCatalog({ ...next, ready: true })
-    })
+    loadCatalog()
+      .then((next) => {
+        if (active) setCatalog({ ...next, ready: true })
+      })
+      .catch(() => {
+        if (active) setCatalog({ items: empty, purchasable: false, ready: true })
+      })
     return () => { active = false }
   }, [])
 

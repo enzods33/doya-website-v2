@@ -7,6 +7,7 @@ import { useI18n } from '../i18n/I18nProvider.jsx'
 import { Stars, Wordmark, MenuIcon, CartIcon, HomeIcon } from './Brand.jsx'
 import LanguageSwitcher from './LanguageSwitcher.jsx'
 import NewsletterSignup from './NewsletterSignup.jsx'
+import PublisherCredit from './PublisherCredit.jsx'
 import StudioCredit from './StudioCredit.jsx'
 import Link from './Link.jsx'
 import { editorialEase } from '../utils/motion.js'
@@ -218,7 +219,7 @@ function Header() {
             <NewsletterSignup variant="menu" className="mobile-menu-newsletter" />
           </div>
           <div className="mobile-menu-foot-bar">
-            <p className="mobile-menu-meta">{siteContent.name} {siteContent.year}</p>
+            <PublisherCredit className="mobile-menu-meta" source="menu"> {siteContent.year}</PublisherCredit>
             <LanguageSwitcher className="mobile-language-switcher" />
           </div>
           <div className="mobile-menu-studio">
