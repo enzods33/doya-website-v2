@@ -1,12 +1,10 @@
-# Build + contrôles SPA, puis déploiement Netlify si les secrets sont présents.
-# Secrets repo : NETLIFY_AUTH_TOKEN, NETLIFY_SITE_ID
-# Sans secrets : le job vérifie seulement le build (évite un Drop oubliant _redirects).
+# Build + contrôles SPA (preview / CI).
+# Le déploiement production part sur le VPS Hetzner (voir deploy.yml).
+# Secrets Netlify optionnels : NETLIFY_AUTH_TOKEN, NETLIFY_SITE_ID (staging manuel).
 
 name: Netlify
 
 on:
-  push:
-    branches: [master]
   pull_request:
     branches: [master]
   workflow_dispatch:
@@ -28,6 +26,10 @@ jobs:
       - run: npm run build
         env:
           VITE_INDEXABLE: 'false'
+          VITE_SITE_URL: ${{ secrets.VITE_SITE_URL }}
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+          VITE_ASSETS_URL: ${{ secrets.VITE_ASSETS_URL }}
       - name: Verify SPA + SEO artifacts
         run: |
           set -e
@@ -45,8 +47,8 @@ jobs:
           path: dist
           retention-days: 7
 
-  deploy:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+  deploy-netlify-staging:
+    if: github.event_name == 'workflow_dispatch'
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -60,8 +62,7 @@ jobs:
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
         run: |
           if [ -z "$NETLIFY_AUTH_TOKEN" ] || [ -z "$NETLIFY_SITE_ID" ]; then
-            echo "Secrets Netlify absents — build vérifié, deploy ignoré."
-            echo "Ajouter NETLIFY_AUTH_TOKEN + NETLIFY_SITE_ID pour activer le deploy Git."
+            echo "Secrets Netlify absents — deploy ignoré."
             exit 0
           fi
           npx --yes netlify-cli deploy --prod --dir=dist --site="$NETLIFY_SITE_ID" --auth="$NETLIFY_AUTH_TOKEN"

@@ -173,6 +173,8 @@ Quand le site est en ligne sur le nom de domaine définitif (nouvelle IP / DNS),
 URL actuelle : `https://harmonious-hamster-bac94a.netlify.app`  
 (constante front : `STAGING_SITE_URL` dans `src/config/publicUrls.js`)
 
+**Prod front** : VPS Hetzner via `.github/workflows/deploy.yml` (push `master`), comme Alegria / Dojo. Netlify reste optionnel (workflow manuel).
+
 Déjà côté Supabase (en plus du local) :
 - Secret `SITE_URL` → cette URL (CORS Edge + retours Stripe)
 - Auth redirects : `…/**`, `/admin`, `/panier`, `/commande`

@@ -13,7 +13,7 @@ Site de présentation indépendant, créé de zéro en React et JavaScript. L’
 - **Admin** : `/admin` Google OAuth + allowlist (`reference/admin.md`) — concerts, bio, audience, newsletter, ventes.
 - **Médias** : hero / cover / shop sur R2 ; galerie Bio via admin (fallback `media.js`).
 - **SEO** : prêt-prod — `reference/seo.md` (`VITE_SITE_URL` + `VITE_INDEXABLE=true` au go-live). Staging Netlify reste `noindex`.
-- **Déploiement** : preview / Drop Netlify (`dist/` + `_redirects` + `_headers`). Workflow GitHub Pages encore présent. **Go-live** : checklist `reference/commerce.md` (domaine, Stripe test→live, reset stocks/ventes/stats, CM2C, Brevo).
+- **Déploiement** : push `master` → GitHub Actions → VPS Hetzner (`dist/` via SSH), comme Alegria / Dojo. Staging Netlify possible en manuel. **Go-live** : checklist `reference/commerce.md` (domaine, Stripe test→live, reset stocks/ventes/stats, CM2C, Brevo).
 
 ## Lancer le site
 
@@ -32,6 +32,56 @@ npm run preview
 ```
 
 Build → `dist/` (port preview `4174`).
+
+## Déploiement VPS (Hetzner)
+
+Comme Alegria / Dojo : push sur `master` → Actions `Deploy to VPS` → `dist/` sur le serveur.
+
+Secrets GitHub (Settings → Secrets and variables → Actions) :
+
+| Secret | Exemple |
+| --- | --- |
+| `SSH_PRIVATE_KEY` | clé privée déployée (comme Alegria) |
+| `REMOTE_HOST` | `46.224.50.133` |
+| `REMOTE_USER` | `stef` |
+| `REMOTE_TARGET` | `/var/www/doya` |
+| `VITE_SUPABASE_URL` | URL projet Supabase |
+| `VITE_SUPABASE_ANON_KEY` | clé anon |
+| `VITE_ASSETS_URL` | CDN R2 |
+| `VITE_SITE_URL` | `https://doya.guzzler-bot.cloud` puis le domaine final |
+| `VITE_INDEXABLE` | `false` en staging, `true` au go-live |
+
+Sur le VPS (une fois) :
+
+```bash
+sudo mkdir -p /var/www/doya
+sudo chown stef:stef /var/www/doya
+```
+
+Bloc Caddy (`/etc/caddy/Caddyfile`) — adapter le domaine :
+
+```caddy
+# --- DOYA ---
+doya.guzzler-bot.cloud {
+    root * /var/www/doya
+    file_server
+
+    @noCache {
+        path /index.html /
+    }
+    header @noCache Cache-Control "no-store, no-cache, must-revalidate"
+
+    @staticAssets {
+        path /assets/*
+    }
+    header @staticAssets Cache-Control "public, max-age=31536000, immutable"
+
+    try_files {path} /index.html
+    encode gzip zstd
+}
+```
+
+Puis `sudo caddy validate --config /etc/caddy/Caddyfile && sudo systemctl reload caddy`.
 
 ## Environnement Cloud Agent
 
