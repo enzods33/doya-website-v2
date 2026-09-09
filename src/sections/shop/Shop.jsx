@@ -2,7 +2,7 @@ import { useEffect, useId, useRef, useState } from 'react'
 import { useReducedMotion } from 'motion/react'
 import { CART_LIMITS, formatEuros, isUniqueSize } from '../../commerce/cartRules.js'
 import { DEFAULT_AUTO_PROMOS, fetchAutoPromos } from '../../commerce/autoPromos.js'
-import { availableFor } from '../../commerce/catalog.js'
+import { availableFor, productImageSrc, resolveProductView } from '../../commerce/catalog.js'
 import { useCart } from '../../commerce/CartProvider.jsx'
 import { useCatalog } from '../../commerce/CatalogProvider.jsx'
 import { commerceMessage, translateProduct } from '../../commerce/messages.js'
@@ -32,7 +32,7 @@ function Shop() {
   const [zoom, setZoom] = useState(null)
   const [autoPromos, setAutoPromos] = useState(DEFAULT_AUTO_PROMOS)
   const resumeTimers = useRef({})
-  const { items, purchasable } = useCatalog()
+  const { items, purchasable, revision } = useCatalog()
   const { addItem } = useCart()
   const { t, intlLocale } = useI18n()
   const zoomTitleId = useId()
@@ -44,7 +44,7 @@ function Shop() {
       if (active) setAutoPromos(promos)
     })
     return () => { active = false }
-  }, [])
+  }, [revision])
 
   function isTshirt(product) {
     return product.typeKey === 'tshirt'
@@ -90,6 +90,8 @@ function Shop() {
   }
 
   function setProductView(product, next) {
+    if (next === 'front' && !product.front) return
+    if (next === 'back' && !product.back) return
     setViews((current) => ({ ...current, [product.id]: next }))
     setManualLock((current) => ({ ...current, [product.id]: true }))
     clearResumeTimer(product.id)
@@ -103,9 +105,16 @@ function Shop() {
   }
 
   function displayedViewFor(product, index) {
-    if (manualLock[product.id] && views[product.id]) return views[product.id]
-    if (hoverPaused[product.id]) return 'front'
-    if (!isTshirt(product) || reducedMotion) return views[product.id] ?? 'front'
+    if (manualLock[product.id] && views[product.id]) {
+      return resolveProductView(product, views[product.id])
+    }
+    if (hoverPaused[product.id]) return resolveProductView(product, 'front')
+    if (!isTshirt(product) || reducedMotion) {
+      return resolveProductView(product, views[product.id] ?? product.defaultView)
+    }
+    if (!product.front || !product.back) {
+      return resolveProductView(product, product.defaultView)
+    }
     return (flipTick + index) % 2 === 0 ? 'front' : 'back'
   }
 
@@ -187,6 +196,7 @@ function Shop() {
         {items.map((product, index) => {
           const labels = translateProduct(t, product)
           const displayedView = displayedViewFor(product, index)
+          const imageSrc = productImageSrc(product, displayedView)
           const sale = product.sale
           const sizes = sizesFor(product)
           const uniqueOnly = sizes.length === 1 && isUniqueSize(sizes[0])
@@ -205,13 +215,16 @@ function Shop() {
             className="product-image-trigger"
             onClick={() => setZoom({ product, view: displayedView })}
             aria-label={`${t('shop.zoom')} — ${alt}`}
+            disabled={!imageSrc}
           >
-            <TransitionImage image={{ src: product[displayedView], width: product.width, height: product.height }} className="product-image" alt={alt} />
+            {imageSrc ? (
+              <TransitionImage image={{ src: imageSrc, width: product.width, height: product.height }} className="product-image" alt={alt} />
+            ) : null}
           </button>
           <div className="product-view-controls" role="group" aria-label={t('shop.viewGroup')}>
-            <button type="button" aria-pressed={displayedView === 'front'} onClick={() => setProductView(product, 'front')}>{t('shop.viewFront')}</button>
+            <button type="button" aria-pressed={displayedView === 'front'} disabled={!product.front} onClick={() => setProductView(product, 'front')}>{t('shop.viewFront')}</button>
             <span aria-hidden="true">/</span>
-            <button type="button" aria-pressed={displayedView === 'back'} onClick={() => setProductView(product, 'back')}>{t('shop.viewBack')}</button>
+            <button type="button" aria-pressed={displayedView === 'back'} disabled={!product.back} onClick={() => setProductView(product, 'back')}>{t('shop.viewBack')}</button>
           </div>
           <div className="product-caption"><p className="eyebrow">{labels.type}</p><h3>{labels.name}</h3>
             <div className="product-details">
@@ -265,7 +278,8 @@ function Shop() {
 
       {zoom ? (() => {
         const labels = translateProduct(t, zoom.product)
-        const src = zoom.product[zoom.view]
+        const view = resolveProductView(zoom.product, zoom.view)
+        const src = productImageSrc(zoom.product, view)
         return (
           <div className="product-zoom" role="dialog" aria-modal="true" aria-labelledby={zoomTitleId}>
             <button type="button" className="product-zoom-backdrop" aria-label={t('shop.zoomClose')} onClick={() => setZoom(null)} />
@@ -274,11 +288,13 @@ function Shop() {
                 <p id={zoomTitleId} className="product-zoom-title">{labels.name} · {labels.color}</p>
                 <button type="button" className="product-zoom-close" onClick={() => setZoom(null)}>{t('shop.zoomClose')} <span aria-hidden="true">×</span></button>
               </div>
-              <img src={src} alt={t('shop.productAlt', { type: labels.type, name: labels.name, color: labels.color.toLowerCase(), view: zoom.view === 'front' ? t('shop.viewFrontWord') : t('shop.viewBackWord') })} width={zoom.product.width} height={zoom.product.height} />
+              {src ? (
+                <img src={src} alt={t('shop.productAlt', { type: labels.type, name: labels.name, color: labels.color.toLowerCase(), view: view === 'front' ? t('shop.viewFrontWord') : t('shop.viewBackWord') })} width={zoom.product.width} height={zoom.product.height} />
+              ) : null}
               <div className="product-view-controls product-zoom-controls" role="group" aria-label={t('shop.viewGroup')}>
-                <button type="button" aria-pressed={zoom.view === 'front'} onClick={() => setZoom((current) => ({ ...current, view: 'front' }))}>{t('shop.viewFront')}</button>
+                <button type="button" aria-pressed={view === 'front'} disabled={!zoom.product.front} onClick={() => setZoom((current) => ({ ...current, view: 'front' }))}>{t('shop.viewFront')}</button>
                 <span aria-hidden="true">/</span>
-                <button type="button" aria-pressed={zoom.view === 'back'} onClick={() => setZoom((current) => ({ ...current, view: 'back' }))}>{t('shop.viewBack')}</button>
+                <button type="button" aria-pressed={view === 'back'} disabled={!zoom.product.back} onClick={() => setZoom((current) => ({ ...current, view: 'back' }))}>{t('shop.viewBack')}</button>
               </div>
             </div>
           </div>

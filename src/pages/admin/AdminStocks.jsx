@@ -180,13 +180,15 @@ function AdminStocks() {
     const local = productMap.get(product.productId)
     const front = product.imageFrontUrl || local?.front || null
     const back = product.imageBackUrl || local?.back || null
-    if (!front) return null
+    if (!front && !back) return null
     return {
       front,
       back,
       width: product.imageWidth || local?.width || 1200,
       height: product.imageHeight || local?.height || 1200,
-      defaultView: product.defaultView || local?.defaultView || 'front',
+      defaultView: front
+        ? (product.defaultView || local?.defaultView || 'front')
+        : 'back',
       typeKey: product.typeKey || local?.typeKey || 'tshirt',
       colorKey: product.colorKey || local?.colorKey || 'black',
     }
@@ -544,7 +546,7 @@ function AdminStocks() {
                       >
                         <TransitionImage
                           image={{
-                            src: productMedia[view] || productMedia.front,
+                            src: productMedia[view] || productMedia.front || productMedia.back,
                             width: productMedia.width,
                             height: productMedia.height,
                           }}
@@ -616,11 +618,12 @@ function AdminStocks() {
                         </button>
                       </div>
 
-                      {productMedia?.back ? (
+                      {productMedia?.front || productMedia?.back ? (
                         <div className="product-view-controls admin-stock-view-controls" role="group" aria-label={t('shop.viewGroup')}>
                           <button
                             type="button"
                             aria-pressed={view === 'front'}
+                            disabled={!productMedia.front}
                             onClick={() => setZoomViews((current) => ({ ...current, [product.productId]: 'front' }))}
                           >
                             {t('shop.viewFront')}
@@ -629,6 +632,7 @@ function AdminStocks() {
                           <button
                             type="button"
                             aria-pressed={view === 'back'}
+                            disabled={!productMedia.back}
                             onClick={() => setZoomViews((current) => ({ ...current, [product.productId]: 'back' }))}
                           >
                             {t('shop.viewBack')}
@@ -870,7 +874,7 @@ function AdminStocks() {
               <button type="button" className="product-zoom-close" onClick={() => setZoom(null)}>{t('shop.zoomClose')} <span aria-hidden="true">×</span></button>
             </div>
             <img
-              src={zoom.productMedia[zoom.view] || zoom.productMedia.front}
+              src={zoom.productMedia[zoom.view] || zoom.productMedia.front || zoom.productMedia.back}
               alt={t('shop.productAlt', {
                 type: zoom.labels.type,
                 name: zoom.labels.name,
@@ -880,11 +884,11 @@ function AdminStocks() {
               width={zoom.productMedia.width}
               height={zoom.productMedia.height}
             />
-            {zoom.productMedia.back ? (
+            {zoom.productMedia.front || zoom.productMedia.back ? (
               <div className="product-view-controls product-zoom-controls" role="group" aria-label={t('shop.viewGroup')}>
-                <button type="button" aria-pressed={zoom.view === 'front'} onClick={() => setZoom((current) => ({ ...current, view: 'front' }))}>{t('shop.viewFront')}</button>
+                <button type="button" aria-pressed={zoom.view === 'front'} disabled={!zoom.productMedia.front} onClick={() => setZoom((current) => ({ ...current, view: 'front' }))}>{t('shop.viewFront')}</button>
                 <span aria-hidden="true">/</span>
-                <button type="button" aria-pressed={zoom.view === 'back'} onClick={() => setZoom((current) => ({ ...current, view: 'back' }))}>{t('shop.viewBack')}</button>
+                <button type="button" aria-pressed={zoom.view === 'back'} disabled={!zoom.productMedia.back} onClick={() => setZoom((current) => ({ ...current, view: 'back' }))}>{t('shop.viewBack')}</button>
               </div>
             ) : null}
           </div>

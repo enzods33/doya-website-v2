@@ -9,7 +9,7 @@ import { DEFAULT_AUTO_PROMOS } from '../commerce/autoPromos.js'
 import { commerceConfigured } from '../commerce/config.js'
 import { trackEvent } from '../commerce/pageAnalytics.js'
 import { commerceMessage, translateProduct } from '../commerce/messages.js'
-import { availableFor } from '../commerce/catalog.js'
+import { availableFor, productImageSrc, resolveProductView } from '../commerce/catalog.js'
 import { DEFAULT_SHIPPING_ZONES, fetchShippingZones, zoneForCountry } from '../commerce/shippingZones.js'
 import { shippingQuoteEmails } from '../data/contacts.js'
 import { useI18n } from '../i18n/I18nProvider.jsx'
@@ -18,7 +18,7 @@ import { Stars } from '../components/Brand.jsx'
 
 function CartPage() {
   const { items, setQuantity, removeItem } = useCart()
-  const { items: catalog } = useCatalog()
+  const { items: catalog, revision } = useCatalog()
   const { locale, t } = useI18n()
   const zoomTitleId = useId()
   const [email, setEmail] = useState('')
@@ -45,7 +45,7 @@ function CartPage() {
       if (active) setAutoPromos(promos)
     })
     return () => { active = false }
-  }, [])
+  }, [revision])
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
@@ -271,13 +271,14 @@ function CartPage() {
             <ul className="cart-list">
               {lines.map((line) => {
                 const labels = translateProduct(t, line.product)
-                const src = line.product?.front
+                const src = productImageSrc(line.product, 'front')
+                const thumbView = resolveProductView(line.product, 'front')
                 const alt = line.product
                   ? t('shop.productAlt', {
                     type: labels.type,
                     name: labels.name,
                     color: (labels.color || '').toLowerCase(),
-                    view: t('shop.viewFrontWord'),
+                    view: thumbView === 'front' ? t('shop.viewFrontWord') : t('shop.viewBackWord'),
                   })
                   : ''
                 return (
@@ -287,7 +288,7 @@ function CartPage() {
                         type="button"
                         className="product-image-trigger cart-line-zoom"
                         disabled={!line.product || !src}
-                        onClick={() => line.product && setZoom({ product: line.product, view: 'front' })}
+                        onClick={() => line.product && setZoom({ product: line.product, view: thumbView })}
                         aria-label={line.product ? `${t('shop.zoom')} — ${alt}` : undefined}
                       >
                         {src ? (
@@ -546,7 +547,8 @@ function CartPage() {
 
       {zoom ? (() => {
         const labels = translateProduct(t, zoom.product)
-        const src = zoom.product[zoom.view] || zoom.product.front
+        const view = resolveProductView(zoom.product, zoom.view)
+        const src = productImageSrc(zoom.product, view)
         return (
           <div className="product-zoom" role="dialog" aria-modal="true" aria-labelledby={zoomTitleId}>
             <button type="button" className="product-zoom-backdrop" aria-label={t('shop.zoomClose')} onClick={() => setZoom(null)} />
@@ -557,21 +559,24 @@ function CartPage() {
                   {t('shop.zoomClose')} <span aria-hidden="true">×</span>
                 </button>
               </div>
-              <img
-                src={src}
-                alt={t('shop.productAlt', {
-                  type: labels.type,
-                  name: labels.name,
-                  color: (labels.color || '').toLowerCase(),
-                  view: zoom.view === 'front' ? t('shop.viewFrontWord') : t('shop.viewBackWord'),
-                })}
-                width={zoom.product.width}
-                height={zoom.product.height}
-              />
+              {src ? (
+                <img
+                  src={src}
+                  alt={t('shop.productAlt', {
+                    type: labels.type,
+                    name: labels.name,
+                    color: (labels.color || '').toLowerCase(),
+                    view: view === 'front' ? t('shop.viewFrontWord') : t('shop.viewBackWord'),
+                  })}
+                  width={zoom.product.width}
+                  height={zoom.product.height}
+                />
+              ) : null}
               <div className="product-view-controls product-zoom-controls" role="group" aria-label={t('shop.viewGroup')}>
                 <button
                   type="button"
-                  aria-pressed={zoom.view === 'front'}
+                  aria-pressed={view === 'front'}
+                  disabled={!zoom.product.front}
                   onClick={() => setZoom((current) => ({ ...current, view: 'front' }))}
                 >
                   {t('shop.viewFront')}
@@ -579,7 +584,8 @@ function CartPage() {
                 <span aria-hidden="true">/</span>
                 <button
                   type="button"
-                  aria-pressed={zoom.view === 'back'}
+                  aria-pressed={view === 'back'}
+                  disabled={!zoom.product.back}
                   onClick={() => setZoom((current) => ({ ...current, view: 'back' }))}
                 >
                   {t('shop.viewBack')}

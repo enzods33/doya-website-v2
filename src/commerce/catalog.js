@@ -26,11 +26,27 @@ function localCatalog() {
   }
 }
 
+export function resolveProductView(product, preferred = 'front') {
+  if (preferred === 'back' && product?.back) return 'back'
+  if (preferred === 'front' && product?.front) return 'front'
+  if (product?.front) return 'front'
+  if (product?.back) return 'back'
+  return 'front'
+}
+
+export function productImageSrc(product, view = 'front') {
+  const side = resolveProductView(product, view)
+  return product?.[side] || product?.front || product?.back || null
+}
+
 function remoteToItem(row, local) {
   const typeKey = inferTypeKey(row.type, row.type_key) || local?.typeKey || 'tshirt'
   const colorKey = typeof row.color_key === 'string' && row.color_key
     ? row.color_key
     : (local?.colorKey || 'black')
+  const front = row.image_front_url || local?.front || null
+  const back = row.image_back_url || local?.back || null
+  const preferred = normalizeDefaultView(row.default_view, local?.defaultView)
   return {
     id: row.id,
     typeKey,
@@ -39,9 +55,9 @@ function remoteToItem(row, local) {
     color: row.color || local?.color || null,
     name: row.name || local?.name || null,
     displayName: row.name || local?.displayName || row.id,
-    defaultView: normalizeDefaultView(row.default_view, local?.defaultView),
-    front: row.image_front_url || local?.front || null,
-    back: row.image_back_url || local?.back || null,
+    defaultView: resolveProductView({ front, back }, preferred),
+    front,
+    back,
     width: Number.isInteger(row.image_width) && row.image_width > 0
       ? row.image_width
       : (local?.width || 1200),
@@ -89,7 +105,8 @@ export async function loadCatalog() {
     for (const row of remoteProducts) {
       if (row.currency !== 'eur' || !Number.isInteger(row.price_cents) || row.price_cents <= 0) continue
       const current = remoteToItem(row, local.get(row.id))
-      if (!current.front) continue
+      // Au moins une photo (face ou dos) pour apparaître en boutique
+      if (!current.front && !current.back) continue
       current.sale = { priceCents: row.price_cents, currency: row.currency }
       current.variants = (remoteVariants ?? [])
         .filter((variant) => variant.product_id === row.id)

@@ -23,7 +23,8 @@ export const DEFAULT_AUTO_PROMOS = [
 export const AUTO_PROMOS = DEFAULT_AUTO_PROMOS
 
 export function mapRemoteAutoPromos(rows) {
-  if (!Array.isArray(rows) || !rows.length) return DEFAULT_AUTO_PROMOS
+  if (!Array.isArray(rows)) return DEFAULT_AUTO_PROMOS
+  if (!rows.length) return []
   const mapped = []
   for (const row of rows) {
     const amountOffCents = Number(row.amount_off_cents)
@@ -52,7 +53,7 @@ export function mapRemoteAutoPromos(rows) {
       })
     }
   }
-  return mapped.length ? mapped : DEFAULT_AUTO_PROMOS
+  return mapped
 }
 
 export async function fetchAutoPromos() {
@@ -62,8 +63,8 @@ export async function fetchAutoPromos() {
     const { data, error } = await supabase
       .from('catalog_auto_promos')
       .select('code, amount_off_cents, min_tee_qty, min_cd_qty')
-    if (error || !data?.length) return DEFAULT_AUTO_PROMOS
-    return mapRemoteAutoPromos(data)
+    if (error) return DEFAULT_AUTO_PROMOS
+    return mapRemoteAutoPromos(data ?? [])
   } catch {
     return DEFAULT_AUTO_PROMOS
   }
