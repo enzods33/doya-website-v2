@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { adminStats } from '../../commerce/admin.js'
 import { useI18n } from '../../i18n/I18nProvider.jsx'
 import AdminStatCard from './AdminStatCard.jsx'
@@ -28,6 +28,21 @@ function AdminSales() {
   const [trackingDrafts, setTrackingDrafts] = useState({})
   const [shipBusyId, setShipBusyId] = useState(null)
   const [shipMessage, setShipMessage] = useState('')
+  const [stockDrafts, setStockDrafts] = useState({})
+  const [stockBusy, setStockBusy] = useState(false)
+  const [stockMessage, setStockMessage] = useState('')
+  const stockTimersRef = useRef({})
+  const inventoryRef = useRef([])
+
+  function syncStockDrafts(inventory) {
+    const drafts = {}
+    for (const product of inventory ?? []) {
+      for (const variant of product.variants ?? []) {
+        drafts[variant.variantId] = String(variant.stock)
+      }
+    }
+    setStockDrafts(drafts)
+  }
 
   async function loadSales() {
     setBusy(true)
@@ -35,6 +50,7 @@ function AdminSales() {
     try {
       const next = await adminStats('sales')
       setData(next)
+      syncStockDrafts(next.inventory)
     } catch {
       setError(t('admin.error'))
     } finally {
@@ -52,12 +68,78 @@ function AdminSales() {
   )
 
   const orders = data?.orders ?? []
+  const inventory = data?.inventory ?? []
   const filteredOrders = useMemo(() => {
     if (filter === 'shipped') return orders.filter((row) => row.fulfillmentStatus === 'shipped')
     if (filter === 'to_ship') return orders.filter((row) => row.fulfillmentStatus !== 'shipped')
     return orders
   }, [filter, orders])
+  useEffect(() => {
+    inventoryRef.current = inventory
+  }, [inventory])
 
+  function findVariant(variantId) {
+    for (const product of inventoryRef.current ?? []) {
+      for (const variant of product.variants ?? []) {
+        if (variant.variantId === variantId) return variant
+      }
+    }
+    return null
+  }
+
+  function scheduleStockSave(variantId, rawValue, delayMs = 900) {
+    if (stockTimersRef.current[variantId]) clearTimeout(stockTimersRef.current[variantId])
+
+    const valueSnapshot = rawValue
+    stockTimersRef.current[variantId] = window.setTimeout(async () => {
+      stockTimersRef.current[variantId] = null
+
+      const meta = findVariant(variantId)
+      if (!meta) return
+
+      const trimmed = String(valueSnapshot ?? '').trim()
+      if (!trimmed) return
+
+      const nextStock = Number(trimmed)
+      if (!Number.isInteger(nextStock) || nextStock < 0) {
+        setStockMessage(t('admin.salesStockInvalid'))
+        setStockDrafts((current) => ({ ...current, [variantId]: String(meta.stock) }))
+        return
+      }
+      if (nextStock === meta.stock) return
+      if (nextStock < meta.reserved) {
+        setStockMessage(t('admin.salesStockBelowReserved', { reserved: meta.reserved }))
+        setStockDrafts((current) => ({ ...current, [variantId]: String(meta.stock) }))
+        return
+      }
+
+      setStockMessage('')
+      setError('')
+      setStockBusy(true)
+      try {
+        const result = await adminStats('update_stocks', {
+          updates: [{ variantId, stock: nextStock }],
+        })
+        if (result.inventory) {
+          setData((current) => (current ? { ...current, inventory: result.inventory } : current))
+          syncStockDrafts(result.inventory)
+        } else {
+          await loadSales()
+        }
+        setStockMessage(t('admin.salesStockSaved'))
+      } catch (caught) {
+        const code = caught?.message
+        if (code === 'invalid_stock' || code === 'invalid_stock_updates') setStockMessage(t('admin.salesStockInvalid'))
+        else if (code === 'stock_below_reserved') setStockMessage(t('admin.salesStockBelowReserved', { reserved: '—' }))
+        else setError(t('admin.error'))
+
+        const latest = findVariant(variantId)
+        if (latest) setStockDrafts((current) => ({ ...current, [variantId]: String(latest.stock) }))
+      } finally {
+        setStockBusy(false)
+      }
+    }, delayMs)
+  }
   async function markShipped(order) {
     const trackingNumber = String(trackingDrafts[order.id] ?? '').trim()
     if (!trackingNumber) {
@@ -124,6 +206,7 @@ function AdminSales() {
 
       {error ? <p className="admin-error">{error}</p> : null}
       {shipMessage ? <p className="admin-ok" role="status">{shipMessage}</p> : null}
+      {stockMessage ? <p className="admin-ok" role="status">{stockMessage}</p> : null}
 
       <div className="admin-stat-grid" aria-busy={busy || undefined}>
         <AdminStatCard label={t('admin.salesOrders')} value={data?.paidOrders ?? '—'} loading={busy && !data} />
@@ -135,6 +218,77 @@ function AdminSales() {
           loading={busy && !data}
         />
       </div>
+
+      <div className="admin-sales-toolbar">
+        <div>
+          <h3 className="admin-subtitle admin-subtitle-compact">{t('admin.salesStockTitle')}</h3>
+          <p className="admin-hint">{t('admin.salesStockLead')}</p>
+        </div>
+      </div>
+
+      {busy && !data ? (
+        <div className="admin-list-skeleton" aria-hidden="true">
+          <div className="admin-skeleton-line" />
+          <div className="admin-skeleton-line" />
+        </div>
+      ) : inventory.length === 0 ? (
+        <p className="admin-empty">{t('admin.salesStockEmpty')}</p>
+      ) : (
+        <ul className="admin-stock-list">
+          {inventory.map((product) => (
+            <li key={product.productId} className="admin-stock-card">
+              <div className="admin-stock-head">
+                <p className="admin-list-title">{product.name}</p>
+                <p className="admin-list-meta">
+                  {[product.type, product.color].filter(Boolean).join(' · ')}
+                  {product.onSale ? ` · ${t('admin.salesStockOnSale')}` : ''}
+                </p>
+              </div>
+              <div className="admin-stock-grid">
+                {product.variants.map((variant) => (
+                  <label key={variant.variantId} className="admin-stock-field">
+                    <span className="admin-stock-size">
+                      {variant.size === 'U' ? t('admin.salesStockUnique') : variant.size}
+                    </span>
+                    <input
+                      className="admin-control"
+                      type="number"
+                      inputMode="numeric"
+                      min={0}
+                      step={1}
+                      value={stockDrafts[variant.variantId] ?? ''}
+                      disabled={stockBusy}
+                      aria-label={t('admin.salesStockQtyLabel', {
+                        product: product.name,
+                        size: variant.size === 'U' ? t('admin.salesStockUnique') : variant.size,
+                      })}
+                      onChange={(event) => {
+                        const nextValue = event.target.value
+                        setStockDrafts((current) => ({ ...current, [variant.variantId]: nextValue }))
+                        scheduleStockSave(variant.variantId, nextValue, 900)
+                      }}
+                      onBlur={(event) => {
+                        scheduleStockSave(variant.variantId, event.target.value, 0)
+                      }}
+                    />
+                    {variant.reserved > 0 ? (
+                      <span className="admin-stock-meta">
+                        {t('admin.salesStockReserved', { count: variant.reserved })}
+                      </span>
+                    ) : (
+                      <span className="admin-stock-meta">
+                        {t('admin.salesStockAvailable', {
+                          count: Math.max(0, Number(stockDrafts[variant.variantId]) || 0),
+                        })}
+                      </span>
+                    )}
+                  </label>
+                ))}
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
 
       <div className="admin-sales-toolbar">
         <h3 className="admin-subtitle admin-subtitle-compact">{t('admin.salesHistory')}</h3>

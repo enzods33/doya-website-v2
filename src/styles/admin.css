@@ -613,6 +613,50 @@
   margin-top: 8px;
 }
 .admin-sales-toolbar .admin-subtitle { margin: 0; }
+.admin-sales-toolbar .admin-hint { margin: 6px 0 0; max-width: 52ch; }
+.admin-stock-list {
+  list-style: none;
+  margin: 0 0 18px;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+.admin-stock-card {
+  padding: 14px 16px;
+  border: 1px solid rgb(44 41 38 / 12%);
+  background: rgb(255 255 255 / 42%);
+}
+.admin-stock-head { margin-bottom: 12px; }
+.admin-stock-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+  gap: 10px 12px;
+}
+.admin-stock-field {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  font-size: 11px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.admin-stock-size {
+  font-weight: 600;
+  color: var(--ink);
+}
+.admin-stock-field .admin-control {
+  width: 100%;
+  min-height: 40px;
+  padding: 0 10px;
+  font-variant-numeric: tabular-nums;
+}
+.admin-stock-meta {
+  font-size: 10px;
+  letter-spacing: .04em;
+  text-transform: none;
+  color: var(--muted);
+}
 .admin-sales-filters {
   display: flex;
   flex-wrap: wrap;

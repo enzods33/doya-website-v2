@@ -162,6 +162,7 @@ async function buildSales(db: ReturnType<typeof serviceClient>) {
   const revenueCents = paidOrders.reduce((sum, row) => sum + (row.total_cents ?? 0), 0)
   const unitsSold = productSales.reduce((sum, row) => sum + row.quantity, 0)
   const toShipCount = paidOrders.filter((row) => (row.fulfillment_status ?? 'to_ship') !== 'shipped').length
+  const inventory = await buildInventory(db)
 
   const orderRows = paidOrders.map((row) => {
     const orderItems = itemsByOrder.get(row.id) ?? []
@@ -202,6 +203,7 @@ async function buildSales(db: ReturnType<typeof serviceClient>) {
     revenueCents,
     unitsSold,
     products: productSales,
+    inventory,
     orders: orderRows,
     recentOrders: orderRows.slice(0, 25).map((row) => ({
       id: row.id,
@@ -212,6 +214,71 @@ async function buildSales(db: ReturnType<typeof serviceClient>) {
       fulfillmentStatus: row.fulfillmentStatus,
     })),
   }
+}
+
+async function buildInventory(db: ReturnType<typeof serviceClient>) {
+  const [{ data: products, error: productsError }, { data: variants, error: variantsError }] = await Promise.all([
+    db.from('products').select('id, name, type, color, on_sale').neq('type', 'Test').order('type').order('name'),
+    db.from('product_variants').select('id, product_id, size, stock, reserved').order('size'),
+  ])
+
+  if (productsError || variantsError) {
+    console.error('admin_stats_inventory_failed', productsError ?? variantsError)
+    throw new Error('stats_inventory_failed')
+  }
+
+  const sizeRank = (size: string) => {
+    const order = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'U']
+    const index = order.indexOf(size)
+    return index === -1 ? 99 : index
+  }
+
+  const byProduct = new Map<string, {
+    productId: string
+    name: string
+    type: string | null
+    color: string | null
+    onSale: boolean
+    variants: {
+      variantId: string
+      size: string
+      stock: number
+      reserved: number
+      available: number
+    }[]
+  }>()
+
+  for (const product of products ?? []) {
+    byProduct.set(product.id, {
+      productId: product.id,
+      name: product.name,
+      type: product.type ?? null,
+      color: product.color ?? null,
+      onSale: Boolean(product.on_sale),
+      variants: [],
+    })
+  }
+
+  for (const variant of variants ?? []) {
+    const row = byProduct.get(variant.product_id)
+    if (!row) continue
+    const stock = Math.max(0, Number(variant.stock) || 0)
+    const reserved = Math.max(0, Number(variant.reserved) || 0)
+    row.variants.push({
+      variantId: variant.id,
+      size: variant.size,
+      stock,
+      reserved,
+      available: Math.max(0, stock - reserved),
+    })
+  }
+
+  return [...byProduct.values()]
+    .map((row) => ({
+      ...row,
+      variants: row.variants.sort((a, b) => sizeRank(a.size) - sizeRank(b.size)),
+    }))
+    .filter((row) => row.variants.length > 0)
 }
 
 Deno.serve(async (req) => {
@@ -230,6 +297,7 @@ Deno.serve(async (req) => {
     days?: number
     orderId?: string
     trackingNumber?: string
+    updates?: { variantId?: string; stock?: number }[]
   } = {}
   try {
     body = await req.json()
@@ -240,6 +308,66 @@ Deno.serve(async (req) => {
   const action = typeof body.action === 'string' ? body.action : 'overview'
   const rangeDays = parseDays(body.days)
   const db = serviceClient()
+
+  if (action === 'update_stocks') {
+    const rawUpdates = Array.isArray(body.updates) ? body.updates : []
+    if (!rawUpdates.length || rawUpdates.length > 80) {
+      return json(400, { error: 'invalid_stock_updates' }, origin)
+    }
+
+    const updates: { variantId: string; stock: number }[] = []
+    for (const row of rawUpdates) {
+      const variantId = typeof row.variantId === 'string' ? row.variantId.trim() : ''
+      const stock = Number(row.stock)
+      if (!/^[0-9a-f-]{36}$/i.test(variantId)) {
+        return json(400, { error: 'invalid_variant' }, origin)
+      }
+      if (!Number.isInteger(stock) || stock < 0 || stock > 100000) {
+        return json(400, { error: 'invalid_stock' }, origin)
+      }
+      updates.push({ variantId, stock })
+    }
+
+    const ids = updates.map((row) => row.variantId)
+    const { data: current, error: currentError } = await db
+      .from('product_variants')
+      .select('id, reserved, product_id')
+      .in('id', ids)
+
+    if (currentError) {
+      console.error('admin_update_stocks_lookup_failed', currentError)
+      return json(500, { error: 'stock_update_failed' }, origin)
+    }
+    if ((current ?? []).length !== ids.length) {
+      return json(404, { error: 'variant_not_found' }, origin)
+    }
+
+    const reservedById = new Map((current ?? []).map((row) => [row.id, Math.max(0, Number(row.reserved) || 0)]))
+    for (const row of updates) {
+      const reserved = reservedById.get(row.variantId) ?? 0
+      if (row.stock < reserved) {
+        return json(400, { error: 'stock_below_reserved', variantId: row.variantId, reserved }, origin)
+      }
+    }
+
+    for (const row of updates) {
+      const { error: updateError } = await db
+        .from('product_variants')
+        .update({ stock: row.stock })
+        .eq('id', row.variantId)
+      if (updateError) {
+        console.error('admin_update_stocks_failed', updateError)
+        return json(500, { error: 'stock_update_failed' }, origin)
+      }
+    }
+
+    try {
+      const inventory = await buildInventory(db)
+      return json(200, { ok: true, inventory }, origin)
+    } catch {
+      return json(200, { ok: true }, origin)
+    }
+  }
 
   if (action === 'mark_shipped') {
     const orderId = typeof body.orderId === 'string' ? body.orderId.trim() : ''
