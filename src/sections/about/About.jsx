@@ -150,59 +150,68 @@ function About() {
             <span className="visually-hidden">{t('photo.of')} </span>
             <span>{String(total).padStart(2, '0')}</span>
           </p>
-          <div className="about-gallery-nav" role="group" aria-label={t('about.eyebrow')}>
-            <button type="button" onClick={() => scrollToIndex(index - 1)} aria-label={t('photo.prev')} aria-controls="about-gallery-main">
-              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                <path d="M15.5 4.5 8 12l7.5 7.5" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="square" />
-              </svg>
-            </button>
-            <button type="button" onClick={() => scrollToIndex(index + 1)} aria-label={t('photo.next')} aria-controls="about-gallery-main">
-              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                <path d="M8.5 4.5 16 12l-7.5 7.5" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="square" />
-              </svg>
-            </button>
-          </div>
         </div>
 
-        <div
-          id="about-gallery-main"
-          className="about-gallery-viewport"
-          ref={viewportRef}
-          role="region"
-          aria-roledescription="carousel"
-          aria-label={t('about.eyebrow')}
-          onPointerDown={onPointerDown}
-          onPointerMove={onPointerMove}
-        >
-          <div className="about-gallery-track">
-            {images.map((image, slideIndex) => {
-              const active = slideIndex === index
-              const portrait = image.height >= image.width
-              return (
-                <div
-                  className={`about-gallery-slide${active ? ' is-active' : ''}${portrait ? ' is-portrait' : ' is-landscape'}`}
-                  key={`${image.src}-${slideIndex}`}
-                  ref={(node) => { slideRefs.current[slideIndex] = node }}
-                >
-                  <button
-                    type="button"
-                    className="about-gallery-card"
-                    onClick={() => onSlideActivate(slideIndex)}
-                    aria-label={active ? t('photo.zoom') : t('photo.goTo', { n: slideIndex + 1 })}
+        <div className="about-gallery-stage">
+          <button
+            type="button"
+            className="about-gallery-nav is-prev"
+            onClick={() => scrollToIndex(index - 1)}
+            aria-label={t('photo.prev')}
+            aria-controls="about-gallery-main"
+          >
+            <span aria-hidden="true">←</span>
+          </button>
+          <button
+            type="button"
+            className="about-gallery-nav is-next"
+            onClick={() => scrollToIndex(index + 1)}
+            aria-label={t('photo.next')}
+            aria-controls="about-gallery-main"
+          >
+            <span aria-hidden="true">→</span>
+          </button>
+
+          <div
+            id="about-gallery-main"
+            className="about-gallery-viewport"
+            ref={viewportRef}
+            role="region"
+            aria-roledescription="carousel"
+            aria-label={t('about.eyebrow')}
+            onPointerDown={onPointerDown}
+            onPointerMove={onPointerMove}
+          >
+            <div className="about-gallery-track">
+              {images.map((image, slideIndex) => {
+                const active = slideIndex === index
+                const portrait = image.height >= image.width
+                return (
+                  <div
+                    className={`about-gallery-slide${active ? ' is-active' : ''}${portrait ? ' is-portrait' : ' is-landscape'}`}
+                    key={`${image.src}-${slideIndex}`}
+                    ref={(node) => { slideRefs.current[slideIndex] = node }}
                   >
-                    <img
-                      src={image.src}
-                      width={image.width}
-                      height={image.height}
-                      alt={active ? image.alt : ''}
-                      loading={slideIndex < 2 ? 'eager' : 'lazy'}
-                      decoding="async"
-                      draggable={false}
-                    />
-                  </button>
-                </div>
-              )
-            })}
+                    <button
+                      type="button"
+                      className="about-gallery-card"
+                      onClick={() => onSlideActivate(slideIndex)}
+                      aria-label={active ? t('photo.zoom') : t('photo.goTo', { n: slideIndex + 1 })}
+                    >
+                      <img
+                        src={image.src}
+                        width={image.width}
+                        height={image.height}
+                        alt={active ? image.alt : ''}
+                        loading={slideIndex < 2 ? 'eager' : 'lazy'}
+                        decoding="async"
+                        draggable={false}
+                      />
+                    </button>
+                  </div>
+                )
+              })}
+            </div>
           </div>
         </div>
 

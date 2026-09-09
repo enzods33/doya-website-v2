@@ -466,7 +466,7 @@
 .about-gallery-toolbar {
   display: flex;
   align-items: baseline;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 16px;
   margin-bottom: clamp(20px, 2.6vw, 32px);
 }
@@ -475,35 +475,54 @@
   letter-spacing: .16em;
   font-variant-numeric: tabular-nums;
 }
-.about-gallery-nav {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+.about-gallery-stage {
+  position: relative;
 }
-.about-gallery-nav button {
+.about-gallery-nav {
+  position: absolute;
+  z-index: 3;
+  top: 0;
   display: inline-grid;
   place-items: center;
-  background: rgb(255 255 255 / 72%);
-  border: 1px solid rgb(44 41 38 / 28%);
   width: 48px;
   height: 48px;
   min-width: 48px;
   padding: 0;
-  color: #2c2926;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font-editorial);
+  font-size: clamp(28px, 3.2vw, 40px);
+  line-height: 1;
   cursor: pointer;
-  transition: color var(--motion-duration), border-color var(--motion-duration), background var(--motion-duration);
+  transition: color var(--motion-duration), transform 400ms var(--motion-ease), opacity var(--motion-duration);
+  opacity: .78;
+  text-shadow: 0 1px 0 rgb(244 240 234 / 55%), 0 0 14px rgb(244 240 234 / 40%);
 }
-.about-gallery-nav button svg {
-  width: 22px;
-  height: 22px;
-  display: block;
+.about-gallery-nav.is-prev {
+  left: calc(50% - (var(--about-slide) / 2));
+  transform: translate(0, calc(-100% - 6px));
 }
-.about-gallery-nav button:hover,
-.about-gallery-nav button:focus-visible {
+.about-gallery-nav.is-next {
+  left: calc(50% + (var(--about-slide) / 2));
+  transform: translate(-100%, calc(-100% - 6px));
+}
+.about-gallery-nav:hover,
+.about-gallery-nav:focus-visible {
   color: var(--color-doya-red);
-  border-color: var(--color-doya-red);
-  background: #fff;
-  outline: none;
+  opacity: 1;
+}
+.about-gallery-nav.is-prev:hover,
+.about-gallery-nav.is-prev:focus-visible {
+  transform: translate(-4px, calc(-100% - 6px));
+}
+.about-gallery-nav.is-next:hover,
+.about-gallery-nav.is-next:focus-visible {
+  transform: translate(calc(-100% + 4px), calc(-100% - 6px));
+}
+.about-gallery-nav:focus-visible {
+  outline: 2px solid var(--color-doya-red);
+  outline-offset: 4px;
 }
 .about-gallery-viewport {
   overflow-x: auto;
@@ -1594,7 +1613,16 @@ a.concert-tickets:focus-visible {
 }
 @media (prefers-reduced-motion: reduce) {
   .about-gallery-slide,
-  .about-gallery-progress span { transition: none; }
+  .about-gallery-progress span,
+  .about-gallery-nav { transition: none; }
+  .about-gallery-nav.is-prev:hover,
+  .about-gallery-nav.is-prev:focus-visible {
+    transform: translate(0, calc(-100% - 6px));
+  }
+  .about-gallery-nav.is-next:hover,
+  .about-gallery-nav.is-next:focus-visible {
+    transform: translate(-100%, calc(-100% - 6px));
+  }
 }
 .copyright { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
 .back-to-top {
@@ -1841,15 +1869,13 @@ a.concert-tickets:focus-visible {
     padding-bottom: clamp(40px, 8vw, 64px);
   }
   .about-gallery-toolbar { margin-bottom: 14px; }
-  .about-gallery-nav { gap: 6px; }
-  .about-gallery-nav button {
+  .about-gallery-nav {
     width: 44px;
     height: 44px;
     min-width: 44px;
-  }
-  .about-gallery-nav button svg {
-    width: 20px;
-    height: 20px;
+    font-size: 26px;
+    /* Légère ombre pour rester lisible sur photo claire */
+    text-shadow: 0 1px 0 rgb(244 240 234 / 70%), 0 0 12px rgb(244 240 234 / 55%);
   }
   .about-gallery-slide {
     opacity: .32;
