@@ -37,7 +37,7 @@ Déjà utilisés :
 À renseigner :
 ```bash
 npx supabase secrets set --project-ref ipphjddgeotsohplzkbo \
-  BREVO_SENDER_EMAIL=dasildoya@gmail.com \
+  BREVO_SENDER_EMAIL=almenaprod@gmail.com \
   BREVO_SENDER_NAME=DOYA \
   R2_S3_ENDPOINT=https://<ACCOUNT_ID>.r2.cloudflarestorage.com \
   R2_BUCKET=doya-assets \
@@ -46,8 +46,8 @@ npx supabase secrets set --project-ref ipphjddgeotsohplzkbo \
   R2_PUBLIC_BASE=https://pub-5b2b2b3b50ba46c485eeff926fa26420.r2.dev
 ```
 
-L’expéditeur Brevo doit être **vérifié** dans Brevo (Senders). Actuellement : `dasildoya@gmail.com`.
-`doyamusicofficial@gmail.com` n’est pas encore un sender actif → **à faire avant le live** (voir checklist `reference/commerce.md` §8).
+L’expéditeur Brevo doit être **vérifié** dans Brevo (Senders).
+Sender actif : `almenaprod@gmail.com` (`BREVO_SENDER_EMAIL`).
 
 ## Modules
 

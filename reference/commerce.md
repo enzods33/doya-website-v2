@@ -23,7 +23,7 @@ Les frais de port sont des **forfaits par zone** dans le code (`supabase/functio
 | Europe (UE + Suisse) | 8,00 € | BE, CH, LU, DE, NL, ES, IT, PT, AT, IE |
 | DOM-TOM | 12,90 € | RE, GP, MQ, GF, YT, … |
 
-Forfait valable pour **≤ 6 tee-shirts** et **≤ 5 CD**. Au-delà : pas de paiement Stripe, port **sur devis** (`shipping_quote_required`) — mails `almenaprod@gmail.com` et `doyamusicofficial@gmail.com`.
+Forfait valable pour **≤ 6 tee-shirts** et **≤ 5 CD**. Au-delà : pas de paiement Stripe, port **sur devis** (`shipping_quote_required`) — mails `almenaprod@gmail.com` et `stephanedasil@gmail.com`.
 
 `SUPABASE_URL`, `SUPABASE_ANON_KEY` et `SUPABASE_SERVICE_ROLE_KEY` sont fournis par la plateforme.
 
@@ -141,10 +141,9 @@ Quand le site est en ligne sur le nom de domaine définitif (nouvelle IP / DNS),
    - En live, la carte test `4242…` **ne marche plus** (normal).  
    - Régénérer les clés live si elles ont fuité dans un chat.
 
-8. **Brevo — expéditeur newsletter**  
-   - Ajouter et **vérifier** `doyamusicofficial@gmail.com` dans Brevo → Senders.  
-   - Puis secret Supabase `BREVO_SENDER_EMAIL=doyamusicofficial@gmail.com` (et `BREVO_SENDER_NAME=DOYA` si besoin).  
-   - Aujourd’hui l’envoi passe par `dasildoya@gmail.com` (seul sender actif).
+8. **Brevo — expéditeur**  
+   - Sender vérifié : `almenaprod@gmail.com`.  
+   - Secret Supabase `BREVO_SENDER_EMAIL=almenaprod@gmail.com` (et `BREVO_SENDER_NAME=DOYA`).
 
 9. **Données boutique & stats — reset « jour J » (obligatoire avant ouverture réelle)**  
    Remettre un état propre **prod**, sans les tests staging :
