@@ -58,6 +58,9 @@
   margin-left: clamp(0.15rem, 0.5vw, 0.4rem);
   margin-right: clamp(0.25rem, 0.8vw, 0.6rem);
 }
+.site-header.is-menu-open .header-stars {
+  opacity: .55;
+}
 .desktop-navigation {
   justify-self: center;
   display: flex;
@@ -115,6 +118,7 @@
 .header-nav-language {
   margin-left: clamp(1.1rem, 2vw, 1.85rem);
   padding-left: clamp(0.35rem, 0.8vw, 0.75rem);
+  align-self: center;
 }
 .nav-hover-stars { display: none; }
 .menu-trigger {
@@ -180,25 +184,53 @@
   text-shadow: none;
   display: inline-flex;
   align-items: center;
-  height: 2.5rem;
+  height: auto;
+  align-self: center;
 }
 .header-language-switcher .language-trigger {
   color: var(--ink);
   font-family: var(--font-editorial);
-  font-size: clamp(14px, 1.05vw, 16px);
+  font-size: clamp(15px, 1.1vw, 17px);
   font-weight: 400;
   line-height: 1;
   letter-spacing: .02em;
   text-transform: lowercase;
   text-shadow: none;
-  min-width: 2.25rem;
+  min-width: 0;
   min-height: 2.5rem;
-  padding: 0.25rem 0.2rem;
+  height: 2.5rem;
+  padding: 0.25rem 0.55rem;
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+.header-language-switcher .language-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  line-height: 0;
+  height: auto;
+}
+.header-language-switcher .language-flag {
+  width: 1rem;
+  height: 0.68rem;
+  position: static;
+  top: auto;
+  flex: 0 0 auto;
+}
+.header-language-switcher .language-code {
+  display: block;
+  line-height: 1;
+  letter-spacing: .02em;
+  font-size: inherit;
+  font-weight: inherit;
+  /* Serif minuscule : remonte un peu pour caler sur le drapeau */
+  transform: translateY(-0.1em);
 }
 .header-language-switcher .language-trigger::after {
-  left: 0.2rem;
-  right: 0.2rem;
+  left: 0.55rem;
+  right: 0.55rem;
   bottom: 0.35rem;
 }
 .menu-icon {
@@ -328,9 +360,9 @@
   text-align: center;
 }
 .newsletter-menu-stars {
-  width: 26px;
+  width: 42px;
   height: auto;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
 }
 .newsletter-menu-lead {
   margin: 0;
@@ -402,6 +434,25 @@
   margin-top: 0;
   align-self: center;
   flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+}
+.mobile-language-switcher .language-trigger {
+  min-height: 2.5rem;
+  height: 2.5rem;
+  padding: 0.25rem 0.15rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.mobile-language-switcher .language-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  line-height: 0;
+}
+.mobile-language-switcher .language-code {
+  transform: translateY(-0.07em);
 }
 .mobile-menu-meta {
   margin: 0;

@@ -3,7 +3,7 @@ import { contacts, pressKit } from '../data/contacts.js'
 import { siteContent } from '../data/siteContent.js'
 import { isExternalUrl } from '../utils/links.js'
 import { useI18n } from '../i18n/I18nProvider.jsx'
-import { Stars, Wordmark } from './Brand.jsx'
+import { Lockup } from './Brand.jsx'
 import LanguageSwitcher from './LanguageSwitcher.jsx'
 import Link from './Link.jsx'
 import NewsletterSignup from './NewsletterSignup.jsx'
@@ -55,8 +55,9 @@ function Footer() {
     <footer id="contact" className="site-footer">
       <div className="section-shell">
         <div className="footer-brand">
-          <Link href="#top" aria-label={t('a11y.footerHome')}><Wordmark className="footer-wordmark" /></Link>
-          <Stars className="footer-stars" />
+          <Link href="#top" aria-label={t('a11y.footerHome')}>
+            <Lockup className="footer-wordmark" />
+          </Link>
           <p className="footer-album">{siteContent.albumTitle} <span aria-hidden="true">·</span> {siteContent.year}</p>
         </div>
 
@@ -110,7 +111,7 @@ function Footer() {
 
         <div className="footer-meta">
           <div className="footer-meta-primary">
-            <PublisherCredit className="footer-publisher" />
+            <PublisherCredit className="footer-publisher"> {siteContent.year}</PublisherCredit>
             <nav className="footer-legal" aria-label={t('a11y.footerLegal')}>
               <Link href="/mentions-legales">{t('footer.legalMentions')}</Link>
               <Link href="/cgv">{t('footer.legalCgv')}</Link>

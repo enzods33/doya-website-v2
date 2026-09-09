@@ -1,11 +1,29 @@
 import wordmarkBlack from '../assets/logos/doya-wordmark-black.svg'
 import wordmarkWhite from '../assets/logos/doya-wordmark-white.svg'
+import wordmarkRed from '../assets/logos/doya-wordmark-red.svg'
+import lockupRed from '../assets/logos/doya-lockup-red.svg'
 import starsRed from '../assets/icons/doya-stars-red.svg'
 import starsWhite from '../assets/icons/doya-stars-white.svg'
 import starsBlack from '../assets/icons/doya-stars-black.svg'
 
-export function Wordmark({ light = false, className = '', decorative = false }) {
-  return <img src={light ? wordmarkWhite : wordmarkBlack} width="505" height="145" alt={decorative ? '' : 'DOYA'} className={className} />
+/** @param {{ light?: boolean, color?: 'black' | 'white' | 'red', className?: string, decorative?: boolean }} props */
+export function Wordmark({ light = false, color, className = '', decorative = false }) {
+  const sources = { black: wordmarkBlack, white: wordmarkWhite, red: wordmarkRed }
+  const tone = color ?? (light ? 'white' : 'black')
+  return <img src={sources[tone]} width="505" height="145" alt={decorative ? '' : 'DOYA'} className={className} />
+}
+
+/** Wordmark rouge avec étoiles dans le O (SVG, fond transparent). */
+export function Lockup({ className = '', decorative = false }) {
+  return (
+    <img
+      src={lockupRed}
+      width="505"
+      height="145"
+      alt={decorative ? '' : 'DOYA'}
+      className={className}
+    />
+  )
 }
 
 export function Stars({ color = 'red', className = '' }) {

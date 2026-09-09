@@ -11,10 +11,11 @@ import PublisherCredit from './PublisherCredit.jsx'
 import StudioCredit from './StudioCredit.jsx'
 import Link from './Link.jsx'
 import { editorialEase } from '../utils/motion.js'
-import { useRoute } from '../utils/router.js'
+import { syncHeaderHeightVar, useRoute } from '../utils/router.js'
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const headerRef = useRef(null)
   const dialogRef = useRef(null)
   const triggerRef = useRef(null)
   const bodyOverflowRef = useRef(null)
@@ -36,6 +37,19 @@ function Header() {
   }, [count])
 
   useEffect(() => {
+    const header = headerRef.current
+    if (!header || typeof ResizeObserver === 'undefined') {
+      syncHeaderHeightVar(header)
+      return undefined
+    }
+    const sync = () => syncHeaderHeightVar(header)
+    const observer = new ResizeObserver(sync)
+    observer.observe(header)
+    sync()
+    return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
     const dialog = dialogRef.current
     if (!dialog) return undefined
 
@@ -48,6 +62,11 @@ function Header() {
       return undefined
     }
 
+    // Déverrouille le scroll tout de suite (ancres menu), ferme le dialog à la fin d’anim.
+    if (bodyOverflowRef.current !== null) {
+      document.body.style.overflow = bodyOverflowRef.current
+      bodyOverflowRef.current = null
+    }
     return undefined
   }, [menuOpen])
 
@@ -62,14 +81,16 @@ function Header() {
   function finishClosingMenu() {
     if (menuOpen || !dialogRef.current?.open) return
     dialogRef.current.close()
-    document.body.style.overflow = bodyOverflowRef.current ?? ''
-    bodyOverflowRef.current = null
+    if (bodyOverflowRef.current !== null) {
+      document.body.style.overflow = bodyOverflowRef.current
+      bodyOverflowRef.current = null
+    }
     triggerRef.current?.focus({ preventScroll: true })
   }
 
   useEffect(() => {
     const desktop = window.matchMedia('(min-width: 768px)')
-    const closeOnDesktop = (event) => { if (event.matches) setMenuOpen(false) }
+    const closeOnDesktop = (event) => { if (event.matches) closeMenu() }
     desktop.addEventListener('change', closeOnDesktop)
     return () => desktop.removeEventListener('change', closeOnDesktop)
   }, [])
@@ -79,7 +100,7 @@ function Header() {
     function onKeyDown(event) {
       if (event.key === 'Escape') {
         event.preventDefault()
-        setMenuOpen(false)
+        closeMenu()
       }
     }
     document.addEventListener('keydown', onKeyDown)
@@ -105,16 +126,31 @@ function Header() {
     }
   }
 
+  function closeMenu() {
+    if (bodyOverflowRef.current !== null) {
+      document.body.style.overflow = bodyOverflowRef.current
+      bodyOverflowRef.current = null
+    }
+    setMenuOpen(false)
+  }
+
   function sectionHref(href) {
     return path === '/' ? href : `/${href}`
   }
 
   function toggleMenu() {
-    setMenuOpen((open) => !open)
+    setMenuOpen((open) => {
+      if (open && bodyOverflowRef.current !== null) {
+        document.body.style.overflow = bodyOverflowRef.current
+        bodyOverflowRef.current = null
+      }
+      return !open
+    })
   }
 
   return (
     <m.header
+      ref={headerRef}
       className={`site-header${path === '/' ? '' : ' is-page'}${menuOpen ? ' is-menu-open' : ''}`}
       initial={reducedMotion ? false : { opacity: 0, y: -8 }}
       animate={{ opacity: 1, y: 0 }}
@@ -125,7 +161,7 @@ function Header() {
           href={path === '/' ? '#top' : '/'}
           className="header-home"
           aria-label={t('a11y.home')}
-          onClick={() => setMenuOpen(false)}
+          onClick={closeMenu}
         >
           <HomeIcon className="header-home-icon" />
         </Link>
@@ -133,11 +169,11 @@ function Header() {
           href={path === '/' ? '#about' : '/#about'}
           className="header-brand"
           aria-label={t('a11y.brandBio')}
-          onClick={() => setMenuOpen(false)}
+          onClick={closeMenu}
         >
           <Wordmark className="header-brand-wordmark" />
         </Link>
-        <Stars color="red" className="header-stars" />
+        <Stars color={menuOpen ? 'black' : 'red'} className="header-stars" />
       </div>
       <nav className="desktop-navigation" aria-label={t('a11y.navMain')}>
         {navigation.map((item) => (
@@ -153,7 +189,7 @@ function Header() {
             href="/panier"
             className={`header-cart${cartPulse ? ' is-pulse' : ''}`}
             aria-label={count ? t('nav.cartWithCount', { count }) : t('nav.cart')}
-            onClick={() => setMenuOpen(false)}
+            onClick={closeMenu}
           >
             <CartIcon className="header-cart-icon" />
             {count > 0 && <span className="header-cart-badge">{count > 99 ? '99+' : count}</span>}
@@ -177,7 +213,7 @@ function Header() {
           className="mobile-menu-backdrop"
           aria-label={t('a11y.menuClose')}
           tabIndex={-1}
-          onClick={() => setMenuOpen(false)}
+          onClick={closeMenu}
         />
       ) : null}
       <m.dialog
@@ -186,7 +222,7 @@ function Header() {
         className="mobile-menu"
         aria-label={t('a11y.menuDialog')}
         onKeyDown={keepFocusInMenu}
-        onCancel={(event) => { event.preventDefault(); setMenuOpen(false) }}
+        onCancel={(event) => { event.preventDefault(); closeMenu() }}
         onClose={() => setMenuOpen(false)}
         initial={false}
         animate={{ opacity: menuOpen ? 1 : 0 }}
@@ -207,7 +243,7 @@ function Header() {
             >
               <Link
                 href={item.href.startsWith('#') ? sectionHref(item.href) : item.href}
-                onClick={() => setMenuOpen(false)}
+                onClick={closeMenu}
               >
                 {t(item.labelKey)}
               </Link>

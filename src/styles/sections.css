@@ -11,7 +11,7 @@
 .section-kicker { margin-bottom: 20px; }
 .small-separator { margin-inline: 12px; color: var(--color-doya-red); }
 
-/* Ancres : un seul offset (= hauteur header). Pas de scroll-padding html en plus. */
+/* Ancres : offset = hauteur header (sync live via ResizeObserver). JS mesure aussi. */
 #music,
 #live,
 #shop,
@@ -598,8 +598,6 @@
   letter-spacing: .14em;
   text-transform: uppercase;
 }
-.gallery-stars { width: 32px; margin: 0; }
-
 .photo-lightbox {
   position: fixed;
   inset: 0;
@@ -1247,9 +1245,8 @@ a.concert-tickets:focus-visible {
   border-top: 1px solid var(--section-rule);
   padding-block: var(--section-space) 36px;
 }
-.footer-brand { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 22px; }
-.footer-wordmark { width: clamp(220px, 28vw, 420px); }
-.footer-stars { width: 44px; }
+.footer-brand { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 18px; }
+.footer-wordmark { width: clamp(200px, 26vw, 380px); height: auto; }
 .footer-album { font-family: var(--font-editorial); font-size: clamp(18px, 1.8vw, 26px); letter-spacing: .04em; text-transform: uppercase; }
 .footer-album span { margin-inline: 10px; color: var(--color-doya-red); }
 .footer-newsletter {
@@ -1450,9 +1447,12 @@ a.concert-tickets:focus-visible {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
+  line-height: 0;
 }
 .language-flag {
   display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 0.95rem;
   height: 0.64rem;
   flex: 0 0 auto;
@@ -1460,13 +1460,21 @@ a.concert-tickets:focus-visible {
   border-radius: 0.08rem;
   box-shadow: inset 0 0 0 1px rgb(44 41 38 / 18%);
   opacity: 0.9;
+  line-height: 0;
+  align-self: center;
 }
 .language-flag svg {
   display: block;
   width: 100%;
   height: 100%;
 }
-.language-code { letter-spacing: .1em; }
+.language-code {
+  letter-spacing: .1em;
+  line-height: 1;
+  display: block;
+  /* Le glyphe bascule sous le centre géométrique du drapeau */
+  transform: translateY(-0.07em);
+}
 .language-trigger {
   position: relative;
   display: inline-flex;
@@ -1477,7 +1485,7 @@ a.concert-tickets:focus-visible {
   color: inherit;
   min-width: 3.35rem;
   min-height: 2.75rem;
-  padding: 0.55rem 0.4rem 0.7rem;
+  padding: 0.55rem 0.4rem;
   font: 600 12px/1 var(--font-functional);
   letter-spacing: .1em;
   text-transform: uppercase;
@@ -1569,8 +1577,9 @@ a.concert-tickets:focus-visible {
 }
 .mobile-language-switcher.is-open .language-menu { transform: translateY(0); }
 @media (hover: hover) and (pointer: fine) {
-  .language-trigger:hover { transform: translateY(-2px); }
+  .language-trigger:hover { color: var(--color-doya-red); }
   .language-trigger:hover::after { transform: scaleX(1); transform-origin: left; }
+  .header-language-switcher .language-trigger:hover { transform: none; }
   .language-menu .language-option:hover { color: var(--color-doya-red); transform: translateY(-1px); }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1843,7 +1852,6 @@ a.concert-tickets:focus-visible {
   .about-gallery-footer { gap: 14px; margin-top: 18px; }
   .about-gallery-progress { width: min(100%, 140px); }
   .about-gallery-caption { font-size: 10px; letter-spacing: .12em; }
-  .gallery-stars { width: 26px; }
   .photo-lightbox-nav { width: 42px; height: 42px; font-size: 22px; }
   .photo-lightbox-hint { display: none; }
   .live-section { padding-block: var(--section-space); }
@@ -1922,7 +1930,6 @@ a.concert-tickets:focus-visible {
   .footer-cta { width: 100%; min-width: 0; }
   .site-footer { padding-block: var(--section-space) 28px; }
   .footer-wordmark { width: min(68vw, 240px); }
-  .footer-stars { width: 32px; }
   .footer-album { font-size: 20px; }
   .footer-socials { margin-top: 36px; }
   .socials { gap: 8px 10px; justify-content: center; }

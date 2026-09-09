@@ -215,7 +215,6 @@ function About() {
             <span aria-hidden="true">·</span>
             <span>{siteContent.albumTitle}</span>
           </p>
-          <Stars className="gallery-stars" />
         </div>
       </div>
 

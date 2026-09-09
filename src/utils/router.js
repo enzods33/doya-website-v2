@@ -16,11 +16,32 @@ export function currentPath() {
   return stripBase(window.location.pathname)
 }
 
+/** Hauteur réelle du header sticky (+ bannière offline si visible). */
+export function stickyOffset() {
+  const header = document.querySelector('.site-header')
+  let offset = header ? Math.round(header.getBoundingClientRect().height) : 0
+  const banner = document.querySelector('.offline-banner')
+  if (banner) offset += Math.round(banner.getBoundingClientRect().height)
+  return offset
+}
+
 /**
- * Scroll vers une ancre en respectant `scroll-margin-top` (hauteur header).
+ * Aligne `--header-height` sur la hauteur mesurée du header
+ * (scroll-margin, menu, sections full-viewport).
+ */
+export function syncHeaderHeightVar(headerEl) {
+  if (!headerEl || typeof document === 'undefined') return
+  const height = Math.round(headerEl.getBoundingClientRect().height)
+  if (height > 0) {
+    document.documentElement.style.setProperty('--header-height', `${height}px`)
+  }
+}
+
+/**
+ * Scroll vers une ancre en respectant le header sticky (mesure live).
  * Réessaie si la cible n’est pas encore montée (ex. /panier → /#shop).
  */
-export function scrollToHash(hash, { retries = 12 } = {}) {
+export function scrollToHash(hash, { retries = 16 } = {}) {
   if (!hash || hash === '#') return
   if (hash === '#top') {
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
@@ -33,7 +54,8 @@ export function scrollToHash(hash, { retries = 12 } = {}) {
     }
     return
   }
-  target.scrollIntoView({ block: 'start', behavior: 'auto' })
+  const top = target.getBoundingClientRect().top + window.scrollY - stickyOffset()
+  window.scrollTo({ top: Math.max(0, top), left: 0, behavior: 'auto' })
 }
 
 export function navigate(to) {
@@ -46,6 +68,7 @@ export function navigate(to) {
     window.dispatchEvent(new PopStateEvent('popstate'))
   }
   if (url.hash) {
+    // Double rAF : laisse le menu / layout se déverrouiller avant de mesurer.
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         scrollToHash(url.hash)
