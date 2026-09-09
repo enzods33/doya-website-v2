@@ -1,0 +1,35 @@
+---
+description: Hébergement Hetzner DOYA (comme Alegria/Dojo) + noindex staging
+alwaysApply: true
+---
+
+# Déploiement DOYA — VPS Hetzner
+
+Même schéma qu’**Alegria Gipsy** et **DojoKai** (pas Netlify en prod).
+
+## Infra
+
+- VPS : `stef@46.224.50.133` (`n8n-server`), Caddy
+- SSH depuis ce PC : clé `~/.ssh/id_alegria` (aussi `id_dojo`)
+- Front statique : `/var/www/doya` (`stef:web`)
+- Staging URL : `https://doya.guzzler-bot.cloud`
+- Workflow : `.github/workflows/deploy.yml` — push `master` → build → rsync `dist/`
+- Netlify = staging manuel seulement (`netlify.yml` hors push master)
+
+## Non-indexation (obligatoire tant que l’URL est temporaire)
+
+- Deploy VPS : **`VITE_INDEXABLE=false` forcé** dans `deploy.yml` (ne pas passer à `true` avant le vrai domaine)
+- Caddy DOYA : header `X-Robots-Tag "noindex, nofollow"`
+- Build : meta robots + `robots.txt` Disallow `/` si pas indexable
+
+Au **go-live domaine final** : `VITE_INDEXABLE=true`, `VITE_SITE_URL=https://domaine`, checklist `reference/commerce.md` + go-live-domain rule ; retirer / adapter le header noindex Caddy si besoin.
+
+## Secrets GitHub (Actions)
+
+`SSH_PRIVATE_KEY` (ex. `id_alegria`), `REMOTE_HOST`, `REMOTE_USER=stef`, `REMOTE_TARGET=/var/www/doya`, `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `VITE_ASSETS_URL`, `VITE_SITE_URL` (staging ou domaine final).
+
+## Serveur
+
+- `sudo` demande un mot de passe (pas de NOPASSWD) — mkdir via docker possible ; reload Caddy : `sudo systemctl reload caddy`
+- Ne pas casser les autres blocs Caddy (alegria, karate, etc.)
+- DNS `doya.guzzler-bot.cloud` → `46.224.50.133` requis pour HTTPS
