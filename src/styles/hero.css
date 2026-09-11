@@ -613,16 +613,14 @@
 .hero-album-stage::after {
   z-index: -1;
   inset: var(--hero-cycle-inset);
-  border: 1px solid rgb(255 255 255 / 22%);
+  border: 1px solid rgb(255 255 255 / 34%);
   border-radius: 50%;
-  background:
-    linear-gradient(135deg, rgb(255 255 255 / 11%), transparent 42%),
-    linear-gradient(180deg, rgb(33 30 27 / 20%), rgb(22 20 18 / 34%));
+  background: transparent;
   box-shadow:
-    0 24px 64px rgb(0 0 0 / 22%),
-    inset 0 1px 0 rgb(255 255 255 / 14%);
-  backdrop-filter: blur(9px) saturate(.92);
-  -webkit-backdrop-filter: blur(9px) saturate(.92);
+    0 24px 34px -18px rgb(0 0 0 / 70%),
+    0 9px 18px -14px rgb(0 0 0 / 58%),
+    inset 0 1px 0 rgb(255 255 255 / 34%),
+    inset 0 -2px 0 rgb(35 31 28 / 16%);
 }
 .hero-caption { position: relative; z-index: 1; width: 100%; }
 .hero-caption > div {
@@ -641,7 +639,10 @@
   height: auto;
   aspect-ratio: 1;
   transform: translate(-50%, -50%);
-  opacity: .62;
+  opacity: .84;
+  filter:
+    drop-shadow(0 11px 9px rgb(0 0 0 / 25%))
+    drop-shadow(0 -1px .6px rgb(255 255 255 / 42%));
   pointer-events: none;
   user-select: none;
   animation:
@@ -651,7 +652,7 @@
 }
 @keyframes hero-luna-fade {
   from { opacity: 0; }
-  to { opacity: .62; }
+  to { opacity: .84; }
 }
 @keyframes hero-luna-spin {
   from { transform: translate(-50%, -50%) rotate(0deg); }
@@ -660,17 +661,19 @@
 @media (prefers-reduced-motion: reduce) {
   .hero-luna {
     animation: none;
-    opacity: .62;
+    opacity: .84;
   }
   .hero-cta-discover::before { animation: none; opacity: 0; }
 }
 .hero-subtitle {
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: .28em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, .92);
-  text-shadow: 0 1px 10px rgba(0, 0, 0, .55);
+  color: rgb(255 255 255 / 98%);
+  text-shadow:
+    0 2px 3px rgb(0 0 0 / 78%),
+    0 7px 18px rgb(0 0 0 / 46%);
 }
 .hero-caption h1 {
   margin-top: clamp(8px, 1.2svh, 14px);
@@ -682,7 +685,10 @@
   line-height: 1.02;
   text-transform: uppercase;
   color: #fff;
-  text-shadow: 0 2px 20px rgba(0, 0, 0, .55);
+  text-shadow:
+    0 2px 2px rgb(0 0 0 / 72%),
+    0 9px 26px rgb(0 0 0 / 62%),
+    0 0 1px rgb(255 255 255 / 72%);
 }
 .hero-cta-group {
   display: flex;
@@ -1108,11 +1114,9 @@
   }
   .hero-album-stage {
     padding: 1rem .55rem .65rem;
-    background:
-      linear-gradient(135deg, rgb(255 255 255 / 10%), transparent 42%),
-      linear-gradient(180deg, rgb(33 30 27 / 20%), rgb(22 20 18 / 35%));
-    backdrop-filter: blur(6px) saturate(.92);
-    -webkit-backdrop-filter: blur(6px) saturate(.92);
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
   }
   .hero-caption {
     position: relative;
