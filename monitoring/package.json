@@ -1,0 +1,16 @@
+{
+  "name": "doya-monitoring",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "monitor:public": "node scripts/run-and-push.mjs public",
+    "monitor:commerce": "node scripts/run-and-push.mjs commerce",
+    "monitor:integrations": "node scripts/run-and-push.mjs integrations",
+    "monitor:api": "node scripts/api-readonly.mjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0"
+  }
+}

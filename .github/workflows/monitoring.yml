@@ -1,0 +1,60 @@
+name: Doya Monitoring
+
+on:
+  schedule:
+    - cron: '9,24,39,54 * * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: doya-monitoring
+  cancel-in-progress: true
+
+jobs:
+  playwright:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - suite: public
+            push: KUMA_PUSH_DOYA_PUBLIC
+          - suite: commerce
+            push: KUMA_PUSH_DOYA_COMMERCE
+          - suite: integrations
+            push: KUMA_PUSH_DOYA_INTEGRATIONS
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: monitoring/package-lock.json
+      - name: Install monitoring browser
+        working-directory: monitoring
+        run: npm ci && npx playwright install --with-deps chromium
+      - name: Run read-only suite and push result to Kuma
+        working-directory: monitoring
+        env:
+          DOYA_BASE_URL: https://doya.guzzler-bot.cloud
+          KUMA_PUSH_DOYA_PUBLIC: ${{ secrets.KUMA_PUSH_DOYA_PUBLIC }}
+          KUMA_PUSH_DOYA_COMMERCE: ${{ secrets.KUMA_PUSH_DOYA_COMMERCE }}
+          KUMA_PUSH_DOYA_INTEGRATIONS: ${{ secrets.KUMA_PUSH_DOYA_INTEGRATIONS }}
+        run: node scripts/run-and-push.mjs ${{ matrix.suite }}
+
+  api-readonly:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check catalog reads and Edge preflights
+        working-directory: monitoring
+        env:
+          DOYA_BASE_URL: https://doya.guzzler-bot.cloud
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+          KUMA_PUSH_DOYA_API: ${{ secrets.KUMA_PUSH_DOYA_API }}
+        run: node scripts/api-readonly.mjs
