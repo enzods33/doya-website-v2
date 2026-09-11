@@ -46,9 +46,18 @@ export default {
   hero: {
     label: 'Novo álbum',
     discover: 'Descobrir o álbum',
+    listenFeatured: 'Ouvir {title}',
+    scroll: 'Explorar',
     datesDesktop: 'Próximas datas',
     dates: 'Datas',
     shop: 'Loja',
+  },
+  listenDock: {
+    label: 'Ouvir {title}',
+    eyebrow: 'Single em destaque',
+    platforms: 'Plataformas de escuta',
+    close: 'Ocultar o leitor',
+    open: 'Mostrar o leitor',
   },
   music: {
     eyebrow: 'O álbum',
@@ -92,6 +101,9 @@ export default {
     promoTees: 'A partir de 2 t-shirts: {amount} de desconto.',
     promoCdTee: '1 CD + 1 t-shirt: {amount} de desconto.',
     viewCart: 'Ver o carrinho',
+    addedTitle: 'Adicionado ao carrinho',
+    addedSize: 'Tamanho {size}',
+    addedClose: 'Fechar a confirmação',
     sizesAria: 'Tamanhos {name}',
     soldOut: 'Esgotado',
     cdSignedNote: 'Os 50 primeiros exemplares serão dedicados ♥',

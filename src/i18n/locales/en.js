@@ -46,9 +46,18 @@ export default {
   hero: {
     label: 'New album',
     discover: 'Discover the album',
+    listenFeatured: 'Listen to {title}',
+    scroll: 'Explore',
     datesDesktop: 'Upcoming dates',
     dates: 'Dates',
     shop: 'Shop',
+  },
+  listenDock: {
+    label: 'Listen to {title}',
+    eyebrow: 'Featured single',
+    platforms: 'Listening platforms',
+    close: 'Hide the player',
+    open: 'Show the player',
   },
   music: {
     eyebrow: 'The album',
@@ -92,6 +101,9 @@ export default {
     promoTees: 'From 2 tees: {amount} off.',
     promoCdTee: '1 CD + 1 tee: {amount} off.',
     viewCart: 'View cart',
+    addedTitle: 'Added to cart',
+    addedSize: 'Size {size}',
+    addedClose: 'Close confirmation',
     sizesAria: 'Sizes {name}',
     soldOut: 'Out of stock',
     cdSignedNote: 'The first 50 copies will be signed ♥',

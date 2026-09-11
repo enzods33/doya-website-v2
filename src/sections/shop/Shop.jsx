@@ -131,7 +131,7 @@ function Shop() {
     return label === key ? size : label
   }
 
-  function addProduct(product) {
+  function addProduct(product, index) {
     const sizes = sizesFor(product)
     const size = selectedSizes[product.id] ?? (sizes.length === 1 ? sizes[0] : null)
     if (!size) {
@@ -141,11 +141,22 @@ function Shop() {
     const result = addItem(product.id, size, 1, availableFor(product, size))
     if (result.ok) {
       trackEvent('add_to_cart', 'shop')
-      setFeedback({ kind: 'added', message: commerceMessage('added', t) })
+      setFeedback({
+        kind: 'added',
+        labels: translateProduct(t, product),
+        imageSrc: productImageSrc(product, displayedViewFor(product, index)),
+        size,
+      })
       return
     }
     setFeedback({ kind: 'error', message: commerceMessage(result.error, t) })
   }
+
+  useEffect(() => {
+    if (feedback?.kind !== 'added') return undefined
+    const timer = window.setTimeout(() => setFeedback(null), 6500)
+    return () => window.clearTimeout(timer)
+  }, [feedback])
 
   useEffect(() => {
     if (reducedMotion) return undefined
@@ -255,7 +266,7 @@ function Shop() {
                         })}
                       </div>
                     )}
-                    <button type="button" className="commerce-button commerce-button-small" onClick={() => addProduct(product)}>{t('shop.add')}</button>
+                    <button type="button" className="commerce-button commerce-button-small" onClick={() => addProduct(product, index)}>{t('shop.add')}</button>
                   </>
                 ) : (
                   <p className="size-unique-note product-out-note">{t('shop.soldOut')}</p>
@@ -267,13 +278,23 @@ function Shop() {
         </Reveal>})}
       </div>
       {purchasable && <p className="availability-note shop-note">{t('shop.stripeNote')}</p>}
-      {feedback ? (
-        <p className={`shop-feedback${feedback.kind === 'added' ? ' is-added' : ''}`} role="status">
+      {feedback?.kind === 'error' ? (
+        <p className="shop-feedback" role="status">
           <span>{feedback.message}</span>
-          {feedback.kind === 'added' ? (
-            <Link href="/panier" className="text-link">{t('shop.viewCart')} <span aria-hidden="true">↗</span></Link>
-          ) : null}
         </p>
+      ) : null}
+
+      {feedback?.kind === 'added' ? (
+        <aside className="cart-toast" role="status" aria-live="polite">
+          {feedback.imageSrc ? <img src={feedback.imageSrc} alt="" width="88" height="88" /> : null}
+          <div className="cart-toast-copy">
+            <span>{t('shop.addedTitle')}</span>
+            <strong>{feedback.labels.name}</strong>
+            <small>{t('shop.addedSize', { size: sizeLabel(feedback.size) })}</small>
+            <Link href="/panier" className="cart-toast-link">{t('shop.viewCart')} <span aria-hidden="true">↗</span></Link>
+          </div>
+          <button type="button" className="cart-toast-close" onClick={() => setFeedback(null)} aria-label={t('shop.addedClose')}>×</button>
+        </aside>
       ) : null}
 
       {zoom ? (() => {

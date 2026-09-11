@@ -8,6 +8,7 @@ import ErrorBoundary from './components/ErrorBoundary.jsx'
 import OfflineBanner from './components/OfflineBanner.jsx'
 import Header from './components/Header.jsx'
 import Footer from './components/Footer.jsx'
+import ListenDock from './components/ListenDock.jsx'
 import HomePage from './pages/HomePage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
 import { scrollToHash, useRoute } from './utils/router.js'
@@ -61,6 +62,7 @@ function AppShell() {
         </Suspense>
       </ErrorBoundary>
       {!isAdmin ? <Footer /> : null}
+      {path === '/' ? <ListenDock /> : null}
     </div>
   )
 }

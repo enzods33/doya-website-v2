@@ -15,6 +15,7 @@ import { syncHeaderHeightVar, useRoute } from '../utils/router.js'
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(() => typeof window !== 'undefined' && window.scrollY > 18)
   const headerRef = useRef(null)
   const dialogRef = useRef(null)
   const triggerRef = useRef(null)
@@ -25,6 +26,17 @@ function Header() {
   const { t } = useI18n()
   const prevCountRef = useRef(count)
   const [cartPulse, setCartPulse] = useState(false)
+
+  useEffect(() => {
+    if (path !== '/') return undefined
+    const sync = () => setScrolled(window.scrollY > 18)
+    const frame = window.requestAnimationFrame(sync)
+    window.addEventListener('scroll', sync, { passive: true })
+    return () => {
+      window.cancelAnimationFrame(frame)
+      window.removeEventListener('scroll', sync)
+    }
+  }, [path])
 
   useEffect(() => {
     if (count > prevCountRef.current) {
@@ -151,7 +163,7 @@ function Header() {
   return (
     <m.header
       ref={headerRef}
-      className={`site-header${path === '/' ? '' : ' is-page'}${menuOpen ? ' is-menu-open' : ''}`}
+      className={`site-header${path === '/' ? ` is-home${scrolled ? ' is-scrolled' : ' is-over-hero'}` : ' is-page'}${menuOpen ? ' is-menu-open' : ''}`}
       initial={reducedMotion ? false : { opacity: 0, y: -8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: reducedMotion ? 0 : 0.7, delay: reducedMotion ? 0 : 0.1, ease: editorialEase }}
