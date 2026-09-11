@@ -81,53 +81,60 @@ function Hero() {
         ))}
       </div>
       <div className="hero-copy">
-        <div className="hero-caption">
+        <m.div
+          className="hero-album-stage"
+          initial={reducedMotion ? false : { opacity: 0, y: 18, scale: 0.94, clipPath: 'circle(4% at 50% 50%)' }}
+          animate={{ opacity: 1, y: 0, scale: 1, clipPath: 'circle(72% at 50% 50%)' }}
+          transition={{ duration: reducedMotion ? 0 : 1.05, delay: reducedMotion ? 0 : 0.28, ease: editorialEase }}
+        >
           <img src={lunaPhases} alt="" aria-hidden="true" className="hero-luna" />
-          <m.div
-            initial={reducedMotion ? false : { opacity: 0, y: 22 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: reducedMotion ? 0 : 1.05, delay: reducedMotion ? 0 : 0.58, ease: editorialEase }}
-          >
-            <p className="hero-subtitle">{t('hero.label')}</p>
-            <h1 id="hero-title">{siteContent.albumTitle}</h1>
-            <button
-              type="button"
-              className="hero-stars"
-              onClick={onStarsActivate}
-              aria-label={t('hero.label')}
-            >
-              <Stars color="white" />
-            </button>
-          </m.div>
-        </div>
-        <div className="hero-cta-group">
-          <div className="hero-cta-inner">
+          <div className="hero-caption">
             <m.div
-              className="hero-cta-lead"
-              initial={reducedMotion ? false : { opacity: 0, y: 16 }}
+              initial={reducedMotion ? false : { opacity: 0, y: 22 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: reducedMotion ? 0 : 0.85, delay: reducedMotion ? 0 : 0.88, ease: editorialEase }}
+              transition={{ duration: reducedMotion ? 0 : 1.05, delay: reducedMotion ? 0 : 0.72, ease: editorialEase }}
             >
-              {featuredTrackUrl ? (
-                <a href={featuredTrackUrl} target="_blank" rel="noopener noreferrer" className="hero-cta hero-cta-discover">
-                  <span className="hero-play" aria-hidden="true">▶</span>
-                  {t('hero.listenFeatured', { title: featuredTrack.title })}
-                </a>
-              ) : (
-                <Link href="#music" className="hero-cta hero-cta-discover">{t('hero.discover')}</Link>
-              )}
-            </m.div>
-            <m.div
-              className="hero-cta-pair"
-              initial={reducedMotion ? false : { opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: reducedMotion ? 0 : 0.8, delay: reducedMotion ? 0 : 1.08, ease: editorialEase }}
-            >
-              <Link href="#live" className="hero-cta hero-cta-secondary">{t('hero.dates')}</Link>
-              <Link href="#shop" className="hero-cta hero-cta-secondary">{t('hero.shop')}</Link>
+              <p className="hero-subtitle">{t('hero.label')}</p>
+              <h1 id="hero-title">{siteContent.albumTitle}</h1>
+              <button
+                type="button"
+                className="hero-stars"
+                onClick={onStarsActivate}
+                aria-label={t('hero.label')}
+              >
+                <Stars color="white" />
+              </button>
             </m.div>
           </div>
-        </div>
+          <div className="hero-cta-group">
+            <div className="hero-cta-inner">
+              <m.div
+                className="hero-cta-lead"
+                initial={reducedMotion ? false : { opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: reducedMotion ? 0 : 0.85, delay: reducedMotion ? 0 : 1.02, ease: editorialEase }}
+              >
+                {featuredTrackUrl ? (
+                  <a href={featuredTrackUrl} target="_blank" rel="noopener noreferrer" className="hero-cta hero-cta-discover">
+                    <span className="hero-play" aria-hidden="true">▶</span>
+                    {t('hero.listenFeatured', { title: featuredTrack.title })}
+                  </a>
+                ) : (
+                  <Link href="#music" className="hero-cta hero-cta-discover">{t('hero.discover')}</Link>
+                )}
+              </m.div>
+              <m.div
+                className="hero-cta-pair"
+                initial={reducedMotion ? false : { opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: reducedMotion ? 0 : 0.8, delay: reducedMotion ? 0 : 1.2, ease: editorialEase }}
+              >
+                <Link href="#live" className="hero-cta hero-cta-secondary">{t('hero.dates')}</Link>
+                <Link href="#shop" className="hero-cta hero-cta-secondary">{t('hero.shop')}</Link>
+              </m.div>
+            </div>
+          </div>
+        </m.div>
       </div>
       <Link href="#music" className="hero-scroll-cue" aria-label={t('hero.discover')}>
         <span>{t('hero.scroll')}</span>
