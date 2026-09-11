@@ -146,6 +146,7 @@ function Shop() {
         labels: translateProduct(t, product),
         imageSrc: productImageSrc(product, displayedViewFor(product, index)),
         size,
+        price: formatEuros(product.sale.priceCents),
       })
       return
     }
@@ -286,11 +287,14 @@ function Shop() {
 
       {feedback?.kind === 'added' ? (
         <aside className="cart-toast" role="status" aria-live="polite">
-          {feedback.imageSrc ? <img src={feedback.imageSrc} alt="" width="88" height="88" /> : null}
+          <div className="cart-toast-media" aria-hidden="true">
+            {feedback.imageSrc ? <img src={feedback.imageSrc} alt="" width="112" height="112" /> : null}
+            <span>✓</span>
+          </div>
           <div className="cart-toast-copy">
-            <span>{t('shop.addedTitle')}</span>
+            <span className="cart-toast-status"><i aria-hidden="true">✦</i>{t('shop.addedTitle')}</span>
             <strong>{feedback.labels.name}</strong>
-            <small>{t('shop.addedSize', { size: sizeLabel(feedback.size) })}</small>
+            <small>{t('shop.addedSize', { size: sizeLabel(feedback.size) })} · {feedback.price}</small>
             <Link href="/panier" className="cart-toast-link">{t('shop.viewCart')} <span aria-hidden="true">↗</span></Link>
           </div>
           <button type="button" className="cart-toast-close" onClick={() => setFeedback(null)} aria-label={t('shop.addedClose')}>×</button>

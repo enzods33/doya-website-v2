@@ -64,10 +64,17 @@ function ListenDock() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: reducedMotion ? 0 : 0.7, delay: reducedMotion ? 0 : 1.25, ease: editorialEase }}
     >
-      <img className="listen-dock-cover" src={media.cover.src} alt="" width="64" height="64" />
+      <div className="listen-dock-art" aria-hidden="true">
+        <img className="listen-dock-cover" src={media.cover.src} alt="" width="84" height="84" />
+        <span className="listen-dock-art-mark">✦</span>
+      </div>
       <div className="listen-dock-copy">
-        <span>{t('listenDock.eyebrow')}</span>
+        <span className="listen-dock-eyebrow">
+          <i className="listen-dock-equalizer" aria-hidden="true"><b /><b /><b /></i>
+          {t('listenDock.eyebrow')}
+        </span>
         <strong>{track.title}</strong>
+        <small>{album.artist} · {album.title}</small>
       </div>
       <div className="listen-dock-platforms" aria-label={t('listenDock.platforms')}>
         {links.map((link) => (
@@ -80,6 +87,7 @@ function ListenDock() {
             onClick={() => trackEvent('stream_open', 'listen_dock')}
           >
             <PlatformIcon id={link.id} />
+            <span>{PLATFORM_NAMES[link.id]}</span>
           </a>
         ))}
       </div>
