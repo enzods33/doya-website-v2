@@ -292,7 +292,7 @@ function Shop() {
             <span>✓</span>
           </div>
           <div className="cart-toast-copy">
-            <span className="cart-toast-status"><i aria-hidden="true">✦</i>{t('shop.addedTitle')}</span>
+            <span className="cart-toast-status">{t('shop.addedTitle')}</span>
             <strong>{feedback.labels.name}</strong>
             <small>{t('shop.addedSize', { size: sizeLabel(feedback.size) })} · {feedback.price}</small>
             <Link href="/panier" className="cart-toast-link">{t('shop.viewCart')} <span aria-hidden="true">↗</span></Link>

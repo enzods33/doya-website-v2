@@ -130,20 +130,6 @@
   object-fit: cover;
 }
 
-.listen-dock-art-mark {
-  position: absolute;
-  right: -.38rem;
-  bottom: -.38rem;
-  display: grid;
-  place-items: center;
-  width: 1.55rem;
-  height: 1.55rem;
-  color: #fff;
-  background: var(--color-doya-red);
-  box-shadow: 0 8px 20px rgb(0 0 0 / 30%);
-  font-size: .75rem;
-}
-
 .listen-dock-copy {
   display: grid;
   min-width: 0;
@@ -313,7 +299,8 @@
   place-items: center;
   width: 7rem;
   height: 7rem;
-  background: #e3dfd8;
+  background: #bbb5ad;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 16%);
   overflow: visible;
 }
 
@@ -321,6 +308,7 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
+  filter: drop-shadow(0 10px 9px rgb(0 0 0 / 18%));
 }
 
 .cart-toast-media > span {
@@ -352,20 +340,12 @@
 }
 
 .cart-toast-status {
-  display: flex;
-  align-items: center;
-  gap: .48rem;
+  display: block;
   color: rgb(244 240 234 / 68%);
   font-size: 11px;
   font-weight: 600;
   letter-spacing: .14em;
   text-transform: uppercase;
-}
-
-.cart-toast-status i {
-  color: var(--color-doya-red);
-  font-style: normal;
-  font-size: .75rem;
 }
 
 .cart-toast-copy strong {
@@ -430,7 +410,6 @@
     padding: .45rem;
   }
   .listen-dock-art { width: 3.5rem; height: 3.5rem; margin-block: 0; }
-  .listen-dock-art-mark { right: -.25rem; bottom: -.25rem; width: 1.25rem; height: 1.25rem; font-size: .58rem; }
   .listen-dock-copy strong { font-size: 1rem; }
   .listen-dock-copy small { display: none; }
   .listen-dock-eyebrow { gap: .3rem; font-size: 9px; letter-spacing: .12em; }

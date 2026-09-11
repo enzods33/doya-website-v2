@@ -64,6 +64,7 @@ export const album = {
     { id: 'spotify', name: 'Spotify', url: artistUrl.Spotify },
     { id: 'apple', name: 'Apple Music', url: artistUrl['Apple Music'] },
     { id: 'deezer', name: 'Deezer', url: artistUrl.Deezer },
+    { id: 'youtube', name: 'YouTube', url: artistUrl.YouTube },
   ],
   listeningNote: 'Liens d’écoute officiels de l’album à renseigner à la sortie.',
   buyHref: '#shop',

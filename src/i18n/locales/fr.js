@@ -53,8 +53,8 @@ export default {
     shop: 'Boutique',
   },
   listenDock: {
-    label: 'Écouter {title}',
-    eyebrow: 'Single à la une',
+    label: 'Écouter l’album {title}',
+    eyebrow: 'Écouter l’album',
     platforms: 'Plateformes d’écoute',
     close: 'Masquer le lecteur',
     open: 'Afficher le lecteur',

@@ -100,7 +100,7 @@ test('les profils officiels sont distincts et prêts pour le footer', () => {
   assert.ok(socials.find((social) => social.name === 'Spotify').url.endsWith('/1JGqJy0whUevjrA3Tw6OMA'))
   assert.ok(socials.find((social) => social.name === 'Apple Music').url.endsWith('/1646461706'))
   assert.ok(socials.find((social) => social.name === 'Deezer').url.endsWith('/184643787'))
-  assert.deepEqual(album.platforms.map((platform) => platform.id), ['spotify', 'apple', 'deezer'])
+  assert.deepEqual(album.platforms.map((platform) => platform.id), ['spotify', 'apple', 'deezer', 'youtube'])
   assert.ok(album.platforms.every((platform) => isExternalUrl(platform.url)), 'liens album temporaires = profils artistes jusqu’à la sortie')
   assert.equal(album.buyHref, '#shop')
   assert.equal(album.buyLabel, 'Boutique')

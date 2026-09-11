@@ -7,9 +7,7 @@ import { PlatformIcon, TRACK_PLATFORM_ORDER } from './PlatformIcon.jsx'
 import { editorialEase } from '../utils/motion.js'
 import { trackEvent } from '../commerce/pageAnalytics.js'
 
-const FEATURED_TRACK_NUMBER = '10'
 const STORAGE_KEY = 'doya.listen-dock.hidden'
-const PLATFORM_NAMES = { spotify: 'Spotify', apple: 'Apple Music', deezer: 'Deezer', youtube: 'YouTube' }
 
 function readHidden() {
   try {
@@ -23,10 +21,10 @@ function ListenDock() {
   const [hidden, setHidden] = useState(readHidden)
   const reducedMotion = useReducedMotion()
   const { t } = useI18n()
-  const track = album.tracks.find((item) => item.number === FEATURED_TRACK_NUMBER)
+  const linksByPlatform = Object.fromEntries(album.platforms.map((platform) => [platform.id, platform]))
   const links = TRACK_PLATFORM_ORDER
-    .map((id) => ({ id, url: track?.links?.[id] }))
-    .filter((item) => item.url)
+    .map((id) => linksByPlatform[id])
+    .filter((item) => item?.url)
 
   function hide() {
     setHidden(true)
@@ -46,7 +44,7 @@ function ListenDock() {
     }
   }
 
-  if (!track || links.length === 0) return null
+  if (links.length === 0) return null
 
   if (hidden) {
     return (
@@ -59,22 +57,21 @@ function ListenDock() {
   return (
     <m.aside
       className="listen-dock"
-      aria-label={t('listenDock.label', { title: track.title })}
+      aria-label={t('listenDock.label', { title: album.title })}
       initial={reducedMotion ? false : { opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: reducedMotion ? 0 : 0.7, delay: reducedMotion ? 0 : 1.25, ease: editorialEase }}
     >
       <div className="listen-dock-art" aria-hidden="true">
         <img className="listen-dock-cover" src={media.cover.src} alt="" width="84" height="84" />
-        <span className="listen-dock-art-mark">✦</span>
       </div>
       <div className="listen-dock-copy">
         <span className="listen-dock-eyebrow">
           <i className="listen-dock-equalizer" aria-hidden="true"><b /><b /><b /></i>
           {t('listenDock.eyebrow')}
         </span>
-        <strong>{track.title}</strong>
-        <small>{album.artist} · {album.title}</small>
+        <strong>{album.title}</strong>
+        <small>{album.artist} · {album.year}</small>
       </div>
       <div className="listen-dock-platforms" aria-label={t('listenDock.platforms')}>
         {links.map((link) => (
@@ -83,11 +80,11 @@ function ListenDock() {
             href={link.url}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={t('music.trackOn', { title: track.title, platform: PLATFORM_NAMES[link.id] })}
+            aria-label={t('music.listenOn', { platform: link.name })}
             onClick={() => trackEvent('stream_open', 'listen_dock')}
           >
             <PlatformIcon id={link.id} />
-            <span>{PLATFORM_NAMES[link.id]}</span>
+            <span>{link.name}</span>
           </a>
         ))}
       </div>

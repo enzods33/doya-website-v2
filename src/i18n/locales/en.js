@@ -53,8 +53,8 @@ export default {
     shop: 'Shop',
   },
   listenDock: {
-    label: 'Listen to {title}',
-    eyebrow: 'Featured single',
+    label: 'Listen to the album {title}',
+    eyebrow: 'Listen to the album',
     platforms: 'Listening platforms',
     close: 'Hide the player',
     open: 'Show the player',
