@@ -2,11 +2,12 @@ import { useEffect, useState } from 'react'
 import { m, useReducedMotion } from 'motion/react'
 import { album } from '../data/album.js'
 import { useI18n } from '../i18n/I18nProvider.jsx'
-import { PlatformIcon, TRACK_PLATFORM_ORDER } from './PlatformIcon.jsx'
+import { PlatformIcon } from './PlatformIcon.jsx'
 import { editorialEase } from '../utils/motion.js'
 import { trackEvent } from '../commerce/pageAnalytics.js'
 
 const STORAGE_KEY = 'doya.listen-dock.hidden'
+const AUDIO_PLATFORM_ORDER = ['spotify', 'apple', 'deezer']
 
 function readHidden() {
   try {
@@ -22,7 +23,7 @@ function ListenDock() {
   const reducedMotion = useReducedMotion()
   const { t } = useI18n()
   const linksByPlatform = Object.fromEntries(album.platforms.map((platform) => [platform.id, platform]))
-  const links = TRACK_PLATFORM_ORDER
+  const links = AUDIO_PLATFORM_ORDER
     .map((id) => linksByPlatform[id])
     .filter((item) => item?.url)
 

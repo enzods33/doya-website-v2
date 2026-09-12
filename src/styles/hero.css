@@ -1156,6 +1156,7 @@
   }
   .hero-subtitle { font-size: 10px; letter-spacing: .22em; }
   .hero-luna {
+    width: calc(109% + var(--hero-cycle-gutter));
     opacity: 1;
     animation-name: hero-luna-spin-mobile, hero-luna-fade;
   }
