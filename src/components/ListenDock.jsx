@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react'
-import { m, useReducedMotion } from 'motion/react'
+import { m } from 'motion/react'
 import { album } from '../data/album.js'
 import { useI18n } from '../i18n/I18nProvider.jsx'
 import { PlatformIcon } from './PlatformIcon.jsx'
-import { editorialEase } from '../utils/motion.js'
 import { trackEvent } from '../commerce/pageAnalytics.js'
 
 const STORAGE_KEY = 'doya.listen-dock.hidden'
@@ -19,8 +18,9 @@ function readHidden() {
 
 function ListenDock() {
   const [hidden, setHidden] = useState(readHidden)
-  const [excludedSectionVisible, setExcludedSectionVisible] = useState(false)
-  const reducedMotion = useReducedMotion()
+  const [excludedSectionVisible, setExcludedSectionVisible] = useState(
+    () => typeof window !== 'undefined' && window.location.hash === '#music',
+  )
   const { t } = useI18n()
   const linksByPlatform = Object.fromEntries(album.platforms.map((platform) => [platform.id, platform]))
   const links = AUDIO_PLATFORM_ORDER
@@ -28,10 +28,10 @@ function ListenDock() {
     .filter((item) => item?.url)
 
   useEffect(() => {
-    const excludedSections = [document.querySelector('#music'), document.querySelector('.site-footer')].filter(Boolean)
-    if (excludedSections.length === 0 || !('IntersectionObserver' in window)) return undefined
+    if (!('IntersectionObserver' in window)) return undefined
 
     const visibleSections = new Set()
+    const observedSections = new Set()
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -42,8 +42,23 @@ function ListenDock() {
       },
       { threshold: 0.01 },
     )
-    excludedSections.forEach((section) => observer.observe(section))
-    return () => observer.disconnect()
+
+    function observeExcludedSections() {
+      const sections = [document.querySelector('#music'), document.querySelector('.site-footer')].filter(Boolean)
+      sections.forEach((section) => {
+        if (observedSections.has(section)) return
+        observedSections.add(section)
+        observer.observe(section)
+      })
+    }
+
+    observeExcludedSections()
+    const mutationObserver = new MutationObserver(observeExcludedSections)
+    mutationObserver.observe(document.body, { childList: true, subtree: true })
+    return () => {
+      mutationObserver.disconnect()
+      observer.disconnect()
+    }
   }, [])
 
   function hide() {
@@ -64,11 +79,16 @@ function ListenDock() {
     }
   }
 
-  if (links.length === 0 || excludedSectionVisible) return null
+  if (links.length === 0) return null
 
   if (hidden) {
     return (
-      <button type="button" className="listen-dock-reopen" onClick={show} aria-label={t('listenDock.open')}>
+      <button
+        type="button"
+        className={`listen-dock-reopen${excludedSectionVisible ? ' is-suppressed' : ''}`}
+        onClick={show}
+        aria-label={t('listenDock.open')}
+      >
         <span aria-hidden="true">▶</span>
       </button>
     )
@@ -76,11 +96,9 @@ function ListenDock() {
 
   return (
     <m.aside
-      className="listen-dock"
+      className={`listen-dock${excludedSectionVisible ? ' is-suppressed' : ''}`}
       aria-label={t('listenDock.label', { title: album.title })}
-      initial={reducedMotion ? false : { opacity: 0, y: 24 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: reducedMotion ? 0 : 0.7, delay: reducedMotion ? 0 : 1.25, ease: editorialEase }}
+      initial={false}
     >
       <div className="listen-dock-copy">
         <span className="listen-dock-eyebrow">

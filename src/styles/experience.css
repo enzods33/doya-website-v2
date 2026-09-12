@@ -101,6 +101,19 @@
   backdrop-filter: blur(22px) saturate(1.18);
   -webkit-backdrop-filter: blur(22px) saturate(1.18);
   isolation: isolate;
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity .18s linear, visibility 0s;
+}
+
+.listen-dock.is-suppressed,
+.listen-dock-reopen.is-suppressed {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: none;
+  transition: opacity .18s linear, visibility 0s linear .18s;
 }
 
 .listen-dock::before {

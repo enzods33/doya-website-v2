@@ -84,7 +84,9 @@ function Hero() {
           animate={{ opacity: 1, y: 0, scale: 1, clipPath: 'circle(72% at 50% 50%)' }}
           transition={{ duration: reducedMotion ? 0 : 1.05, delay: reducedMotion ? 0 : 0.28, ease: editorialEase }}
         >
-          <img src={lunaPhases} alt="" aria-hidden="true" className="hero-luna" />
+          <div className="hero-cycle-frame" aria-hidden="true">
+            <img src={lunaPhases} alt="" className="hero-luna" />
+          </div>
           <div className="hero-caption">
             <m.div
               initial={reducedMotion ? false : { opacity: 0, y: 22 }}

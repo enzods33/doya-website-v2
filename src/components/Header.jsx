@@ -196,7 +196,7 @@ function Header() {
         <LanguageSwitcher className="header-language-switcher header-nav-language" />
       </nav>
       <div className="header-end">
-        {commerceConfigured && (
+        {commerceConfigured && count > 0 && (
           <Link
             href="/panier"
             className={`header-cart${cartPulse ? ' is-pulse' : ''}`}
