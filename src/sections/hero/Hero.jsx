@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { m, useReducedMotion } from 'motion/react'
 import { media } from '../../data/media.js'
-import { album, trackPrimaryUrl } from '../../data/album.js'
 import { siteContent } from '../../data/siteContent.js'
 import { useI18n } from '../../i18n/I18nProvider.jsx'
 import { Stars } from '../../components/Brand.jsx'
@@ -33,8 +32,6 @@ function Hero() {
   const { t } = useI18n()
   const letters = [{ src: letterD, name: 'd' }, { src: letterO, name: 'o' }, { src: letterY, name: 'y' }, { src: letterA, name: 'a' }]
   const starsClicks = useRef({ count: 0, timer: 0 })
-  const featuredTrack = album.tracks.find((track) => track.number === '10')
-  const featuredTrackUrl = trackPrimaryUrl(featuredTrack)
 
   function onStarsActivate() {
     const state = starsClicks.current
@@ -114,14 +111,7 @@ function Hero() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: reducedMotion ? 0 : 0.85, delay: reducedMotion ? 0 : 1.02, ease: editorialEase }}
               >
-                {featuredTrackUrl ? (
-                  <a href={featuredTrackUrl} target="_blank" rel="noopener noreferrer" className="hero-cta hero-cta-discover">
-                    <span className="hero-play" aria-hidden="true">▶</span>
-                    {t('hero.listenFeatured', { title: featuredTrack.title })}
-                  </a>
-                ) : (
-                  <Link href="#music" className="hero-cta hero-cta-discover">{t('hero.discover')}</Link>
-                )}
+                <Link href="#music" className="hero-cta hero-cta-discover">{t('hero.discover')}</Link>
               </m.div>
               <m.div
                 className="hero-cta-pair"

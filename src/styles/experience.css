@@ -30,18 +30,6 @@
   min-height: 640px;
 }
 
-.hero-play {
-  display: inline-grid;
-  place-items: center;
-  width: 2rem;
-  height: 2rem;
-  margin-right: .75rem;
-  border: 1px solid rgb(255 255 255 / 55%);
-  border-radius: 50%;
-  font: 600 .6rem/1 var(--font-functional);
-  text-indent: .08rem;
-}
-
 .hero-scroll-cue {
   position: absolute;
   z-index: 6;

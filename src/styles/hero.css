@@ -1221,11 +1221,6 @@
     font-size: .58rem;
     letter-spacing: .04em;
   }
-  .hero-play {
-    width: 1.8rem;
-    height: 1.8rem;
-    margin-right: .45rem;
-  }
 }
 @media (max-width: 389px) and (min-height: 701px) {
   .hero-photo { top: 13%; height: 87%; }
@@ -1237,10 +1232,5 @@
     padding-inline: .35rem;
     font-size: .56rem;
     letter-spacing: .04em;
-  }
-  .hero-play {
-    width: 1.7rem;
-    height: 1.7rem;
-    margin-right: .4rem;
   }
 }
