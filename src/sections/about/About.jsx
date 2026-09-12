@@ -40,6 +40,8 @@ function About() {
 
   const biographyLead = bioCopy?.lead || t('about.biographyLead')
   const biographyBody = bioCopy?.body || t('about.biographyBody')
+  const activeImage = total > 0 ? images[index] ?? images[0] : null
+  const activeImageIsPortrait = activeImage ? activeImage.height >= activeImage.width : true
 
   const scrollToIndex = useCallback((nextIndex, behavior = 'smooth') => {
     if (!total) return
@@ -62,14 +64,12 @@ function About() {
     function syncIndex() {
       cancelAnimationFrame(frame)
       frame = requestAnimationFrame(() => {
-        const viewportRect = viewport.getBoundingClientRect()
-        const center = viewportRect.left + viewportRect.width / 2
+        const center = viewport.scrollLeft + viewport.clientWidth / 2
         let best = 0
         let bestDist = Infinity
         slideRefs.current.forEach((slide, i) => {
           if (!slide) return
-          const rect = slide.getBoundingClientRect()
-          const mid = rect.left + rect.width / 2
+          const mid = slide.offsetLeft + slide.offsetWidth / 2
           const dist = Math.abs(mid - center)
           if (dist < bestDist) {
             bestDist = dist
@@ -123,10 +123,21 @@ function About() {
     else scrollToIndex(slideIndex)
   }
 
+  function onGalleryKeyDown(event) {
+    if (event.key === 'ArrowLeft') {
+      event.preventDefault()
+      scrollToIndex(index - 1)
+    }
+    if (event.key === 'ArrowRight') {
+      event.preventDefault()
+      scrollToIndex(index + 1)
+    }
+  }
+
   return (
     <section id="about" className="about-section" aria-labelledby="about-title">
       <div className="section-shell about-intro">
-        <Stars color="black" className="about-intro-stars" />
+        <Stars color="white" className="about-intro-stars" />
         <Reveal className="about-copy" delay={0.1}>
           <h2 id="about-title" className="editorial-title about-title">{t('about.eyebrow')}</h2>
           <Wordmark decorative className="about-wordmark" />
@@ -140,8 +151,16 @@ function About() {
       </div>
 
       {total > 0 ? (
-        <div className="about-gallery">
+        <div className={`about-gallery${activeImageIsPortrait ? ' has-portrait-active' : ' has-landscape-active'}`}>
+          <div className="about-gallery-backdrop" aria-hidden="true">
+            <img key={activeImage?.src} src={activeImage?.src} alt="" />
+          </div>
           <div className="about-gallery-toolbar section-shell">
+            <p className="about-gallery-kicker" aria-hidden="true">
+              <span>{siteContent.name}</span>
+              <span>×</span>
+              <span>{siteContent.albumTitle}</span>
+            </p>
             <p className="eyebrow about-gallery-count" aria-live="polite" aria-atomic="true">
               <span>{String(index + 1).padStart(2, '0')}</span>
               <span aria-hidden="true"> / </span>
@@ -154,7 +173,10 @@ function About() {
             <button
               type="button"
               className="about-gallery-nav is-prev"
-              onClick={() => scrollToIndex(index - 1)}
+              onClick={(event) => {
+                if (event.detail > 0) event.currentTarget.blur()
+                scrollToIndex(index - 1)
+              }}
               aria-label={t('photo.prev')}
               aria-controls="about-gallery-main"
             >
@@ -163,7 +185,10 @@ function About() {
             <button
               type="button"
               className="about-gallery-nav is-next"
-              onClick={() => scrollToIndex(index + 1)}
+              onClick={(event) => {
+                if (event.detail > 0) event.currentTarget.blur()
+                scrollToIndex(index + 1)
+              }}
               aria-label={t('photo.next')}
               aria-controls="about-gallery-main"
             >
@@ -179,6 +204,8 @@ function About() {
               aria-label={t('about.eyebrow')}
               onPointerDown={onPointerDown}
               onPointerMove={onPointerMove}
+              onKeyDown={onGalleryKeyDown}
+              tabIndex={0}
             >
               <div className="about-gallery-track">
                 {images.map((image, slideIndex) => {
@@ -217,11 +244,6 @@ function About() {
             <div className="about-gallery-progress" aria-hidden="true">
               <span style={{ width: `${((index + 1) / total) * 100}%` }} />
             </div>
-            <p className="about-gallery-caption">
-              <span>{siteContent.name}</span>
-              <span aria-hidden="true">·</span>
-              <span>{siteContent.albumTitle}</span>
-            </p>
           </div>
         </div>
       ) : null}
