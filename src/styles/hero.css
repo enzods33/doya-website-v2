@@ -1122,7 +1122,7 @@
   .letter-o, .letter-a { right: 6%; }
   .hero::before { height: 14%; background: linear-gradient(to bottom, rgba(255,255,255,.22), transparent); }
   .hero::after { height: 26%; background: linear-gradient(to top, rgba(0,0,0,.28), rgba(0,0,0,.06) 55%, transparent); }
-  .hero-stars { width: 2.1rem; order: 3; margin-top: .3rem; margin-bottom: 0; translate: none; }
+  .hero-stars { width: 2.35rem; order: 3; margin-top: .3rem; margin-bottom: 0; translate: none; }
   .hero-copy {
     position: absolute;
     z-index: 6;
