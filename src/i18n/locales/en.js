@@ -47,7 +47,7 @@ export default {
     label: 'New album',
     discover: 'Discover the album',
     listenFeatured: 'Listen to {title}',
-    scroll: 'Explore',
+    scroll: 'Discover',
     datesDesktop: 'Upcoming dates',
     dates: 'Dates',
     shop: 'Shop',

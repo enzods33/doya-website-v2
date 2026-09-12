@@ -47,7 +47,7 @@ export default {
     label: 'Novo álbum',
     discover: 'Descobrir o álbum',
     listenFeatured: 'Ouvir {title}',
-    scroll: 'Explorar',
+    scroll: 'Descobrir',
     datesDesktop: 'Próximas datas',
     dates: 'Datas',
     shop: 'Loja',

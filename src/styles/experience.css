@@ -395,16 +395,7 @@
 
 @media (max-width: 767px) {
   .hero { height: 100svh; min-height: 100svh; }
-  .hero-scroll-cue {
-    right: auto;
-    left: 50%;
-    bottom: calc(max(.55rem, env(safe-area-inset-bottom)) + 3.45rem);
-    z-index: 29;
-    padding: 0;
-    font-size: 9px;
-    transform: translateX(-50%);
-  }
-  .hero-scroll-cue i { height: 2rem; }
+  .hero-scroll-cue { display: none; }
   .listen-dock {
     left: .55rem;
     right: .55rem;
