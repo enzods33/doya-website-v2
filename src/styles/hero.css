@@ -1226,7 +1226,11 @@
   .hero-photo { top: 13%; height: 87%; }
 }
 @media (min-width: 400px) and (max-width: 767px) and (min-height: 850px) {
-  .hero-copy { top: 5.5rem; }
+  .hero-copy {
+    top: 5.5rem;
+    width: min(calc(100% - 2rem), 17.5rem);
+    max-width: 17.5rem;
+  }
   .hero-photo-frame { top: .25rem; height: calc(100% - .25rem); }
 }
 @media (max-width: 350px) and (max-height: 600px) {
