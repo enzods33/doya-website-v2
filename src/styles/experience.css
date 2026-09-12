@@ -49,35 +49,58 @@
   bottom: 1.4rem;
   display: flex;
   align-items: center;
-  gap: .8rem;
+  gap: .6rem;
+  min-height: 2.35rem;
+  padding: .28rem .32rem .28rem .78rem;
+  border: 1px solid rgb(255 255 255 / 28%);
+  border-radius: 999px;
   color: #fff;
-  font-size: 11px;
+  background: rgb(24 22 20 / 34%);
+  box-shadow: 0 12px 32px rgb(0 0 0 / 18%), inset 0 1px 0 rgb(255 255 255 / 10%);
+  backdrop-filter: blur(12px) saturate(1.12);
+  -webkit-backdrop-filter: blur(12px) saturate(1.12);
+  font-size: 10px;
   font-weight: 600;
-  letter-spacing: .16em;
+  letter-spacing: .18em;
   text-transform: uppercase;
   text-shadow: 0 1px 12px rgb(0 0 0 / 55%);
+  transition: background .25s var(--motion-ease), border-color .25s var(--motion-ease), translate .25s var(--motion-ease);
+}
+
+.hero-scroll-cue:hover,
+.hero-scroll-cue:focus-visible {
+  border-color: rgb(255 255 255 / 48%);
+  background: rgb(24 22 20 / 48%);
+  translate: 0 -2px;
 }
 
 .hero-scroll-cue i {
   position: relative;
-  width: 1px;
-  height: 2.8rem;
-  overflow: hidden;
-  background: rgb(255 255 255 / 35%);
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 1.7rem;
+  height: 1.7rem;
+  border: 1px solid rgb(255 255 255 / 42%);
+  border-radius: 50%;
+  background: rgb(255 255 255 / 8%);
 }
 
-.hero-scroll-cue i::after {
+.hero-scroll-cue i::before {
   content: '';
   position: absolute;
-  inset: 0;
-  background: #fff;
-  transform: translateY(-100%);
-  animation: hero-scroll-line 2s var(--motion-ease) infinite;
+  width: .38rem;
+  height: .38rem;
+  margin-top: -.18rem;
+  border-right: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+  transform: rotate(45deg);
+  animation: hero-scroll-arrow 1.8s var(--motion-ease) infinite;
 }
 
-@keyframes hero-scroll-line {
-  0% { transform: translateY(-100%); }
-  55%, 100% { transform: translateY(100%); }
+@keyframes hero-scroll-arrow {
+  0%, 100% { transform: translateY(-2px) rotate(45deg); opacity: .7; }
+  50% { transform: translateY(2px) rotate(45deg); opacity: 1; }
 }
 
 .listen-dock {
@@ -383,7 +406,17 @@
 
 @media (max-width: 767px) {
   .hero { height: 100svh; min-height: 100svh; }
-  .hero-scroll-cue { display: none; }
+  .hero-scroll-cue {
+    right: auto;
+    left: 50%;
+    bottom: calc(max(.55rem, env(safe-area-inset-bottom)) + 3.65rem);
+    z-index: 29;
+    min-height: 2rem;
+    padding: .22rem .28rem .22rem .68rem;
+    font-size: 9px;
+    transform: translateX(-50%);
+  }
+  .hero-scroll-cue i { width: 1.45rem; height: 1.45rem; }
   .listen-dock {
     left: .55rem;
     right: .55rem;
@@ -422,7 +455,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-scroll-cue i::after,
+  .hero-scroll-cue i::before,
   .cart-toast,
   .cart-toast::after,
   .listen-dock-equalizer b { animation: none; }
