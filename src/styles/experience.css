@@ -13,7 +13,7 @@
 
 .site-header.is-home.is-over-hero {
   background: linear-gradient(to bottom, rgb(244 240 234 / 70%), transparent);
-  border-bottom-color: transparent;
+  border-bottom: 0;
   box-shadow: none;
 }
 
