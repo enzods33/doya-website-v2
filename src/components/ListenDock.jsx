@@ -1,7 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { m, useReducedMotion } from 'motion/react'
 import { album } from '../data/album.js'
-import { media } from '../data/media.js'
 import { useI18n } from '../i18n/I18nProvider.jsx'
 import { PlatformIcon, TRACK_PLATFORM_ORDER } from './PlatformIcon.jsx'
 import { editorialEase } from '../utils/motion.js'
@@ -19,12 +18,25 @@ function readHidden() {
 
 function ListenDock() {
   const [hidden, setHidden] = useState(readHidden)
+  const [footerVisible, setFooterVisible] = useState(false)
   const reducedMotion = useReducedMotion()
   const { t } = useI18n()
   const linksByPlatform = Object.fromEntries(album.platforms.map((platform) => [platform.id, platform]))
   const links = TRACK_PLATFORM_ORDER
     .map((id) => linksByPlatform[id])
     .filter((item) => item?.url)
+
+  useEffect(() => {
+    const footer = document.querySelector('.site-footer')
+    if (!footer || !('IntersectionObserver' in window)) return undefined
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setFooterVisible(entry.isIntersecting),
+      { threshold: 0.01 },
+    )
+    observer.observe(footer)
+    return () => observer.disconnect()
+  }, [])
 
   function hide() {
     setHidden(true)
@@ -44,7 +56,7 @@ function ListenDock() {
     }
   }
 
-  if (links.length === 0) return null
+  if (links.length === 0 || footerVisible) return null
 
   if (hidden) {
     return (
@@ -62,9 +74,6 @@ function ListenDock() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: reducedMotion ? 0 : 0.7, delay: reducedMotion ? 0 : 1.25, ease: editorialEase }}
     >
-      <div className="listen-dock-art" aria-hidden="true">
-        <img className="listen-dock-cover" src={media.cover.src} alt="" width="84" height="84" />
-      </div>
       <div className="listen-dock-copy">
         <span className="listen-dock-eyebrow">
           <i className="listen-dock-equalizer" aria-hidden="true"><b /><b /><b /></i>
