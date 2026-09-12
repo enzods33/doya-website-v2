@@ -19,7 +19,7 @@ function readHidden() {
 
 function ListenDock() {
   const [hidden, setHidden] = useState(readHidden)
-  const [footerVisible, setFooterVisible] = useState(false)
+  const [excludedSectionVisible, setExcludedSectionVisible] = useState(false)
   const reducedMotion = useReducedMotion()
   const { t } = useI18n()
   const linksByPlatform = Object.fromEntries(album.platforms.map((platform) => [platform.id, platform]))
@@ -28,14 +28,21 @@ function ListenDock() {
     .filter((item) => item?.url)
 
   useEffect(() => {
-    const footer = document.querySelector('.site-footer')
-    if (!footer || !('IntersectionObserver' in window)) return undefined
+    const excludedSections = [document.querySelector('#music'), document.querySelector('.site-footer')].filter(Boolean)
+    if (excludedSections.length === 0 || !('IntersectionObserver' in window)) return undefined
 
+    const visibleSections = new Set()
     const observer = new IntersectionObserver(
-      ([entry]) => setFooterVisible(entry.isIntersecting),
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) visibleSections.add(entry.target)
+          else visibleSections.delete(entry.target)
+        })
+        setExcludedSectionVisible(visibleSections.size > 0)
+      },
       { threshold: 0.01 },
     )
-    observer.observe(footer)
+    excludedSections.forEach((section) => observer.observe(section))
     return () => observer.disconnect()
   }, [])
 
@@ -57,7 +64,7 @@ function ListenDock() {
     }
   }
 
-  if (links.length === 0 || footerVisible) return null
+  if (links.length === 0 || excludedSectionVisible) return null
 
   if (hidden) {
     return (

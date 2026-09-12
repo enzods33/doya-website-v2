@@ -126,7 +126,9 @@ function TrackListen({ track, open, onToggle }) {
 function Music() {
   const { t } = useI18n()
   const [openTrack, setOpenTrack] = useState(null)
-  const albumPlatforms = album.platforms.filter((platform) => isExternalUrl(platform.url))
+  const albumPlatforms = album.platforms.filter(
+    (platform) => platform.id !== 'youtube' && isExternalUrl(platform.url),
+  )
 
   useEffect(() => {
     if (!openTrack) return undefined
@@ -159,31 +161,36 @@ function Music() {
         </Reveal>
         <div className="music-layout">
           <div className="music-cover-column">
-            <Photo image={media.cover} className="album-cover" />
+            <div className="music-cover-stage">
+              <Photo image={media.cover} className="album-cover" />
+            </div>
             <div className="music-cover-foot">
               {albumPlatforms.length > 0 && (
-                <ul className="album-platforms" aria-label={t('music.listenAlbum')}>
-                  {albumPlatforms.map((platform) => (
-                    <li key={platform.id}>
-                      <a
-                        href={platform.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={t('music.listenOn', { platform: platform.name })}
-                        onClick={() => trackEvent('stream_open', 'music')}
-                      >
-                        <PlatformIcon id={platform.id} />
-                      </a>
-                    </li>
-                  ))}
-                </ul>
+                <div className="music-platform-panel">
+                  <p className="music-listen-label">{t('music.listenAlbum')}</p>
+                  <ul className="album-platforms" aria-label={t('music.listenAlbum')}>
+                    {albumPlatforms.map((platform) => (
+                      <li key={platform.id}>
+                        <a
+                          href={platform.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={t('music.listenOn', { platform: platform.name })}
+                          onClick={() => trackEvent('stream_open', 'music')}
+                        >
+                          <PlatformIcon id={platform.id} />
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               )}
               <div className="music-buy-under">
                 <ShopBuy />
               </div>
             </div>
           </div>
-          <div className="tracklist-column">
+          <Reveal className="tracklist-column" delay={0.12} distance={28} duration={1}>
             <VinylDisc className="music-tracklist-vinyl" />
             <ol className="tracklist">
               {album.tracks.map((track) => (
@@ -200,7 +207,7 @@ function Music() {
                 </li>
               ))}
             </ol>
-          </div>
+          </Reveal>
           <figure className="music-aside">
             <Photo image={media.editorial} className="music-aside-photo" />
           </figure>
