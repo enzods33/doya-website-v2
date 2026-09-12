@@ -580,7 +580,7 @@
 }
 .hero-album-stage {
   --hero-cycle-gutter: 2.7rem;
-  --hero-cycle-inset: 0%;
+  --hero-cycle-inset: 1%;
   --hero-cycle-offset-y: 5px;
   position: relative;
   display: grid;
@@ -630,6 +630,7 @@
   height: auto;
   aspect-ratio: 1;
   transform: translate(-50%, -50%);
+  scale: .98;
   opacity: 1;
   filter:
     drop-shadow(0 2px 2px rgb(0 0 0 / 36%))
