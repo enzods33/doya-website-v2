@@ -116,7 +116,10 @@ function ListenDock() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={t('music.listenOn', { platform: link.name })}
-            onClick={() => trackEvent('stream_open', 'listen_dock')}
+            onClick={(event) => {
+              if (event.detail > 0) event.currentTarget.blur()
+              trackEvent('stream_open', 'listen_dock')
+            }}
           >
             <PlatformIcon id={link.id} />
             <span>{link.name}</span>

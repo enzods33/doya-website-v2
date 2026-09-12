@@ -221,12 +221,37 @@
   text-indent: .1rem;
 }
 
-.listen-dock-platforms a:hover,
 .listen-dock-platforms a:focus-visible {
   color: #fff;
   background: rgb(194 5 15 / 82%);
   border-color: rgb(255 255 255 / 35%);
   transform: translateY(-2px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .listen-dock-platforms a:hover {
+    color: #fff;
+    background: rgb(194 5 15 / 82%);
+    border-color: rgb(255 255 255 / 35%);
+    transform: translateY(-2px);
+  }
+}
+
+@media (hover: none) {
+  .listen-dock-platforms a:hover:not(:active) {
+    color: #f4f0ea;
+    background: rgb(244 240 234 / 5%);
+    border-color: rgb(244 240 234 / 18%);
+    transform: none;
+  }
+
+  .listen-dock-platforms a:active {
+    color: #fff;
+    background: rgb(194 5 15 / 82%);
+    border-color: rgb(255 255 255 / 35%);
+    transform: scale(.94);
+    transition-duration: .08s;
+  }
 }
 
 .listen-dock-platforms .platform-icon {
