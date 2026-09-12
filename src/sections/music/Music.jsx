@@ -208,9 +208,6 @@ function Music() {
               ))}
             </ol>
           </Reveal>
-          <figure className="music-aside">
-            <Photo image={media.editorial} className="music-aside-photo" />
-          </figure>
         </div>
       </div>
     </section>

@@ -2192,6 +2192,33 @@ a.concert-tickets:focus-visible {
     color: var(--color-doya-red);
   }
 }
+@media (min-width: 1101px) {
+  .music-layout {
+    --music-photo: min(45svh, 580px);
+    grid-template-columns: var(--music-photo) minmax(510px, 620px);
+    column-gap: clamp(42px, 4vw, 72px);
+    width: max-content;
+    max-width: 100%;
+    margin-inline: auto;
+    align-self: center;
+  }
+  .music-cover-column {
+    justify-self: end;
+  }
+  .tracklist-column {
+    grid-column: 2;
+    width: 100%;
+    max-width: none;
+    justify-self: start;
+  }
+  .music-platform-panel {
+    gap: 1.4rem;
+  }
+  .music-listen-label {
+    max-width: none;
+    white-space: nowrap;
+  }
+}
 @media (max-width: 1100px) {
   .music-shell {
     justify-content: flex-start;
