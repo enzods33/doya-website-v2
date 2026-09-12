@@ -553,7 +553,7 @@
 .letter-o, .letter-a { right: 7.5%; }
 .hero-stars {
   display: block;
-  width: clamp(3.1rem, 3.5vw + 0.35svh, 3.6rem);
+  width: clamp(2.9rem, 3.25vw + 0.35svh, 3.3rem);
   margin: clamp(0.4rem, .8svh, .65rem) auto 0;
   padding: 0;
   border: 0;
@@ -919,7 +919,7 @@
   .hero-album-stage { padding: 1.25rem .7rem .85rem; }
   .hero-subtitle { font-size: 9px; }
   .hero-caption h1 { margin-top: 5px; font-size: 24px; }
-  .hero-stars { width: 2.25rem; margin-top: 0.35rem; }
+  .hero-stars { width: 2.1rem; margin-top: 0.35rem; }
   .hero-cta-group { margin-top: 0.4rem; }
   .hero-cta-inner { gap: 5px; width: min(100%, 13.5rem); }
   .hero-cta-discover {
@@ -940,7 +940,7 @@
   .hero-copy { top: 2.65rem; width: min(68vw, 13.5rem); max-width: 13.5rem; }
   .hero-album-stage { padding: 1.05rem .6rem .7rem; }
   .hero-caption h1 { font-size: 21px; }
-  .hero-stars { width: 1.9rem; margin-top: 0.25rem; }
+  .hero-stars { width: 1.8rem; margin-top: 0.25rem; }
   .hero-cta-group { margin-top: 0.3rem; }
   .hero-cta-inner { gap: 4px; }
   .hero-cta-discover { min-height: 1.85rem; padding: 0.3rem .55rem; font-size: 9px; }

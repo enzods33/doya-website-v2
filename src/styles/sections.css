@@ -330,10 +330,13 @@
   height: 1.9rem;
   margin: 0;
   padding: 0;
-  border: 1px solid rgb(44 41 38 / 28%);
+  border: 1px solid rgb(44 41 38 / 38%);
   border-radius: 50%;
-  background: transparent;
-  color: var(--ink);
+  background: rgb(255 255 255 / 72%);
+  color: rgb(18 16 14 / 96%);
+  box-shadow:
+    0 2px 8px rgb(44 41 38 / 10%),
+    inset 0 1px 0 rgb(255 255 255 / 90%);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   transition:
@@ -355,12 +358,12 @@
 .track-listen.is-open .track-play {
   color: var(--color-doya-red);
   border-color: var(--color-doya-red);
-  background: transparent;
+  background: rgb(255 255 255 / 82%);
 }
 @media (hover: hover) and (pointer: fine) {
   .track-play:hover {
-    border-color: var(--ink);
-    background: rgb(255 255 255 / 28%);
+    border-color: rgb(44 41 38 / 62%);
+    background: rgb(255 255 255 / 92%);
   }
 }
 /* Overlay à gauche du play : n’élargit pas la grille (pas de wrap / pas de push layout) */
