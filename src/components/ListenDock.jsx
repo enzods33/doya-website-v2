@@ -7,6 +7,7 @@ import { trackEvent } from '../commerce/pageAnalytics.js'
 
 const STORAGE_KEY = 'doya.listen-dock.hidden'
 const AUDIO_PLATFORM_ORDER = ['spotify', 'apple', 'deezer']
+const MUSIC_SECTION_REVEAL_PROGRESS = 0.6
 
 function readHidden() {
   try {
@@ -28,36 +29,44 @@ function ListenDock() {
     .filter((item) => item?.url)
 
   useEffect(() => {
-    if (!('IntersectionObserver' in window)) return undefined
+    let frame = 0
 
-    const visibleSections = new Set()
-    const observedSections = new Set()
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) visibleSections.add(entry.target)
-          else visibleSections.delete(entry.target)
-        })
-        setExcludedSectionVisible(visibleSections.size > 0)
-      },
-      { threshold: 0.01 },
-    )
+    function syncVisibility() {
+      cancelAnimationFrame(frame)
+      frame = requestAnimationFrame(() => {
+        const viewportHeight = window.innerHeight
+        const musicSection = document.querySelector('#music')
+        const footer = document.querySelector('.site-footer')
 
-    function observeExcludedSections() {
-      const sections = [document.querySelector('#music'), document.querySelector('.site-footer')].filter(Boolean)
-      sections.forEach((section) => {
-        if (observedSections.has(section)) return
-        observedSections.add(section)
-        observer.observe(section)
+        let musicSectionSuppressesDock = false
+        if (musicSection) {
+          const rect = musicSection.getBoundingClientRect()
+          const intersectsViewport = rect.top < viewportHeight && rect.bottom > 0
+          const passedProgress = rect.height > 0 ? -rect.top / rect.height : 0
+          musicSectionSuppressesDock = intersectsViewport && passedProgress < MUSIC_SECTION_REVEAL_PROGRESS
+        }
+
+        let footerSuppressesDock = false
+        if (footer) {
+          const rect = footer.getBoundingClientRect()
+          footerSuppressesDock = rect.top < viewportHeight && rect.bottom > 0
+        }
+
+        setExcludedSectionVisible(musicSectionSuppressesDock || footerSuppressesDock)
       })
     }
 
-    observeExcludedSections()
-    const mutationObserver = new MutationObserver(observeExcludedSections)
+    syncVisibility()
+    window.addEventListener('scroll', syncVisibility, { passive: true })
+    window.addEventListener('resize', syncVisibility)
+
+    const mutationObserver = new MutationObserver(syncVisibility)
     mutationObserver.observe(document.body, { childList: true, subtree: true })
     return () => {
+      cancelAnimationFrame(frame)
+      window.removeEventListener('scroll', syncVisibility)
+      window.removeEventListener('resize', syncVisibility)
       mutationObserver.disconnect()
-      observer.disconnect()
     }
   }, [])
 
