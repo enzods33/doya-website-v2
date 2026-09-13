@@ -1214,8 +1214,8 @@ a.concert-tickets:focus-visible {
   background-image: var(--shop-atmosphere-image);
   background-position: center 30%;
   background-size: cover;
-  filter: blur(27px) saturate(.9) contrast(.94);
-  opacity: .29;
+  filter: blur(27px) saturate(.66) contrast(.94);
+  opacity: .2;
   transform: scale(1.085);
   transform-origin: center;
   mask-image: linear-gradient(180deg, transparent 0, black 12%, black 88%, transparent 100%);
@@ -2992,6 +2992,10 @@ a.concert-tickets:focus-visible {
     transform: scale(1.14);
     mask-image: linear-gradient(180deg, transparent 0, black 6%, black 74%, transparent 100%);
     -webkit-mask-image: linear-gradient(180deg, transparent 0, black 6%, black 74%, transparent 100%);
+  }
+  .shop-section::after {
+    filter: blur(24px) saturate(.62) contrast(.95);
+    opacity: .15;
   }
   .music-heading {
     margin-bottom: 30px;
