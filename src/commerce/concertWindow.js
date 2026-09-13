@@ -54,7 +54,7 @@ export function windowConcerts(
   }
 }
 
-/** Mode billetterie affiché : link | soon | none */
+/** Mode billetterie affiché : link | soon | none (entrée libre) */
 export function concertTicketMode(concert, past = false) {
   if (past) return 'none'
   if (concert.ticketing === 'link' && typeof concert.ticketUrl === 'string' && concert.ticketUrl.startsWith('https://')) {

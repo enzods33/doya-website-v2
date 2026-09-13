@@ -889,6 +889,123 @@
   border-bottom: 1px solid var(--section-rule);
   letter-spacing: .14em;
 }
+.live-tour-label {
+  margin-top: clamp(30px, 4vw, 48px);
+}
+.live-featured {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(14rem, .72fr) minmax(16rem, 1.15fr) auto;
+  align-items: center;
+  gap: clamp(28px, 4vw, 62px);
+  min-height: clamp(11.75rem, 15vw, 13.75rem);
+  margin: 0 0 26px;
+  padding: clamp(26px, 3vw, 42px);
+  border: 1px solid rgb(44 41 38 / 15%);
+  border-left: 2px solid var(--color-doya-red);
+  background:
+    radial-gradient(circle at 88% 0%, rgb(180 207 217 / 44%), transparent 30%),
+    radial-gradient(circle at 14% 118%, rgb(123 111 98 / 18%), transparent 42%),
+    linear-gradient(118deg, rgb(249 247 243 / 88%), rgb(232 228 222 / 78%));
+  box-shadow:
+    0 30px 72px rgb(44 41 38 / 13%),
+    inset 0 1px 0 rgb(255 255 255 / 72%);
+}
+.live-featured::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 43%;
+  background:
+    radial-gradient(ellipse at 28% 115%, rgb(61 58 54 / 16%) 0 25%, transparent 26%),
+    radial-gradient(ellipse at 68% 128%, rgb(61 58 54 / 10%) 0 31%, transparent 32%);
+  filter: blur(8px);
+  opacity: .72;
+}
+.live-featured > * {
+  position: relative;
+  z-index: 1;
+}
+.live-featured-place {
+  min-height: 6rem;
+  padding-left: clamp(28px, 3vw, 48px);
+  border-left: 1px solid rgb(44 41 38 / 14%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.live-featured-date .eyebrow {
+  margin-bottom: .65rem;
+  color: var(--color-doya-red);
+}
+.live-featured-date time {
+  display: flex;
+  align-items: flex-end;
+  gap: .85rem;
+  font-family: var(--font-editorial);
+  line-height: .82;
+}
+.live-featured-day {
+  font-size: clamp(68px, 7vw, 104px);
+  letter-spacing: -.06em;
+}
+.live-featured-date-copy {
+  display: grid;
+  gap: .45rem;
+  padding-bottom: .45rem;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  line-height: 1;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+}
+.live-featured-month { color: var(--ink); }
+.live-featured-year { color: var(--muted); }
+.live-featured-city {
+  font-family: var(--font-editorial);
+  font-size: clamp(30px, 3.1vw, 46px);
+  line-height: .95;
+  letter-spacing: .025em;
+  text-transform: uppercase;
+}
+.live-featured-city span {
+  font-family: var(--font-sans);
+  font-size: .28em;
+  color: var(--muted);
+  letter-spacing: .12em;
+  vertical-align: middle;
+}
+.live-featured-venue {
+  margin-top: .85rem;
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.live-featured .concert-tickets {
+  min-width: 8.5rem;
+  justify-self: end;
+  color: var(--color-doya-white);
+  border-color: var(--ink);
+  background: var(--ink);
+  box-shadow: 0 14px 30px rgb(44 41 38 / 18%);
+}
+.live-featured .concert-tickets.is-muted {
+  color: var(--muted);
+  border-color: rgb(44 41 38 / 16%);
+  background: rgb(255 255 255 / 18%);
+  box-shadow: none;
+}
+.concert-tickets.is-free {
+  color: var(--ink);
+  border-color: rgb(44 41 38 / 24%);
+  background: rgb(255 255 255 / 30%);
+}
 .live-empty { padding-top: 32px; }
 .live-empty-title {
   font-family: var(--font-editorial);
@@ -2335,6 +2452,34 @@ a.concert-tickets:focus-visible {
     padding-bottom: 16px;
     letter-spacing: .12em;
   }
+  .live-featured {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 24px 14px;
+    min-height: 17.5rem;
+    margin: 18px 0 22px;
+    padding: 22px 20px 20px;
+  }
+  .live-featured-date {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .live-featured-place {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    align-self: end;
+    min-height: 0;
+    padding-left: 0;
+    border-left: 0;
+  }
+  .live-featured .concert-tickets {
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 6.75rem;
+    align-self: end;
+  }
+  .live-featured-day { font-size: clamp(64px, 19vw, 76px); }
+  .live-featured-city { font-size: clamp(29px, 9vw, 36px); }
   .live-empty { padding-top: 22px; }
   .live-empty-title { font-size: clamp(24px, 6vw, 32px); }
   .concerts li {
@@ -2462,6 +2607,30 @@ a.concert-tickets:focus-visible {
     radial-gradient(circle at 22% 62%, rgb(255 255 255 / 38%) 0, transparent 36%),
     radial-gradient(circle at 82% 44%, rgb(214 0 28 / 4%) 0, transparent 27%),
     linear-gradient(135deg, color-mix(in srgb, var(--color-stone) 92%, white), var(--color-stone));
+}
+@media (max-width: 359px) {
+  .live-featured {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 22px 8px;
+    min-height: 17rem;
+  }
+  .live-featured-date { grid-column: 1; grid-row: 1; }
+  .live-featured-place { grid-column: 1 / -1; grid-row: 2; }
+  .live-featured .concert-tickets {
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 5.6rem;
+    padding-inline: .7rem;
+    font-size: 10px;
+  }
+  .live-featured-date .eyebrow {
+    white-space: nowrap;
+    font-size: 9px;
+    letter-spacing: .1em;
+  }
+  .live-featured-date time { gap: .55rem; }
+  .live-featured-day { font-size: 64px; }
+  .live-featured-date-copy { font-size: 9px; letter-spacing: .1em; }
 }
 .music-section::before {
   content: '';

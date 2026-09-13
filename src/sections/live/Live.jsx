@@ -24,6 +24,13 @@ function ConcertTickets({ concert, past, t }) {
       </span>
     )
   }
+  if (!past && concert.ticketing === 'none') {
+    return (
+      <span className="concert-tickets is-muted is-free">
+        {t('live.freeEntry')}
+      </span>
+    )
+  }
   return <span className="concert-tickets-slot" aria-hidden="true" />
 }
 
@@ -37,12 +44,18 @@ function Live() {
     () => new Intl.DateTimeFormat(intlLocale, { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'UTC' }),
     [intlLocale],
   )
+  const monthFormat = useMemo(
+    () => new Intl.DateTimeFormat(intlLocale, { month: 'long', timeZone: 'UTC' }),
+    [intlLocale],
+  )
 
   const { concerts, hasMore } = useMemo(
     () => windowConcerts(rows, new Date(), { expanded }),
     [rows, expanded],
   )
-  const nextConcertId = concerts.find((concert) => !isPastDate(concert.date))?.id
+  const nextConcert = concerts.find((concert) => !isPastDate(concert.date)) ?? null
+  const tourConcerts = concerts
+  const nextDate = nextConcert ? new Date(`${nextConcert.date}T12:00:00Z`) : null
 
   useEffect(() => {
     let active = true
@@ -59,35 +72,60 @@ function Live() {
       <div className="section-shell live-layout">
         <Reveal as="h2" id="live-title" className="editorial-title">{t('live.title')}</Reveal>
         <div className="live-content">
-          <p className="eyebrow">{t('live.label')}</p>
           {!ready ? null : concerts.length ? (
             <>
-              <ul className="concerts">
-                {concerts.map((concert) => {
-                  const past = isPastDate(concert.date)
-                  const next = concert.id === nextConcertId
-                  return (
-                    <li key={concert.id} className={[past ? 'is-past' : '', next ? 'is-next' : ''].filter(Boolean).join(' ') || undefined}>
-                      <time
-                        className={past ? 'is-past' : undefined}
-                        dateTime={concert.date}
-                      >
-                        {dateFormat.format(new Date(`${concert.date}T12:00:00Z`))}
-                      </time>
-                      <span className="concert-place">
-                        <span className="concert-city">
-                          {concert.city}
-                          {concert.country ? (
-                            <span className="concert-country-inline">, {concert.country.slice(0, 2)}</span>
-                          ) : null}
-                        </span>
-                        <span className="concert-venue">{concert.venue}</span>
+              {nextConcert && nextDate ? (
+                <Reveal as="article" className="live-featured" delay={0.08} distance={28} duration={1}>
+                  <div className="live-featured-date">
+                    <p className="eyebrow">{t('live.nextDate')}</p>
+                    <time dateTime={nextConcert.date}>
+                      <span className="live-featured-day">{String(nextDate.getUTCDate()).padStart(2, '0')}</span>
+                      <span className="live-featured-date-copy">
+                        <span className="live-featured-month">{monthFormat.format(nextDate)}</span>
+                        <span className="live-featured-year">{nextDate.getUTCFullYear()}</span>
                       </span>
-                      <ConcertTickets concert={concert} past={past} t={t} />
-                    </li>
-                  )
-                })}
-              </ul>
+                    </time>
+                  </div>
+                  <div className="live-featured-place">
+                    <p className="live-featured-city">
+                      {nextConcert.city}
+                      {nextConcert.country ? <span>, {nextConcert.country.slice(0, 2)}</span> : null}
+                    </p>
+                    <p className="live-featured-venue">{nextConcert.venue}</p>
+                  </div>
+                  <ConcertTickets concert={nextConcert} past={false} t={t} />
+                </Reveal>
+              ) : null}
+              {tourConcerts.length ? (
+                <>
+                  <p className="eyebrow live-tour-label">{t('live.label')}</p>
+                  <ul className="concerts">
+                    {tourConcerts.map((concert) => {
+                      const past = isPastDate(concert.date)
+                      return (
+                        <li key={concert.id} className={past ? 'is-past' : undefined}>
+                          <time
+                            className={past ? 'is-past' : undefined}
+                            dateTime={concert.date}
+                          >
+                            {dateFormat.format(new Date(`${concert.date}T12:00:00Z`))}
+                          </time>
+                          <span className="concert-place">
+                            <span className="concert-city">
+                              {concert.city}
+                              {concert.country ? (
+                                <span className="concert-country-inline">, {concert.country.slice(0, 2)}</span>
+                              ) : null}
+                            </span>
+                            <span className="concert-venue">{concert.venue}</span>
+                          </span>
+                          <ConcertTickets concert={concert} past={past} t={t} />
+                        </li>
+                      )
+                    })}
+                  </ul>
+                </>
+              ) : null}
               {hasMore && !expanded ? (
                 <p className="live-more">
                   <button type="button" className="text-link" onClick={() => setExpanded(true)}>

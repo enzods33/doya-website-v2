@@ -1,5 +1,5 @@
 // Fallback local si Supabase n’est pas configuré / vide.
-// Colonnes : date, city, venue, country, ticketing (link|soon|none), ticketUrl
+// Colonnes : date, city, venue, country, ticketing (link|soon|none = entrée libre), ticketUrl
 // Textes UI → src/i18n/locales/*
 
 export const concerts = [
