@@ -2768,16 +2768,20 @@ a.concert-tickets:focus-visible {
   content: '';
   position: absolute;
   z-index: -1;
-  right: clamp(-16rem, -10vw, -7rem);
-  top: clamp(5rem, 12vw, 12rem);
-  width: clamp(22rem, 40vw, 42rem);
+  right: calc(clamp(-16rem, -10vw, -7rem) - clamp(1.7rem, 3.1vw, 3.25rem));
+  top: calc(clamp(5rem, 12vw, 12rem) - clamp(1.7rem, 3.1vw, 3.25rem));
+  width: clamp(25.4rem, 46.2vw, 48.5rem);
   aspect-ratio: 1;
-  border: 1px solid rgb(244 240 234 / 8%);
-  border-radius: 50%;
-  box-shadow:
-    0 0 0 clamp(2rem, 5vw, 5rem) rgb(244 240 234 / 2%),
-    0 0 0 clamp(7rem, 12vw, 12rem) rgb(244 240 234 / 1.5%);
+  background: url('../assets/hero/luna-phases.webp') center / 100% 100% no-repeat;
+  opacity: .15;
+  filter: grayscale(1) brightness(1.18) drop-shadow(0 28px 52px rgb(0 0 0 / 24%));
   pointer-events: none;
+  transform-origin: center;
+  animation: footer-luna-spin 120s linear infinite;
+}
+@keyframes footer-luna-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 .site-footer > .section-shell { position: relative; z-index: 1; }
 .footer-stage {
@@ -2937,6 +2941,9 @@ a.concert-tickets:focus-visible {
   .site-footer .back-to-top:hover .back-to-top-label { color: var(--footer-ink); }
   .site-footer .back-to-top:hover .back-to-top-mark { border-color: rgb(244 240 234 / 58%); }
 }
+@media (prefers-reduced-motion: reduce) {
+  .site-footer::after { animation: none; }
+}
 @media (max-width: 767px) {
   .music-cover-column {
     justify-self: center;
@@ -2957,9 +2964,9 @@ a.concert-tickets:focus-visible {
     background: linear-gradient(90deg, transparent 19px, rgb(255 255 255 / 5%) 20px, transparent 21px);
   }
   .site-footer::after {
-    right: -14rem;
-    top: 15rem;
-    width: 28rem;
+    right: -16.17rem;
+    top: 12.83rem;
+    width: 32.34rem;
   }
   .footer-stage {
     grid-template-columns: 1fr;
