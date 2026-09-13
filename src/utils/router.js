@@ -72,6 +72,13 @@ export function navigate(to) {
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         scrollToHash(url.hash)
+        if (path === '/') {
+          window.history.replaceState(
+            window.history.state,
+            '',
+            `${withBase(path)}${url.search}`,
+          )
+        }
       })
     })
   } else if (next !== current) {

@@ -2,7 +2,9 @@
 .site-header.is-home {
   position: fixed;
   left: 0;
-  right: 0;
+  right: auto;
+  width: var(--header-client-width, 100%);
+  max-width: 100%;
   transition:
     color .4s var(--motion-ease),
     background-color .4s var(--motion-ease),

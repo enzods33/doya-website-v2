@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { m, useReducedMotion } from 'motion/react'
 import { navigation, mobileNavigation, siteContent } from '../data/siteContent.js'
 import { commerceConfigured } from '../commerce/config.js'
@@ -48,17 +48,27 @@ function Header() {
     prevCountRef.current = count
   }, [count])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const header = headerRef.current
     if (!header || typeof ResizeObserver === 'undefined') {
       syncHeaderHeightVar(header)
       return undefined
     }
-    const sync = () => syncHeaderHeightVar(header)
+    const sync = () => {
+      syncHeaderHeightVar(header)
+      header.style.setProperty('--header-client-width', `${document.documentElement.clientWidth}px`)
+    }
     const observer = new ResizeObserver(sync)
     observer.observe(header)
+    observer.observe(document.documentElement)
+    window.addEventListener('resize', sync, { passive: true })
+    window.visualViewport?.addEventListener('resize', sync, { passive: true })
     sync()
-    return () => observer.disconnect()
+    return () => {
+      observer.disconnect()
+      window.removeEventListener('resize', sync)
+      window.visualViewport?.removeEventListener('resize', sync)
+    }
   }, [])
 
   useEffect(() => {
