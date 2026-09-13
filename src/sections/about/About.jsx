@@ -147,10 +147,10 @@ function About() {
   return (
     <section id="about" className="about-section" aria-labelledby="about-title">
       <div className="section-shell about-intro">
+        <Stars color="white" className="about-intro-stars" />
         <Reveal className="about-copy" delay={0.1}>
           <h2 id="about-title" className="editorial-title about-title">{t('about.eyebrow')}</h2>
           <Wordmark decorative className="about-wordmark" />
-          <Stars color="white" className="about-intro-stars" />
           <div className="about-biography">
             <p className="about-biography-lead">{biographyText(biographyLead)}</p>
             {biographyBody.split(/\n\n+/).map((paragraph) => (
