@@ -7,16 +7,12 @@ import { Stars, Wordmark } from '../../components/Brand.jsx'
 import Reveal from '../../components/Reveal.jsx'
 import PhotoLightbox from '../../components/PhotoLightbox.jsx'
 
-const BIO_ACCENT_PATTERN = /(DOYA|Luna Bohemia|Un mismo pulso)/gi
-const BIO_PULSE_PATTERN = /(Une même pulsation|Un mismo pulso|One pulse|Uma mesma pulsação)\.?$/i
-
-function brandedBiographyLead(text) {
-  return String(text).replace(BIO_PULSE_PATTERN, 'Un mismo pulso.')
-}
+const BIO_ACCENT_PATTERN = /(DOYA|Luna Bohemia|Une même pulsation|Un mismo pulso|One pulse|Uma mesma pulsação)/gi
+const BIO_ACCENT_EXACT = /^(doya|luna bohemia|une même pulsation|un mismo pulso|one pulse|uma mesma pulsação)$/i
 
 function biographyText(text) {
   return String(text).split(BIO_ACCENT_PATTERN).map((part, index) => (
-    /^(doya|luna bohemia)$/i.test(part)
+    BIO_ACCENT_EXACT.test(part)
       ? <span className="about-biography-accent" key={`${part}-${index}`}>{part}</span>
       : part
   ))
@@ -53,7 +49,7 @@ function About() {
     return () => { cancelled = true }
   }, [locale])
 
-  const biographyLead = brandedBiographyLead(bioCopy?.lead || t('about.biographyLead'))
+  const biographyLead = bioCopy?.lead || t('about.biographyLead')
   const biographyBody = bioCopy?.body || t('about.biographyBody')
   const activeImage = total > 0 ? images[index] ?? images[0] : null
   const activeImageIsPortrait = activeImage ? activeImage.height >= activeImage.width : true
