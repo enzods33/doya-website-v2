@@ -9,6 +9,7 @@ import { commerceMessage, translateProduct } from '../../commerce/messages.js'
 import { trackEvent } from '../../commerce/pageAnalytics.js'
 import { isExternalUrl } from '../../utils/links.js'
 import { siteContent } from '../../data/siteContent.js'
+import { media } from '../../data/media.js'
 import { useI18n } from '../../i18n/I18nProvider.jsx'
 import Reveal from '../../components/Reveal.jsx'
 import TransitionImage from '../../components/TransitionImage.jsx'
@@ -186,7 +187,12 @@ function Shop() {
   }, [zoom])
 
   return (
-    <section id="shop" className="shop-section section-shell" aria-labelledby="shop-title">
+    <section
+      id="shop"
+      className="shop-section section-shell"
+      aria-labelledby="shop-title"
+      style={{ '--shop-atmosphere-image': `url("${media.hero.src}")` }}
+    >
       <Reveal as="header" className="shop-heading">
         <div className="shop-heading-main">
           <h2 id="shop-title" className="editorial-title">{t('shop.title')}</h2>
