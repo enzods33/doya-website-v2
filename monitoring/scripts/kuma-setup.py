@@ -34,12 +34,16 @@ PUSH_MONITORS = (
     ),
     (
         "KUMA_PUSH_DOYA_API",
-        "Doya — API catalogue & fonctions",
+        "Doya — API catalogue & fonctions (API)",
         28800,
         50,
         "GET uniquement sur le catalogue public et OPTIONS sur Stripe, Brevo et Auth admin. Aucune ecriture base ou stockage.",
     ),
 )
+
+MONITOR_ALIASES = {
+    "KUMA_PUSH_DOYA_API": ("Doya — API catalogue & fonctions",),
+}
 
 
 def clone_row(cur, table, source, updates):
@@ -118,7 +122,13 @@ def main():
     monitor_ids = [(site_id, 10)]
     secrets_out = {}
     for env_key, name, interval, weight, description in PUSH_MONITORS:
-        existing = cur.execute("SELECT * FROM monitor WHERE name=?", (name,)).fetchone()
+        candidate_names = (name, *MONITOR_ALIASES.get(env_key, ()))
+        placeholders = ",".join("?" for _ in candidate_names)
+        candidates = list(cur.execute(
+            f"SELECT * FROM monitor WHERE name IN ({placeholders}) ORDER BY CASE WHEN name=? THEN 0 ELSE 1 END, id",
+            (*candidate_names, name),
+        ))
+        existing = candidates[0] if candidates else None
         if existing:
             monitor_id = existing["id"]
             token = existing["push_token"] or secrets.token_hex(24)
@@ -144,6 +154,10 @@ def main():
                 "weight": weight,
                 "description": description,
             })
+        for duplicate in candidates[1:]:
+            cur.execute("DELETE FROM monitor_group WHERE monitor_id=?", (duplicate["id"],))
+            cur.execute("DELETE FROM monitor_notification WHERE monitor_id=?", (duplicate["id"],))
+            cur.execute("UPDATE monitor SET active=0 WHERE id=?", (duplicate["id"],))
         monitor_ids.append((monitor_id, weight))
         secrets_out[env_key] = f"https://monitoring.guzzler-bot.cloud/api/push/{token}"
 
