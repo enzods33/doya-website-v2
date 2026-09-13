@@ -20,24 +20,52 @@ const PLATFORM_NAMES = {
 const VINYL_GROOVES = [42, 48, 54, 60, 66, 72, 78, 84, 90]
 
 function VinylDisc({ className = '' }) {
+  const vinylId = useId().replace(/:/g, '')
+  const shellGradientId = `vinyl-shell-${vinylId}`
+  const labelGradientId = `vinyl-label-${vinylId}`
+
   return (
     <div className={className} aria-hidden="true">
-      <svg className="music-tracklist-vinyl-disc" viewBox="0 0 200 200" focusable="false">
-        <circle cx="100" cy="100" r="98" fill="currentColor" />
-        <g fill="none" stroke="var(--color-doya-white)" strokeWidth="0.9" opacity="0.22">
-          {VINYL_GROOVES.map((r) => (
-            <circle key={r} cx="100" cy="100" r={r} />
-          ))}
-        </g>
-        <circle cx="100" cy="100" r="34" fill="currentColor" opacity="0.92" />
-        <circle cx="100" cy="100" r="32" fill="none" stroke="var(--color-doya-white)" strokeWidth="0.7" opacity="0.2" />
-      </svg>
-      <img
-        src={monogramWhite}
-        alt=""
-        className="music-tracklist-vinyl-mark"
-        draggable="false"
-      />
+      <div className="music-tracklist-vinyl-rotor">
+        <svg className="music-tracklist-vinyl-disc" viewBox="0 0 200 200" focusable="false">
+          <defs>
+            <radialGradient id={shellGradientId} cx="39%" cy="32%" r="72%">
+              <stop offset="0" stopColor="#f8f5f0" stopOpacity=".76" />
+              <stop offset=".28" stopColor="#c9c5bf" stopOpacity=".64" />
+              <stop offset=".72" stopColor="#5f5b57" stopOpacity=".78" />
+              <stop offset="1" stopColor="#292725" stopOpacity=".9" />
+            </radialGradient>
+            <radialGradient id={labelGradientId} cx="35%" cy="30%" r="78%">
+              <stop offset="0" stopColor="#8c8781" />
+              <stop offset="1" stopColor="#4b4743" />
+            </radialGradient>
+          </defs>
+          <circle cx="100" cy="100" r="98" fill={`url(#${shellGradientId})`} />
+          <circle cx="100" cy="100" r="97" fill="none" stroke="#fff" strokeWidth="1.15" opacity=".62" />
+          <circle cx="100" cy="100" r="93" fill="none" stroke="#282522" strokeWidth=".65" opacity=".62" />
+          <g fill="none" stroke="#fff" strokeWidth="0.62" opacity="0.48">
+            {VINYL_GROOVES.map((r) => (
+              <circle key={r} cx="100" cy="100" r={r} />
+            ))}
+          </g>
+          <g fill="none" stroke="#282522" strokeWidth=".42" opacity=".38">
+            <circle cx="100" cy="100" r="45" />
+            <circle cx="100" cy="100" r="57" />
+            <circle cx="100" cy="100" r="69" />
+            <circle cx="100" cy="100" r="81" />
+          </g>
+          <circle cx="100" cy="100" r="34" fill={`url(#${labelGradientId})`} />
+          <circle cx="100" cy="100" r="32" fill="none" stroke="#fff" strokeWidth="0.8" opacity="0.44" />
+          <circle cx="100" cy="100" r="3.2" fill="#d6001c" opacity=".92" />
+          <circle cx="100" cy="100" r="1.15" fill="#f8f5f0" />
+        </svg>
+        <img
+          src={monogramWhite}
+          alt=""
+          className="music-tracklist-vinyl-mark"
+          draggable="false"
+        />
+      </div>
     </div>
   )
 }
@@ -160,7 +188,7 @@ function Music() {
           <p className="eyebrow music-meta">{album.artist} <span className="small-separator">/</span> {album.year} <span className="small-separator">/</span> {t('music.tracksMeta', { n: album.tracks.length })}</p>
         </Reveal>
         <div className="music-layout">
-          <div className="music-cover-column">
+          <Reveal className="music-cover-column" distance={34} duration={1.05}>
             <div className="music-cover-stage">
               <Photo image={media.cover} className="album-cover" />
             </div>
@@ -189,7 +217,7 @@ function Music() {
                 <ShopBuy />
               </div>
             </div>
-          </div>
+          </Reveal>
           <Reveal className="tracklist-column" delay={0.12} distance={28} duration={1}>
             <VinylDisc className="music-tracklist-vinyl" />
             <ol className="tracklist">

@@ -251,7 +251,12 @@
   color: var(--ink);
   pointer-events: none;
   user-select: none;
-  animation: music-vinyl-spin 48s linear infinite;
+  transform: translate(-50%, -50%);
+}
+.music-tracklist-vinyl-rotor {
+  position: absolute;
+  inset: 0;
+  animation: music-vinyl-spin 42s linear infinite;
 }
 .music-tracklist-vinyl-disc {
   display: block;
@@ -272,11 +277,11 @@
   filter: drop-shadow(0 0 1px rgb(44 41 38 / 35%));
 }
 @keyframes music-vinyl-spin {
-  from { transform: translate(-50%, -50%) rotate(0deg); }
-  to { transform: translate(-50%, -50%) rotate(360deg); }
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .music-tracklist-vinyl { animation: none; transform: translate(-50%, -50%); }
+  .music-tracklist-vinyl-rotor { animation: none; }
 }
 .tracklist {
   display: grid;
@@ -2453,7 +2458,9 @@ a.concert-tickets:focus-visible {
 /* —— Scène éditoriale de l’album —— */
 .music-section {
   background:
-    radial-gradient(circle at 50% 55%, rgb(255 255 255 / 42%) 0, rgb(255 255 255 / 12%) 31%, transparent 58%),
+    radial-gradient(circle at 71% 56%, rgb(255 255 255 / 62%) 0, rgb(255 255 255 / 17%) 28%, transparent 54%),
+    radial-gradient(circle at 22% 62%, rgb(255 255 255 / 38%) 0, transparent 36%),
+    radial-gradient(circle at 82% 44%, rgb(214 0 28 / 4%) 0, transparent 27%),
     linear-gradient(135deg, color-mix(in srgb, var(--color-stone) 92%, white), var(--color-stone));
 }
 .music-section::before {
@@ -2469,13 +2476,34 @@ a.concert-tickets:focus-visible {
   -webkit-mask-image: linear-gradient(180deg, transparent 0, black 17%, black 88%, transparent 100%);
 }
 .music-shell {
+  isolation: isolate;
   justify-content: flex-start;
+}
+.music-shell::before {
+  content: 'LUNA';
+  position: absolute;
+  z-index: -1;
+  right: clamp(-2rem, 1vw, 1rem);
+  top: clamp(4rem, 11vh, 8rem);
+  font-family: var(--font-editorial);
+  font-size: clamp(9rem, 20vw, 20rem);
+  font-weight: 400;
+  line-height: .78;
+  letter-spacing: .08em;
+  color: rgb(44 41 38 / 2.8%);
+  pointer-events: none;
+  user-select: none;
 }
 .music-heading {
   position: relative;
   margin-bottom: clamp(28px, 4vh, 52px);
   padding-bottom: clamp(14px, 1.8vh, 22px);
   border-bottom: 1px solid rgb(44 41 38 / 15%);
+}
+.music-heading h2 {
+  font-size: clamp(42px, 4.4vw, 70px);
+  line-height: .94;
+  letter-spacing: .025em;
 }
 .music-heading::after {
   content: '';
@@ -2507,6 +2535,7 @@ a.concert-tickets:focus-visible {
   isolation: isolate;
   width: 100%;
   aspect-ratio: 1;
+  perspective: 1000px;
 }
 .music-cover-stage::before {
   content: '';
@@ -2516,6 +2545,19 @@ a.concert-tickets:focus-visible {
   border: 1px solid rgb(214 0 28 / 34%);
   box-shadow: 0 18px 40px rgb(44 41 38 / 10%);
 }
+.music-cover-stage::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(118deg, rgb(255 255 255 / 24%), transparent 23% 72%, rgb(255 255 255 / 9%)),
+    linear-gradient(180deg, transparent 68%, rgb(20 18 16 / 10%));
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 18%),
+    inset 0 -24px 42px rgb(15 13 12 / 7%);
+}
 .album-cover {
   display: block;
   width: 100%;
@@ -2523,6 +2565,7 @@ a.concert-tickets:focus-visible {
   box-shadow:
     0 34px 72px rgb(32 30 28 / 28%),
     0 8px 18px rgb(32 30 28 / 16%);
+  transition: transform .8s var(--motion-ease), box-shadow .8s var(--motion-ease);
 }
 .music-cover-foot {
   width: 100%;
@@ -2570,23 +2613,65 @@ a.concert-tickets:focus-visible {
   height: 33px;
 }
 .tracklist-column {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   padding: clamp(12px, 1.4vw, 20px) clamp(14px, 1.6vw, 24px);
   border: 1px solid rgb(44 41 38 / 14%);
-  background: linear-gradient(145deg, rgb(255 255 255 / 24%), rgb(255 255 255 / 9%));
+  background:
+    linear-gradient(112deg, rgb(255 255 255 / 43%), transparent 31%),
+    linear-gradient(145deg, rgb(255 255 255 / 27%), rgb(255 255 255 / 10%));
   box-shadow:
-    0 24px 56px rgb(44 41 38 / 10%),
-    inset 0 1px 0 rgb(255 255 255 / 35%);
+    0 28px 70px rgb(44 41 38 / 13%),
+    0 8px 22px rgb(44 41 38 / 7%),
+    inset 0 1px 0 rgb(255 255 255 / 62%);
+}
+.tracklist-column::before {
+  content: '';
+  position: absolute;
+  inset: -45%;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(112deg, transparent 43%, rgb(255 255 255 / 28%) 49%, transparent 55%);
+  transform: translateX(-58%);
+  animation: music-panel-light 11s ease-in-out infinite;
+}
+@keyframes music-panel-light {
+  0%, 24% { transform: translateX(-58%); opacity: 0; }
+  38% { opacity: .75; }
+  58%, 100% { transform: translateX(58%); opacity: 0; }
 }
 .music-tracklist-vinyl {
-  width: min(92%, 21rem);
-  filter: drop-shadow(0 18px 22px rgb(44 41 38 / 18%));
+  width: min(96%, 24rem);
+  filter: drop-shadow(0 26px 28px rgb(44 41 38 / 24%));
+}
+.music-tracklist-vinyl::before {
+  content: '';
+  position: absolute;
+  inset: -2.5%;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(255 255 255 / 18%) 54%, rgb(44 41 38 / 8%) 67%, transparent 72%);
+  box-shadow: 0 22px 44px rgb(44 41 38 / 16%);
+}
+.music-tracklist-vinyl::after {
+  content: '';
+  position: absolute;
+  inset: 2.25%;
+  z-index: 2;
+  border-radius: 50%;
+  background: conic-gradient(from 212deg, transparent 0 8%, rgb(255 255 255 / 34%) 13%, transparent 20% 54%, rgb(255 255 255 / 15%) 59%, transparent 67% 100%);
+  mix-blend-mode: screen;
+  opacity: .72;
 }
 .music-tracklist-vinyl-disc {
-  opacity: .17;
+  opacity: .31;
+  mix-blend-mode: multiply;
 }
 .music-tracklist-vinyl-mark {
-  opacity: .9;
-  filter: drop-shadow(0 2px 5px rgb(44 41 38 / 36%));
+  width: 29%;
+  opacity: .96;
+  filter: drop-shadow(0 3px 7px rgb(44 41 38 / 42%));
 }
 .track-row {
   padding-inline: .25rem;
@@ -2607,6 +2692,12 @@ a.concert-tickets:focus-visible {
     0 8px 18px rgb(32 30 28 / 13%);
 }
 @media (hover: hover) and (pointer: fine) {
+  .music-cover-stage:hover .album-cover {
+    transform: translateY(-5px) rotateX(1.2deg) rotateY(-1deg);
+    box-shadow:
+      0 42px 88px rgb(32 30 28 / 31%),
+      0 12px 24px rgb(32 30 28 / 17%);
+  }
   .album-platforms a:hover {
     border-color: rgb(44 41 38 / 50%);
     background: rgb(255 255 255 / 38%);
@@ -2623,8 +2714,8 @@ a.concert-tickets:focus-visible {
 }
 @media (min-width: 1101px) {
   .music-layout {
-    --music-photo: min(45svh, 580px);
-    grid-template-columns: var(--music-photo) minmax(510px, 620px);
+    --music-photo: min(49svh, 610px);
+    grid-template-columns: var(--music-photo) minmax(540px, 660px);
     column-gap: clamp(42px, 4vw, 72px);
     width: max-content;
     max-width: 100%;
@@ -2662,7 +2753,8 @@ a.concert-tickets:focus-visible {
 @media (max-width: 767px) {
   .music-section {
     background:
-      radial-gradient(circle at 72% 25%, rgb(255 255 255 / 46%), transparent 42%),
+      radial-gradient(circle at 70% 58%, rgb(255 255 255 / 62%), transparent 39%),
+      radial-gradient(circle at 82% 55%, rgb(214 0 28 / 4%), transparent 25%),
       var(--color-stone);
     padding-block: 38px 64px;
   }
@@ -2672,6 +2764,15 @@ a.concert-tickets:focus-visible {
   .music-heading {
     margin-bottom: 30px;
     padding-bottom: 17px;
+  }
+  .music-heading h2 {
+    font-size: clamp(32px, 9.5vw, 42px);
+  }
+  .music-shell::before {
+    right: -1.5rem;
+    top: 7.5rem;
+    font-size: clamp(7rem, 39vw, 10rem);
+    color: rgb(44 41 38 / 3.2%);
   }
   .music-cover-column {
     max-width: 360px;
@@ -2712,10 +2813,10 @@ a.concert-tickets:focus-visible {
       inset 0 1px 0 rgb(255 255 255 / 38%);
   }
   .music-tracklist-vinyl {
-    width: min(88vw, 19rem);
+    width: min(94vw, 21rem);
   }
   .music-tracklist-vinyl-disc {
-    opacity: .16;
+    opacity: .27;
   }
   .music-tracklist-vinyl-mark {
     opacity: .88;
@@ -2726,9 +2827,11 @@ a.concert-tickets:focus-visible {
 }
 @media (prefers-reduced-motion: reduce) {
   .album-platforms a,
-  .track-row {
+  .track-row,
+  .album-cover {
     transition: none;
   }
+  .tracklist-column::before { animation: none; }
   .product,
   .product::after,
   .product .product-image,
