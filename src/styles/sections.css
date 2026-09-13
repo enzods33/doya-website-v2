@@ -1451,6 +1451,16 @@ a.concert-tickets:focus-visible {
   letter-spacing: .08em;
   text-transform: uppercase;
 }
+.product.is-featured .product-details > span:first-child {
+  max-width: 32rem;
+  font-family: var(--font-editorial);
+  font-size: 13px;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: .025em;
+  text-transform: none;
+}
 .shop-note {
   position: relative;
   z-index: 1;
