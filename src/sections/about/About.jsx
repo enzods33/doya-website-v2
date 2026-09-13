@@ -7,8 +7,8 @@ import { Stars, Wordmark } from '../../components/Brand.jsx'
 import Reveal from '../../components/Reveal.jsx'
 import PhotoLightbox from '../../components/PhotoLightbox.jsx'
 
-const BIO_ACCENT_PATTERN = /(DOYA|Luna Bohemia|Une même pulsation|Un mismo pulso|One pulse|Uma mesma pulsação)/gi
-const BIO_ACCENT_EXACT = /^(doya|luna bohemia|une même pulsation|un mismo pulso|one pulse|uma mesma pulsação)$/i
+const BIO_ACCENT_PATTERN = /(Une même pulsation|Un mismo pulso|One pulse|Uma mesma pulsação)/gi
+const BIO_ACCENT_EXACT = /^(une même pulsation|un mismo pulso|one pulse|uma mesma pulsação)$/i
 
 function biographyText(text) {
   return String(text).split(BIO_ACCENT_PATTERN).map((part, index) => (
