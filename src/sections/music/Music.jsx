@@ -180,7 +180,12 @@ function Music() {
   }
 
   return (
-    <section id="music" className="music-section" aria-labelledby="music-title">
+    <section
+      id="music"
+      className="music-section"
+      aria-labelledby="music-title"
+      style={{ '--music-atmosphere-image': `url("${media.hero.src}")` }}
+    >
       <div className="music-shell section-shell">
         <Reveal as="header" className="music-heading">
           <p className="eyebrow">{t('music.eyebrow')}</p>
