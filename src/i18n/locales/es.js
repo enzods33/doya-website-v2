@@ -97,7 +97,7 @@ export default {
     viewGroup: 'Vista de la ropa',
     viewFront: 'Vista frontal',
     viewBack: 'Vista trasera',
-    add: 'Añadir',
+    add: 'Añadir al carrito',
     viewPiece: 'Ver la pieza',
     stripeNote: 'Pago seguro con Stripe.',
     promoTees: 'A partir de 2 camisetas: {amount} de descuento.',

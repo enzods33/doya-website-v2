@@ -97,7 +97,7 @@ export default {
     viewGroup: 'Vista das peças',
     viewFront: 'Vista frente',
     viewBack: 'Vista costas',
-    add: 'Adicionar',
+    add: 'Adicionar ao carrinho',
     viewPiece: 'Ver a peça',
     stripeNote: 'Pagamento seguro via Stripe.',
     promoTees: 'A partir de 2 t-shirts: {amount} de desconto.',

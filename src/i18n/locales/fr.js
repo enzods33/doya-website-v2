@@ -97,7 +97,7 @@ export default {
     viewGroup: 'Vue des vêtements',
     viewFront: 'Vue face',
     viewBack: 'Vue dos',
-    add: 'Ajouter',
+    add: 'Ajouter au panier',
     viewPiece: 'Voir la pièce',
     stripeNote: 'Paiement sécurisé par Stripe.',
     promoTees: 'À partir de 2 tee-shirts : {amount} de réduction.',

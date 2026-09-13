@@ -97,7 +97,7 @@ export default {
     viewGroup: 'Garment view',
     viewFront: 'Front view',
     viewBack: 'Back view',
-    add: 'Add',
+    add: 'Add to cart',
     viewPiece: 'View piece',
     stripeNote: 'Secure payment via Stripe.',
     promoTees: 'From 2 tees: {amount} off.',
