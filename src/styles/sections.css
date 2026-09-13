@@ -543,7 +543,7 @@
 .about-gallery-nav {
   position: absolute;
   z-index: 5;
-  top: calc(50% - 4px);
+  top: -18px;
   display: inline-grid;
   place-items: center;
   width: 52px;
@@ -568,12 +568,17 @@
     transform 400ms var(--motion-ease);
 }
 .about-gallery-nav.is-prev {
-  left: calc(50% - (var(--about-active-slide) / 2) + 18px);
+  left: calc(50% - (var(--about-landscape-slide) / 2) + 56px);
   transform: translateY(-50%);
 }
 .about-gallery-nav.is-next {
-  right: calc(50% - (var(--about-active-slide) / 2) + 18px);
+  right: calc(50% - (var(--about-landscape-slide) / 2) + 56px);
   transform: translateY(-50%);
+}
+@media (min-width: 768px) {
+  .about-gallery.has-landscape-active .about-gallery-nav {
+    top: clamp(28px, calc(5.5vw - 14px), 65px);
+  }
 }
 .about-gallery-nav:focus-visible {
   color: #fff;
@@ -2455,6 +2460,7 @@ a.concert-tickets:focus-visible {
     letter-spacing: .14em;
   }
   .about-gallery-nav {
+    top: calc(50% - 4px);
     width: 44px;
     height: 44px;
     min-width: 44px;
@@ -3133,13 +3139,6 @@ a.concert-tickets:focus-visible {
   padding-block: clamp(10px, 1.2vw, 18px);
   text-align: left;
 }
-.site-footer .footer-brand::before {
-  content: 'DOYA · LUNA BOHEMIA';
-  color: rgb(244 240 234 / 48%);
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: .22em;
-}
 .site-footer .footer-wordmark {
   width: min(100%, 29rem);
   filter: drop-shadow(0 18px 44px rgb(194 5 15 / 18%));
@@ -3312,8 +3311,9 @@ a.concert-tickets:focus-visible {
     padding-bottom: 26px;
   }
   .site-footer .footer-brand {
-    align-items: flex-start;
+    align-items: center;
     padding-block: 0;
+    text-align: center;
   }
   .site-footer .footer-wordmark { width: min(72vw, 16.5rem); }
   .site-footer .footer-album-mark { width: min(56vw, 12rem); }
