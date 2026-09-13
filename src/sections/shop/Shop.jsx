@@ -232,7 +232,6 @@ function Shop() {
           return <Reveal as="article" className={productClassName} key={product.id} delay={(index % 2) * 0.08}
             onPointerEnter={() => pauseAutoOnHover(product)}
             onPointerLeave={() => scheduleAutoResume(product)}>
-          <span className="product-index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
           <button
             type="button"
             className="product-image-trigger"

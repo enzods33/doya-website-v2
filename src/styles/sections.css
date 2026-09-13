@@ -1173,25 +1173,6 @@ a.concert-tickets:focus-visible {
   transition: transform 520ms var(--motion-ease);
   pointer-events: none;
 }
-.product-index {
-  position: absolute;
-  z-index: 3;
-  top: 12px;
-  right: 12px;
-  display: grid;
-  place-items: center;
-  width: 36px;
-  height: 36px;
-  border: 1px solid rgb(244 240 234 / 34%);
-  border-radius: 50%;
-  color: var(--color-doya-white);
-  background: rgb(29 27 25 / 68%);
-  box-shadow: 0 8px 22px rgb(0 0 0 / 18%);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  font-size: 9px;
-  letter-spacing: .12em;
-}
 .product > img,
 .product .product-image {
   width: 100%;
