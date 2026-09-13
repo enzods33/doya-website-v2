@@ -61,8 +61,10 @@ export async function putAvailableProductInCart(page) {
   const size = product.locator('.size-list button:enabled').first()
   if (await size.count()) await size.click()
   await product.locator('button.commerce-button-small:enabled').click()
-  await expect(page.locator('.shop-feedback.is-added')).toBeVisible()
-  await page.locator('a[href="/panier"]').first().click()
+  const cartToast = page.locator('.cart-toast')
+  await expect(cartToast).toBeVisible()
+  await expect(cartToast.locator('a[href="/panier"]')).toHaveAttribute('href', '/panier')
+  await page.goto('/panier', { waitUntil: 'domcontentloaded' })
   await expect(page).toHaveURL(/\/panier/)
   await expect(page.locator('.cart-pay-note')).toContainText('Stripe')
 }

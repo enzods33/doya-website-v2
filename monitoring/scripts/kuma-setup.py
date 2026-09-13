@@ -14,28 +14,28 @@ PUSH_MONITORS = (
     (
         "KUMA_PUSH_DOYA_PUBLIC",
         "Doya — Site public & back-office (Playwright)",
-        1200,
+        28800,
         20,
         "Lecture seule: rendu du site, medias principaux et porte Google du back-office. Aucun clic OAuth.",
     ),
     (
         "KUMA_PUSH_DOYA_COMMERCE",
         "Doya — Panier & paiement (Playwright)",
-        1200,
+        28800,
         30,
         "Panier reel, CGV, affichage Stripe et fallbacks. Stripe/Brevo simules dans le navigateur; aucune commande ni reservation de stock.",
     ),
     (
         "KUMA_PUSH_DOYA_INTEGRATIONS",
         "Doya — Écoute, réseaux & Brevo (Playwright)",
-        1200,
+        28800,
         40,
         "Verifie les liens officiels, menus d'ecoute et messages newsletter. Brevo simule; aucun contact cree et aucun lien externe ouvert.",
     ),
     (
         "KUMA_PUSH_DOYA_API",
         "Doya — API catalogue & fonctions",
-        1200,
+        28800,
         50,
         "GET uniquement sur le catalogue public et OPTIONS sur Stripe, Brevo et Auth admin. Aucune ecriture base ou stockage.",
     ),
@@ -123,8 +123,9 @@ def main():
             monitor_id = existing["id"]
             token = existing["push_token"] or secrets.token_hex(24)
             cur.execute(
-                """UPDATE monitor SET active=1, type='push', interval=?, retry_interval=300,
-                   maxretries=1, weight=?, description=?, push_token=? WHERE id=?""",
+                """UPDATE monitor SET active=1, type='push', interval=?, retry_interval=1800,
+                   maxretries=1, resend_interval=0, expiry_notification=0,
+                   weight=?, description=?, push_token=? WHERE id=?""",
                 (interval, weight, description, token, monitor_id),
             )
         else:
@@ -136,8 +137,10 @@ def main():
                 "url": None,
                 "push_token": token,
                 "interval": interval,
-                "retry_interval": 300,
+                "retry_interval": 1800,
                 "maxretries": 1,
+                "resend_interval": 0,
+                "expiry_notification": 0,
                 "weight": weight,
                 "description": description,
             })

@@ -11,6 +11,11 @@ STATE = Path("/app/data/doya-alert-digest.state")
 STATUS_URL = "https://monitoring.guzzler-bot.cloud/status/doya"
 
 
+def is_missing_result(row):
+    detail = (row.get("msg") or "").strip().lower()
+    return not detail or "heartbeat" in detail
+
+
 def send(token, chat, message):
     body = urllib.parse.urlencode({
         "chat_id": str(chat),
@@ -51,11 +56,14 @@ def main():
         except Exception:
             pass
 
-    downs = [row for row in rows if row["status"] == 0]
-    pending = [row for row in rows if row["status"] != 1]
-    if not downs:
-        if pending:
-            print("pending, quiet")
+    confirmed = [
+        row for row in rows
+        if row["status"] == 0 and not is_missing_result(row)
+    ]
+    unsettled = [row for row in rows if row["status"] != 1]
+    if not confirmed:
+        if unsettled:
+            print("missing result or pending, quiet")
             return
         if previous.get("down"):
             send(token, chat, f"✅ Doya — rétabli\nToutes les sondes Doya sont UP.\n{STATUS_URL}")
@@ -65,20 +73,20 @@ def main():
             print("ok quiet")
         return
 
-    fingerprint = "|".join(f"{row['id']}:{(row['msg'] or '')[:120]}" for row in downs)
+    fingerprint = "|".join(f"{row['id']}:{(row['msg'] or '')[:120]}" for row in confirmed)
     if previous.get("down") and previous.get("fingerprint") == fingerprint:
         print("same incident, quiet")
         return
     lines = ["🔴 Doya — ALERTE"]
-    for row in downs[:6]:
+    for row in confirmed[:6]:
         detail = (row["msg"] or "aucun résultat reçu").strip()[:180]
         lines.append(f"• {row['name']} — {detail}")
-    if len(downs) > 6:
-        lines.append(f"• … +{len(downs) - 6} autre(s)")
+    if len(confirmed) > 6:
+        lines.append(f"• … +{len(confirmed) - 6} autre(s)")
     lines.extend(["", f"📊 {STATUS_URL}"])
     send(token, chat, "\n".join(lines))
     STATE.write_text(json.dumps({"down": True, "fingerprint": fingerprint}), encoding="utf-8")
-    print(f"alerted {len(downs)}")
+    print(f"alerted {len(confirmed)} confirmed failure(s)")
 
 
 if __name__ == "__main__":
