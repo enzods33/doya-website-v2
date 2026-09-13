@@ -282,6 +282,7 @@
   border: 0;
   background: rgb(44 41 38 / 42%);
   cursor: pointer;
+  overscroll-behavior: none;
 }
 .mobile-menu {
   position: fixed;
@@ -300,6 +301,8 @@
   background: var(--color-mist);
   color: var(--ink);
   box-sizing: border-box;
+  overflow: hidden;
+  overscroll-behavior: none;
 }
 .mobile-menu[open] {
   display: flex;

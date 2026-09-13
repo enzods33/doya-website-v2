@@ -13,13 +13,57 @@ import Link from './Link.jsx'
 import { editorialEase } from '../utils/motion.js'
 import { syncHeaderHeightVar, useRoute } from '../utils/router.js'
 
+function lockPageScroll(lockRef) {
+  if (lockRef.current) return
+
+  const root = document.documentElement
+  const body = document.body
+  const scrollY = window.scrollY
+
+  lockRef.current = {
+    scrollY,
+    rootOverflow: root.style.overflow,
+    bodyOverflow: body.style.overflow,
+    bodyPosition: body.style.position,
+    bodyTop: body.style.top,
+    bodyLeft: body.style.left,
+    bodyRight: body.style.right,
+    bodyWidth: body.style.width,
+  }
+
+  root.style.overflow = 'hidden'
+  body.style.overflow = 'hidden'
+  body.style.position = 'fixed'
+  body.style.top = `-${scrollY}px`
+  body.style.left = '0'
+  body.style.right = '0'
+  body.style.width = '100%'
+}
+
+function unlockPageScroll(lockRef) {
+  const lock = lockRef.current
+  if (!lock) return
+
+  const root = document.documentElement
+  const body = document.body
+  root.style.overflow = lock.rootOverflow
+  body.style.overflow = lock.bodyOverflow
+  body.style.position = lock.bodyPosition
+  body.style.top = lock.bodyTop
+  body.style.left = lock.bodyLeft
+  body.style.right = lock.bodyRight
+  body.style.width = lock.bodyWidth
+  lockRef.current = null
+  window.scrollTo({ top: lock.scrollY, left: 0, behavior: 'auto' })
+}
+
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(() => typeof window !== 'undefined' && window.scrollY > 18)
   const headerRef = useRef(null)
   const dialogRef = useRef(null)
   const triggerRef = useRef(null)
-  const bodyOverflowRef = useRef(null)
+  const pageScrollLockRef = useRef(null)
   const reducedMotion = useReducedMotion()
   const { path } = useRoute()
   const { count } = useCart()
@@ -77,18 +121,14 @@ function Header() {
 
     if (menuOpen) {
       if (!dialog.open) {
-        bodyOverflowRef.current = document.body.style.overflow
-        document.body.style.overflow = 'hidden'
+        lockPageScroll(pageScrollLockRef)
         dialog.show()
       }
       return undefined
     }
 
     // Déverrouille le scroll tout de suite (ancres menu), ferme le dialog à la fin d’anim.
-    if (bodyOverflowRef.current !== null) {
-      document.body.style.overflow = bodyOverflowRef.current
-      bodyOverflowRef.current = null
-    }
+    unlockPageScroll(pageScrollLockRef)
     return undefined
   }, [menuOpen])
 
@@ -96,17 +136,14 @@ function Header() {
     const dialog = dialogRef.current
     return () => {
       if (dialog?.open) dialog.close()
-      if (bodyOverflowRef.current !== null) document.body.style.overflow = bodyOverflowRef.current
+      unlockPageScroll(pageScrollLockRef)
     }
   }, [])
 
   function finishClosingMenu() {
     if (menuOpen || !dialogRef.current?.open) return
     dialogRef.current.close()
-    if (bodyOverflowRef.current !== null) {
-      document.body.style.overflow = bodyOverflowRef.current
-      bodyOverflowRef.current = null
-    }
+    unlockPageScroll(pageScrollLockRef)
     triggerRef.current?.focus({ preventScroll: true })
   }
 
@@ -149,10 +186,7 @@ function Header() {
   }
 
   function closeMenu() {
-    if (bodyOverflowRef.current !== null) {
-      document.body.style.overflow = bodyOverflowRef.current
-      bodyOverflowRef.current = null
-    }
+    unlockPageScroll(pageScrollLockRef)
     setMenuOpen(false)
   }
 
@@ -162,10 +196,7 @@ function Header() {
 
   function toggleMenu() {
     setMenuOpen((open) => {
-      if (open && bodyOverflowRef.current !== null) {
-        document.body.style.overflow = bodyOverflowRef.current
-        bodyOverflowRef.current = null
-      }
+      if (open) unlockPageScroll(pageScrollLockRef)
       return !open
     })
   }
