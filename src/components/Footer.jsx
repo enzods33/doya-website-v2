@@ -55,14 +55,16 @@ function Footer() {
   return (
     <footer id="contact" className="site-footer">
       <div className="section-shell">
-        <div className="footer-brand">
-          <Link href="#top" aria-label={t('a11y.footerHome')}>
-            <Lockup className="footer-wordmark" />
-          </Link>
-          <LunaBohemiaMark className="footer-album-mark" />
-        </div>
+        <div className="footer-stage">
+          <div className="footer-brand">
+            <Link href="#top" aria-label={t('a11y.footerHome')}>
+              <Lockup className="footer-wordmark" />
+            </Link>
+            <LunaBohemiaMark className="footer-album-mark" />
+          </div>
 
-        <NewsletterSignup className="footer-newsletter" />
+          <NewsletterSignup className="footer-newsletter" />
+        </div>
 
         <div className="footer-contact" aria-label={t('a11y.footerContact')}>
           {contacts.map((contact) => {
