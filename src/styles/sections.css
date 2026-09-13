@@ -568,11 +568,11 @@
     transform 400ms var(--motion-ease);
 }
 .about-gallery-nav.is-prev {
-  left: clamp(1rem, 8vw, 6rem);
+  left: calc(50% - (var(--about-active-slide) / 2) + 18px);
   transform: translateY(-50%);
 }
 .about-gallery-nav.is-next {
-  right: clamp(1rem, 8vw, 6rem);
+  right: calc(50% - (var(--about-active-slide) / 2) + 18px);
   transform: translateY(-50%);
 }
 .about-gallery-nav:focus-visible {
