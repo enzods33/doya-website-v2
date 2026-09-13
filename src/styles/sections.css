@@ -1190,7 +1190,6 @@ a.concert-tickets:focus-visible {
     radial-gradient(circle at 22% 62%, rgb(255 255 255 / 38%) 0, transparent 36%),
     radial-gradient(circle at 82% 44%, rgb(214 0 28 / 4%) 0, transparent 27%),
     linear-gradient(135deg, color-mix(in srgb, var(--color-stone) 92%, white), var(--color-stone));
-  border-top: 1px solid var(--section-rule);
   padding-block: clamp(20px, 2vw, 30px) clamp(72px, 8vw, 122px);
 }
 .shop-section::before {
