@@ -128,9 +128,9 @@ export default {
   about: {
     eyebrow: 'Bio',
     biographyLead:
-      'DOYA is Marina and Melissa.',
+      'Two sisters. Two voices. One pulse.',
     biographyBody:
-      'A duo singing between Spanish and French, never choosing only one shore.\n\nFrom Mariposa to Mueve, from Lo vi venir to No anda sola, their path is already written in choruses — songs that stand on their own, even before the album.\n\nLuna Bohemia (2026) is the next chapter: twelve tracks, desert light, a clear identity.\n\nTwo voices, one line. Black and white. The warmth of sand, the red of the stars.\n\nDOYA does not invent a legend: it sets an universe, and lets the music carry it.',
+      'Marina and Mélissa grew up in France in a Spanish family, with flamenco as their first shared language. Trained at the Tarbes Conservatory, they learned violin, saxophone and percussion. Their teenage years in Andalusia added singing, guitar and cajón to that palette. From the start, their music has lived in the conversation between classical discipline, popular instinct and freedom.\n\nIn 2018, that bond became DOYA. The duo combines the force of two voices with flamenco, Latin, pop and electronic colours. Their connection is immediate on stage. From Spain to Portugal, from the Salle Pleyel to the Zénith arenas, they have shaped a sound that feels warm, physical and precise.\n\nTheir appearance on The Voice France in 2023, followed by a performance at Lollapalooza Paris, brought their music to a wider audience. The EP Tú conmigo arrived in 2024 after the success of No anda sola, establishing a songwriting style that moves naturally between French and Spanish.\n\nWith Luna Bohemia, their first album distributed by Universal Music France, DOYA opens a new chapter. Across twelve tracks, roots meet movement and acoustic textures meet electronics. Carried by their bond, their music makes heritage dance in the present. Two voices answering and carrying each other until they become a single breath.',
   },
   contact: {
     booking: {

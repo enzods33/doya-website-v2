@@ -128,9 +128,9 @@ export default {
   about: {
     eyebrow: 'Bio',
     biographyLead:
-      'DOYA son Marina y Melissa.',
+      'Dos hermanas. Dos voces. Un mismo pulso.',
     biographyBody:
-      'Un dúo que canta entre el español y el francés, sin elegir una sola orilla.\n\nDe Mariposa a Mueve, de Lo vi venir a No anda sola, su camino ya se escribe en estribillos — canciones que se sostienen solas, incluso antes del álbum.\n\nLuna Bohemia (2026) es el capítulo: doce temas, luz de desierto, una identidad nítida.\n\nDos voces, una misma línea. El negro y el blanco. El calor de la arena, el rojo de las estrellas.\n\nDOYA no inventa una leyenda: plantea un universo y deja que la música lo lleve.',
+      'Marina y Mélissa crecen en Francia en una familia española, con el flamenco como lengua íntima. Formadas en el Conservatorio de Tarbes, estudian violín, saxofón y percusión. Su adolescencia en Andalucía suma el cante, la guitarra y el cajón a esa paleta. Desde muy pronto, su música nace del diálogo entre disciplina clásica, instinto popular y libertad.\n\nEn 2018, ese vínculo se convierte en DOYA. El dúo une la fuerza de dos voces con colores flamencos, latinos, pop y electrónicos. En el escenario, su complicidad es inmediata. De España a Portugal, de la Salle Pleyel a los Zéniths franceses, construyen un lenguaje solar, físico y preciso.\n\nSu paso por The Voice France en 2023 y después por el escenario de Lollapalooza Paris amplía su público. El EP Tú conmigo llega en 2024 tras el éxito de No anda sola, y afirma una escritura que transita con naturalidad entre el francés y el español.\n\nCon Luna Bohemia, su primer álbum distribuido por Universal Music France, DOYA abre un nuevo capítulo. Doce canciones donde las raíces encuentran el movimiento y lo acústico dialoga con la electrónica. Llevada por su complicidad, su música hace bailar la herencia en el presente. Dos voces que se responden, se sostienen y terminan formando un solo aliento.',
   },
   contact: {
     booking: {

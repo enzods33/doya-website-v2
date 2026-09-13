@@ -7,6 +7,16 @@ import { Stars, Wordmark } from '../../components/Brand.jsx'
 import Reveal from '../../components/Reveal.jsx'
 import PhotoLightbox from '../../components/PhotoLightbox.jsx'
 
+const BIO_ACCENT_PATTERN = /(DOYA|Luna Bohemia)/gi
+
+function biographyText(text) {
+  return String(text).split(BIO_ACCENT_PATTERN).map((part, index) => (
+    /^(doya|luna bohemia)$/i.test(part)
+      ? <span className="about-biography-accent" key={`${part}-${index}`}>{part}</span>
+      : part
+  ))
+}
+
 function About() {
   const reducedMotion = useReducedMotion()
   const { t, locale } = useI18n()
@@ -137,14 +147,14 @@ function About() {
   return (
     <section id="about" className="about-section" aria-labelledby="about-title">
       <div className="section-shell about-intro">
-        <Stars color="white" className="about-intro-stars" />
         <Reveal className="about-copy" delay={0.1}>
           <h2 id="about-title" className="editorial-title about-title">{t('about.eyebrow')}</h2>
           <Wordmark decorative className="about-wordmark" />
+          <Stars color="white" className="about-intro-stars" />
           <div className="about-biography">
-            <p className="about-biography-lead">{biographyLead}</p>
+            <p className="about-biography-lead">{biographyText(biographyLead)}</p>
             {biographyBody.split(/\n\n+/).map((paragraph) => (
-              <p key={paragraph.slice(0, 24)} className="about-biography-body">{paragraph}</p>
+              <p key={paragraph.slice(0, 24)} className="about-biography-body">{biographyText(paragraph)}</p>
             ))}
           </div>
         </Reveal>

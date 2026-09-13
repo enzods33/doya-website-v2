@@ -128,9 +128,9 @@ export default {
   about: {
     eyebrow: 'Bio',
     biographyLead:
-      'DOYA, c’est Marina et Melissa.',
+      'Deux sœurs. Deux voix. Une même pulsation.',
     biographyBody:
-      'Un duo qui chante entre l’espagnol et le français, sans choisir un seul rivage.\n\nDe Mariposa à Mueve, de Lo vi venir à No anda sola, leur trajectoire s’écrit déjà en refrains — des chansons qui tiennent debout seules, avant même l’album.\n\nLuna Bohemia (2026) en est le chapitre : douze titres, une lumière de désert, une identité nette.\n\nDeux voix, une même ligne. Le noir et le blanc. La chaleur du sable, le rouge des étoiles.\n\nDOYA ne raconte pas une légende inventée : elle pose un univers, et laisse la musique le porter.',
+      'Marina et Mélissa grandissent en France dans une famille espagnole, avec le flamenco comme langue intime. Formées au conservatoire de Tarbes, elles apprennent le violon, le saxophone et les percussions. Leur adolescence en Andalousie ajoute le chant, la guitare et le cajón à cette palette. Très tôt, leur musique se construit dans le dialogue entre discipline classique, instinct populaire et liberté.\n\nEn 2018, ce lien devient DOYA. Le duo mêle la force de deux voix à des couleurs flamencas, latines, pop et électro. Sur scène, leur complicité est immédiate. De l’Espagne au Portugal, de la Salle Pleyel aux Zéniths, elles installent un langage solaire, physique et précis.\n\nLeur passage dans The Voice France en 2023, puis sur la scène de Lollapalooza Paris, élargit leur public. L’EP Tú conmigo paraît en 2024, après le succès de No anda sola, et affirme une écriture qui traverse naturellement le français et l’espagnol.\n\nAvec Luna Bohemia, leur premier album distribué par Universal Music France, DOYA ouvre un nouveau chapitre. Douze titres où les racines rencontrent le mouvement, où l’acoustique dialogue avec l’électronique. Portée par leur complicité, leur musique fait danser l’héritage dans le présent. Deux voix qui se répondent, se portent et finissent par ne former qu’un seul souffle.',
   },
   contact: {
     booking: {
