@@ -94,7 +94,7 @@ function ListenDock() {
     return (
       <button
         type="button"
-        className={`listen-dock-reopen${excludedSectionVisible ? ' is-suppressed' : ''}`}
+        className="listen-dock-reopen"
         onClick={show}
         aria-label={t('listenDock.open')}
       >

@@ -107,8 +107,7 @@
   transition: opacity .18s linear, visibility 0s;
 }
 
-.listen-dock.is-suppressed,
-.listen-dock-reopen.is-suppressed {
+.listen-dock.is-suppressed {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
