@@ -104,6 +104,7 @@ export default {
     addedTitle: 'Adicionado ao carrinho',
     addedSize: 'Tamanho {size}',
     addedClose: 'Fechar a confirmação',
+    chooseSizeHint: 'Selecione um tamanho disponível antes de adicionar este artigo.',
     sizesAria: 'Tamanhos {name}',
     soldOut: 'Esgotado',
     cdSignedNote: 'Os 50 primeiros exemplares serão dedicados ♥',
@@ -113,7 +114,7 @@ export default {
     viewBackWord: 'de costas',
     type: { tshirt: 'T-shirt', cd: 'CD', other: 'Artigo' },
     size: { ENF: 'Infantil', CD: 'CD', VINYL: 'Vinil', U: 'CD' },
-    color: { black: 'Preto', white: 'Branco', digipack: 'Digipack', default: '' },
+    color: { black: 'Preto', white: 'Branco', digipack: 'Novo álbum em CD · Livreto incluído', default: '' },
     product: {
       'luna-bohemia-white': 'Estrelas',
       'luna-bohemia-black': 'Estrelas',

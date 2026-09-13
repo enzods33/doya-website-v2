@@ -104,6 +104,7 @@ export default {
     addedTitle: 'Added to cart',
     addedSize: 'Size {size}',
     addedClose: 'Close confirmation',
+    chooseSizeHint: 'Select an available size before adding this item.',
     sizesAria: 'Sizes {name}',
     soldOut: 'Out of stock',
     cdSignedNote: 'The first 50 copies will be signed ♥',
@@ -113,7 +114,7 @@ export default {
     viewBackWord: 'back',
     type: { tshirt: 'T-shirt', cd: 'CD', other: 'Item' },
     size: { ENF: 'Kids', CD: 'CD', VINYL: 'Vinyl', U: 'CD' },
-    color: { black: 'Black', white: 'White', digipack: 'Digipack', default: '' },
+    color: { black: 'Black', white: 'White', digipack: 'New album on CD · Booklet included', default: '' },
     product: {
       'luna-bohemia-white': 'Stars',
       'luna-bohemia-black': 'Stars',

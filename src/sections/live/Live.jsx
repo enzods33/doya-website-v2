@@ -42,6 +42,7 @@ function Live() {
     () => windowConcerts(rows, new Date(), { expanded }),
     [rows, expanded],
   )
+  const nextConcertId = concerts.find((concert) => !isPastDate(concert.date))?.id
 
   useEffect(() => {
     let active = true
@@ -64,8 +65,9 @@ function Live() {
               <ul className="concerts">
                 {concerts.map((concert) => {
                   const past = isPastDate(concert.date)
+                  const next = concert.id === nextConcertId
                   return (
-                    <li key={concert.id} className={past ? 'is-past' : undefined}>
+                    <li key={concert.id} className={[past ? 'is-past' : '', next ? 'is-next' : ''].filter(Boolean).join(' ') || undefined}>
                       <time
                         className={past ? 'is-past' : undefined}
                         dateTime={concert.date}

@@ -9,7 +9,7 @@ export function isUniqueSize(size) {
   return UNIQUE_SIZES.includes(String(size || '').toUpperCase())
 }
 
-export { AUTO_PROMOS, DEFAULT_AUTO_PROMOS, bestAutoPromo, fetchAutoPromos } from './autoPromos.js'
+export { AUTO_PROMOS, AUTO_PROMO_TEMPLATES, DEFAULT_AUTO_PROMOS, bestAutoPromo, fetchAutoPromos } from './autoPromos.js'
 
 export const CART_LIMITS = {
   maxLineQuantity: 6,

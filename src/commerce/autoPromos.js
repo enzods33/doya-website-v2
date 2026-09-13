@@ -1,5 +1,5 @@
-/** Miroir front des auto-promos serveur (montants chargés depuis catalog_auto_promos). */
-export const DEFAULT_AUTO_PROMOS = [
+/** Règles conservées pour une éventuelle réactivation depuis l’administration. */
+export const AUTO_PROMO_TEMPLATES = [
   {
     id: '2tees',
     minTees: 2,
@@ -20,6 +20,8 @@ export const DEFAULT_AUTO_PROMOS = [
   },
 ]
 
+/** Pas de remise implicite si la configuration distante est indisponible. */
+export const DEFAULT_AUTO_PROMOS = []
 export const AUTO_PROMOS = DEFAULT_AUTO_PROMOS
 
 export function mapRemoteAutoPromos(rows) {

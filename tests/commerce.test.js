@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs'
 import { products } from '../src/data/products.js'
 import {
   AUTO_PROMOS,
+  AUTO_PROMO_TEMPLATES,
   CART_LIMITS,
   FLAT_SHIPPING_LIMITS,
   bestAutoPromo,
@@ -49,13 +50,15 @@ test('les zones de port front restent alignées avec Deno', () => {
   assert.equal(zoneForCountry('XX'), null)
 })
 
-test('auto-promos : meilleure offre seule', () => {
-  assert.equal(bestAutoPromo(1, 0), null)
-  assert.equal(bestAutoPromo(2, 0)?.id, '2tees')
-  assert.equal(bestAutoPromo(1, 1)?.id, 'cdtee')
-  assert.equal(bestAutoPromo(2, 1)?.id, '2tees')
-  assert.equal(AUTO_PROMOS.find((p) => p.id === '2tees')?.amountOffCents, 800)
-  assert.equal(AUTO_PROMOS.find((p) => p.id === 'cdtee')?.amountOffCents, 500)
+test('auto-promos désactivées par défaut et règles conservées', () => {
+  assert.deepEqual(AUTO_PROMOS, [])
+  assert.equal(bestAutoPromo(2, 1), null)
+  assert.equal(AUTO_PROMO_TEMPLATES.find((p) => p.id === '2tees')?.amountOffCents, 800)
+  assert.equal(AUTO_PROMO_TEMPLATES.find((p) => p.id === 'cdtee')?.amountOffCents, 500)
+  assert.equal(bestAutoPromo(1, 0, AUTO_PROMO_TEMPLATES), null)
+  assert.equal(bestAutoPromo(2, 0, AUTO_PROMO_TEMPLATES)?.id, '2tees')
+  assert.equal(bestAutoPromo(1, 1, AUTO_PROMO_TEMPLATES)?.id, 'cdtee')
+  assert.equal(bestAutoPromo(2, 1, AUTO_PROMO_TEMPLATES)?.id, '2tees')
 })
 
 test('URLs assets CDN stables', () => {

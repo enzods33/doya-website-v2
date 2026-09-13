@@ -835,10 +835,23 @@
   pointer-events: none;
 }
 .live-section {
-  background: var(--color-sand);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 82% 24%, rgb(255 255 255 / 26%), transparent 30%),
+    linear-gradient(135deg, var(--color-sand), #d2cdc6);
   color: var(--ink);
   border-top: 1px solid var(--section-rule);
   padding-block: var(--section-space);
+}
+.live-section::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent calc(50% - .5px), rgb(44 41 38 / 4%) 50%, transparent calc(50% + .5px));
 }
 .live-layout {
   display: grid;
@@ -848,6 +861,7 @@
   row-gap: 0;
 }
 .live-layout h2 {
+  position: relative;
   font-size: clamp(28px, 3.2vw, 44px);
   letter-spacing: .04em;
   line-height: 1.05;
@@ -855,6 +869,14 @@
   padding-top: 0.15em;
   color: var(--ink);
   font-weight: 500;
+}
+.live-layout h2::after {
+  content: '';
+  display: block;
+  width: 2.8rem;
+  height: 1px;
+  margin-top: 16px;
+  background: var(--color-doya-red);
 }
 .live-content { padding-top: 0; min-width: 0; }
 .live-content > .eyebrow {
@@ -898,6 +920,31 @@
   align-items: baseline;
   padding-block: clamp(18px, 2vw, 26px);
   border-bottom: 1px solid var(--section-rule);
+  transition: opacity var(--motion-duration), background var(--motion-duration), transform var(--motion-duration);
+}
+.concerts li.is-past { opacity: .66; }
+.concerts li.is-next {
+  position: relative;
+  margin-inline: -16px;
+  padding-inline: 16px;
+  border-bottom-color: rgb(44 41 38 / 18%);
+  background: rgb(244 240 234 / 42%);
+  box-shadow: inset 2px 0 0 var(--color-doya-red), 0 14px 36px rgb(44 41 38 / 6%);
+}
+.concerts li.is-next .concert-city::before {
+  content: '';
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  margin: 0 9px 2px 0;
+  border-radius: 50%;
+  background: var(--color-doya-red);
+  box-shadow: 0 0 12px rgb(194 5 15 / 36%);
+}
+.concerts li.is-next .concert-tickets {
+  color: var(--color-doya-white);
+  border-color: var(--ink);
+  background: var(--ink);
 }
 .concert-place {
   display: contents;
@@ -989,6 +1036,7 @@ a.concert-tickets:focus-visible {
   background: rgb(44 41 38 / 4%);
 }
 @media (hover: hover) and (pointer: fine) {
+  .concerts li:not(.is-past):hover { transform: translateX(3px); }
   a.concert-tickets:hover::after,
   a.concert-tickets:focus-visible::after {
     transform: scaleX(1);
@@ -1002,7 +1050,7 @@ a.concert-tickets:focus-visible {
 }
 .concert-tickets.is-muted::after { display: none; }
 .concerts li.is-past .concert-city,
-.concerts li.is-past .concert-venue { opacity: .72; }
+.concerts li.is-past .concert-venue { opacity: 1; }
 .concerts li.is-past .concert-tickets { opacity: .45; }
 .concerts .availability-note {
   color: var(--muted);
@@ -1012,31 +1060,51 @@ a.concert-tickets:focus-visible {
   justify-self: end;
 }
 .shop-section {
-  background: var(--color-mist);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 82% 12%, rgb(255 255 255 / 66%), transparent 28%),
+    linear-gradient(145deg, #e8e4dd 0%, var(--color-mist) 52%, #d8d2ca 100%);
   border-top: 1px solid var(--section-rule);
-  padding-block: var(--section-space);
+  padding-block: clamp(72px, 8vw, 122px);
+}
+.shop-section::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, transparent calc(50% - .5px), rgb(44 41 38 / 5%) 50%, transparent calc(50% + .5px)),
+    repeating-linear-gradient(90deg, transparent 0, transparent calc(25% - 1px), rgb(44 41 38 / 2.5%) 25%);
 }
 .shop-heading {
+  position: relative;
+  z-index: 1;
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   grid-template-rows: auto auto;
-  column-gap: clamp(20px, 3vw, 40px);
-  align-items: end;
-  margin-bottom: clamp(28px, 3.5vw, 52px);
+  column-gap: clamp(28px, 5vw, 76px);
+  align-items: center;
+  margin-bottom: clamp(32px, 4vw, 56px);
+  padding: clamp(20px, 2.4vw, 32px) 0 0;
+  border-top: 1px solid rgb(44 41 38 / 18%);
 }
+.shop-heading-main { min-width: 0; }
 .shop-heading h2 {
-  grid-column: 1;
-  grid-row: 1;
   margin: 0;
-  font-size: clamp(32px, 4.2vw, 52px);
-  letter-spacing: .06em;
-  line-height: .95;
+  font-size: clamp(38px, 4.6vw, 62px);
+  letter-spacing: .045em;
+  line-height: .92;
+  text-shadow: 0 12px 28px rgb(44 41 38 / 7%);
+}
+.shop-heading-meta {
+  display: grid;
+  justify-items: end;
 }
 .shop-collection {
-  grid-column: 2;
-  grid-row: 1;
   margin: 0;
-  align-self: end;
   text-align: right;
   letter-spacing: .14em;
   color: var(--muted);
@@ -1044,75 +1112,137 @@ a.concert-tickets:focus-visible {
 .shop-promo {
   grid-column: 1 / -1;
   grid-row: 2;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px 28px;
-  margin: 18px 0 0;
-  padding: 16px 0 0;
-  border-top: 1px solid var(--section-rule);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  margin: clamp(22px, 3vw, 34px) 0 0;
+  padding: 0;
+  border-top: 1px solid rgb(44 41 38 / 14%);
+  border-bottom: 1px solid rgb(44 41 38 / 10%);
+  background: rgb(244 240 234 / 32%);
   list-style: none;
 }
 .shop-promo li {
   margin: 0;
-  color: rgb(44 41 38 / 88%);
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: .04em;
+  padding: 12px clamp(16px, 2vw, 28px);
+  color: rgb(44 41 38 / 64%);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: .045em;
   line-height: 1.45;
 }
-@media (min-width: 768px) {
-  .shop-promo li + li {
-    padding-left: 28px;
-    border-left: 1px solid var(--section-rule);
-  }
+.shop-promo li + li {
+  border-left: 1px solid rgb(44 41 38 / 10%);
 }
 .cart-promo-msg strong {
   font-weight: 600;
 }
 .products {
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  column-gap: clamp(24px, 3vw, 48px);
-  row-gap: clamp(36px, 4.5vw, 64px);
+  gap: clamp(18px, 2.2vw, 34px);
 }
 .product {
   position: relative;
   min-width: 0;
   display: flex;
   flex-direction: column;
-  padding-bottom: clamp(22px, 2.8vw, 36px);
-  border-bottom: 1px solid rgb(44 41 38 / 12%);
+  overflow: hidden;
+  padding-bottom: 0;
+  border: 1px solid rgb(44 41 38 / 13%);
+  background: rgb(244 240 234 / 58%);
+  box-shadow: 0 18px 48px rgb(44 41 38 / 7%);
+  transition:
+    border-color 420ms var(--motion-ease),
+    box-shadow 420ms var(--motion-ease),
+    transform 420ms var(--motion-ease);
 }
-.product:not(:nth-child(4n + 1))::before {
+.product::after {
   content: '';
   position: absolute;
-  left: calc(clamp(12px, 1.5vw, 24px) * -1);
-  top: 8%;
-  bottom: 12%;
-  width: 1px;
-  background: rgb(44 41 38 / 10%);
+  z-index: 4;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 2px;
+  background: var(--color-doya-red);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 520ms var(--motion-ease);
   pointer-events: none;
 }
+.product-index {
+  position: absolute;
+  z-index: 3;
+  top: 12px;
+  right: 12px;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgb(244 240 234 / 34%);
+  border-radius: 50%;
+  color: var(--color-doya-white);
+  background: rgb(29 27 25 / 68%);
+  box-shadow: 0 8px 22px rgb(0 0 0 / 18%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-size: 9px;
+  letter-spacing: .12em;
+}
 .product > img,
-.product .product-image { width: 100%; aspect-ratio: 1; object-fit: contain; pointer-events: none; }
-.product-image-trigger {
-  display: block;
+.product .product-image {
   width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+.product-image-trigger {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  aspect-ratio: 4 / 3;
   padding: 0;
   border: 0;
-  background: linear-gradient(145deg, #d0cbc4, #dad5ce);
-  box-shadow: inset 0 0 0 1px rgb(44 41 38 / 6%);
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 42%, rgb(255 255 255 / 46%), transparent 42%),
+    linear-gradient(145deg, #cbc6bf, #ddd8d1);
+  box-shadow: inset 0 -1px 0 rgb(44 41 38 / 9%);
   cursor: zoom-in;
   text-align: inherit;
   color: inherit;
 }
+.product.is-light-product .product-image-trigger {
+  background:
+    radial-gradient(circle at 50% 40%, rgb(255 255 255 / 16%), transparent 42%),
+    linear-gradient(145deg, #bbb5ae, #d0cac2);
+}
+.product.is-dark-product .product-image-trigger {
+  background:
+    radial-gradient(circle at 50% 42%, rgb(255 255 255 / 28%), transparent 44%),
+    linear-gradient(145deg, #d5d0c9, #e1dcd5);
+}
 
+.product .product-image {
+  display: grid;
+  place-items: center;
+  max-width: 92%;
+  max-height: 92%;
+  transition: transform 760ms var(--motion-ease), filter 420ms var(--motion-ease);
+}
 .product .product-image img {
-  filter: drop-shadow(0 14px 12px rgb(44 41 38 / 16%));
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 18px 16px rgb(44 41 38 / 20%));
 }
 .product-image-trigger:focus-visible {
   outline: 2px solid var(--color-doya-red);
-  outline-offset: 4px;
+  outline-offset: -4px;
 }
 .product-zoom {
   position: fixed;
@@ -1181,143 +1311,187 @@ a.concert-tickets:focus-visible {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
-  margin-top: 10px;
-  font-size: 12px;
+  gap: 7px;
+  margin: 11px 18px 0;
+  font-size: 11px;
   text-transform: uppercase;
   letter-spacing: .05em;
 }
 .product-view-controls button {
   border: 0;
-  min-height: 32px;
-  padding: 0;
+  min-height: 34px;
+  padding: 0 2px;
   background: transparent;
   position: relative;
 }
-.product-view-controls button[aria-pressed='true']::after { content: ''; position: absolute; left: 0; right: 0; bottom: 4px; height: 1px; background: var(--color-doya-red); }
+.product-view-controls button[aria-pressed='true']::after { content: ''; position: absolute; left: 2px; right: 2px; bottom: 4px; height: 1px; background: var(--color-doya-red); }
 .product-view-controls button[aria-pressed='false'] { color: var(--muted); }
 .product-caption {
-  margin-top: 8px;
-  padding-top: 0;
+  margin-top: 0;
+  padding: 8px 18px 18px;
   border-top: 0;
   display: flex;
   flex-direction: column;
   flex: 1;
 }
-.product-caption > .eyebrow { font-size: 12px; color: var(--muted); }
-.product-caption h3 { margin-top: 4px; font-family: var(--font-editorial); font-size: clamp(18px, 1.5vw, 25px); text-transform: uppercase; }
-.product-details { display: flex; justify-content: space-between; gap: 16px; margin-top: 10px; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; }
-.shop-note { margin-top: 42px; }
+.product-caption > .eyebrow { font-size: 10px; color: var(--muted); letter-spacing: .16em; }
+.product-caption h3 { margin-top: 5px; font-family: var(--font-editorial); font-size: clamp(21px, 1.7vw, 27px); text-transform: uppercase; }
+.product-details {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 12px;
+  padding-top: 11px;
+  border-top: 1px solid rgb(44 41 38 / 12%);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.shop-note {
+  position: relative;
+  z-index: 1;
+  width: max-content;
+  max-width: 100%;
+  margin: clamp(28px, 4vw, 48px) auto 0;
+  padding-left: 18px;
+  color: rgb(44 41 38 / 60%);
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.shop-note::before {
+  content: '◇';
+  position: absolute;
+  left: 0;
+  color: var(--color-doya-red);
+}
+.shop-section .product-buy {
+  margin-top: 16px;
+  padding-top: 14px;
+  gap: 12px;
+  border-top: 1px solid rgb(44 41 38 / 10%);
+}
+.shop-section .size-list {
+  min-height: 38px;
+  gap: 6px;
+}
+.shop-section .size-list button {
+  min-width: 36px;
+  min-height: 36px;
+  border: 1px solid rgb(44 41 38 / 14%);
+  background: rgb(255 255 255 / 20%);
+  transition: color var(--motion-duration), border-color var(--motion-duration), background var(--motion-duration);
+}
+.shop-section .size-list button[aria-pressed='true'] {
+  color: var(--color-doya-white);
+  border-color: var(--ink);
+  background: var(--ink);
+}
+.shop-section .size-list button[aria-pressed='true']::after { display: none; }
+.shop-section .size-list button:disabled { background: transparent; }
+.shop-section .commerce-button-small {
+  position: relative;
+  min-height: 44px;
+  border: 1px solid var(--ink);
+  transition: color var(--motion-duration), border-color var(--motion-duration), background var(--motion-duration);
+}
+.shop-error-toast {
+  position: fixed;
+  z-index: 76;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  width: min(calc(100vw - 3rem), 25rem);
+  min-height: 72px;
+  padding: 12px 12px 12px 14px;
+  color: var(--color-doya-white);
+  border: 1px solid rgb(255 255 255 / 18%);
+  background: rgb(31 28 26 / 97%);
+  box-shadow: 0 24px 70px rgb(0 0 0 / 34%), inset 0 2px 0 var(--color-doya-red);
+  animation: shop-error-toast-in 420ms var(--motion-ease) both;
+}
+.shop-error-mark {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgb(255 255 255 / 30%);
+  border-radius: 50%;
+  color: var(--color-doya-white);
+  font-family: var(--font-editorial);
+  font-size: 19px;
+}
+.shop-error-toast div { display: grid; gap: 4px; min-width: 0; }
+.shop-error-toast strong {
+  font-family: var(--font-editorial);
+  font-size: 17px;
+  font-weight: 400;
+  letter-spacing: .03em;
+}
+.shop-error-toast small { color: rgb(244 240 234 / 64%); font-size: 10px; line-height: 1.35; }
+.shop-error-toast button {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 44px;
+  padding: 0;
+  color: rgb(244 240 234 / 62%);
+  border: 0;
+  background: transparent;
+  font-size: 20px;
+  cursor: pointer;
+}
+@keyframes shop-error-toast-in {
+  from { opacity: 0; transform: translateY(14px) scale(.98); }
+  to { opacity: 1; transform: none; }
+}
+@media (hover: hover) and (pointer: fine) {
+  .product:hover {
+    border-color: rgb(44 41 38 / 25%);
+    box-shadow: 0 26px 68px rgb(44 41 38 / 13%);
+    transform: translateY(-5px);
+  }
+  .product:hover::after { transform: scaleX(1); }
+  .product:hover .product-image { transform: scale(1.035); }
+  .shop-section .size-list button:hover:not(:disabled):not([aria-pressed='true']) {
+    border-color: rgb(44 41 38 / 42%);
+    background: rgb(255 255 255 / 42%);
+  }
+  .shop-section .commerce-button-small:hover {
+    color: var(--color-doya-white);
+    border-color: var(--color-doya-red);
+    background: var(--color-doya-red);
+  }
+}
 
-@media (min-width: 1024px) {
-  .shop-section {
-    box-sizing: border-box;
-    height: calc(100svh - var(--header-height));
-    min-height: calc(100svh - var(--header-height));
-    max-height: calc(100svh - var(--header-height));
-    display: flex;
-    flex-direction: column;
-    padding-block: clamp(10px, 1.8vh, 24px);
-    overflow: hidden;
-  }
-  .shop-heading {
-    flex: 0 0 auto;
-    margin-bottom: clamp(8px, 1.4vh, 18px);
-  }
-  .shop-heading h2 {
-    font-size: clamp(26px, 3.2vw, 44px);
-  }
-  .shop-promo {
-    margin-top: clamp(8px, 1.2vh, 14px);
-    padding-top: clamp(8px, 1.2vh, 14px);
-  }
-  .shop-promo li {
-    font-size: 12px;
-  }
+@media (min-width: 768px) and (max-width: 1199px) {
+  .products { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .product.is-featured { grid-column: 1 / -1; }
+  .product.is-featured .product-image-trigger { aspect-ratio: 16 / 9; }
+  .product.is-featured .product-image { max-width: min(68%, 31rem); max-height: 88%; }
+}
+
+@media (min-width: 1200px) {
   .products {
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+  }
+  .product.is-featured {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+  .product.is-featured .product-image-trigger {
     flex: 1 1 auto;
-    min-height: 0;
-    grid-auto-rows: minmax(0, 1fr);
-    align-content: stretch;
-    row-gap: clamp(10px, 1.8vh, 24px);
-    column-gap: clamp(16px, 2vw, 36px);
+    min-height: 30rem;
+    aspect-ratio: auto;
   }
-  .product {
-    min-height: 0;
-    height: 100%;
-    padding-bottom: clamp(6px, 1vh, 14px);
-  }
-  .product-image-trigger {
-    flex: 1 1 0;
-    min-height: 0;
-    container-type: size;
-    display: grid;
-    place-items: center;
-    position: relative;
-  }
-  .product > img,
-  .product .product-image {
-    position: static;
-    inset: auto;
-    width: min(100cqw, 100cqh);
-    height: min(100cqw, 100cqh);
-    max-width: 100%;
-    max-height: 100%;
-    aspect-ratio: 1;
-    object-fit: contain;
-  }
-  .product .product-image {
-    display: grid;
-    overflow: hidden;
-  }
-  .product .product-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    object-position: center;
-  }
-  .product-view-controls {
-    flex: 0 0 auto;
-    margin-top: clamp(4px, 0.8vh, 8px);
-  }
-  .product-caption {
-    flex: 0 0 auto;
-    margin-top: clamp(4px, 0.8vh, 8px);
-  }
-  .product-caption h3 {
-    font-size: clamp(15px, 1.2vw, 20px);
-  }
-  .product-details {
-    margin-top: 6px;
-  }
-  .shop-section .product-buy {
-    flex: 0 0 auto;
-    margin-top: 8px;
-    padding-top: 8px;
-    gap: 6px;
-  }
-  .shop-section .size-list {
-    min-height: 0;
-    gap: 4px;
-  }
-  .shop-section .size-list button {
-    min-width: 32px;
-    min-height: 32px;
-  }
-  .shop-section .size-unique-note {
-    min-height: 0;
-  }
-  .shop-section .commerce-button-small {
-    min-height: 36px;
-  }
-  .shop-note {
-    flex: 0 0 auto;
-    margin-top: clamp(8px, 1.2vh, 16px);
-  }
-  .shop-feedback {
-    flex: 0 0 auto;
-    margin-top: clamp(6px, 1vh, 12px);
-  }
+  .product.is-featured .product-image { max-width: min(82%, 35rem); max-height: min(82%, 35rem); }
+  .product:not(.is-featured) .product-image-trigger { flex: 0 0 auto; }
+  .product:not(.is-featured) .product-caption h3 { font-size: clamp(19px, 1.45vw, 24px); }
 }
 
 .about-section {
@@ -2199,38 +2373,48 @@ a.concert-tickets:focus-visible {
   .concert-tickets::after { display: none; }
   .shop-heading {
     grid-template-columns: 1fr;
-    gap: 10px;
-    margin-bottom: 28px;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-top: 18px;
   }
-  .shop-heading h2,
+  .shop-heading-main,
+  .shop-heading-meta,
   .shop-collection {
     grid-column: 1;
     grid-row: auto;
   }
-  .shop-heading h2 { font-size: clamp(30px, 9vw, 40px); }
+  .shop-heading-meta { justify-items: start; }
+  .shop-heading h2 { font-size: clamp(32px, 10vw, 42px); }
   .shop-collection { text-align: left; }
   .shop-promo {
     grid-column: 1;
     grid-row: auto;
     margin-top: 14px;
     padding-top: 14px;
-    gap: 8px 0;
+    grid-template-columns: 1fr;
+    gap: 0;
     flex-direction: column;
   }
+  .shop-promo li { padding: 10px 0; }
+  .shop-promo li + li { border-left: 0; border-top: 1px solid rgb(44 41 38 / 8%); }
   .products {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: 18px;
-    row-gap: 40px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 22px;
   }
-  .product { padding-bottom: 22px; }
-  .product:not(:nth-child(4n + 1))::before { display: none; }
-  .product:nth-child(even)::before {
-    display: block;
-    left: -9px;
+  .product { padding-bottom: 0; }
+  .product-image-trigger { aspect-ratio: 4 / 3; }
+  .product .product-image { max-width: 88%; max-height: 88%; }
+  .product-view-controls { margin-top: 9px; }
+  .product-caption { padding: 8px 16px 16px; }
+  .product-caption h3 { font-size: 24px; line-height: 1.1; }
+  .product-details { font-size: 11px; }
+  .shop-section .size-list button { min-width: 40px; min-height: 40px; }
+  .shop-note { max-width: 290px; text-align: center; }
+  .shop-error-toast {
+    right: .75rem;
+    bottom: 4.8rem;
+    width: calc(100vw - 1.5rem);
   }
-  .product-caption h3 { font-size: 19px; line-height: 1.15; }
-  .product-details { font-size: 12px; }
-  .shop-note { max-width: 290px; }
   .footer-contact { grid-template-columns: 1fr; gap: 0; max-width: 280px; margin-top: 36px; padding-top: 12px; }
   .footer-newsletter { margin-top: 28px; padding: 8px 0 0; }
   .newsletter-signup-form { grid-template-columns: 1fr; }
@@ -2343,9 +2527,9 @@ a.concert-tickets:focus-visible {
 .music-cover-stage::before {
   content: '';
   position: absolute;
-  inset: 10px -10px -10px 10px;
+  inset: 8px -8px -8px 8px;
   z-index: -1;
-  border: 1px solid rgb(214 0 28 / 48%);
+  border: 1px solid rgb(214 0 28 / 34%);
   box-shadow: 0 18px 40px rgb(44 41 38 / 10%);
 }
 .album-cover {
@@ -2404,7 +2588,7 @@ a.concert-tickets:focus-visible {
 .tracklist-column {
   padding: clamp(12px, 1.4vw, 20px) clamp(14px, 1.6vw, 24px);
   border: 1px solid rgb(44 41 38 / 14%);
-  background: rgb(255 255 255 / 13%);
+  background: linear-gradient(145deg, rgb(255 255 255 / 24%), rgb(255 255 255 / 9%));
   box-shadow:
     0 24px 56px rgb(44 41 38 / 10%),
     inset 0 1px 0 rgb(255 255 255 / 35%);
@@ -2427,6 +2611,12 @@ a.concert-tickets:focus-visible {
     background .3s var(--motion-ease),
     transform .3s var(--motion-ease);
 }
+.track-row.is-open {
+  color: var(--ink);
+  background: rgb(255 255 255 / 34%);
+  transform: translateX(3px);
+}
+.track-row.is-open .track-number { color: var(--color-doya-red); }
 .music-aside-photo {
   box-shadow:
     0 34px 72px rgb(32 30 28 / 24%),
@@ -2555,4 +2745,9 @@ a.concert-tickets:focus-visible {
   .track-row {
     transition: none;
   }
+  .product,
+  .product::after,
+  .product .product-image,
+  .concerts li { transition: none; }
+  .shop-error-toast { animation: none; }
 }

@@ -154,8 +154,8 @@ function Shop() {
   }
 
   useEffect(() => {
-    if (feedback?.kind !== 'added') return undefined
-    const timer = window.setTimeout(() => setFeedback(null), 6500)
+    if (!feedback) return undefined
+    const timer = window.setTimeout(() => setFeedback(null), feedback.kind === 'added' ? 6500 : 4200)
     return () => window.clearTimeout(timer)
   }, [feedback])
 
@@ -188,13 +188,17 @@ function Shop() {
   return (
     <section id="shop" className="shop-section section-shell" aria-labelledby="shop-title">
       <Reveal as="header" className="shop-heading">
-        <h2 id="shop-title" className="editorial-title">{t('shop.title')}</h2>
-        <p className="eyebrow shop-collection">
-          <span>{t('shop.label')}</span>
-          <span className="small-separator" aria-hidden="true">/</span>
-          <span>{siteContent.albumTitle}</span>
-        </p>
-        {purchasable ? (
+        <div className="shop-heading-main">
+          <h2 id="shop-title" className="editorial-title">{t('shop.title')}</h2>
+        </div>
+        <div className="shop-heading-meta">
+          <p className="eyebrow shop-collection">
+            <span>{t('shop.label')}</span>
+            <span className="small-separator" aria-hidden="true">/</span>
+            <span>{siteContent.albumTitle}</span>
+          </p>
+        </div>
+        {purchasable && autoPromos.length > 0 ? (
           <ul className="shop-promo">
             {autoPromos.map((promo) => (
               <li key={promo.id}>
@@ -213,15 +217,22 @@ function Shop() {
           const sizes = sizesFor(product)
           const uniqueOnly = sizes.length === 1 && isUniqueSize(sizes[0])
           const hasAnyStock = sizes.some((size) => availableFor(product, size) > 0)
+          const productClassName = [
+            'product',
+            product.typeKey === 'cd' ? 'is-featured' : '',
+            product.colorKey === 'white' ? 'is-light-product' : '',
+            product.colorKey === 'black' ? 'is-dark-product' : '',
+          ].filter(Boolean).join(' ')
           const alt = t('shop.productAlt', {
             type: labels.type,
             name: labels.name,
             color: String(labels.color || labels.type).toLowerCase(),
             view: displayedView === 'front' ? t('shop.viewFrontWord') : t('shop.viewBackWord'),
           })
-          return <Reveal as="article" className="product" key={product.id} delay={(index % 2) * 0.08}
+          return <Reveal as="article" className={productClassName} key={product.id} delay={(index % 2) * 0.08}
             onPointerEnter={() => pauseAutoOnHover(product)}
             onPointerLeave={() => scheduleAutoResume(product)}>
+          <span className="product-index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
           <button
             type="button"
             className="product-image-trigger"
@@ -280,9 +291,14 @@ function Shop() {
       </div>
       {purchasable && <p className="availability-note shop-note">{t('shop.stripeNote')}</p>}
       {feedback?.kind === 'error' ? (
-        <p className="shop-feedback" role="status">
-          <span>{feedback.message}</span>
-        </p>
+        <aside className="shop-error-toast" role="alert" aria-live="assertive">
+          <span className="shop-error-mark" aria-hidden="true">!</span>
+          <div>
+            <strong>{feedback.message}</strong>
+            <small>{t('shop.chooseSizeHint')}</small>
+          </div>
+          <button type="button" onClick={() => setFeedback(null)} aria-label={t('shop.addedClose')}>×</button>
+        </aside>
       ) : null}
 
       {feedback?.kind === 'added' ? (
