@@ -621,7 +621,7 @@ export default {
     home: 'Back to home',
   },
   legal: {
-    updated: 'Last updated: 13 September 2026',
+    updated: 'Last updated: September 2026',
     backHome: 'Back to home',
     mentions: {
       kicker: 'Information',
@@ -668,82 +668,68 @@ export default {
     cgv: {
       kicker: 'Shop',
       title: 'Terms of sale',
-      intro: 'These terms of sale govern orders placed by consumers through the DOYA online shop. Customers can review them before ordering and must accept them before payment.',
+      intro: 'These terms apply to purchases made in the DOYA online shop.',
       sections: [
         {
           heading: 'Seller',
           paragraphs: [
-            'ALMENA PROD, a French simplified joint-stock company (SAS), official DOYA shop.',
-            'Registered office: 14 chemin des Arts, 65290 Louey, France.',
-            'SIREN: 101 884 062. SIRET: 101 884 062 00015.',
-            'Registered with the Tarbes Trade and Companies Register. Share capital: €1,000.',
-            'Customer service and orders: almenaprod@gmail.com.',
+            'ALMENA PROD — DOYA shop',
+            'Registered office: Louey, France',
+            'SIRET: 101 884 062 00015',
+            'Order contact: almenaprod@gmail.com',
           ],
         },
         {
-          heading: 'Products and availability',
+          heading: 'Products',
           paragraphs: [
-            'Each product page presents its essential characteristics, price and available options. Photographs show products as faithfully as possible, subject to minor screen-related colour differences.',
-            'Offers remain valid while stocks last. If a product becomes unavailable after payment, ALMENA PROD informs the customer and refunds the corresponding amount as soon as possible.',
+            'The shop sells products and physical formats related to DOYA (t-shirts, CDs, etc.), while stocks last.',
+            'Photos are illustrative. If an item is unavailable after payment, the customer is refunded.',
           ],
         },
         {
           heading: 'Price and payment',
           paragraphs: [
-            'Prices are shown in euros, including tax and excluding shipping. Before payment, the summary details the products, any discount, shipping charges and the total amount.',
-            'Payment is due when the order is placed and is securely processed by Stripe. ALMENA PROD does not store bank card data.',
+            'Prices in euros incl. tax, excluding shipping. The final amount (items, any promo, shipping) is confirmed at checkout.',
+            'Secure payment via Stripe. ALMENA PROD does not store card data.',
           ],
         },
         {
-          heading: 'Placing an order',
+          heading: 'Orders',
           paragraphs: [
-            'Before paying, customers can review their basket and contact details and correct any mistakes. The order becomes binding once these terms have been accepted and Stripe has validated payment.',
-            'Confirmation is sent to the email address provided. Customers are responsible for checking that their email and delivery information are accurate.',
+            'The order is confirmed once Stripe validates payment. A receipt is sent to the email provided.',
           ],
         },
         {
           heading: 'Delivery',
           paragraphs: [
-            'Available destinations and shipping charges are shown before payment. Unless a different timeframe is stated before ordering, products are delivered no later than thirty days after the contract is concluded.',
-            'ALMENA PROD remains responsible for proper delivery until the customer physically receives the parcel. In case of delay, loss or damage, contact almenaprod@gmail.com promptly with the order number and, where useful, photographs.',
+            'Shipping fees are shown before payment based on destination. Delivery times are indicative and depend on the carrier.',
           ],
         },
         {
           heading: 'Withdrawal',
           paragraphs: [
-            'Consumers have fourteen days from receipt of the product, or the last product in a split delivery, to notify their decision to withdraw without giving a reason.',
-            'The request must be sent before the deadline to almenaprod@gmail.com using the form below or any other unambiguous statement. Returning the product alone is not sufficient.',
-            'The product must then be returned no later than fourteen days after notification, complete and in a condition suitable for resale. Direct return costs are paid by the customer unless ALMENA PROD made an error. The customer may be liable for handling beyond what is necessary to establish the product’s nature and characteristics.',
-            'ALMENA PROD refunds all payments, including standard delivery charges, within fourteen days of notification. The refund may be withheld until the goods or proof of dispatch are received. It is made using the original payment method unless another fee-free method is expressly agreed.',
-            'As provided by law, the right of withdrawal does not apply in particular to goods made to the customer’s specifications or clearly personalised, or to sealed CDs that have been unsealed after delivery.',
+            'You have 14 days from receipt to withdraw without giving a reason (French Consumer Code).',
+            'Email almenaprod@gmail.com with the order number, then return items complete and undamaged. Return shipping is paid by the customer unless we made an error.',
           ],
         },
         {
-          heading: 'Model withdrawal form',
+          heading: 'Warranties and claims',
           paragraphs: [
-            'To ALMENA PROD, 14 chemin des Arts, 65290 Louey, France — almenaprod@gmail.com:',
-            'I hereby give notice that I withdraw from my contract of sale for the following goods: [description]. Ordered on: [date]. Received on: [date]. Order number: [number]. Consumer’s name: [name]. Consumer’s address: [address]. Date: [date]. Consumer’s signature, only if this form is submitted on paper: [signature].',
-          ],
-        },
-        {
-          heading: 'Legal warranties and claims',
-          paragraphs: [
-            'Consumers benefit from the French legal guarantee of conformity under Articles L. 217-3 et seq. of the Consumer Code and may act for two years after delivery. Repair or replacement is free of charge under the statutory conditions and must take place no later than thirty days after the request.',
-            'Consumers also benefit from the warranty against hidden defects under Articles 1641 et seq. of the French Civil Code. They may act within two years of discovering the defect and, under the statutory conditions, choose between cancelling the sale and receiving a price reduction.',
-            'For any claim, email almenaprod@gmail.com with the order number and supporting information. These warranties apply independently of any optional commercial warranty.',
+            'Legal guarantee of conformity and hidden defects apply.',
+            'Damaged on delivery: contact almenaprod@gmail.com with photos and order number.',
           ],
         },
         {
           heading: 'Personal data',
           paragraphs: [
-            'Data required for ordering, payment and delivery is processed under the site Privacy Policy. Newsletter subscription is optional and separate from the order.',
+            'Order data (and newsletter if applicable) is processed under the site Privacy Policy.',
           ],
         },
         {
-          heading: 'Governing law and mediation',
+          heading: 'Governing law',
           paragraphs: [
-            'These terms are governed by French law, without depriving consumers of any more protective mandatory provisions in their country of residence. In the event of a dispute, customers must first send a written complaint to almenaprod@gmail.com to seek an amicable solution.',
-            'After a prior written complaint has failed to resolve the matter, consumers may use the consumer mediator appointed by ALMENA PROD free of charge. The mediator’s name, contact details and website must be added to these terms once membership has been finalised.',
+            'French law. In case of dispute, first contact almenaprod@gmail.com for an amicable solution.',
+            'Failing agreement, you may use free consumer mediation (French Consumer Code). Details of the mediator designated by ALMENA PROD are available on request at almenaprod@gmail.com.',
           ],
         },
       ],

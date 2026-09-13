@@ -621,7 +621,7 @@ export default {
     home: 'Voltar ao início',
   },
   legal: {
-    updated: 'Última atualização: 13 de setembro de 2026',
+    updated: 'Última atualização: setembro 2026',
     backHome: 'Voltar ao início',
     mentions: {
       kicker: 'Informação',
@@ -668,82 +668,68 @@ export default {
     cgv: {
       kicker: 'Loja',
       title: 'Condições gerais de venda',
-      intro: 'Estas condições gerais de venda regem as encomendas efetuadas por consumidores na loja online DOYA. O cliente pode consultá-las antes da encomenda e deve aceitá-las antes do pagamento.',
+      intro: 'Estas CGV aplicam-se às compras efetuadas na loja online DOYA.',
       sections: [
         {
           heading: 'Vendedor',
           paragraphs: [
-            'SAS ALMENA PROD, loja oficial DOYA.',
-            'Sede social: 14 chemin des Arts, 65290 Louey, França.',
-            'SIREN: 101 884 062. SIRET: 101 884 062 00015.',
-            'Registada no Registo Comercial de Tarbes. Capital social: 1 000 €.',
-            'Apoio ao cliente e encomendas: almenaprod@gmail.com.',
+            'ALMENA PROD — loja DOYA',
+            'Sede social: Louey, France',
+            'SIRET: 101 884 062 00015',
+            'Contacto encomendas: almenaprod@gmail.com',
           ],
         },
         {
-          heading: 'Produtos e disponibilidade',
+          heading: 'Produtos',
           paragraphs: [
-            'A página de cada produto apresenta as suas características essenciais, preço e variantes disponíveis. As fotografias representam os produtos tão fielmente quanto possível, exceto pequenas diferenças de cor relacionadas com o ecrã.',
-            'As ofertas são válidas enquanto houver stock. Se um produto ficar indisponível após o pagamento, a ALMENA PROD informa o cliente e reembolsa o respetivo valor o mais rapidamente possível.',
+            'A loja vende artigos e formatos físicos ligados à DOYA (t-shirts, CDs, etc.), sob reserva de stock.',
+            'As fotos são ilustrativas. Se um artigo ficar indisponível após o pagamento, o cliente é reembolsado.',
           ],
         },
         {
           heading: 'Preço e pagamento',
           paragraphs: [
-            'Os preços são indicados em euros, com impostos e sem portes. Antes do pagamento, o resumo detalha os produtos, qualquer desconto, os portes e o montante total.',
-            'O pagamento é devido no momento da encomenda e processado com segurança pela Stripe. A ALMENA PROD não armazena dados bancários.',
+            'Preços em euros com impostos, sem portes. O valor final (artigos, promo, portes) é confirmado no pagamento.',
+            'Pagamento seguro via Stripe. A ALMENA PROD não armazena dados de cartão.',
           ],
         },
         {
-          heading: 'Formação da encomenda',
+          heading: 'Encomenda',
           paragraphs: [
-            'Antes de pagar, o cliente pode rever o carrinho e os seus dados e corrigir qualquer erro. A encomenda torna-se definitiva após a aceitação destas condições e a validação do pagamento pela Stripe.',
-            'A confirmação é enviada para o email indicado. O cliente deve verificar a exatidão do email e das informações de entrega.',
+            'A encomenda é confirmada após validação do pagamento pela Stripe. É enviado um recibo para o email indicado.',
           ],
         },
         {
           heading: 'Entrega',
           paragraphs: [
-            'Os destinos disponíveis e os portes são indicados antes do pagamento. Salvo prazo diferente anunciado antes da encomenda, os produtos são entregues, o mais tardar, trinta dias após a celebração do contrato.',
-            'A ALMENA PROD permanece responsável pela entrega até o cliente receber fisicamente a encomenda. Em caso de atraso, perda ou dano, contacte rapidamente almenaprod@gmail.com com o número da encomenda e, quando útil, fotografias.',
+            'Os portes são apresentados antes do pagamento conforme o destino. Os prazos são indicativos e dependem do transportador.',
           ],
         },
         {
           heading: 'Retratação',
           paragraphs: [
-            'O consumidor dispõe de catorze dias após a receção do produto, ou do último produto de uma encomenda entregue separadamente, para notificar a decisão de retratação sem indicar motivo.',
-            'O pedido deve ser enviado antes do fim do prazo para almenaprod@gmail.com através do formulário abaixo ou de qualquer declaração inequívoca. A simples devolução do produto não é suficiente.',
-            'O produto deve ser devolvido, no máximo, catorze dias após a notificação, completo e em condições de ser novamente vendido. Os custos diretos da devolução ficam a cargo do cliente, salvo erro da ALMENA PROD. O cliente pode ser responsável por manipulação além do necessário para verificar a natureza e as características do produto.',
-            'A ALMENA PROD reembolsa todos os valores pagos, incluindo os portes standard, no prazo de catorze dias após a notificação. O reembolso pode ser adiado até à receção do produto ou de uma prova de envio. É efetuado pelo mesmo meio de pagamento, salvo acordo expresso para outro meio sem custos.',
-            'Nos termos da lei, o direito de retratação não se aplica, nomeadamente, a bens feitos segundo as especificações do cliente ou claramente personalizados, nem a CD selados que tenham sido abertos após a entrega.',
+            'Dispõe de 14 dias após a receção para se retratar sem motivo (Código do consumo francês).',
+            'Escreva para almenaprod@gmail.com com o n.º da encomenda e devolva os artigos completos e sem danos. Portes de devolução a cargo do cliente, salvo erro nosso.',
           ],
         },
         {
-          heading: 'Formulário de retratação',
+          heading: 'Garantias e reclamações',
           paragraphs: [
-            'À atenção de ALMENA PROD, 14 chemin des Arts, 65290 Louey, França — almenaprod@gmail.com:',
-            'Pela presente notifico a minha retratação do contrato de venda dos seguintes bens: [descrição]. Encomendado(s) em: [data]. Recebido(s) em: [data]. Número da encomenda: [número]. Nome do consumidor: [nome]. Endereço do consumidor: [endereço]. Data: [data]. Assinatura do consumidor, apenas em caso de envio em papel: [assinatura].',
-          ],
-        },
-        {
-          heading: 'Garantias legais e reclamações',
-          paragraphs: [
-            'O consumidor beneficia da garantia legal francesa de conformidade prevista nos artigos L. 217-3 e seguintes do Código do Consumo e dispõe de dois anos após a entrega para agir. A reparação ou substituição é gratuita, nas condições legais, e ocorre no máximo trinta dias após o pedido.',
-            'O consumidor beneficia também da garantia contra vícios ocultos prevista nos artigos 1641 e seguintes do Código Civil francês. Pode agir no prazo de dois anos após a descoberta do vício e escolher, nas condições legais, entre resolver a venda e obter uma redução do preço.',
-            'Para qualquer reclamação, escreva para almenaprod@gmail.com com o número da encomenda e os elementos úteis. Estas garantias aplicam-se independentemente de qualquer garantia comercial opcional.',
+            'Aplicam-se a garantia legal de conformidade e os vícios ocultos.',
+            'Produto danificado na entrega: contacte almenaprod@gmail.com com fotos e n.º da encomenda.',
           ],
         },
         {
           heading: 'Dados pessoais',
           paragraphs: [
-            'Os dados necessários à encomenda, pagamento e entrega são tratados segundo a Política de privacidade do site. A subscrição da newsletter é opcional e distinta da encomenda.',
+            'Os dados da encomenda (e newsletter, se aplicável) são tratados segundo a Política de privacidade do site.',
           ],
         },
         {
-          heading: 'Lei aplicável e mediação',
+          heading: 'Lei aplicável',
           paragraphs: [
-            'Estas condições regem-se pelo direito francês, sem privar o consumidor das disposições imperativas mais protetoras do seu país de residência. Em caso de litígio, o cliente deve primeiro enviar uma reclamação escrita para almenaprod@gmail.com para procurar uma solução amigável.',
-            'Se a reclamação escrita prévia não resolver o litígio, o consumidor pode recorrer gratuitamente ao mediador de consumo designado pela ALMENA PROD. O nome, os contactos e o site do mediador devem ser acrescentados a estas condições quando a adesão estiver concluída.',
+            'Direito francês. Em caso de litígio, contacte primeiro almenaprod@gmail.com para uma solução amigável.',
+            'Na falta de acordo, pode recorrer gratuitamente a um mediador de consumo (Código do consumo). Os dados do mediador designado pela ALMENA PROD estão disponíveis sob pedido em almenaprod@gmail.com.',
           ],
         },
       ],

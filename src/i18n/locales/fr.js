@@ -621,7 +621,7 @@ export default {
     home: 'Retour à l’accueil',
   },
   legal: {
-    updated: 'Dernière mise à jour : 13 septembre 2026',
+    updated: 'Dernière mise à jour : septembre 2026',
     backHome: 'Retour à l’accueil',
     mentions: {
       kicker: 'Informations',
@@ -668,82 +668,68 @@ export default {
     cgv: {
       kicker: 'Boutique',
       title: 'Conditions générales de vente',
-      intro: 'Les présentes conditions générales de vente régissent les commandes passées par des consommateurs sur la boutique en ligne DOYA. Le client peut les consulter avant sa commande et doit les accepter avant le paiement.',
+      intro: 'Ces CGV s’appliquent aux achats effectués sur la boutique en ligne DOYA.',
       sections: [
         {
           heading: 'Vendeur',
           paragraphs: [
-            'SAS ALMENA PROD, boutique officielle DOYA.',
-            'Siège social : 14 chemin des Arts, 65290 Louey, France.',
-            'SIREN : 101 884 062. SIRET : 101 884 062 00015.',
-            'Société immatriculée au RCS de Tarbes. Capital social : 1 000 €.',
-            'Service client et commandes : almenaprod@gmail.com.',
+            'ALMENA PROD — boutique DOYA',
+            'Siège social : Louey, France',
+            'SIRET : 101 884 062 00015',
+            'Contact commandes : almenaprod@gmail.com',
           ],
         },
         {
-          heading: 'Produits et disponibilité',
+          heading: 'Produits',
           paragraphs: [
-            'Les caractéristiques essentielles, le prix et les éventuelles variantes de chaque article sont présentés sur sa fiche. Les photographies illustrent les produits aussi fidèlement que possible, sans constituer un engagement sur de faibles différences de couleur liées à l’écran.',
-            'Les offres restent valables dans la limite des stocks disponibles. Si un produit devient indisponible après paiement, ALMENA PROD en informe le client et rembourse la somme correspondante dans les meilleurs délais.',
+            'La boutique vend des articles et supports physiques liés à DOYA (tee-shirts, CD, etc.), dans la limite des stocks.',
+            'Les photos sont illustratives. En cas d’indisponibilité après paiement, le client est remboursé.',
           ],
         },
         {
           heading: 'Prix et paiement',
           paragraphs: [
-            'Les prix sont indiqués en euros toutes taxes comprises, hors frais de livraison. Le récapitulatif présenté avant paiement détaille les articles, les éventuelles réductions, les frais de livraison et le montant total.',
-            'Le paiement est exigible à la commande et traité de manière sécurisée par Stripe. ALMENA PROD ne stocke pas les données de carte bancaire.',
+            'Prix en euros TTC, hors livraison. Le montant final (articles, promo éventuelle, port) est confirmé au paiement.',
+            'Paiement sécurisé via Stripe. Les données de carte ne sont pas stockées par ALMENA PROD.',
           ],
         },
         {
-          heading: 'Formation de la commande',
+          heading: 'Commande',
           paragraphs: [
-            'Avant de payer, le client peut vérifier son panier, ses coordonnées et corriger toute erreur. La commande devient ferme après acceptation des présentes CGV et validation du paiement par Stripe.',
-            'Une confirmation est envoyée à l’adresse e-mail indiquée. Le client doit vérifier l’exactitude de cette adresse et des informations de livraison.',
+            'La commande est confirmée après validation du paiement par Stripe. Un reçu est envoyé à l’e-mail indiqué.',
           ],
         },
         {
           heading: 'Livraison',
           paragraphs: [
-            'Les zones desservies et les frais de livraison sont indiqués avant paiement selon la destination. Sauf délai différent annoncé avant la commande, les produits sont livrés au plus tard trente jours après la conclusion du contrat.',
-            'ALMENA PROD reste responsable de la bonne exécution de la livraison jusqu’à la prise de possession physique du colis par le client. En cas de retard, perte ou colis endommagé, contactez rapidement almenaprod@gmail.com en indiquant le numéro de commande et, si utile, des photographies.',
+            'Les frais de port sont affichés avant paiement selon la destination. Les délais sont indicatifs et dépendent du transporteur.',
           ],
         },
         {
           heading: 'Rétractation',
           paragraphs: [
-            'Le consommateur dispose de quatorze jours à compter de la réception du bien, ou du dernier bien d’une commande livrée séparément, pour notifier sa décision de se rétracter, sans avoir à la motiver.',
-            'La demande doit être envoyée avant l’expiration du délai à almenaprod@gmail.com au moyen du formulaire ci-dessous ou de toute déclaration dénuée d’ambiguïté. Le simple renvoi du produit ne suffit pas.',
-            'Le produit doit ensuite être retourné au plus tard quatorze jours après la notification, complet et dans un état permettant sa remise en vente. Les frais directs de retour sont à la charge du client, sauf erreur d’ALMENA PROD. La responsabilité du client peut être engagée en cas de manipulation excédant ce qui est nécessaire pour vérifier la nature et les caractéristiques du produit.',
-            'ALMENA PROD rembourse les sommes versées, y compris les frais de livraison standard, dans les quatorze jours suivant la notification. Le remboursement peut être différé jusqu’à récupération du bien ou réception d’une preuve d’expédition. Il est effectué par le même moyen de paiement, sauf accord exprès pour un autre moyen sans frais.',
-            'Conformément à la loi, le droit de rétractation ne s’applique notamment pas aux biens confectionnés selon les spécifications du client ou nettement personnalisés, ni aux CD descellés après livraison.',
+            'Vous disposez de 14 jours après réception pour vous rétracter sans motif (Code de la consommation).',
+            'Écrire à almenaprod@gmail.com avec le n° de commande, puis renvoyer les articles complets et non endommagés. Frais de retour à la charge du client, sauf erreur de notre part.',
           ],
         },
         {
-          heading: 'Formulaire type de rétractation',
+          heading: 'Garanties et réclamations',
           paragraphs: [
-            'À l’attention d’ALMENA PROD, 14 chemin des Arts, 65290 Louey, France — almenaprod@gmail.com :',
-            'Je vous notifie par la présente ma rétractation du contrat portant sur la vente du ou des biens suivants : [désignation]. Commandé(s) le : [date]. Reçu(s) le : [date]. Numéro de commande : [numéro]. Nom du consommateur : [nom]. Adresse du consommateur : [adresse]. Date : [date]. Signature du consommateur, uniquement en cas d’envoi sur papier : [signature].',
-          ],
-        },
-        {
-          heading: 'Garanties légales et réclamations',
-          paragraphs: [
-            'Le consommateur bénéficie de la garantie légale de conformité prévue aux articles L. 217-3 et suivants du Code de la consommation. Il dispose de deux ans à compter de la délivrance du bien pour agir. La mise en conformité par réparation ou remplacement intervient sans frais, dans les conditions légales et au plus tard dans les trente jours suivant la demande.',
-            'Le consommateur bénéficie également de la garantie contre les vices cachés prévue aux articles 1641 et suivants du Code civil. Il peut agir dans les deux ans suivant la découverte du vice et choisir, dans les conditions légales, entre la résolution de la vente et une réduction du prix.',
-            'Pour toute réclamation, écrivez à almenaprod@gmail.com avec le numéro de commande et les éléments utiles. Ces garanties s’appliquent indépendamment de toute garantie commerciale éventuelle.',
+            'Garantie légale de conformité et vices cachés applicables.',
+            'Produit endommagé à la livraison : contactez almenaprod@gmail.com avec photos et n° de commande.',
           ],
         },
         {
           heading: 'Données personnelles',
           paragraphs: [
-            'Les données nécessaires à la commande, au paiement et à la livraison sont traitées conformément à la Politique de confidentialité du site. L’inscription à la newsletter reste facultative et distincte de la commande.',
+            'Les données de commande (et newsletter le cas échéant) sont traitées selon la Politique de confidentialité du site.',
           ],
         },
         {
-          heading: 'Droit applicable et médiation',
+          heading: 'Droit applicable',
           paragraphs: [
-            'Les présentes CGV sont soumises au droit français, sans priver le consommateur des dispositions impératives plus protectrices de son pays de résidence. En cas de litige, le client doit d’abord adresser une réclamation écrite à almenaprod@gmail.com afin de rechercher une solution amiable.',
-            'Après une réclamation écrite préalable restée sans solution, le consommateur peut recourir gratuitement au médiateur de la consommation dont relève ALMENA PROD. Son nom, ses coordonnées et son site internet doivent figurer dans les présentes CGV dès l’adhésion finalisée.',
+            'Droit français. En cas de litige, contactez d’abord almenaprod@gmail.com pour une solution amiable.',
+            'À défaut d’accord, vous pouvez recourir gratuitement à un médiateur de la consommation (Code de la consommation). Les coordonnées du médiateur désigné par ALMENA PROD sont disponibles sur demande à almenaprod@gmail.com.',
           ],
         },
       ],
