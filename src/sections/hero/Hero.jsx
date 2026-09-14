@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import { m, useReducedMotion } from 'motion/react'
 import { media } from '../../data/media.js'
-import { siteContent } from '../../data/siteContent.js'
 import { useI18n } from '../../i18n/I18nProvider.jsx'
 import { Stars } from '../../components/Brand.jsx'
 import Link from '../../components/Link.jsx'
+import LunaBohemiaMark from '../../components/LunaBohemiaMark.jsx'
 import Photo from '../../components/Photo.jsx'
 import { editorialEase } from '../../utils/motion.js'
 import { navigate } from '../../utils/router.js'
@@ -94,7 +94,9 @@ function Hero() {
               transition={{ duration: reducedMotion ? 0 : 1.05, delay: reducedMotion ? 0 : 0.72, ease: editorialEase }}
             >
               <p className="hero-subtitle">{t('hero.label')}</p>
-              <h1 id="hero-title">{siteContent.albumTitle}</h1>
+              <h1 id="hero-title" className="hero-album-title">
+                <LunaBohemiaMark className="hero-album-mark" />
+              </h1>
               <button
                 type="button"
                 className="hero-stars"

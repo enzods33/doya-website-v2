@@ -691,6 +691,24 @@
     0 9px 26px rgb(0 0 0 / 62%),
     0 0 1px rgb(255 255 255 / 72%);
 }
+.hero-caption .hero-album-title {
+  width: min(74%, 17rem);
+  margin-inline: auto;
+  font-size: 0;
+  line-height: 0;
+  text-shadow: none;
+}
+.hero-album-title .hero-album-mark {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter:
+    brightness(0)
+    invert(1)
+    drop-shadow(0 2px 2px rgb(0 0 0 / 72%))
+    drop-shadow(0 6px 12px rgb(0 0 0 / 38%));
+  opacity: 1;
+}
 .hero-cta-group {
   position: relative;
   z-index: 2;
