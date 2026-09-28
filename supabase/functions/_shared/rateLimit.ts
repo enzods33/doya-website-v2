@@ -35,7 +35,7 @@ type RpcClient = {
   rpc: (
     fn: string,
     args: Record<string, unknown>,
-  ) => Promise<{ data: unknown; error: { message?: string } | null }>
+  ) => PromiseLike<{ data: unknown; error: { message?: string } | null }>
 }
 
 /** Rate-limit durable via `consume_rate_limit` (service_role). */
