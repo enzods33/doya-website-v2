@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useId, useRef, useState } from 'react'
 import { useReducedMotion } from 'motion/react'
-import { CART_LIMITS, formatEuros, isUniqueSize } from '../../commerce/cartRules.js'
+import { APPAREL_SIZES, KIDS_SIZES, CART_LIMITS, formatEuros, isUniqueSize } from '../../commerce/cartRules.js'
 import { DEFAULT_AUTO_PROMOS, fetchAutoPromos } from '../../commerce/autoPromos.js'
 import { availableFor, productImageSrc, resolveProductView } from '../../commerce/catalog.js'
 import { useCart } from '../../commerce/CartProvider.jsx'
@@ -120,10 +120,15 @@ function Shop() {
   }
 
   function sizesFor(product) {
+    const visibleSizes = product.id === 'tee-luna-mini-red' ? KIDS_SIZES
+      : product.typeKey === 'tshirt' ? APPAREL_SIZES.filter((size) => size !== 'ENF')
+        : CART_LIMITS.sizes
     if (product.variants?.length) {
-      return CART_LIMITS.sizes.filter((size) => product.variants.some((variant) => variant.size === size))
+      return visibleSizes.filter((size) => product.variants.some((variant) => variant.size === size))
     }
-    return CART_LIMITS.sizes.filter((size) => !isUniqueSize(size))
+    if (product.typeKey === 'other') return ['U']
+    if (product.typeKey === 'cd') return ['CD']
+    return visibleSizes.filter((size) => !isUniqueSize(size))
   }
 
   function sizeLabel(size) {
