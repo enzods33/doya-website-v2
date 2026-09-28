@@ -1,7 +1,7 @@
 begin;
 
 create extension if not exists pgtap with schema extensions;
-select plan(5);
+select plan(6);
 
 insert into public.products (id, name, type, color, price_cents, on_sale)
 values ('stock-test', 'Stock test', 'T-shirt', 'Noir', 1000, false);
@@ -32,6 +32,8 @@ select is((select status from public.stock_reservations where order_id = '000000
   'held', 'Le stock de la session Stripe reste réservé');
 select is((select reserved from public.product_variants where id = '00000000-0000-4000-8000-000000000001'),
   1, 'Une seule unité reste réservée');
+select ok(not has_function_privilege('anon', 'public.bump_catalog_revision()', 'EXECUTE'),
+  'bump_catalog_revision n''est pas exécutable par anon');
 
 select * from finish();
 rollback;
