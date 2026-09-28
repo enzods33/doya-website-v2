@@ -137,6 +137,18 @@ test('les anciens chunks sont récupérés sans boucle de rechargement', () => {
   assert.match(migration, /'boundary'/)
 })
 
+test('le monitoring verrouille le contrat cache et 404 des assets', () => {
+  const monitor = readFileSync(new URL('../monitoring/scripts/api-readonly.mjs', import.meta.url), 'utf8')
+  assert.match(monitor, /site:html-cache/)
+  assert.match(monitor, /site:hashed-asset/)
+  assert.match(monitor, /site:missing-asset/)
+  assert.match(monitor, /max-age=31536000/)
+  assert.match(monitor, /immutable/)
+  assert.match(monitor, /no-store/)
+  assert.match(monitor, /missingResponse\.status === 404/)
+  assert.match(monitor, /!missingType\.includes\('text\/html'\)/)
+})
+
 test('aucune clé secrète n’est embarquée dans le client', () => {
   const client = readFileSync(new URL('../src/commerce/checkout.js', import.meta.url), 'utf8')
     + readFileSync(new URL('../src/commerce/config.js', import.meta.url), 'utf8')
