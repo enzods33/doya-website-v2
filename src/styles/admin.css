@@ -804,19 +804,29 @@
 }
 .admin-stock-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(4.5rem, 1fr));
-  gap: 0.65rem 0.75rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr));
+  gap: 0.75rem;
   padding-top: 0.85rem;
   border-top: 1px solid rgb(44 41 38 / 8%);
 }
 .admin-stock-field {
   display: grid;
-  gap: 0.35rem;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: 0.4rem;
+  min-width: 0;
   margin: 0;
+  padding: 0.65rem;
+  border: 1px solid rgb(44 41 38 / 8%);
+  border-radius: 0.7rem;
   font-size: 10px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--muted);
+  background: rgb(255 255 255 / 38%);
+}
+.admin-stock-field.is-hidden {
+  opacity: 0.62;
 }
 .admin-stock-size {
   font-weight: 600;

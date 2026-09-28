@@ -89,9 +89,9 @@ Deno.serve(async (req) => {
 
   for (const item of items) {
     const productId = typeof item?.productId === 'string' ? item.productId.trim() : ''
-    const size = typeof item?.size === 'string' ? item.size.trim().toUpperCase() : ''
+    const size = typeof item?.size === 'string' ? item.size.trim() : ''
     const quantity = Number(item?.quantity)
-    if (!CART_LIMITS.productIdPattern.test(productId) || !CART_LIMITS.sizes.includes(size as typeof CART_LIMITS.sizes[number])) {
+    if (!CART_LIMITS.productIdPattern.test(productId) || !size || size.length > CART_LIMITS.maxVariantKeyLength) {
       return json(400, { error: 'invalid_cart' }, origin)
     }
     if (!Number.isInteger(quantity) || quantity < 1 || quantity > CART_LIMITS.maxLineQuantity) {
@@ -102,21 +102,32 @@ Deno.serve(async (req) => {
 
   const db = serviceClient()
   const productIds = [...new Set(normalized.map((item) => item.productId))]
-  const { data: products, error: productsError } = await db
-    .from('products')
-    .select('id, type, type_key, name, price_cents, on_sale')
-    .in('id', productIds)
-  if (productsError || !products?.length) return json(400, { error: 'invalid_cart' }, origin)
+  const [{ data: products, error: productsError }, { data: variants, error: variantsError }] = await Promise.all([
+    db.from('products')
+      .select('id, type, type_key, name, price_cents, on_sale')
+      .in('id', productIds),
+    db.from('product_variants')
+      .select('product_id, size, label, active')
+      .in('product_id', productIds)
+      .eq('active', true),
+  ])
+  if (productsError || variantsError || !products?.length) return json(400, { error: 'invalid_cart' }, origin)
 
   const productMap = new Map(products.map((row) => [row.id, row]))
+  const variantMap = new Map((variants ?? []).map((row) => [`${row.product_id}:${row.size}`, row]))
   if (productIds.some((id) => !productMap.has(id))) return json(400, { error: 'invalid_cart' }, origin)
+  if (normalized.some((item) => !variantMap.has(`${item.productId}:${item.size}`))) {
+    return json(400, { error: 'invalid_cart' }, origin)
+  }
 
   const priced = normalized.map((item) => {
     const product = productMap.get(item.productId)!
+    const variant = variantMap.get(`${item.productId}:${item.size}`)!
     const unitPriceCents = Number(product.price_cents) || 0
     return {
       ...item,
       name: String(product.name || item.name || item.productId),
+      variantLabel: String(variant.label || item.size),
       unitPriceCents,
       type: String(product.type || ''),
       typeKey: String(product.type_key || ''),
@@ -143,18 +154,10 @@ Deno.serve(async (req) => {
     'stephanedasil@gmail.com',
   ].filter((email, index, list) => list.indexOf(email) === index)
   const linesHtml = priced.map((item) => {
-    const size = item.size === 'CD'
-      ? 'CD'
-      : item.size === 'U'
-        ? 'taille unique'
-      : item.size === 'VINYL'
-        ? 'vinyle'
-        : item.size === 'ENF'
-          ? 'enfant'
-          : `taille ${item.size}`
+    const variant = item.variantLabel || item.size
     return `<tr>
 <td style="padding:8px 0;border-bottom:1px solid #eee;font-size:15px;color:#2c2926;">
-${escapeHtml(String(item.quantity))} × ${escapeHtml(item.name)} <span style="color:#7a736c;">(${escapeHtml(size)})</span>
+${escapeHtml(String(item.quantity))} × ${escapeHtml(item.name)} <span style="color:#7a736c;">(${escapeHtml(variant)})</span>
 </td>
 <td align="right" style="padding:8px 0;border-bottom:1px solid #eee;font-size:15px;color:#2c2926;white-space:nowrap;">
 ${escapeHtml(formatEuros(item.unitPriceCents * item.quantity))}

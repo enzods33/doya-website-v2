@@ -106,7 +106,9 @@ export function stripeProductName(productId: string, locale: CheckoutLocale, fal
   return `${base} — ${color}`
 }
 
-export function stripeLineDescription(size: string, locale: CheckoutLocale): string {
+export function stripeLineDescription(size: string, locale: CheckoutLocale, variantLabel = ''): string {
+  const customLabel = variantLabel.trim()
+  if (customLabel && !['CD', 'U', 'VINYL', 'ENF'].includes(size)) return customLabel
   if (size === 'CD') return COLOR[locale].digipack
   if (size === 'U') return { fr: 'Taille unique', en: 'One size', es: 'Talla única', pt: 'Tamanho único' }[locale]
   if (size === 'VINYL') return SIZE_LABEL[locale] === 'Size' ? 'Vinyl' : 'Vinyle'

@@ -1,6 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import { useReducedMotion } from 'motion/react'
-import { APPAREL_SIZES, KIDS_SIZES, CART_LIMITS, formatEuros, isUniqueSize } from '../../commerce/cartRules.js'
+import { formatEuros } from '../../commerce/cartRules.js'
 import { DEFAULT_AUTO_PROMOS, fetchAutoPromos } from '../../commerce/autoPromos.js'
 import { availableFor, productImageSrc, resolveProductView } from '../../commerce/catalog.js'
 import { useCart } from '../../commerce/CartProvider.jsx'
@@ -120,18 +120,12 @@ function Shop() {
   }
 
   function sizesFor(product) {
-    const visibleSizes = product.id === 'tee-luna-mini-red' ? KIDS_SIZES
-      : product.typeKey === 'tshirt' ? APPAREL_SIZES.filter((size) => size !== 'ENF')
-        : CART_LIMITS.sizes
-    if (product.variants?.length) {
-      return visibleSizes.filter((size) => product.variants.some((variant) => variant.size === size))
-    }
-    if (product.typeKey === 'other') return ['U']
-    if (product.typeKey === 'cd') return ['CD']
-    return visibleSizes.filter((size) => !isUniqueSize(size))
+    return (product.variants ?? []).map((variant) => variant.size)
   }
 
-  function sizeLabel(size) {
+  function sizeLabel(product, size) {
+    const variant = (product.variants ?? []).find((row) => row.size === size)
+    if (variant?.label) return variant.label
     const key = `shop.size.${size}`
     const label = t(key)
     return label === key ? size : label
@@ -152,6 +146,8 @@ function Shop() {
         labels: translateProduct(t, product),
         imageSrc: productImageSrc(product, displayedViewFor(product, index)),
         size,
+        variantLabel: sizeLabel(product, size),
+        singleVariant: sizes.length === 1,
         price: formatEuros(product.sale.priceCents),
       })
       return
@@ -226,7 +222,7 @@ function Shop() {
           const imageSrc = productImageSrc(product, displayedView)
           const sale = product.sale
           const sizes = sizesFor(product)
-          const uniqueOnly = sizes.length === 1 && isUniqueSize(sizes[0])
+          const uniqueOnly = sizes.length === 1
           const hasAnyStock = sizes.some((size) => availableFor(product, size) > 0)
           const productClassName = [
             'product',
@@ -269,7 +265,7 @@ function Shop() {
                 {hasAnyStock ? (
                   <>
                     {uniqueOnly ? (
-                      <p className="size-unique-note product-cd-note">{product.typeKey === 'cd' ? t('shop.cdSignedNote') : t('shop.uniqueSize')}</p>
+                      <p className="size-unique-note product-cd-note">{product.typeKey === 'cd' ? t('shop.cdSignedNote') : sizeLabel(product, sizes[0])}</p>
                     ) : (
                       <div className="size-list" role="group" aria-label={t('shop.sizesAria', { name: labels.name })}>
                         {sizes.map((size) => {
@@ -282,7 +278,7 @@ function Shop() {
                               aria-pressed={selectedSizes[product.id] === size}
                               onClick={() => setSelectedSizes((current) => ({ ...current, [product.id]: size }))}
                             >
-                              {sizeLabel(size)}
+                              {sizeLabel(product, size)}
                             </button>
                           )
                         })}
@@ -320,7 +316,7 @@ function Shop() {
           <div className="cart-toast-copy">
             <span className="cart-toast-status">{t('shop.addedTitle')}</span>
             <strong>{feedback.labels.name}</strong>
-            <small>{isUniqueSize(feedback.size) ? sizeLabel(feedback.size) : t('shop.addedSize', { size: sizeLabel(feedback.size) })} · {feedback.price}</small>
+            <small>{feedback.singleVariant ? feedback.variantLabel : t('shop.addedSize', { size: feedback.variantLabel })} · {feedback.price}</small>
             <Link href="/panier" className="cart-toast-link">{t('shop.viewCart')} <span aria-hidden="true">↗</span></Link>
           </div>
           <button type="button" className="cart-toast-close" onClick={() => setFeedback(null)} aria-label={t('shop.addedClose')}>×</button>

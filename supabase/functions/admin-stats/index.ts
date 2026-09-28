@@ -9,8 +9,6 @@ const MAX_DAYS = 366
 const DEFAULT_DAYS = 90
 const TRACKING_MAX = 64
 const MAX_IMAGE_BYTES = 4_500_000
-const TSHIRT_SIZES = ['ENF', 'XS', 'S', 'M', 'L', 'XL'] as const
-const KIDS_SIZES = ['3/4', '5/6', '7/8', '9/11', '12/13'] as const
 
 function slugFile(name: string) {
   const base = name.replace(/\.[^.]+$/, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
@@ -122,6 +120,7 @@ async function buildSales(db: ReturnType<typeof serviceClient>) {
   let items: {
     product_id: string
     size: string
+    variant_label: string
     quantity: number
     unit_price_cents: number
     order_id: string
@@ -130,7 +129,7 @@ async function buildSales(db: ReturnType<typeof serviceClient>) {
   if (orderIds.length) {
     const { data: itemRows, error: itemsError } = await db
       .from('order_items')
-      .select('product_id, size, quantity, unit_price_cents, order_id')
+      .select('product_id, size, variant_label, quantity, unit_price_cents, order_id')
       .in('order_id', orderIds)
     if (itemsError) {
       console.error('admin_stats_items_failed', itemsError)
@@ -168,11 +167,12 @@ async function buildSales(db: ReturnType<typeof serviceClient>) {
       color: meta?.color ?? '',
       quantity: 0,
       revenueCents: 0,
-      sizes: {},
+      sizes: {} as Record<string, number>,
     }
     current.quantity += item.quantity
     current.revenueCents += item.quantity * item.unit_price_cents
-    current.sizes[item.size] = (current.sizes[item.size] ?? 0) + item.quantity
+    const variantLabel = item.variant_label || item.size
+    current.sizes[variantLabel] = (current.sizes[variantLabel] ?? 0) + item.quantity
     byProduct.set(item.product_id, current)
   }
 
@@ -208,6 +208,7 @@ async function buildSales(db: ReturnType<typeof serviceClient>) {
           type: meta?.type ?? '',
           color: meta?.color ?? '',
           size: item.size,
+          variantLabel: item.variant_label || item.size,
           quantity: item.quantity,
           unitPriceCents: item.unit_price_cents,
         }
@@ -241,18 +242,12 @@ async function buildInventory(db: ReturnType<typeof serviceClient>) {
       .neq('type', 'Test')
       .order('sort_order')
       .order('name'),
-    db.from('product_variants').select('id, product_id, size, stock, reserved').order('size'),
+    db.from('product_variants').select('id, product_id, size, label, active, sort_order, stock, reserved').order('sort_order').order('label'),
   ])
 
   if (productsError || variantsError) {
     console.error('admin_stats_inventory_failed', productsError ?? variantsError)
     throw new Error('stats_inventory_failed')
-  }
-
-  const sizeRank = (size: string) => {
-    const order = ['ENF', 'XS', 'S', 'M', 'L', 'XL', 'CD', 'VINYL', 'U', 'XXL']
-    const index = order.indexOf(size)
-    return index === -1 ? 99 : index
   }
 
   const byProduct = new Map<string, {
@@ -273,6 +268,9 @@ async function buildInventory(db: ReturnType<typeof serviceClient>) {
     variants: {
       variantId: string
       size: string
+      label: string
+      active: boolean
+      sortOrder: number
       stock: number
       reserved: number
       available: number
@@ -307,6 +305,9 @@ async function buildInventory(db: ReturnType<typeof serviceClient>) {
     row.variants.push({
       variantId: variant.id,
       size: variant.size,
+      label: typeof variant.label === 'string' && variant.label.trim() ? variant.label.trim() : variant.size,
+      active: variant.active !== false,
+      sortOrder: Number.isInteger(variant.sort_order) ? variant.sort_order : 100,
       stock,
       reserved,
       available: Math.max(0, stock - reserved),
@@ -316,7 +317,7 @@ async function buildInventory(db: ReturnType<typeof serviceClient>) {
   return [...byProduct.values()]
     .map((row) => ({
       ...row,
-      variants: row.variants.sort((a, b) => sizeRank(a.size) - sizeRank(b.size)),
+      variants: row.variants.sort((a, b) => a.sortOrder - b.sortOrder || a.label.localeCompare(b.label)),
     }))
     .filter((row) => row.variants.length > 0)
     .sort((a, b) => a.sortOrder - b.sortOrder || a.name.localeCompare(b.name))
@@ -411,6 +412,10 @@ Deno.serve(async (req) => {
     trackingNumber?: string
     updates?: { variantId?: string; stock?: number }[]
     productId?: string
+    variantId?: string
+    variantLabel?: string
+    variantStock?: number
+    variantActive?: boolean
     side?: string
     imageUrl?: string
     width?: number
@@ -439,7 +444,6 @@ Deno.serve(async (req) => {
       type?: string
       color?: string
       typeKey?: string
-      sizeKind?: string
       colorKey?: string
       priceCents?: number
       onSale?: boolean
@@ -448,7 +452,7 @@ Deno.serve(async (req) => {
       imageBackUrl?: string | null
       imageWidth?: number
       imageHeight?: number
-      stocks?: Record<string, number>
+      variants?: { label?: string; stock?: number }[]
     }
   } = {}
   try {
@@ -545,6 +549,80 @@ Deno.serve(async (req) => {
 
     const inventory = await buildInventory(db)
     return json(200, { ok: true, inventory }, origin)
+  }
+
+  if (action === 'add_variant') {
+    const productId = typeof body.productId === 'string' ? body.productId.trim() : ''
+    const label = typeof body.variantLabel === 'string' ? body.variantLabel.trim() : ''
+    const stock = Number(body.variantStock)
+    if (!/^[a-z0-9-]+$/.test(productId)) return json(400, { error: 'invalid_product' }, origin)
+    if (!label || label.length > 80) return json(400, { error: 'invalid_variant_label' }, origin)
+    if (!Number.isInteger(stock) || stock < 0 || stock > 100000) return json(400, { error: 'invalid_stock' }, origin)
+
+    const { data: productRow } = await db.from('products').select('id').eq('id', productId).maybeSingle()
+    if (!productRow) return json(404, { error: 'invalid_product' }, origin)
+
+    const { data: existing, error: existingError } = await db
+      .from('product_variants')
+      .select('size, label, sort_order')
+      .eq('product_id', productId)
+    if (existingError) return json(500, { error: 'variant_create_failed' }, origin)
+    if ((existing ?? []).length >= 40) return json(400, { error: 'too_many_variants' }, origin)
+    if ((existing ?? []).some((row) => String(row.label || '').trim().toLocaleLowerCase() === label.toLocaleLowerCase())) {
+      return json(409, { error: 'variant_exists' }, origin)
+    }
+
+    const usedKeys = new Set((existing ?? []).map((row) => String(row.size)))
+    let key = label
+    if (usedKeys.has(key)) key = `variant-${crypto.randomUUID()}`
+    const nextSort = (existing ?? []).reduce((max, row) => Math.max(max, Number(row.sort_order) || 0), 0) + 10
+    const { error } = await db.from('product_variants').insert({
+      product_id: productId,
+      size: key,
+      label,
+      active: true,
+      sort_order: nextSort,
+      stock,
+      reserved: 0,
+    })
+    if (error) {
+      console.error('admin_add_variant_failed', error)
+      return json(500, { error: 'variant_create_failed' }, origin)
+    }
+    return json(200, { ok: true, inventory: await buildInventory(db) }, origin)
+  }
+
+  if (action === 'update_variant') {
+    const variantId = typeof body.variantId === 'string' ? body.variantId.trim() : ''
+    const label = typeof body.variantLabel === 'string' ? body.variantLabel.trim() : ''
+    if (!/^[0-9a-f-]{36}$/i.test(variantId)) return json(400, { error: 'invalid_variant' }, origin)
+    if (!label || label.length > 80) return json(400, { error: 'invalid_variant_label' }, origin)
+
+    const { data: current, error: currentError } = await db
+      .from('product_variants')
+      .select('id, product_id, active')
+      .eq('id', variantId)
+      .maybeSingle()
+    if (currentError || !current) return json(404, { error: 'variant_not_found' }, origin)
+
+    const { data: siblings, error: siblingsError } = await db
+      .from('product_variants')
+      .select('id, label')
+      .eq('product_id', current.product_id)
+    if (siblingsError) return json(500, { error: 'variant_update_failed' }, origin)
+    if ((siblings ?? []).some((row) => row.id !== variantId
+      && String(row.label || '').trim().toLocaleLowerCase() === label.toLocaleLowerCase())) {
+      return json(409, { error: 'variant_exists' }, origin)
+    }
+
+    const patch: { label: string; active?: boolean } = { label }
+    if (typeof body.variantActive === 'boolean') patch.active = body.variantActive
+    const { error } = await db.from('product_variants').update(patch).eq('id', variantId)
+    if (error) {
+      console.error('admin_update_variant_failed', error)
+      return json(500, { error: 'variant_update_failed' }, origin)
+    }
+    return json(200, { ok: true, inventory: await buildInventory(db) }, origin)
   }
 
   if (action === 'update_sort_order') {
@@ -661,7 +739,7 @@ Deno.serve(async (req) => {
     }
 
     let maxRedemptions: number | null = null
-    if (promo.maxRedemptions != null && promo.maxRedemptions !== '') {
+    if (promo.maxRedemptions != null) {
       const max = Number(promo.maxRedemptions)
       if (!Number.isInteger(max) || max < 1 || max > 100000) {
         return json(400, { error: 'invalid_promo_cap' }, origin)
@@ -826,17 +904,23 @@ Deno.serve(async (req) => {
       return json(400, { error: 'invalid_product_image' }, origin)
     }
 
-    const stocks = product.stocks && typeof product.stocks === 'object' ? product.stocks : {}
-    const sizeKind = product.sizeKind === 'kids' ? 'kids'
-      : typeKey === 'cd' ? 'cd' : typeKey === 'other' ? 'unique' : 'adult'
-    const sizes = sizeKind === 'cd' ? (['CD'] as const)
-      : sizeKind === 'unique' ? (['U'] as const)
-        : sizeKind === 'kids' ? KIDS_SIZES : TSHIRT_SIZES
-    for (const size of sizes) {
-      const stock = Number((stocks as Record<string, number>)[size] ?? 0)
+    const rawVariants = Array.isArray(product.variants) ? product.variants : []
+    if (!rawVariants.length || rawVariants.length > 40) {
+      return json(400, { error: 'invalid_variants' }, origin)
+    }
+    const variants: { label: string; stock: number }[] = []
+    const labels = new Set<string>()
+    for (const row of rawVariants) {
+      const label = typeof row?.label === 'string' ? row.label.trim() : ''
+      const stock = Number(row?.stock)
+      if (!label || label.length > 80) return json(400, { error: 'invalid_variant_label' }, origin)
+      const labelKey = label.toLocaleLowerCase()
+      if (labels.has(labelKey)) return json(409, { error: 'variant_exists' }, origin)
+      labels.add(labelKey)
       if (!Number.isInteger(stock) || stock < 0 || stock > 100000) {
         return json(400, { error: 'invalid_stock' }, origin)
       }
+      variants.push({ label, stock })
     }
 
     const typeLabel = typeof product.type === 'string' && product.type.trim()
@@ -869,14 +953,20 @@ Deno.serve(async (req) => {
       return json(500, { error: 'product_upsert_failed' }, origin)
     }
 
-    for (const size of sizes) {
-      const stock = Number((stocks as Record<string, number>)[size] ?? 0)
+    const usedKeys = new Set<string>()
+    for (const [index, variant] of variants.entries()) {
+      let key = variant.label
+      if (usedKeys.has(key)) key = `variant-${crypto.randomUUID()}`
+      usedKeys.add(key)
       const { error } = await db.from('product_variants').insert({
-          product_id: productId,
-          size,
-          stock,
-          reserved: 0,
-        })
+        product_id: productId,
+        size: key,
+        label: variant.label,
+        active: true,
+        sort_order: (index + 1) * 10,
+        stock: variant.stock,
+        reserved: 0,
+      })
       if (error) {
         console.error('admin_insert_variant_failed', error)
         await db.from('products').delete().eq('id', productId)
@@ -906,7 +996,7 @@ Deno.serve(async (req) => {
 
     const { data: order, error: orderError } = await db
       .from('orders')
-      .select('id, order_number, email, status, shipping_name, shipping_phone, shipping_address, subtotal_cents, discount_cents, shipping_cents, total_cents, promo_code, fulfillment_status, tracking_number, order_items (product_id, size, quantity, unit_price_cents)')
+      .select('id, order_number, email, status, shipping_name, shipping_phone, shipping_address, subtotal_cents, discount_cents, shipping_cents, total_cents, promo_code, fulfillment_status, tracking_number, order_items (product_id, size, variant_label, quantity, unit_price_cents)')
       .eq('id', orderId)
       .maybeSingle()
 
@@ -944,11 +1034,13 @@ Deno.serve(async (req) => {
     const lines: OrderEmailLine[] = (order.order_items ?? []).map((item: {
       product_id: string
       size: string
+      variant_label: string
       quantity: number
       unit_price_cents: number
     }) => ({
       name: names.get(item.product_id) ?? item.product_id,
       size: item.size,
+      variantLabel: item.variant_label || item.size,
       quantity: item.quantity,
       unitPriceCents: item.unit_price_cents,
     }))

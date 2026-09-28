@@ -95,7 +95,7 @@ export async function loadCatalog() {
       supabase.from('catalog_products').select(
         'id, name, type, color, price_cents, currency, default_view, sort_order, image_front_url, image_back_url, image_width, image_height, type_key, color_key',
       ),
-      supabase.from('catalog_variants').select('product_id, size, available'),
+      supabase.from('catalog_variants').select('product_id, size, label, sort_order, available'),
     ])
 
     if (productError || variantError || !remoteProducts) return localCatalog()
@@ -110,7 +110,13 @@ export async function loadCatalog() {
       current.sale = { priceCents: row.price_cents, currency: row.currency }
       current.variants = (remoteVariants ?? [])
         .filter((variant) => variant.product_id === row.id)
-        .map((variant) => ({ size: variant.size, available: Math.max(0, variant.available ?? 0) }))
+        .map((variant) => ({
+          size: variant.size,
+          label: variant.label || variant.size,
+          sortOrder: Number.isInteger(variant.sort_order) ? variant.sort_order : 100,
+          available: Math.max(0, variant.available ?? 0),
+        }))
+        .sort((a, b) => a.sortOrder - b.sortOrder || a.label.localeCompare(b.label))
       items.push(current)
     }
 

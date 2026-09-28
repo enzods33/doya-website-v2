@@ -35,7 +35,7 @@ Deno.serve(async (req) => {
 
     const { data: order, error } = await admin
       .from('orders')
-      .select('id, order_number, status, email, subtotal_cents, discount_cents, shipping_cents, total_cents, promo_code, paid_at, shipping_name, order_items (product_id, size, quantity, unit_price_cents)')
+      .select('id, order_number, status, email, subtotal_cents, discount_cents, shipping_cents, total_cents, promo_code, paid_at, shipping_name, order_items (product_id, size, variant_label, quantity, unit_price_cents)')
       .eq('stripe_checkout_session_id', session.id)
       .maybeSingle()
 
