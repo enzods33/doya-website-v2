@@ -76,9 +76,9 @@ select
   v.id,
   v.product_id,
   v.size,
+  greatest(v.stock - v.reserved, 0)::integer as available,
   v.label,
-  v.sort_order,
-  greatest(v.stock - v.reserved, 0)::integer as available
+  v.sort_order
 from public.product_variants v
 join public.products p on p.id = v.product_id
 where p.on_sale = true
