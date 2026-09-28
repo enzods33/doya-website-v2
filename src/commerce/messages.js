@@ -21,14 +21,15 @@ export function translateProduct(t, product) {
         : product.id === 'tote-eclipse-black' ? 'shop.type.tote'
           : `shop.type.${product.typeKey}`
   const colorKey = `shop.color.${product.colorKey}`
-  const name = t(nameKey)
+  const translatedName = t(nameKey)
   const type = t(typeKey)
   const color = t(colorKey)
   const customType = product.typeKey === 'other' && !['cap-luna-black', 'tote-eclipse-black'].includes(product.id) && product.type
     ? product.type
     : null
+  const catalogName = product.displayName || product.name
   return {
-    name: name === nameKey ? (product.displayName || product.name || product.id) : name,
+    name: catalogName || (translatedName === nameKey ? product.id : translatedName),
     type: customType || (type === typeKey ? (product.type || product.typeKey || '') : type),
     color: color === colorKey ? (product.color || product.colorKey || '') : color,
   }
