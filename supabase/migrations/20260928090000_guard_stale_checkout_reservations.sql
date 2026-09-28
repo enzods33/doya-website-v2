@@ -30,3 +30,8 @@ $$;
 
 revoke all on function public.release_stale_reservations() from public, anon, authenticated;
 grant execute on function public.release_stale_reservations() to service_role;
+
+
+-- Fonction de trigger interne uniquement : elle ne doit pas être appelable via l'API.
+revoke all on function public.bump_catalog_revision() from public, anon, authenticated;
+grant execute on function public.bump_catalog_revision() to service_role;
