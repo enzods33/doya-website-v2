@@ -70,6 +70,13 @@ export function resolveRouteSeo(path, t) {
       canonicalPath: '/admin',
     }
   }
+  if (path === '/desabonnement') {
+    return {
+      title: `Newsletter — ${siteContent.name}`,
+      description: t('meta.description'),
+      canonicalPath: '/desabonnement',
+    }
+  }
   if (path !== '/') {
     return {
       title: `${t('notFound.title')} — ${siteContent.name}`,

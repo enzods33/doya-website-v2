@@ -5,6 +5,7 @@ import { trackEvent } from '../commerce/pageAnalytics.js'
 import { isValidEmail } from '../commerce/cartRules.js'
 import { useI18n } from '../i18n/I18nProvider.jsx'
 import { Stars } from './Brand.jsx'
+import Link from './Link.jsx'
 
 function HoneypotField({ value, onChange, disabled }) {
   return (
@@ -101,6 +102,7 @@ function NewsletterSignup({ className = '', variant = 'default' }) {
             {busy ? t('newsletter.sending') : t('newsletter.menuSubmit')}
           </button>
         </form>
+        <p className="newsletter-signup-privacy"><Link href="/confidentialite">{t('newsletter.privacy')}</Link></p>
         {status ? (
           <p className={`newsletter-signup-status is-${status.kind}`} role="status">
             {status.message}
@@ -140,6 +142,7 @@ function NewsletterSignup({ className = '', variant = 'default' }) {
           {busy ? t('newsletter.sending') : t('newsletter.submit')}
         </button>
       </form>
+      <p className="newsletter-signup-privacy"><Link href="/confidentialite">{t('newsletter.privacy')}</Link></p>
       {status ? (
         <p className={`newsletter-signup-status is-${status.kind}`} role="status">
           {status.message}

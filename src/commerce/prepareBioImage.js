@@ -35,7 +35,7 @@ function targetSize(width, height, maxEdge) {
  * @param {File} file
  * @returns {Promise<{ file: File, width: number, height: number }>}
  */
-export async function prepareBioImage(file) {
+export async function prepareBioImage(file, { product = false } = {}) {
   if (!(file instanceof File) || file.size <= 0) {
     throw new Error('invalid_image_type')
   }
@@ -57,17 +57,21 @@ export async function prepareBioImage(file) {
   if (!ctx) throw new Error('image_prepare_failed')
   ctx.drawImage(img, 0, 0, width, height)
 
+  // La galerie bio reste en JPEG. Un visuel produit transparent reste en WebP.
+  const outputMime = product && (mime === 'image/png' || mime === 'image/webp')
+    ? 'image/webp' : BIO_IMAGE_MIME
   const blob = await new Promise((resolve, reject) => {
     canvas.toBlob(
       (result) => (result ? resolve(result) : reject(new Error('image_prepare_failed'))),
-      BIO_IMAGE_MIME,
+      outputMime,
       BIO_IMAGE_QUALITY,
     )
   })
+  if (blob.type !== outputMime) throw new Error('image_prepare_failed')
 
   const base = file.name.replace(/\.[^.]+$/, '').replace(/[^\w.-]+/g, '-') || 'photo'
   return {
-    file: new File([blob], `${base}.jpg`, { type: BIO_IMAGE_MIME }),
+    file: new File([blob], `${base}.${outputMime === 'image/webp' ? 'webp' : 'jpg'}`, { type: outputMime }),
     width,
     height,
   }

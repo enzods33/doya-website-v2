@@ -1894,6 +1894,13 @@ a.concert-tickets:focus-visible {
   box-sizing: border-box;
 }
 .newsletter-signup-submit:disabled { opacity: .55; cursor: wait; }
+.newsletter-signup-privacy {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+.newsletter-signup-privacy a { color: inherit; text-underline-offset: 3px; }
 .newsletter-signup-status {
   margin: 12px 0 0;
   font-size: 13px;
@@ -3186,6 +3193,7 @@ a.concert-tickets:focus-visible {
   line-height: 1;
 }
 .site-footer .newsletter-signup-text,
+.site-footer .newsletter-signup-privacy,
 .site-footer .footer-contact-note,
 .site-footer .footer-note { color: var(--footer-muted); }
 .site-footer .newsletter-signup-form { gap: 0; margin-top: 14px; }

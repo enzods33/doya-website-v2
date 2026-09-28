@@ -36,6 +36,7 @@ function ListenDock() {
       frame = requestAnimationFrame(() => {
         const viewportHeight = window.innerHeight
         const musicSection = document.querySelector('#music')
+        const shopSection = document.querySelector('#shop')
         const footer = document.querySelector('.site-footer')
 
         let musicSectionSuppressesDock = false
@@ -52,7 +53,13 @@ function ListenDock() {
           footerSuppressesDock = rect.top < viewportHeight && rect.bottom > 0
         }
 
-        setExcludedSectionVisible(musicSectionSuppressesDock || footerSuppressesDock)
+        let shopSuppressesDock = false
+        if (shopSection) {
+          const rect = shopSection.getBoundingClientRect()
+          shopSuppressesDock = rect.top < viewportHeight && rect.bottom > 0
+        }
+
+        setExcludedSectionVisible(musicSectionSuppressesDock || shopSuppressesDock || footerSuppressesDock)
       })
     }
 

@@ -35,7 +35,7 @@ function emptyNewProduct() {
     typeCustom: '',
     color: '',
     price: '',
-    onSale: true,
+    onSale: false,
     frontFile: null,
     backFile: null,
     frontPreview: '',
@@ -400,7 +400,7 @@ function AdminStocks() {
   async function onPickImage(side, file) {
     if (!file) return
     try {
-      const prepared = await prepareBioImage(file)
+      const prepared = await prepareBioImage(file, { product: true })
       const preview = URL.createObjectURL(prepared.file)
       setNewProduct((current) => {
         if (side === 'front' && current.frontPreview) URL.revokeObjectURL(current.frontPreview)
@@ -411,6 +411,30 @@ function AdminStocks() {
       })
     } catch {
       setStockMessage(t('admin.stockImageInvalid'))
+    }
+  }
+
+  async function replaceProductImage(productId, side, file) {
+    if (!file || stockBusy) return
+    setStockBusy(true)
+    setStockMessage('')
+    setError('')
+    try {
+      const prepared = await prepareBioImage(file, { product: true })
+      const upload = await adminShopUpload(prepared.file, {
+        width: prepared.width, height: prepared.height, side, productId,
+      })
+      const result = await adminStats('update_images', {
+        productId, side, imageUrl: upload.publicUrl,
+        width: upload.width, height: upload.height,
+      })
+      if (result.inventory) applyInventory(result.inventory)
+      else await loadInventory()
+      setStockMessage(t('admin.stockImageSaved'))
+    } catch {
+      setError(t('admin.error'))
+    } finally {
+      setStockBusy(false)
     }
   }
 
@@ -430,6 +454,17 @@ function AdminStocks() {
     }
     if (!newProduct.frontFile) {
       setStockMessage(t('admin.stockImageRequired'))
+      return
+    }
+    const sizeKind = newProduct.typeSelect === 'kids_tshirt' ? 'kids'
+      : typeKey === 'cd' ? 'cd'
+        : typeKey === 'other' ? 'unique' : 'adult'
+    const stocks = sizeKind === 'cd' ? { CD: Number(newProduct.stockCd) }
+      : sizeKind === 'unique' ? { U: Number(newProduct.stockUnique) }
+        : Object.fromEntries((sizeKind === 'kids' ? KIDS_SIZES : TSHIRT_SIZES)
+          .map((size) => [size, Number(newProduct.stocks[size])]))
+    if (Object.values(stocks).some((stock) => !Number.isInteger(stock) || stock < 0 || stock > 100000)) {
+      setStockMessage(t('admin.salesStockInvalid'))
       return
     }
 
@@ -455,14 +490,6 @@ function AdminStocks() {
         })
         backUrl = backUpload.publicUrl
       }
-
-      const sizeKind = newProduct.typeSelect === 'kids_tshirt' ? 'kids'
-        : typeKey === 'cd' ? 'cd'
-          : typeKey === 'other' ? 'unique' : 'adult'
-      const stocks = sizeKind === 'cd' ? { CD: Number(newProduct.stockCd) || 0 }
-        : sizeKind === 'unique' ? { U: Number(newProduct.stockUnique) || 0 }
-          : Object.fromEntries((sizeKind === 'kids' ? KIDS_SIZES : TSHIRT_SIZES)
-            .map((size) => [size, Number(newProduct.stocks[size]) || 0]))
 
       const maxSort = inventory.reduce((max, row) => Math.max(max, row.sortOrder || 0), 0)
       const result = await adminStats('upsert_product', {
@@ -646,6 +673,15 @@ function AdminStocks() {
                           </button>
                         </div>
                       ) : null}
+                      <div className="admin-stock-create-images">
+                        {['front', 'back'].map((side) => (
+                          <label key={side} className="admin-stock-image-pick">
+                            <span>{side === 'front' ? t('admin.stockReplaceFront') : t('admin.stockReplaceBack')}</span>
+                            <input type="file" accept="image/jpeg,image/png,image/webp" disabled={stockBusy}
+                              onChange={(event) => { replaceProductImage(product.productId, side, event.target.files?.[0]); event.target.value = '' }} />
+                          </label>
+                        ))}
+                      </div>
                     </div>
                   </div>
 

@@ -3,7 +3,7 @@ import { requireAdmin } from '../_shared/admin.ts'
 import { serviceClient } from '../_shared/clients.ts'
 import { sendShippedOrderEmail, type OrderEmailLine } from '../_shared/orderEmail.ts'
 import { loadShippingZones } from '../_shared/shipping.ts'
-import { r2PutObject } from '../_shared/r2.ts'
+import { r2PublicBase, r2PutObject } from '../_shared/r2.ts'
 
 const MAX_DAYS = 366
 const DEFAULT_DAYS = 90
@@ -373,7 +373,7 @@ Deno.serve(async (req) => {
     if (!(file instanceof File)) return json(400, { error: 'invalid_file' }, origin)
     if (file.size <= 0 || file.size > MAX_IMAGE_BYTES) return json(400, { error: 'file_too_large' }, origin)
     const mime = (file.type || '').toLowerCase()
-    if (mime !== 'image/jpeg' && mime !== 'image/jpg') {
+    if (mime !== 'image/jpeg' && mime !== 'image/jpg' && mime !== 'image/webp') {
       return json(400, { error: 'invalid_image_type' }, origin)
     }
 
@@ -381,10 +381,12 @@ Deno.serve(async (req) => {
     const side = sideRaw === 'back' ? 'back' : 'front'
     const productHint = slugProductId(String(form.get('productId') || 'product')) || 'product'
     const bytes = new Uint8Array(await file.arrayBuffer())
-    const key = `shop/web/${productHint}-${side}-${Date.now()}-${slugFile(file.name)}.jpg`
+    const extension = mime === 'image/webp' ? 'webp' : 'jpg'
+    const storedMime = mime === 'image/webp' ? 'image/webp' : 'image/jpeg'
+    const key = `shop/web/${productHint}-${side}-${Date.now()}-${slugFile(file.name)}.${extension}`
     let publicUrl = ''
     try {
-      publicUrl = await r2PutObject(key, bytes, 'image/jpeg')
+      publicUrl = await r2PutObject(key, bytes, storedMime)
     } catch (error) {
       const detail = error instanceof Error ? error.message : String(error)
       console.error('shop_r2_upload_failed', detail)
@@ -409,6 +411,10 @@ Deno.serve(async (req) => {
     trackingNumber?: string
     updates?: { variantId?: string; stock?: number }[]
     productId?: string
+    side?: string
+    imageUrl?: string
+    width?: number
+    height?: number
     priceCents?: number
     onSale?: boolean
     sortOrder?: number
@@ -764,6 +770,26 @@ Deno.serve(async (req) => {
     return json(200, { ok: true, promos }, origin)
   }
 
+  if (action === 'update_images') {
+    const productId = typeof body.productId === 'string' ? body.productId.trim() : ''
+    const side = body.side === 'back' ? 'back' : body.side === 'front' ? 'front' : ''
+    const imageUrl = typeof body.imageUrl === 'string' ? body.imageUrl.trim() : ''
+    const width = Number(body.width)
+    const height = Number(body.height)
+    if (!productId || !side || !imageUrl.startsWith(`${r2PublicBase()}/shop/web/`)
+      || !Number.isInteger(width) || width < 1 || width > 1600
+      || !Number.isInteger(height) || height < 1 || height > 1600) {
+      return json(400, { error: 'invalid_product_image' }, origin)
+    }
+    const { data, error } = await db.from('products').update({
+      [side === 'front' ? 'image_front_url' : 'image_back_url']: imageUrl,
+      ...(side === 'front' ? { image_width: width, image_height: height } : {}),
+      updated_at: new Date().toISOString(),
+    }).eq('id', productId).select('id').maybeSingle()
+    if (error || !data) return json(404, { error: 'invalid_product' }, origin)
+    return json(200, { ok: true, inventory: await buildInventory(db) }, origin)
+  }
+
   if (action === 'upsert_product') {
     const product = body.product ?? {}
     const productId = slugProductId(typeof product.id === 'string' ? product.id : '')
@@ -800,35 +826,6 @@ Deno.serve(async (req) => {
       return json(400, { error: 'invalid_product_image' }, origin)
     }
 
-    const typeLabel = typeof product.type === 'string' && product.type.trim()
-      ? product.type.trim()
-      : (typeKey === 'cd' ? 'CD' : typeKey === 'tshirt' ? 'T-shirt' : 'Article')
-    const colorLabel = colorRaw || colorKey
-
-    const { error: productError } = await db.from('products').upsert({
-      id: productId,
-      name,
-      type: typeLabel,
-      color: colorLabel,
-      type_key: typeKey,
-      color_key: colorKey,
-      price_cents: priceCents,
-      currency: 'eur',
-      on_sale: onSale,
-      sort_order: sortOrder,
-      image_front_url: imageFrontUrl,
-      image_back_url: imageBackUrl,
-      image_width: Number.isInteger(imageWidth) && imageWidth > 0 ? imageWidth : 1200,
-      image_height: Number.isInteger(imageHeight) && imageHeight > 0 ? imageHeight : 1200,
-      default_view: 'front',
-      updated_at: new Date().toISOString(),
-    }, { onConflict: 'id' })
-
-    if (productError) {
-      console.error('admin_upsert_product_failed', productError)
-      return json(500, { error: 'product_upsert_failed' }, origin)
-    }
-
     const stocks = product.stocks && typeof product.stocks === 'object' ? product.stocks : {}
     const sizeKind = product.sizeKind === 'kids' ? 'kids'
       : typeKey === 'cd' ? 'cd' : typeKey === 'other' ? 'unique' : 'adult'
@@ -840,34 +837,58 @@ Deno.serve(async (req) => {
       if (!Number.isInteger(stock) || stock < 0 || stock > 100000) {
         return json(400, { error: 'invalid_stock' }, origin)
       }
-      const { data: existing } = await db
-        .from('product_variants')
-        .select('id, reserved')
-        .eq('product_id', productId)
-        .eq('size', size)
-        .maybeSingle()
+    }
 
-      if (existing) {
-        const reserved = Math.max(0, Number(existing.reserved) || 0)
-        if (stock < reserved) {
-          return json(400, { error: 'stock_below_reserved', size, reserved }, origin)
-        }
-        const { error } = await db.from('product_variants').update({ stock }).eq('id', existing.id)
-        if (error) {
-          console.error('admin_upsert_variant_failed', error)
-          return json(500, { error: 'product_upsert_failed' }, origin)
-        }
-      } else {
-        const { error } = await db.from('product_variants').insert({
+    const typeLabel = typeof product.type === 'string' && product.type.trim()
+      ? product.type.trim()
+      : (typeKey === 'cd' ? 'CD' : typeKey === 'tshirt' ? 'T-shirt' : 'Article')
+    const colorLabel = colorRaw || colorKey
+
+    const { error: productError } = await db.from('products').insert({
+      id: productId,
+      name,
+      type: typeLabel,
+      color: colorLabel,
+      type_key: typeKey,
+      color_key: colorKey,
+      price_cents: priceCents,
+      currency: 'eur',
+      on_sale: false,
+      sort_order: sortOrder,
+      image_front_url: imageFrontUrl,
+      image_back_url: imageBackUrl,
+      image_width: Number.isInteger(imageWidth) && imageWidth > 0 ? imageWidth : 1200,
+      image_height: Number.isInteger(imageHeight) && imageHeight > 0 ? imageHeight : 1200,
+      default_view: 'front',
+      updated_at: new Date().toISOString(),
+    })
+
+    if (productError) {
+      console.error('admin_upsert_product_failed', productError)
+      if (productError.code === '23505') return json(409, { error: 'product_exists' }, origin)
+      return json(500, { error: 'product_upsert_failed' }, origin)
+    }
+
+    for (const size of sizes) {
+      const stock = Number((stocks as Record<string, number>)[size] ?? 0)
+      const { error } = await db.from('product_variants').insert({
           product_id: productId,
           size,
           stock,
           reserved: 0,
         })
-        if (error) {
-          console.error('admin_insert_variant_failed', error)
-          return json(500, { error: 'product_upsert_failed' }, origin)
-        }
+      if (error) {
+        console.error('admin_insert_variant_failed', error)
+        await db.from('products').delete().eq('id', productId)
+        return json(500, { error: 'product_upsert_failed' }, origin)
+      }
+    }
+
+    if (onSale) {
+      const { error } = await db.from('products').update({ on_sale: true }).eq('id', productId)
+      if (error) {
+        await db.from('products').delete().eq('id', productId)
+        return json(500, { error: 'product_upsert_failed' }, origin)
       }
     }
 

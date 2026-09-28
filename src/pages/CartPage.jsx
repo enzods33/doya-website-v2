@@ -140,14 +140,16 @@ function CartPage() {
   const quoteMailto = useMemo(() => {
     const subject = t('cart.quoteSubject')
     const body = t('cart.quoteBody', {
-      tees: String(teeQty),
-      cds: String(cdQty),
+      items: lines.map((line) => {
+        const label = line.product ? translateProduct(t, line.product) : null
+        return `- ${line.quantity} × ${label ? `${label.type} ${label.name}` : line.productId} (${line.size})`
+      }).join('\n'),
       email: email.trim() || '—',
       message: quoteMessage.trim() || '—',
       country: shippingCountry,
     })
     return `mailto:${shippingQuoteEmails.join(',')}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
-  }, [cdQty, email, quoteMessage, shippingCountry, t, teeQty])
+  }, [lines, email, quoteMessage, shippingCountry, t])
 
   function openMailtoFallback() {
     window.location.assign(quoteMailto)
