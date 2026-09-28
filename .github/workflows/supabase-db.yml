@@ -1,0 +1,32 @@
+name: Supabase local DB
+
+on:
+  pull_request:
+    branches: [master]
+
+jobs:
+  migrations-and-stock:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+        with:
+          version: 2.118.0
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Vérifier les Edge Functions critiques
+        run: |
+          deno check --node-modules-dir=auto supabase/functions/create-checkout-session/index.ts
+          deno check --node-modules-dir=auto supabase/functions/release-checkout/index.ts
+          deno check --node-modules-dir=auto supabase/functions/stripe-webhook/index.ts
+          deno check --node-modules-dir=auto supabase/functions/admin-brevo-campaign/index.ts
+          deno check --node-modules-dir=auto supabase/functions/unsubscribe-newsletter/index.ts
+      - name: Rejouer les migrations dans une base jetable
+        run: supabase db start
+      - name: Tester la réservation du stock
+        run: supabase test db
+      - name: Arrêter la base locale
+        if: always()
+        run: supabase stop || true

@@ -1,7 +1,8 @@
-import { json, preflight, rejectOrigin } from '../_shared/http.ts'
+import { json, preflight, publicSiteUrl, rejectOrigin } from '../_shared/http.ts'
 import { requireAdmin } from '../_shared/admin.ts'
 import { serviceClient } from '../_shared/clients.ts'
 import { emailLogoPublicUrl, rewriteEmailLogoSrc } from '../_shared/emailLogo.ts'
+import { newsletterMessageVersions } from '../_shared/newsletterDelivery.ts'
 
 type CampaignBody = {
   action?: string
@@ -18,6 +19,7 @@ type CampaignBody = {
   scheduledAt?: string | null
   /** fr | es | pt | en | all — filtre destinataires via attribut Brevo LANG */
   lang?: string
+  idempotencyKey?: string
 }
 
 const NEWSLETTER_LANGS = new Set(['fr', 'es', 'pt', 'en'])
@@ -33,6 +35,19 @@ function contactLang(attributes: Record<string, unknown> | undefined | null): st
   const value = String(raw ?? '').trim().toLowerCase()
   if (NEWSLETTER_LANGS.has(value)) return value
   return 'fr'
+}
+
+type BrevoContact = {
+  email?: string
+  attributes?: Record<string, unknown>
+  emailBlacklisted?: boolean
+  listUnsubscribed?: number[]
+}
+
+function isSubscribedContact(contact: BrevoContact, listId: number): boolean {
+  return Boolean(contact.email?.trim())
+    && contact.emailBlacklisted !== true
+    && !contact.listUnsubscribed?.includes(listId)
 }
 
 type NewsletterRow = {
@@ -126,7 +141,7 @@ async function fetchListEmails(
       { headers: { accept: 'application/json', 'api-key': apiKey } },
     )
     const payload = await response.json().catch(() => ({})) as {
-      contacts?: { email?: string; attributes?: Record<string, unknown> }[]
+      contacts?: BrevoContact[]
       count?: number
     }
     if (!response.ok) {
@@ -135,6 +150,7 @@ async function fetchListEmails(
     }
     const batch = Array.isArray(payload.contacts) ? payload.contacts : []
     for (const contact of batch) {
+      if (!isSubscribedContact(contact, listId)) continue
       const email = typeof contact.email === 'string' ? contact.email.trim().toLowerCase() : ''
       if (!email) continue
       if (langFilter !== 'all' && contactLang(contact.attributes) !== langFilter) continue
@@ -142,7 +158,6 @@ async function fetchListEmails(
     }
     offset += batch.length
     if (batch.length < limit) break
-    if (emails.length >= 500) break
   }
   return [...new Set(emails)]
 }
@@ -158,7 +173,7 @@ async function fetchLangStats(apiKey: string, listId: number) {
       { headers: { accept: 'application/json', 'api-key': apiKey } },
     )
     const payload = await response.json().catch(() => ({})) as {
-      contacts?: { email?: string; attributes?: Record<string, unknown> }[]
+      contacts?: BrevoContact[]
     }
     if (!response.ok) {
       console.error('brevo_lang_stats_failed', payload)
@@ -166,6 +181,7 @@ async function fetchLangStats(apiKey: string, listId: number) {
     }
     const batch = Array.isArray(payload.contacts) ? payload.contacts : []
     for (const contact of batch) {
+      if (!isSubscribedContact(contact, listId)) continue
       const email = typeof contact.email === 'string' ? contact.email.trim() : ''
       if (!email) continue
       const lang = contactLang(contact.attributes) as keyof typeof stats
@@ -174,15 +190,8 @@ async function fetchLangStats(apiKey: string, listId: number) {
     }
     offset += batch.length
     if (batch.length < limit) break
-    if (stats.total >= 2000) break
   }
   return stats
-}
-
-function chunk<T>(items: T[], size: number): T[][] {
-  const out: T[][] = []
-  for (let i = 0; i < items.length; i += size) out.push(items.slice(i, i + size))
-  return out
 }
 
 Deno.serve(async (req) => {
@@ -344,59 +353,17 @@ Deno.serve(async (req) => {
     return json(200, { ok: true, removed: email }, origin)
   }
 
-  if (action === 'purge_campaigns') {
-    const response = await fetch('https://api.brevo.com/v3/emailCampaigns?limit=50&sort=desc', {
-      headers: brevoHeaders(apiKey),
-    })
-    const payload = await response.json().catch(() => ({})) as { campaigns?: { id?: number }[] }
-    if (!response.ok) {
-      console.error('brevo_list_failed', payload)
-      return json(502, { error: 'brevo_list_failed' }, origin)
-    }
-    const campaigns = Array.isArray(payload.campaigns) ? payload.campaigns : []
-    let deleted = 0
-    for (const campaign of campaigns) {
-      if (!campaign?.id) continue
-      const del = await fetch(`https://api.brevo.com/v3/emailCampaigns/${campaign.id}`, {
-        method: 'DELETE',
-        headers: { accept: 'application/json', 'api-key': apiKey },
-      })
-      if (del.ok || del.status === 204 || del.status === 404) deleted += 1
-      else console.error('brevo_delete_campaign_failed', campaign.id, await del.text().catch(() => ''))
-    }
-    return json(200, { ok: true, deleted }, origin)
-  }
-
-  if (action === 'cleanup_tests') {
-    const email = 'stephanedasil@gmail.com'
-    await fetch(`https://api.brevo.com/v3/contacts/${encodeURIComponent(email)}`, {
-      method: 'DELETE',
-      headers: { accept: 'application/json', 'api-key': apiKey },
-    })
-    const response = await fetch('https://api.brevo.com/v3/emailCampaigns?limit=50&sort=desc', {
-      headers: brevoHeaders(apiKey),
-    })
-    const payload = await response.json().catch(() => ({})) as { campaigns?: { id?: number }[] }
-    const campaigns = Array.isArray(payload.campaigns) ? payload.campaigns : []
-    let deleted = 0
-    for (const campaign of campaigns) {
-      if (!campaign?.id) continue
-      const del = await fetch(`https://api.brevo.com/v3/emailCampaigns/${campaign.id}`, {
-        method: 'DELETE',
-        headers: { accept: 'application/json', 'api-key': apiKey },
-      })
-      if (del.ok || del.status === 204 || del.status === 404) deleted += 1
-    }
-    return json(200, { ok: true, removed: email, deleted }, origin)
-  }
-
-  if (action === 'send' || action === 'schedule') {
+  if (action === 'test' || action === 'send' || action === 'schedule') {
     if (!senderEmail) return json(503, { error: 'brevo_sender_missing' }, origin)
     const subject = typeof body.subject === 'string' ? body.subject.trim() : ''
     const bodyText = typeof body.bodyText === 'string' ? body.bodyText.trim() : ''
     const signature = typeof body.signature === 'string' ? body.signature : '— DOYA'
     const htmlFromClient = typeof body.htmlContent === 'string' ? body.htmlContent.trim() : ''
     const sendLang = normalizeSendLang(body.lang)
+    const idempotencyKey = typeof body.idempotencyKey === 'string' ? body.idempotencyKey : ''
+    if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(idempotencyKey)) {
+      return json(400, { error: 'invalid_campaign_key' }, origin)
+    }
     const logoSrc = emailLogoPublicUrl()
     const htmlContent = rewriteEmailLogoSrc(
       htmlFromClient || (bodyText ? buildNewsletterHtml(bodyText, signature, logoSrc) : ''),
@@ -411,7 +378,19 @@ Deno.serve(async (req) => {
     const langSuffix = sendLang === 'all' ? '' : ` · ${sendLang.toUpperCase()}`
 
     if (!subject || !htmlContent) return json(400, { error: 'invalid_campaign' }, origin)
-    if (action === 'schedule' && !scheduledAt) return json(400, { error: 'invalid_schedule' }, origin)
+    if (action === 'schedule' && (!scheduledAt || !Number.isFinite(Date.parse(scheduledAt)) || Date.parse(scheduledAt) <= Date.now())) {
+      return json(400, { error: 'invalid_schedule' }, origin)
+    }
+
+    if (action === 'test') {
+      const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+        method: 'POST',
+        headers: brevoHeaders(apiKey),
+        body: JSON.stringify({ sender: { name: senderName, email: senderEmail }, to: [{ email: admin.email }], subject: `[TEST] ${subject}`, htmlContent }),
+      })
+      if (!response.ok) return json(502, { error: 'brevo_test_failed' }, origin)
+      return json(200, { ok: true, email: admin.email }, origin)
+    }
 
     let emails: string[] = []
     try {
@@ -425,28 +404,32 @@ Deno.serve(async (req) => {
         lang: sendLang,
       }, origin)
     }
+    // Une requête unique évite les succès partiels entre lots. Brevo limite les
+    // messageVersions à 1000 ; au-delà, ne pas envoyer une liste tronquée.
+    if (emails.length > 1000) return json(400, { error: 'list_too_large' }, origin)
 
-    for (const group of chunk(emails, 50)) {
-      const sendPayload: Record<string, unknown> = {
-        sender: { name: senderName, email: senderEmail },
-        to: group.map((email) => ({ email })),
-        subject,
-        htmlContent,
-      }
-      if (action === 'schedule') sendPayload.scheduledAt = scheduledAt
-      const sendRes = await fetch('https://api.brevo.com/v3/smtp/email', {
-        method: 'POST',
-        headers: brevoHeaders(apiKey),
-        body: JSON.stringify(sendPayload),
-      })
-      if (!sendRes.ok) {
-        const errPayload = await sendRes.json().catch(() => ({}))
-        console.error('brevo_tx_send_failed', errPayload)
-        return json(502, {
-          error: action === 'schedule' ? 'brevo_schedule_failed' : 'brevo_send_failed',
-          detail: (errPayload as { message?: string })?.message ?? null,
-        }, origin)
-      }
+    const secret = Deno.env.get('BREVO_UNSUBSCRIBE_SECRET') || apiKey
+    const messageVersions = await newsletterMessageVersions(emails, htmlContent, publicSiteUrl(), secret, sendLang)
+    const sendPayload: Record<string, unknown> = {
+      sender: { name: senderName, email: senderEmail },
+      subject,
+      htmlContent,
+      messageVersions,
+      headers: { idempotencyKey },
+    }
+    if (action === 'schedule') sendPayload.scheduledAt = scheduledAt
+    const sendRes = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: brevoHeaders(apiKey),
+      body: JSON.stringify(sendPayload),
+    })
+    if (!sendRes.ok) {
+      const errPayload = await sendRes.json().catch(() => ({}))
+      console.error('brevo_tx_send_failed', errPayload)
+      return json(502, {
+        error: action === 'schedule' ? 'brevo_schedule_failed' : 'brevo_send_failed',
+        detail: (errPayload as { message?: string })?.message ?? null,
+      }, origin)
     }
 
     const db = serviceClient()

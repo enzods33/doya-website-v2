@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { adminBrevo } from '../../commerce/admin.js'
 import {
   DEFAULT_NEWSLETTER_SIGNATURE,
@@ -10,6 +10,7 @@ import { useI18n } from '../../i18n/I18nProvider.jsx'
 import AdminStatCard from './AdminStatCard.jsx'
 
 const STORAGE_SIGNATURE = 'doya-newsletter-signature'
+const STORAGE_DRAFT = 'doya-newsletter-draft'
 
 function readStored(key, fallback) {
   try {
@@ -20,15 +21,28 @@ function readStored(key, fallback) {
   }
 }
 
+function readDraft() {
+  try {
+    const draft = JSON.parse(localStorage.getItem(STORAGE_DRAFT) || '{}')
+    return {
+      subject: typeof draft.subject === 'string' ? draft.subject : '',
+      bodyText: typeof draft.bodyText === 'string' ? draft.bodyText : '',
+    }
+  } catch {
+    return { subject: '', bodyText: '' }
+  }
+}
+
 function AdminNewsletter() {
   const { t } = useI18n()
   const [campaigns, setCampaigns] = useState([])
   const [subscribers, setSubscribers] = useState(null)
   const [langStats, setLangStats] = useState(null)
   const [statsBusy, setStatsBusy] = useState(true)
-  const [subject, setSubject] = useState('')
-  const [signature, setSignature] = useState(DEFAULT_NEWSLETTER_SIGNATURE)
-  const [bodyText, setBodyText] = useState('')
+  const [draft] = useState(readDraft)
+  const [subject, setSubject] = useState(draft.subject)
+  const [signature, setSignature] = useState(() => readStored(STORAGE_SIGNATURE, DEFAULT_NEWSLETTER_SIGNATURE))
+  const [bodyText, setBodyText] = useState(draft.bodyText)
   const [scheduleDate, setScheduleDate] = useState('')
   const [scheduleTime, setScheduleTime] = useState('18:00')
   const [busy, setBusy] = useState(false)
@@ -40,10 +54,11 @@ function AdminNewsletter() {
   const [previewBusy, setPreviewBusy] = useState(false)
   const [campaignPreview, setCampaignPreview] = useState(null)
   const [sendLang, setSendLang] = useState('fr')
+  const sendKey = useRef(crypto.randomUUID())
 
   useEffect(() => {
-    setSignature(readStored(STORAGE_SIGNATURE, DEFAULT_NEWSLETTER_SIGNATURE))
-  }, [])
+    try { localStorage.setItem(STORAGE_DRAFT, JSON.stringify({ subject, bodyText })) } catch { /* mode privé */ }
+  }, [subject, bodyText])
 
   useEffect(() => {
     try {
@@ -143,6 +158,10 @@ function AdminNewsletter() {
     }
   }
   async function submit(mode) {
+    if (mode === 'send' && !window.confirm(t('admin.newsletterConfirmSend', {
+      count: sendLang === 'all' ? subscribers ?? '—' : langStats?.[sendLang] ?? '—',
+      lang: t(`admin.sendLang${sendLang === 'all' ? 'All' : sendLang[0].toUpperCase() + sendLang.slice(1)}`),
+    }))) return
     setBusy(true)
     setError('')
     setOk('')
@@ -156,6 +175,7 @@ function AdminNewsletter() {
         htmlContent: buildNewsletterHtml(bodyText, sendOptions),
         logoUrl: EMAIL_LOGO_PUBLIC_URL,
         lang: sendLang,
+        idempotencyKey: sendKey.current,
       }
       if (mode === 'schedule') {
         if (!scheduleDate || !scheduleTime) throw new Error('invalid_schedule')
@@ -164,7 +184,12 @@ function AdminNewsletter() {
         payload.scheduledAt = local.toISOString()
       }
       const result = await adminBrevo(mode, payload)
-      await refresh({ soft: true })
+      sendKey.current = crypto.randomUUID()
+      if (mode !== 'test') await refresh({ soft: true })
+      if (mode === 'test') {
+        setOk(t('admin.newsletterTestSent', { email: result.email }))
+        return
+      }
       if (mode === 'send') {
         setSentModal({
           subject,
@@ -240,7 +265,7 @@ function AdminNewsletter() {
         >
           <label>
             <span>{t('admin.fieldSubject')}</span>
-            <input className="admin-control" required value={subject} onChange={(e) => setSubject(e.target.value)} />
+            <input className="admin-control" required value={subject} onChange={(e) => { sendKey.current = crypto.randomUUID(); setSubject(e.target.value) }} />
           </label>
           <label>
             <span>{t('admin.fieldMessage')}</span>
@@ -249,7 +274,7 @@ function AdminNewsletter() {
               required
               rows={8}
               value={bodyText}
-              onChange={(e) => setBodyText(e.target.value)}
+              onChange={(e) => { sendKey.current = crypto.randomUUID(); setBodyText(e.target.value) }}
               placeholder={t('admin.fieldMessagePlaceholder')}
             />
           </label>
@@ -258,7 +283,7 @@ function AdminNewsletter() {
             <select
               className="admin-control"
               value={sendLang}
-              onChange={(e) => setSendLang(e.target.value)}
+              onChange={(e) => { sendKey.current = crypto.randomUUID(); setSendLang(e.target.value) }}
             >
               <option value="fr">{t('admin.sendLangFr')}</option>
               <option value="es">{t('admin.sendLangEs')}</option>
@@ -274,7 +299,7 @@ function AdminNewsletter() {
               className="admin-control"
               rows={3}
               value={signature}
-              onChange={(e) => setSignature(e.target.value)}
+              onChange={(e) => { sendKey.current = crypto.randomUUID(); setSignature(e.target.value) }}
               placeholder={DEFAULT_NEWSLETTER_SIGNATURE}
             />
             <span className="admin-field-help">{t('admin.fieldSignatureHelp')}</span>
@@ -290,7 +315,7 @@ function AdminNewsletter() {
                     type="date"
                     required
                     value={scheduleDate}
-                    onChange={(e) => setScheduleDate(e.target.value)}
+                    onChange={(e) => { sendKey.current = crypto.randomUUID(); setScheduleDate(e.target.value) }}
                   />
                 </label>
                 <label>
@@ -300,7 +325,7 @@ function AdminNewsletter() {
                     type="time"
                     required
                     value={scheduleTime}
-                    onChange={(e) => setScheduleTime(e.target.value)}
+                    onChange={(e) => { sendKey.current = crypto.randomUUID(); setScheduleTime(e.target.value) }}
                   />
                 </label>
               </div>
@@ -321,6 +346,9 @@ function AdminNewsletter() {
           ) : (
             <div className="admin-form-actions">
               <button type="submit" className="admin-primary" disabled={busy}>{t('admin.sendNow')}</button>
+              <button type="button" className="admin-secondary" disabled={busy || !subject.trim() || !bodyText.trim()} onClick={() => submit('test')}>
+                {t('admin.newsletterSendTest')}
+              </button>
               <button
                 type="button"
                 className="admin-secondary"

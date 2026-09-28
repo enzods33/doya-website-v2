@@ -1,8 +1,7 @@
-# Build + contrôles SPA (preview / CI).
-# Le déploiement production part sur le VPS Hetzner (voir deploy.yml).
-# Secrets Netlify optionnels : NETLIFY_AUTH_TOKEN, NETLIFY_SITE_ID (staging manuel).
+# Contrôles front de la pull request.
+# Aucun déploiement ici : la production est déployée sur le VPS Hetzner via deploy.yml.
 
-name: Netlify
+name: Frontend CI
 
 on:
   pull_request:
@@ -10,7 +9,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: netlify-${{ github.ref }}
+  group: frontend-ci-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -23,6 +22,8 @@ jobs:
           node-version: '22'
           cache: npm
       - run: npm ci
+      - run: npm run lint
+      - run: npm test
       - run: npm run build
         env:
           VITE_INDEXABLE: 'false'
@@ -41,28 +42,3 @@ jobs:
           test -f dist/sitemap.xml
           grep -q 'index.html' dist/_redirects
           echo "SPA artifacts OK"
-      - uses: actions/upload-artifact@v4
-        with:
-          name: dist
-          path: dist
-          retention-days: 7
-
-  deploy-netlify-staging:
-    if: github.event_name == 'workflow_dispatch'
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          name: dist
-          path: dist
-      - name: Deploy to Netlify
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-        run: |
-          if [ -z "$NETLIFY_AUTH_TOKEN" ] || [ -z "$NETLIFY_SITE_ID" ]; then
-            echo "Secrets Netlify absents — deploy ignoré."
-            exit 0
-          fi
-          npx --yes netlify-cli deploy --prod --dir=dist --site="$NETLIFY_SITE_ID" --auth="$NETLIFY_AUTH_TOKEN"

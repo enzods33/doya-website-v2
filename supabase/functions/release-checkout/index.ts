@@ -1,6 +1,7 @@
 import { json, preflight, rejectOrigin } from '../_shared/http.ts'
 import { serviceClient, stripeClient } from '../_shared/clients.ts'
 import { allowRatePersistent, clientIp } from '../_shared/rateLimit.ts'
+import { checkoutReleaseAction } from '../_shared/checkoutRelease.ts'
 
 /** Libère le stock si le client annule Stripe Checkout (retour /panier?canceled=1&session_id=…). */
 
@@ -35,9 +36,19 @@ Deno.serve(async (req) => {
     const session = await stripeClient().checkout.sessions.retrieve(sessionId)
     if (!session?.id) return json(404, { error: 'not_found' }, origin)
 
-    // Ne libérer que si non payé (annulation / abandon).
-    if (session.payment_status === 'paid') {
-      return json(200, { released: false, reason: 'already_paid' }, origin)
+    // Une session non payée peut encore être ouverte et payable depuis un autre onglet.
+    // Expirer Stripe avant de libérer la réservation ferme cette fenêtre de concurrence.
+    const action = checkoutReleaseAction(session.status)
+    if (action === 'expire') {
+      try {
+        await stripeClient().checkout.sessions.expire(sessionId)
+      } catch (error) {
+        console.error('checkout_expire_failed', error)
+        return json(409, { error: 'checkout_still_open' }, origin)
+      }
+    } else if (action === 'wait') {
+      // Une session terminée peut encore attendre la confirmation d'un paiement asynchrone.
+      return json(200, { released: false, reason: 'checkout_complete' }, origin)
     }
 
     const orderId = typeof session.metadata?.orderId === 'string' ? session.metadata.orderId : ''

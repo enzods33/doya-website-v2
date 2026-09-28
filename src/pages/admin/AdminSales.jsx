@@ -66,6 +66,7 @@ function AdminSales() {
       setOpenId(order.id)
       return
     }
+    if (!window.confirm(t('admin.salesConfirmShipment', { order: order.orderNumber, tracking: trackingNumber }))) return
     setShipBusyId(order.id)
     setShipMessage('')
     setError('')

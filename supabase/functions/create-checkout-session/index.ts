@@ -134,19 +134,20 @@ Deno.serve(async (req) => {
     },
   }))
 
-  const discounts = []
-  if (order.discountCents > 0) {
-    const coupon = await stripe.coupons.create({
-      amount_off: order.discountCents,
-      currency: 'eur',
-      duration: 'once',
-      max_redemptions: 1,
-      metadata: { orderId: order.orderId, orderNumber: order.orderNumber ?? '' },
-    })
-    discounts.push({ coupon: coupon.id })
-  }
-
+  let sessionId = ''
   try {
+    const discounts = []
+    if (order.discountCents > 0) {
+      const coupon = await stripe.coupons.create({
+        amount_off: order.discountCents,
+        currency: 'eur',
+        duration: 'once',
+        max_redemptions: 1,
+        metadata: { orderId: order.orderId, orderNumber: order.orderNumber ?? '' },
+      })
+      discounts.push({ coupon: coupon.id })
+    }
+
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
       locale: stripeCheckoutLocale(locale),
@@ -154,7 +155,7 @@ Deno.serve(async (req) => {
       client_reference_id: order.orderNumber ?? order.orderId,
       success_url: `${site}/commande?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${site}/panier?canceled=1&session_id={CHECKOUT_SESSION_ID}`,
-      expires_at: Math.floor(Date.now() / 1000) + 30 * 60,
+      // Stripe exige au moins 30 min ; garder une marge évite la borne exacte en cas de léger décalage d'horloge.\n      expires_at: Math.floor(Date.now() / 1000) + 31 * 60,
       billing_address_collection: 'required',
       phone_number_collection: { enabled: true },
       shipping_address_collection: {
@@ -186,16 +187,31 @@ Deno.serve(async (req) => {
         },
       },
     })
+    sessionId = session.id
 
-    await admin.rpc('attach_stripe_session', {
+    const { error: attachError } = await admin.rpc('attach_stripe_session', {
       p_order_id: order.orderId,
       p_session_id: session.id,
     })
+    if (attachError) throw attachError
 
     if (!session.url) throw new Error('missing_checkout_url')
     return json(200, { url: session.url }, origin)
   } catch (error) {
-    await admin.rpc('release_reservation', { p_order_id: order.orderId })
+    // Une session créée reste payable tant que Stripe n'a pas confirmé son expiration.
+    let safeToRelease = !sessionId
+    if (sessionId) {
+      try {
+        await stripe.checkout.sessions.expire(sessionId)
+        safeToRelease = true
+      } catch (expireError) {
+        console.error('checkout_expire_failed', expireError)
+      }
+    }
+    if (safeToRelease) {
+      const { error: releaseError } = await admin.rpc('release_reservation', { p_order_id: order.orderId })
+      if (releaseError) console.error('checkout_release_failed', releaseError)
+    }
     console.error(error)
     return json(502, { error: 'stripe_unavailable' }, origin)
   }
