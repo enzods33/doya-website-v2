@@ -118,7 +118,7 @@ export default {
     productAlt: '{type} {name}, {color}, {view} view.',
     viewFrontWord: 'front',
     viewBackWord: 'back',
-    type: { tshirt: 'T-shirt', cd: 'CD', other: 'Item' },
+    type: { tshirt: 'T-shirt', adultTshirt: 'Adult T-shirt', kidsTshirt: 'Kids T-shirt', cap: 'Cap', tote: 'Tote bag', cd: 'CD', other: 'Item' },
     size: { ENF: 'Kids', CD: 'CD', VINYL: 'Vinyl', U: 'One size' },
     color: { black: 'Black', white: 'White', red: 'Red', digipack: 'New album on CD · Booklet included', default: '' },
     product: {

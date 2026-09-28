@@ -118,7 +118,7 @@ export default {
     productAlt: '{type} {name}, {color}, vista {view}.',
     viewFrontWord: 'de frente',
     viewBackWord: 'de costas',
-    type: { tshirt: 'T-shirt', cd: 'CD', other: 'Artigo' },
+    type: { tshirt: 'T-shirt', adultTshirt: 'T-shirt adulto', kidsTshirt: 'T-shirt infantil', cap: 'Boné', tote: 'Saco de pano', cd: 'CD', other: 'Artigo' },
     size: { ENF: 'Infantil', CD: 'CD', VINYL: 'Vinil', U: 'Tamanho único' },
     color: { black: 'Preto', white: 'Branco', red: 'Vermelho', digipack: 'Novo álbum em CD · Livreto incluído', default: '' },
     product: {
