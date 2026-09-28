@@ -120,6 +120,24 @@ test('le nom catalogue/back-office reste prioritaire sur les anciens libellés c
   assert.match(migration, /tee-luna-mini-red/)
 })
 
+test('le panier présente un opt-in newsletter explicite et non bloquant', () => {
+  const cart = readFileSync(new URL('../src/pages/CartPage.jsx', import.meta.url), 'utf8')
+  const fr = readFileSync(new URL('../src/i18n/locales/fr.js', import.meta.url), 'utf8')
+  const en = readFileSync(new URL('../src/i18n/locales/en.js', import.meta.url), 'utf8')
+  const es = readFileSync(new URL('../src/i18n/locales/es.js', import.meta.url), 'utf8')
+  const pt = readFileSync(new URL('../src/i18n/locales/pt.js', import.meta.url), 'utf8')
+
+  assert.match(cart, /checked=\{newsletter\}/)
+  assert.match(cart, /cart\.newsletterHint/)
+  assert.match(cart, /await subscribeNewsletter\(email\.trim\(\), locale\)/)
+  assert.match(cart, /Ne bloque pas le paiement si Brevo échoue/)
+  assert.match(fr, /Recevoir les actualités DOYA/)
+  assert.match(fr, /Newsletter gratuite · désabonnement à tout moment/)
+  assert.match(en, /Free newsletter · unsubscribe at any time/)
+  assert.match(es, /Newsletter gratuita · cancela la suscripción en cualquier momento/)
+  assert.match(pt, /Newsletter gratuita · cancelar subscrição a qualquer momento/)
+})
+
 test('les anciens chunks sont récupérés sans boucle de rechargement', () => {
   const recovery = readFileSync(new URL('../src/utils/chunkRecovery.js', import.meta.url), 'utf8')
   const main = readFileSync(new URL('../src/main.jsx', import.meta.url), 'utf8')

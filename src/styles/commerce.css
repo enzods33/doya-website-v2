@@ -421,6 +421,19 @@
   flex: 1;
   min-width: 0;
 }
+.cart-newsletter-copy {
+  display: grid;
+  gap: 2px;
+}
+.cart-newsletter-copy strong {
+  font: inherit;
+  font-weight: 600;
+}
+.cart-newsletter-copy small {
+  color: rgb(44 41 38 / 68%);
+  font-size: 11px;
+  line-height: 1.35;
+}
 .cart-aside-totals {
   display: grid;
   gap: 6px;

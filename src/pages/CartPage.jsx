@@ -396,7 +396,7 @@ function CartPage() {
                   ) : null}
                 </label>
 
-                <label className="cart-check">
+                <label className="cart-check cart-newsletter-check">
                   <input
                     type="checkbox"
                     checked={newsletter}
@@ -407,7 +407,10 @@ function CartPage() {
                       if (checked) trackEvent('newsletter_optin', 'cart')
                     }}
                   />
-                  <span>{t('cart.newsletter')}</span>
+                  <span className="cart-newsletter-copy">
+                    <strong>{t('cart.newsletter')}</strong>
+                    <small>{t('cart.newsletterHint')}</small>
+                  </span>
                 </label>
 
                 {!needsShippingQuote ? (
