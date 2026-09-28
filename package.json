@@ -8,7 +8,8 @@
     "build": "vite build && node -e \"require('fs').copyFileSync('dist/index.html','dist/404.html')\"",
     "preview": "vite preview --host 0.0.0.0 --port 4174 --strictPort",
     "lint": "oxlint",
-    "test": "node --test tests/*.test.js"
+    "test": "node --test tests/*.test.js",
+    "assets:audit": "node scripts/asset-retention.mjs --root /var/www/doya --min-age-days 30"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.57.4",
