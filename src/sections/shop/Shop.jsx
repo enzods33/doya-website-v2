@@ -17,7 +17,7 @@ import Link from '../../components/Link.jsx'
 
 const TSHIRT_FLIP_MS = 3400
 const HOVER_RESUME_MS = 2000
-const MOBILE_MANUAL_RESUME_MS = 4000
+const MANUAL_VIEW_RESUME_MS = 5000
 
 function finePointerHover() {
   return window.matchMedia('(hover: hover) and (pointer: fine)').matches
@@ -25,14 +25,16 @@ function finePointerHover() {
 
 function Shop() {
   const [views, setViews] = useState({})
+  const [autoViews, setAutoViews] = useState({})
   const [manualLock, setManualLock] = useState({})
   const [hoverPaused, setHoverPaused] = useState({})
-  const [flipTick, setFlipTick] = useState(0)
   const [selectedSizes, setSelectedSizes] = useState({})
   const [feedback, setFeedback] = useState(null)
   const [zoom, setZoom] = useState(null)
   const [autoPromos, setAutoPromos] = useState(DEFAULT_AUTO_PROMOS)
-  const resumeTimers = useRef({})
+  const autoTimers = useRef({})
+  const manualTimers = useRef({})
+  const hoverTimers = useRef({})
   const { items, purchasable, revision } = useCatalog()
   const { addItem } = useCart()
   const { t, intlLocale } = useI18n()
@@ -51,10 +53,24 @@ function Shop() {
     return product.typeKey === 'tshirt'
   }
 
-  function clearResumeTimer(id) {
-    if (resumeTimers.current[id]) {
-      window.clearTimeout(resumeTimers.current[id])
-      resumeTimers.current[id] = null
+  function clearAutoTimer(id) {
+    if (autoTimers.current[id]) {
+      window.clearInterval(autoTimers.current[id])
+      autoTimers.current[id] = null
+    }
+  }
+
+  function clearManualTimer(id) {
+    if (manualTimers.current[id]) {
+      window.clearTimeout(manualTimers.current[id])
+      manualTimers.current[id] = null
+    }
+  }
+
+  function clearHoverTimer(id) {
+    if (hoverTimers.current[id]) {
+      window.clearTimeout(hoverTimers.current[id])
+      hoverTimers.current[id] = null
     }
   }
 
@@ -67,41 +83,69 @@ function Shop() {
     })
   }
 
+  function clearHoverPause(id) {
+    setHoverPaused((current) => {
+      if (!current[id]) return current
+      const next = { ...current }
+      delete next[id]
+      return next
+    })
+  }
+
+  function toggleAutoView(product) {
+    setAutoViews((current) => {
+      const active = resolveProductView(product, current[product.id] ?? product.defaultView)
+      const next = active === 'front' ? 'back' : 'front'
+      return { ...current, [product.id]: resolveProductView(product, next) }
+    })
+  }
+
+  function restartAutoInterval(product) {
+    clearAutoTimer(product.id)
+    if (!isTshirt(product) || reducedMotion || !product.front || !product.back) return
+    autoTimers.current[product.id] = window.setInterval(() => {
+      toggleAutoView(product)
+    }, TSHIRT_FLIP_MS)
+  }
+
   function pauseAutoOnHover(product) {
-    if (!isTshirt(product) || reducedMotion) return
-    if (!finePointerHover()) return
-    clearResumeTimer(product.id)
-    unlockManual(product.id)
+    if (!isTshirt(product) || reducedMotion || !finePointerHover()) return
+    if (manualTimers.current[product.id]) return
+    clearAutoTimer(product.id)
+    clearHoverTimer(product.id)
     setHoverPaused((current) => (current[product.id] ? current : { ...current, [product.id]: true }))
   }
 
   function scheduleAutoResume(product) {
-    if (!isTshirt(product) || reducedMotion) return
-    clearResumeTimer(product.id)
-    resumeTimers.current[product.id] = window.setTimeout(() => {
-      setHoverPaused((paused) => {
-        if (!paused[product.id]) return paused
-        const next = { ...paused }
-        delete next[product.id]
-        return next
-      })
-      unlockManual(product.id)
-      resumeTimers.current[product.id] = null
+    if (!isTshirt(product) || reducedMotion || !finePointerHover()) return
+    if (manualTimers.current[product.id]) return
+    clearHoverTimer(product.id)
+    hoverTimers.current[product.id] = window.setTimeout(() => {
+      clearHoverPause(product.id)
+      restartAutoInterval(product)
+      hoverTimers.current[product.id] = null
     }, HOVER_RESUME_MS)
   }
 
   function setProductView(product, next) {
     if (next === 'front' && !product.front) return
     if (next === 'back' && !product.back) return
+
     setViews((current) => ({ ...current, [product.id]: next }))
     setManualLock((current) => ({ ...current, [product.id]: true }))
-    clearResumeTimer(product.id)
-    // Survol : garder la pause auto, mais laisser Face/Dos piloter la vue
-    if (isTshirt(product) && !reducedMotion && !finePointerHover()) {
-      resumeTimers.current[product.id] = window.setTimeout(() => {
+    clearAutoTimer(product.id)
+    clearManualTimer(product.id)
+    clearHoverTimer(product.id)
+    clearHoverPause(product.id)
+
+    if (isTshirt(product) && !reducedMotion && product.front && product.back) {
+      manualTimers.current[product.id] = window.setTimeout(() => {
+        const resumedView = next === 'front' ? 'back' : 'front'
+        setAutoViews((current) => ({ ...current, [product.id]: resumedView }))
         unlockManual(product.id)
-        resumeTimers.current[product.id] = null
-      }, MOBILE_MANUAL_RESUME_MS)
+        manualTimers.current[product.id] = null
+        restartAutoInterval(product)
+      }, MANUAL_VIEW_RESUME_MS)
     }
   }
 
@@ -116,7 +160,7 @@ function Shop() {
     if (!product.front || !product.back) {
       return resolveProductView(product, product.defaultView)
     }
-    return (flipTick + index) % 2 === 0 ? 'front' : 'back'
+    return resolveProductView(product, autoViews[product.id] ?? ((index % 2 === 0) ? 'front' : 'back'))
   }
 
   function sizesFor(product) {
@@ -162,13 +206,42 @@ function Shop() {
   }, [feedback])
 
   useEffect(() => {
+    Object.values(autoTimers.current).forEach((timer) => {
+      if (timer) window.clearInterval(timer)
+    })
+    autoTimers.current = {}
+
     if (reducedMotion) return undefined
-    const id = window.setInterval(() => setFlipTick((tick) => tick + 1), TSHIRT_FLIP_MS)
-    return () => window.clearInterval(id)
-  }, [reducedMotion])
+
+    items.forEach((product, index) => {
+      if (!isTshirt(product) || !product.front || !product.back) return
+      if (manualTimers.current[product.id] || hoverTimers.current[product.id]) return
+      autoTimers.current[product.id] = window.setInterval(() => {
+        setAutoViews((current) => {
+          const initialView = index % 2 === 0 ? 'front' : 'back'
+          const active = resolveProductView(product, current[product.id] ?? initialView)
+          const next = active === 'front' ? 'back' : 'front'
+          return { ...current, [product.id]: resolveProductView(product, next) }
+        })
+      }, TSHIRT_FLIP_MS)
+    })
+
+    return () => {
+      Object.values(autoTimers.current).forEach((timer) => {
+        if (timer) window.clearInterval(timer)
+      })
+      autoTimers.current = {}
+    }
+  }, [items, reducedMotion])
 
   useEffect(() => () => {
-    Object.values(resumeTimers.current).forEach((timer) => {
+    Object.values(autoTimers.current).forEach((timer) => {
+      if (timer) window.clearInterval(timer)
+    })
+    Object.values(manualTimers.current).forEach((timer) => {
+      if (timer) window.clearTimeout(timer)
+    })
+    Object.values(hoverTimers.current).forEach((timer) => {
       if (timer) window.clearTimeout(timer)
     })
   }, [])

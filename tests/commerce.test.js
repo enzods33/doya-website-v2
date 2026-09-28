@@ -97,6 +97,16 @@ test('normalisation des codes et format monétaire', () => {
   assert.equal(formatEuros(-1), null)
 })
 
+test('la vue produit reprend automatiquement 5 s après un choix manuel avec un fondu doux', () => {
+  const shop = readFileSync(new URL('../src/sections/shop/Shop.jsx', import.meta.url), 'utf8')
+  const transition = readFileSync(new URL('../src/components/TransitionImage.jsx', import.meta.url), 'utf8')
+  assert.match(shop, /MANUAL_VIEW_RESUME_MS = 5000/)
+  assert.match(shop, /manualTimers\.current\[product\.id\] = window\.setTimeout/)
+  assert.match(shop, /const resumedView = next === 'front' \? 'back' : 'front'/)
+  assert.match(transition, /duration: 0\.72/)
+  assert.match(transition, /scale: 0\.985/)
+})
+
 test('le nom catalogue/back-office reste prioritaire sur les anciens libellés codés', () => {
   const messages = readFileSync(new URL('../src/commerce/messages.js', import.meta.url), 'utf8')
   const labels = readFileSync(new URL('../supabase/functions/_shared/checkoutLabels.ts', import.meta.url), 'utf8')
