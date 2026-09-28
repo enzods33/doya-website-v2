@@ -120,6 +120,23 @@ test('le nom catalogue/back-office reste prioritaire sur les anciens libellés c
   assert.match(migration, /tee-luna-mini-red/)
 })
 
+test('les anciens chunks sont récupérés sans boucle de rechargement', () => {
+  const recovery = readFileSync(new URL('../src/utils/chunkRecovery.js', import.meta.url), 'utf8')
+  const main = readFileSync(new URL('../src/main.jsx', import.meta.url), 'utf8')
+  const boundary = readFileSync(new URL('../src/components/ErrorBoundary.jsx', import.meta.url), 'utf8')
+  const deploy = readFileSync(new URL('../.github/workflows/deploy.yml', import.meta.url), 'utf8')
+  const migration = readFileSync(new URL('../supabase/migrations/20260928190000_allow_app_error_event.sql', import.meta.url), 'utf8')
+
+  assert.match(recovery, /vite:preloadError/)
+  assert.match(recovery, /doya-stale-chunk-reload/)
+  assert.match(recovery, /RELOAD_WINDOW_MS = 30_000/)
+  assert.match(main, /registerChunkRecovery\(\)/)
+  assert.match(boundary, /recoverFromStaleChunk\(error\)/)
+  assert.doesNotMatch(deploy, /--delete/)
+  assert.match(migration, /'app_error'/)
+  assert.match(migration, /'boundary'/)
+})
+
 test('aucune clé secrète n’est embarquée dans le client', () => {
   const client = readFileSync(new URL('../src/commerce/checkout.js', import.meta.url), 'utf8')
     + readFileSync(new URL('../src/commerce/config.js', import.meta.url), 'utf8')
