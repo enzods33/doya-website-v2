@@ -315,7 +315,7 @@ function AdminNewsletter() {
                     type="date"
                     required
                     value={scheduleDate}
-                    onChange={(e) => setScheduleDate(e.target.value)}
+                    onChange={(e) => { sendKey.current = crypto.randomUUID(); setScheduleDate(e.target.value) }}
                   />
                 </label>
                 <label>
@@ -325,7 +325,7 @@ function AdminNewsletter() {
                     type="time"
                     required
                     value={scheduleTime}
-                    onChange={(e) => setScheduleTime(e.target.value)}
+                    onChange={(e) => { sendKey.current = crypto.randomUUID(); setScheduleTime(e.target.value) }}
                   />
                 </label>
               </div>
