@@ -9,11 +9,11 @@ values ('stock-test', 'Stock test', 'T-shirt', 'Noir', 1000, false);
 insert into public.product_variants (id, product_id, size, stock, reserved)
 values ('00000000-0000-4000-8000-000000000001', 'stock-test', 'S', 2, 2);
 
-insert into public.orders (id, email, subtotal_cents, total_cents, created_at, stripe_checkout_session_id)
+insert into public.orders (id, order_number, email, subtotal_cents, total_cents, created_at, stripe_checkout_session_id)
 values
-  ('00000000-0000-4000-8000-000000000011', 'test@example.invalid', 1000, 1000,
+  ('00000000-0000-4000-8000-000000000011', 'DOYA-90001', 'test@example.invalid', 1000, 1000,
     now() - interval '36 minutes', 'cs_test_still_open'),
-  ('00000000-0000-4000-8000-000000000012', 'test@example.invalid', 1000, 1000,
+  ('00000000-0000-4000-8000-000000000012', 'DOYA-90002', 'test@example.invalid', 1000, 1000,
     now() - interval '36 minutes', null);
 
 insert into public.stock_reservations (order_id, variant_id, quantity)
