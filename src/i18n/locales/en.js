@@ -92,9 +92,6 @@ export default {
   },
   shop: {
     title: 'Shop',
-    newCollectionLabel: 'New arrivals',
-    newCollectionTitle: 'More from the collection',
-    newLabel: 'New',
     uniqueSize: 'One size',
     label: 'Collection',
     note: 'Collection visuals. Availability, pricing and shop links to be confirmed.',

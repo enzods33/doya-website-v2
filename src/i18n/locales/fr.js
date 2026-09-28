@@ -92,9 +92,6 @@ export default {
   },
   shop: {
     title: 'Boutique',
-    newCollectionLabel: 'Nouveautés',
-    newCollectionTitle: 'La collection s’agrandit',
-    newLabel: 'Nouveau',
     uniqueSize: 'Taille unique',
     label: 'Collection',
     note: 'Visuels de collection. Disponibilités, prix et liens boutique à confirmer.',
