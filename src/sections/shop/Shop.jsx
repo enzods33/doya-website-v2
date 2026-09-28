@@ -35,6 +35,7 @@ function Shop() {
   const autoTimers = useRef({})
   const manualTimers = useRef({})
   const hoverTimers = useRef({})
+  const manualHoverBypass = useRef({})
   const { items, purchasable, revision } = useCatalog()
   const { addItem } = useCart()
   const { t, intlLocale } = useI18n()
@@ -110,7 +111,7 @@ function Shop() {
 
   function pauseAutoOnHover(product) {
     if (!isTshirt(product) || reducedMotion || !finePointerHover()) return
-    if (manualTimers.current[product.id]) return
+    if (manualTimers.current[product.id] || manualHoverBypass.current[product.id]) return
     clearAutoTimer(product.id)
     clearHoverTimer(product.id)
     setHoverPaused((current) => (current[product.id] ? current : { ...current, [product.id]: true }))
@@ -118,6 +119,7 @@ function Shop() {
 
   function scheduleAutoResume(product) {
     if (!isTshirt(product) || reducedMotion || !finePointerHover()) return
+    manualHoverBypass.current[product.id] = false
     if (manualTimers.current[product.id]) return
     clearHoverTimer(product.id)
     hoverTimers.current[product.id] = window.setTimeout(() => {
@@ -137,6 +139,7 @@ function Shop() {
     clearManualTimer(product.id)
     clearHoverTimer(product.id)
     clearHoverPause(product.id)
+    manualHoverBypass.current[product.id] = true
 
     if (isTshirt(product) && !reducedMotion && product.front && product.back) {
       manualTimers.current[product.id] = window.setTimeout(() => {

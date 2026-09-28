@@ -102,6 +102,8 @@ test('la vue produit reprend automatiquement 5 s après un choix manuel avec un 
   const transition = readFileSync(new URL('../src/components/TransitionImage.jsx', import.meta.url), 'utf8')
   assert.match(shop, /MANUAL_VIEW_RESUME_MS = 5000/)
   assert.match(shop, /manualTimers\.current\[product\.id\] = window\.setTimeout/)
+  assert.match(shop, /manualHoverBypass\.current\[product\.id\] = true/)
+  assert.match(shop, /manualTimers\.current\[product\.id\] \|\| manualHoverBypass\.current\[product\.id\]/)
   assert.match(shop, /const resumedView = next === 'front' \? 'back' : 'front'/)
   assert.match(transition, /duration: 0\.72/)
   assert.match(transition, /scale: 0\.985/)
