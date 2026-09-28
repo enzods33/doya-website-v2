@@ -1,0 +1,22 @@
+name: Supabase local DB
+
+on:
+  pull_request:
+    branches: [master]
+
+jobs:
+  migrations-and-stock:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+        with:
+          version: 2.118.0
+      - name: Rejouer les migrations dans une base jetable
+        run: supabase db start
+      - name: Tester la réservation du stock
+        run: supabase test db
+      - name: Arrêter la base locale
+        if: always()
+        run: supabase stop || true
