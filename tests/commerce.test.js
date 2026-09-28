@@ -97,6 +97,17 @@ test('normalisation des codes et format monétaire', () => {
   assert.equal(formatEuros(-1), null)
 })
 
+test('le nom catalogue/back-office reste prioritaire sur les anciens libellés codés', () => {
+  const messages = readFileSync(new URL('../src/commerce/messages.js', import.meta.url), 'utf8')
+  const labels = readFileSync(new URL('../supabase/functions/_shared/checkoutLabels.ts', import.meta.url), 'utf8')
+  const migration = readFileSync(new URL('../supabase/migrations/20260928152000_rename_luna_mini_to_phases_mini.sql', import.meta.url), 'utf8')
+  assert.match(messages, /const catalogName = product\.displayName \|\| product\.name/)
+  assert.match(messages, /name: catalogName \|\|/)
+  assert.match(labels, /const base = fallback\.trim\(\) \|\| PRODUCT_BASE/)
+  assert.match(migration, /set name = 'Phases Mini'/)
+  assert.match(migration, /tee-luna-mini-red/)
+})
+
 test('aucune clé secrète n’est embarquée dans le client', () => {
   const client = readFileSync(new URL('../src/commerce/checkout.js', import.meta.url), 'utf8')
     + readFileSync(new URL('../src/commerce/config.js', import.meta.url), 'utf8')

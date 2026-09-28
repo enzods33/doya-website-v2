@@ -101,7 +101,7 @@ function colorKey(productId: string): 'white' | 'black' | 'red' | 'digipack' {
 }
 
 export function stripeProductName(productId: string, locale: CheckoutLocale, fallback = ''): string {
-  const base = PRODUCT_BASE[locale][productId] ?? fallback ?? productId
+  const base = fallback.trim() || PRODUCT_BASE[locale][productId] || productId
   const color = COLOR[locale][colorKey(productId)]
   return `${base} — ${color}`
 }

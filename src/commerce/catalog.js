@@ -16,7 +16,7 @@ function localCatalog() {
   return {
     items: products.map((product, index) => ({
       ...product,
-      displayName: product.id,
+      displayName: product.name || null,
       defaultView: normalizeDefaultView(product.defaultView),
       sortOrder: (index + 1) * 10,
       sale: null,
@@ -78,7 +78,7 @@ export async function loadCatalog() {
       product.id,
       {
         ...product,
-        displayName: product.id,
+        displayName: product.name || null,
         defaultView: normalizeDefaultView(product.defaultView),
         sortOrder: (index + 1) * 10,
         sale: null,
