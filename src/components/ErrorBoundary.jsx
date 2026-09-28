@@ -2,6 +2,7 @@ import { Component, useContext } from 'react'
 import { I18nContext } from '../i18n/I18nProvider.jsx'
 import fr from '../i18n/locales/fr.js'
 import { trackEvent } from '../commerce/pageAnalytics.js'
+import { recoverFromStaleChunk } from '../utils/chunkRecovery.js'
 import Link from './Link.jsx'
 
 const FALLBACK = fr.error
@@ -45,6 +46,7 @@ export default class ErrorBoundary extends Component {
     } catch {
       /* analytics optional */
     }
+    recoverFromStaleChunk(error)
   }
 
   componentDidUpdate(prevProps) {

@@ -2,6 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.jsx'
 import { loadLocaleMessages, resolveInitialLocale } from './i18n/index.js'
+import { registerChunkRecovery } from './utils/chunkRecovery.js'
 import './styles/index.css'
 
 function resetInitialHomePosition() {
@@ -27,4 +28,5 @@ async function boot() {
   )
 }
 
+registerChunkRecovery()
 boot()
