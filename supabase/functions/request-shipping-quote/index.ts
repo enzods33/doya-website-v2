@@ -84,6 +84,7 @@ Deno.serve(async (req) => {
   const normalized: { productId: string; size: string; quantity: number; name: string; unitPriceCents: number }[] = []
   let teeQty = 0
   let cdQty = 0
+  let accessoryQty = 0
   let subtotalCents = 0
 
   for (const item of items) {
@@ -103,7 +104,7 @@ Deno.serve(async (req) => {
   const productIds = [...new Set(normalized.map((item) => item.productId))]
   const { data: products, error: productsError } = await db
     .from('products')
-    .select('id, type, name, price_cents, on_sale')
+    .select('id, type, type_key, name, price_cents, on_sale')
     .in('id', productIds)
   if (productsError || !products?.length) return json(400, { error: 'invalid_cart' }, origin)
 
@@ -118,16 +119,18 @@ Deno.serve(async (req) => {
       name: String(product.name || item.name || item.productId),
       unitPriceCents,
       type: String(product.type || ''),
+      typeKey: String(product.type_key || ''),
     }
   })
 
   for (const item of priced) {
-    if (item.type === 'CD') cdQty += item.quantity
-    else if (item.type === 'T-shirt') teeQty += item.quantity
+    if (item.typeKey === 'cd' || item.type === 'CD') cdQty += item.quantity
+    else if (item.typeKey === 'tshirt' || item.type === 'T-shirt') teeQty += item.quantity
+    else accessoryQty += item.quantity
   }
   subtotalCents = priced.reduce((sum, item) => sum + item.unitPriceCents * item.quantity, 0)
 
-  if (teeQty <= FLAT_SHIPPING_LIMITS.maxTees && cdQty <= FLAT_SHIPPING_LIMITS.maxCds) {
+  if (teeQty + accessoryQty <= FLAT_SHIPPING_LIMITS.maxTees && cdQty <= FLAT_SHIPPING_LIMITS.maxCds) {
     return json(400, { error: 'quote_not_required' }, origin)
   }
 
@@ -140,8 +143,10 @@ Deno.serve(async (req) => {
     'stephanedasil@gmail.com',
   ].filter((email, index, list) => list.indexOf(email) === index)
   const linesHtml = priced.map((item) => {
-    const size = item.size === 'CD' || item.size === 'U'
+    const size = item.size === 'CD'
       ? 'CD'
+      : item.size === 'U'
+        ? 'taille unique'
       : item.size === 'VINYL'
         ? 'vinyle'
         : item.size === 'ENF'

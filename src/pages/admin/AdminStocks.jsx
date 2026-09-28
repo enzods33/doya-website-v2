@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { adminShopUpload, adminStats } from '../../commerce/admin.js'
 import { prepareBioImage } from '../../commerce/prepareBioImage.js'
-import { APPAREL_SIZES } from '../../commerce/cartRules.js'
+import { APPAREL_SIZES, KIDS_SIZES } from '../../commerce/cartRules.js'
 import { products as productCatalog } from '../../data/products.js'
 import { useI18n } from '../../i18n/I18nProvider.jsx'
 import TransitionImage from '../../components/TransitionImage.jsx'
@@ -40,13 +40,15 @@ function emptyNewProduct() {
     backFile: null,
     frontPreview: '',
     backPreview: '',
-    stocks: Object.fromEntries(TSHIRT_SIZES.map((size) => [size, '0'])),
+    stocks: Object.fromEntries([...TSHIRT_SIZES, ...KIDS_SIZES].map((size) => [size, '0'])),
     stockCd: '0',
+    stockUnique: '0',
   }
 }
 
 function resolveNewProductType(product) {
   if (product.typeSelect === 'tshirt') return { typeKey: 'tshirt', type: 'T-shirt' }
+  if (product.typeSelect === 'kids_tshirt') return { typeKey: 'tshirt', type: 'T-shirt' }
   if (product.typeSelect === 'cd') return { typeKey: 'cd', type: 'CD' }
   if (product.typeSelect === '__other__') {
     const label = String(product.typeCustom || '').trim()
@@ -454,9 +456,13 @@ function AdminStocks() {
         backUrl = backUpload.publicUrl
       }
 
-      const stocks = typeKey === 'cd'
-        ? { CD: Number(newProduct.stockCd) || 0 }
-        : Object.fromEntries(TSHIRT_SIZES.map((size) => [size, Number(newProduct.stocks[size]) || 0]))
+      const sizeKind = newProduct.typeSelect === 'kids_tshirt' ? 'kids'
+        : typeKey === 'cd' ? 'cd'
+          : typeKey === 'other' ? 'unique' : 'adult'
+      const stocks = sizeKind === 'cd' ? { CD: Number(newProduct.stockCd) || 0 }
+        : sizeKind === 'unique' ? { U: Number(newProduct.stockUnique) || 0 }
+          : Object.fromEntries((sizeKind === 'kids' ? KIDS_SIZES : TSHIRT_SIZES)
+            .map((size) => [size, Number(newProduct.stocks[size]) || 0]))
 
       const maxSort = inventory.reduce((max, row) => Math.max(max, row.sortOrder || 0), 0)
       const result = await adminStats('upsert_product', {
@@ -464,6 +470,7 @@ function AdminStocks() {
           id,
           name,
           typeKey,
+          sizeKind,
           type,
           colorKey: color
             ? color.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'custom'
@@ -724,6 +731,7 @@ function AdminStocks() {
               }))}
             >
               <option value="tshirt">{t('shop.type.tshirt')}</option>
+              <option value="kids_tshirt">{t('admin.stockCreateKidsTshirt')}</option>
               <option value="cd">{t('shop.type.cd')}</option>
               {customTypes.map((label) => (
                 <option key={label} value={label}>{label}</option>
@@ -788,20 +796,22 @@ function AdminStocks() {
             </label>
           </div>
           <div className="admin-span-2 admin-stock-grid admin-stock-create-stocks">
-            {newProduct.typeSelect === 'cd' ? (
+            {newProduct.typeSelect === 'cd' || newProduct.typeSelect !== 'tshirt' && newProduct.typeSelect !== 'kids_tshirt' ? (
               <label className="admin-stock-field">
-                <span className="admin-stock-size">{formatSizeLabel('CD', t)}</span>
+                <span className="admin-stock-size">{newProduct.typeSelect === 'cd' ? formatSizeLabel('CD', t) : t('shop.uniqueSize')}</span>
                 <input
                   className="admin-control"
                   type="number"
                   min={0}
-                  value={newProduct.stockCd}
+                  value={newProduct.typeSelect === 'cd' ? newProduct.stockCd : newProduct.stockUnique}
                   disabled={creating}
-                  onChange={(event) => setNewProduct((current) => ({ ...current, stockCd: event.target.value }))}
+                  onChange={(event) => setNewProduct((current) => ({ ...current,
+                    [current.typeSelect === 'cd' ? 'stockCd' : 'stockUnique']: event.target.value,
+                  }))}
                 />
               </label>
             ) : (
-              TSHIRT_SIZES.map((size) => (
+              (newProduct.typeSelect === 'kids_tshirt' ? KIDS_SIZES : TSHIRT_SIZES).map((size) => (
                 <label key={size} className="admin-stock-field">
                   <span className="admin-stock-size">{formatSizeLabel(size, t)}</span>
                   <input

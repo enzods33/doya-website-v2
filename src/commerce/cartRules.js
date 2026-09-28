@@ -1,7 +1,8 @@
 import { products } from '../data/products.js'
 
 export const APPAREL_SIZES = ['ENF', 'XS', 'S', 'M', 'L', 'XL']
-/** Formats uniques (CD maintenant, VINYL plus tard). U = legacy. */
+export const KIDS_SIZES = ['3/4', '5/6', '7/8', '9/11', '12/13']
+/** Formats uniques (CD et accessoires) ; U reste accepté pour les anciennes commandes. */
 export const MEDIA_SIZES = ['CD', 'VINYL']
 export const UNIQUE_SIZES = ['CD', 'VINYL', 'U']
 
@@ -15,7 +16,7 @@ export const CART_LIMITS = {
   maxLineQuantity: 6,
   maxLines: 8,
   maxTotalQuantity: 12,
-  sizes: [...APPAREL_SIZES, ...MEDIA_SIZES, 'U'],
+  sizes: [...APPAREL_SIZES, ...KIDS_SIZES, ...MEDIA_SIZES, 'U'],
   productIdPattern: /^[a-z0-9-]+$/,
   productIds: products.map((product) => product.id),
 }

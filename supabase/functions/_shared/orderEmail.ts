@@ -49,8 +49,10 @@ function formatAddress(address: Record<string, unknown> | null) {
 
 function linesHtml(lines: OrderEmailLine[]) {
   return lines.map((line) => {
-    const size = line.size === 'CD' || line.size === 'U'
+    const size = line.size === 'CD'
       ? 'Digipack'
+      : line.size === 'U'
+        ? 'Taille unique'
       : line.size === 'VINYL'
         ? 'Vinyle'
         : line.size === 'ENF'

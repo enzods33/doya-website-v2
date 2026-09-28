@@ -116,7 +116,10 @@ function CartPage() {
   const cdQty = lines.reduce((total, line) => (
     line.product?.typeKey === 'cd' ? total + line.quantity : total
   ), 0)
-  const needsShippingQuote = teeQty > FLAT_SHIPPING_LIMITS.maxTees || cdQty > FLAT_SHIPPING_LIMITS.maxCds
+  const accessoryQty = lines.reduce((total, line) => (
+    line.product?.typeKey === 'other' ? total + line.quantity : total
+  ), 0)
+  const needsShippingQuote = teeQty + accessoryQty > FLAT_SHIPPING_LIMITS.maxTees || cdQty > FLAT_SHIPPING_LIMITS.maxCds
   const manualPromo = Boolean(normalizePromoCode(promoCode))
   const appliedPromo = manualPromo ? null : bestAutoPromo(teeQty, cdQty, autoPromos)
   const autoDiscountCents = appliedPromo?.amountOffCents ?? 0
