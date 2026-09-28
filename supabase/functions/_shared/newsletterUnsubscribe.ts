@@ -3,9 +3,10 @@ function base64Url(bytes: Uint8Array): string {
   return btoa(String.fromCharCode(...bytes)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '')
 }
 
-function fromBase64Url(value: string): Uint8Array {
+function fromBase64Url(value: string): ArrayBuffer {
   const raw = atob(value.replace(/-/g, '+').replace(/_/g, '/') + '='.repeat((4 - value.length % 4) % 4))
-  return Uint8Array.from(raw, (character) => character.charCodeAt(0))
+  const bytes = Uint8Array.from(raw, (character) => character.charCodeAt(0))
+  return bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) as ArrayBuffer
 }
 
 function signingKey(secret: string): Promise<CryptoKey> {
