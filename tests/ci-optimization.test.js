@@ -4,9 +4,9 @@ import { existsSync, readFileSync } from 'node:fs'
 
 test('monitoring: API toutes les 15 min, Playwright horaire dans un seul job',()=>{
   const y=readFileSync(new URL('../.github/workflows/monitoring.yml',import.meta.url),'utf8')
-  assert.match(y,/cron: '9 \\* \\* \\* \\*'/)
-  assert.match(y,/cron: '24,39,54 \\* \\* \\* \\*'/)
-  assert.match(y,/github\.event\.schedule == '9 \\* \\* \\* \\*'/)
+  assert.ok(y.includes("- cron: '9 * * * *'"))
+  assert.ok(y.includes("- cron: '24,39,54 * * * *'"))
+  assert.ok(y.includes("github.event.schedule == '9 * * * *'"))
   assert.doesNotMatch(y,/matrix:/)
   assert.match(y,/run-and-push\.mjs public/)
   assert.match(y,/run-and-push\.mjs commerce/)
