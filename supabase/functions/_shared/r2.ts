@@ -36,8 +36,10 @@ export function r2Endpoint(): string {
 export async function r2PutObject(key: string, body: Uint8Array, contentType: string) {
   const client = r2Client()
   const url = `${r2Endpoint()}/${r2Bucket()}/${key}`
-  // Blob + content-length : aws4fetch signe correctement le body en Deno Edge.
-  const blob = new Blob([body], { type: contentType })
+  // Copie dans un ArrayBuffer standard : compatible BlobPart avec Deno 2 / TS récent.
+  const bytes = new Uint8Array(body.byteLength)
+  bytes.set(body)
+  const blob = new Blob([bytes.buffer], { type: contentType })
   const response = await client.fetch(url, {
     method: 'PUT',
     headers: {

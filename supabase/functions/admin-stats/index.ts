@@ -167,7 +167,7 @@ async function buildSales(db: ReturnType<typeof serviceClient>) {
       color: meta?.color ?? '',
       quantity: 0,
       revenueCents: 0,
-      sizes: {},
+      sizes: {} as Record<string, number>,
     }
     current.quantity += item.quantity
     current.revenueCents += item.quantity * item.unit_price_cents
@@ -739,7 +739,7 @@ Deno.serve(async (req) => {
     }
 
     let maxRedemptions: number | null = null
-    if (promo.maxRedemptions != null && promo.maxRedemptions !== '') {
+    if (promo.maxRedemptions != null) {
       const max = Number(promo.maxRedemptions)
       if (!Number.isInteger(max) || max < 1 || max > 100000) {
         return json(400, { error: 'invalid_promo_cap' }, origin)
