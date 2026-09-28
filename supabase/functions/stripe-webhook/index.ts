@@ -21,6 +21,7 @@ Deno.serve(async (req) => {
   }
 
   const admin = serviceClient()
+  let eventRecorded = false
 
   // Déjà traité avec succès → no-op (évite le double travail).
   const { data: seen } = await admin
@@ -108,14 +109,15 @@ Deno.serve(async (req) => {
         console.info('partial_refund_skip_restock', paymentIntent, charge.amount_refunded, charge.amount)
       }
     }
+
+    // Succès seulement : marque l’event pour bloquer les retries no-op.
+    if (!eventRecorded) await markProcessed(admin, event)
   } catch (error) {
     // Pas d’enregistrement → Stripe peut retenter.
     console.error(error)
     return new Response('handler_failed', { status: 500 })
   }
 
-  // Succès seulement : marque l’event pour bloquer les retries no-op.
-  if (!eventRecorded) await markProcessed(admin, event)
   return new Response('ok', { status: 200 })
 })
 
