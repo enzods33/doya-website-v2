@@ -70,11 +70,17 @@ Deno.serve(async (req) => {
       })
       if (error) throw error
 
-      // Mails confirmation (client + atelier). Échec mail ≠ échec paiement.
-      try {
-        await notifyPaidOrder(admin, orderId)
-      } catch (mailError) {
-        console.error('order_email_failed', mailError)
+      // Enregistrer l'événement avant l'envoi des mails. En cas de livraison
+      // concurrente du même webhook, une seule invocation enverra les confirmations.
+      const firstProcessing = await markProcessed(admin, event)
+      eventRecorded = true
+      if (firstProcessing) {
+        // Échec mail ≠ échec paiement : la commande reste payée.
+        try {
+          await notifyPaidOrder(admin, orderId)
+        } catch (mailError) {
+          console.error('order_email_failed', mailError)
+        }
       }
     }
 
@@ -109,7 +115,7 @@ Deno.serve(async (req) => {
   }
 
   // Succès seulement : marque l’event pour bloquer les retries no-op.
-  await markProcessed(admin, event)
+  if (!eventRecorded) await markProcessed(admin, event)
   return new Response('ok', { status: 200 })
 })
 
@@ -164,14 +170,11 @@ async function notifyPaidOrder(
 async function markProcessed(
   admin: ReturnType<typeof serviceClient>,
   event: Stripe.Event,
-) {
-  const { error } = await admin.rpc('record_stripe_event', {
+): Promise<boolean> {
+  const { data, error } = await admin.rpc('record_stripe_event', {
     p_event_id: event.id,
     p_event_type: event.type,
   })
-  if (error) {
-    // Traitement déjà fait : un échec d’idempotence ne doit pas faire retenter
-    // le handler (risque faible). On logue seulement.
-    console.error('record_stripe_event_failed', error)
-  }
+  if (error) throw error
+  return data === true
 }
