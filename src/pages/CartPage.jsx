@@ -4,7 +4,7 @@ import { useCatalog } from '../commerce/CatalogProvider.jsx'
 import { startCheckout, releaseCheckout } from '../commerce/checkout.js'
 import { subscribeNewsletter } from '../commerce/newsletter.js'
 import { requestShippingQuote } from '../commerce/shippingQuote.js'
-import { CART_LIMITS, FLAT_SHIPPING_LIMITS, bestAutoPromo, fetchAutoPromos, formatEuros, isUniqueSize, isValidEmail, normalizePromoCode } from '../commerce/cartRules.js'
+import { CART_LIMITS, FLAT_SHIPPING_LIMITS, bestAutoPromo, fetchAutoPromos, formatEuros, isValidEmail, normalizePromoCode } from '../commerce/cartRules.js'
 import { DEFAULT_AUTO_PROMOS } from '../commerce/autoPromos.js'
 import { commerceConfigured } from '../commerce/config.js'
 import { trackEvent } from '../commerce/pageAnalytics.js'
@@ -101,13 +101,17 @@ function CartPage() {
 
   const lines = useMemo(() => items.map((item) => {
     const product = catalog.find((entry) => entry.id === item.productId)
+    const variant = product?.variants?.find((row) => row.size === item.size)
+    const sizeKey = `shop.size.${item.size}`
+    const translatedSize = t(sizeKey)
     return {
       ...item,
       product,
+      variantLabel: variant?.label || (translatedSize === sizeKey ? item.size : translatedSize),
       available: product ? availableFor(product, item.size) : 0,
       priceCents: product?.sale?.priceCents ?? null,
     }
-  }), [items, catalog])
+  }), [items, catalog, t])
 
   const subtotal = lines.reduce((total, line) => total + (line.priceCents ?? 0) * line.quantity, 0)
   const teeQty = lines.reduce((total, line) => (
@@ -142,7 +146,7 @@ function CartPage() {
     const body = t('cart.quoteBody', {
       items: lines.map((line) => {
         const label = line.product ? translateProduct(t, line.product) : null
-        return `- ${line.quantity} × ${label ? `${label.type} ${label.name}` : line.productId} (${line.size})`
+        return `- ${line.quantity} × ${label ? `${label.type} ${label.name}` : line.productId} (${line.variantLabel})`
       }).join('\n'),
       email: email.trim() || '—',
       message: quoteMessage.trim() || '—',
@@ -315,16 +319,7 @@ function CartPage() {
                       <p className="eyebrow">{labels.type}</p>
                       <h2>{labels.name || line.productId}</h2>
                       <p className="cart-meta">
-                        {isUniqueSize(line.size)
-                          ? t('cart.lineMetaUnique', { color: labels.color || labels.type || '—' })
-                          : t('cart.lineMeta', {
-                            color: labels.color || '—',
-                            size: (() => {
-                              const key = `shop.size.${line.size}`
-                              const label = t(key)
-                              return label === key ? line.size : label
-                            })(),
-                          })}
+                        {[labels.color || labels.type || '—', line.variantLabel].filter(Boolean).join(' · ')}
                         {line.priceCents ? ` · ${formatEuros(line.priceCents)}` : ''}
                       </p>
                       <div className="cart-actions">

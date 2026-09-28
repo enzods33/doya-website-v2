@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
 import { adminStats } from '../../commerce/admin.js'
-import { isUniqueSize } from '../../commerce/cartRules.js'
 import { useI18n } from '../../i18n/I18nProvider.jsx'
 import AdminStatCard from './AdminStatCard.jsx'
 
@@ -219,7 +218,7 @@ function AdminSales() {
                           {order.lines.map((line) => (
                             <li key={`${line.productId}-${line.size}`}>
                               {line.quantity} × {line.name}
-                              {isUniqueSize(line.size) ? '' : ` · ${line.size === 'ENF' ? t('shop.size.ENF') : line.size}`}
+                              {line.variantLabel ? ` · ${line.variantLabel}` : ''}
                               {' · '}
                               {formatEuro(line.unitPriceCents * line.quantity, intlLocale)}
                             </li>
@@ -308,12 +307,11 @@ function AdminSales() {
               <div className="admin-sales-bar" aria-hidden="true">
                 <span style={{ width: `${Math.round((row.quantity / maxQty) * 100)}%` }} />
               </div>
-              {Object.entries(row.sizes || {}).some(([size]) => !isUniqueSize(size)) ? (
+              {Object.keys(row.sizes || {}).length ? (
                 <p className="admin-sales-sizes">
                   {Object.entries(row.sizes)
-                    .filter(([size]) => !isUniqueSize(size))
                     .sort((a, b) => b[1] - a[1])
-                    .map(([size, qty]) => `${size === 'ENF' ? t('shop.size.ENF') : size} × ${qty}`)
+                    .map(([variant, qty]) => `${variant} × ${qty}`)
                     .join(' · ')}
                 </p>
               ) : null}

@@ -54,9 +54,9 @@ Deno.serve(async (req) => {
   let totalQuantity = 0
   for (const item of items) {
     const productId = typeof item.productId === 'string' ? item.productId : ''
-    const size = typeof item.size === 'string' ? item.size.toUpperCase() : ''
+    const size = typeof item.size === 'string' ? item.size.trim() : ''
     const quantity = Number(item.quantity)
-    if (!CART_LIMITS.productIdPattern.test(productId) || !CART_LIMITS.sizes.includes(size as typeof CART_LIMITS.sizes[number])) {
+    if (!CART_LIMITS.productIdPattern.test(productId) || !size || size.length > CART_LIMITS.maxVariantKeyLength) {
       return json(400, { error: 'invalid_cart' }, origin)
     }
     if (!Number.isInteger(quantity) || quantity < 1 || quantity > CART_LIMITS.maxLineQuantity) {
@@ -121,14 +121,14 @@ Deno.serve(async (req) => {
 
   const site = checkoutReturnOrigin(origin)
   const stripe = stripeClient()
-  const lineItems = (order.lines as { name: string; productId: string; size: string; quantity: number; unitPriceCents: number }[]).map((line) => ({
+  const lineItems = (order.lines as { name: string; productId: string; size: string; variantLabel?: string; quantity: number; unitPriceCents: number }[]).map((line) => ({
     quantity: line.quantity,
     price_data: {
       currency: 'eur',
       unit_amount: line.unitPriceCents,
       product_data: {
         name: stripeProductName(line.productId, locale, line.name),
-        description: stripeLineDescription(line.size, locale),
+        description: stripeLineDescription(line.size, locale, line.variantLabel),
         metadata: { productId: line.productId, size: line.size },
       },
     },

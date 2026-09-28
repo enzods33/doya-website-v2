@@ -127,7 +127,7 @@ async function notifyPaidOrder(
 ) {
   const { data: order, error } = await admin
     .from('orders')
-    .select('order_number, email, shipping_name, shipping_phone, shipping_address, subtotal_cents, discount_cents, shipping_cents, total_cents, promo_code, order_items (product_id, size, quantity, unit_price_cents)')
+    .select('order_number, email, shipping_name, shipping_phone, shipping_address, subtotal_cents, discount_cents, shipping_cents, total_cents, promo_code, order_items (product_id, size, variant_label, quantity, unit_price_cents)')
     .eq('id', orderId)
     .maybeSingle()
 
@@ -145,11 +145,13 @@ async function notifyPaidOrder(
   const lines: OrderEmailLine[] = (order.order_items ?? []).map((item: {
     product_id: string
     size: string
+    variant_label: string
     quantity: number
     unit_price_cents: number
   }) => ({
     name: names.get(item.product_id) ?? item.product_id,
     size: item.size,
+    variantLabel: item.variant_label,
     quantity: item.quantity,
     unitPriceCents: item.unit_price_cents,
   }))

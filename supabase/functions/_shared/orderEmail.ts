@@ -15,6 +15,7 @@ function formatEuros(cents: number) {
 export type OrderEmailLine = {
   name: string
   size: string
+  variantLabel?: string
   quantity: number
   unitPriceCents: number
 }
@@ -49,15 +50,18 @@ function formatAddress(address: Record<string, unknown> | null) {
 
 function linesHtml(lines: OrderEmailLine[]) {
   return lines.map((line) => {
-    const size = line.size === 'CD'
-      ? 'Digipack'
-      : line.size === 'U'
-        ? 'Taille unique'
-      : line.size === 'VINYL'
-        ? 'Vinyle'
-        : line.size === 'ENF'
-          ? 'Taille enfant'
-          : `Taille ${line.size}`
+    const explicitLabel = String(line.variantLabel || '').trim()
+    const size = explicitLabel && explicitLabel !== line.size
+      ? explicitLabel
+      : line.size === 'CD'
+        ? 'Digipack'
+        : line.size === 'U'
+          ? 'Taille unique'
+          : line.size === 'VINYL'
+            ? 'Vinyle'
+            : line.size === 'ENF'
+              ? 'Taille enfant'
+              : line.size
     return `<tr>
 <td style="padding:8px 0;border-bottom:1px solid #eee;font-size:15px;color:#2c2926;">
 ${escapeHtml(String(line.quantity))} × ${escapeHtml(line.name)} <span style="color:#7a736c;">(${escapeHtml(size)})</span>

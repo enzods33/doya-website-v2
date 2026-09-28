@@ -1,13 +1,19 @@
 begin;
 
 create extension if not exists pgtap with schema extensions;
-select plan(6);
+select plan(9);
 
 insert into public.products (id, name, type, color, price_cents, on_sale)
 values ('stock-test', 'Stock test', 'T-shirt', 'Noir', 1000, false);
 
-insert into public.product_variants (id, product_id, size, stock, reserved)
-values ('00000000-0000-4000-8000-000000000001', 'stock-test', 'S', 2, 2);
+insert into public.product_variants (id, product_id, size, label, active, sort_order, stock, reserved)
+values ('00000000-0000-4000-8000-000000000001', 'stock-test', 'S', 'S', true, 10, 2, 2);
+
+insert into public.products (id, name, type, color, type_key, color_key, price_cents, on_sale)
+values ('variant-test', 'Variant test', 'T-shirt', 'Noir', 'tshirt', 'black', 1500, true);
+
+insert into public.product_variants (id, product_id, size, label, active, sort_order, stock, reserved)
+values ('00000000-0000-4000-8000-000000000002', 'variant-test', 'Noir / M', 'Noir / M', true, 10, 3, 0);
 
 insert into public.orders (id, order_number, email, subtotal_cents, total_cents, created_at, stripe_checkout_session_id)
 values
@@ -34,6 +40,30 @@ select is((select reserved from public.product_variants where id = '00000000-000
   1, 'Une seule unité reste réservée');
 select ok(not has_function_privilege('anon', 'public.bump_catalog_revision()', 'EXECUTE'),
   'bump_catalog_revision n''est pas exécutable par anon');
+
+select is(
+  public.create_pending_order(
+    'variant@example.invalid',
+    null,
+    '[{"productId":"variant-test","size":"Noir / M","quantity":1}]'::jsonb,
+    null,
+    0
+  ) -> 'lines' -> 0 ->> 'variantLabel',
+  'Noir / M',
+  'Le libellé libre remonte dans la réponse de création de commande'
+);
+
+select is(
+  (select variant_label from public.order_items where product_id = 'variant-test' limit 1),
+  'Noir / M',
+  'La ligne de commande conserve un instantané du libellé'
+);
+
+select is(
+  (select reserved from public.product_variants where id = '00000000-0000-4000-8000-000000000002'),
+  1,
+  'La variante libre réserve bien son stock'
+);
 
 select * from finish();
 rollback;

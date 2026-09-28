@@ -1,14 +1,38 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { adminShopUpload, adminStats } from '../../commerce/admin.js'
 import { prepareBioImage } from '../../commerce/prepareBioImage.js'
-import { APPAREL_SIZES, KIDS_SIZES } from '../../commerce/cartRules.js'
 import { products as productCatalog } from '../../data/products.js'
 import { useI18n } from '../../i18n/I18nProvider.jsx'
 import TransitionImage from '../../components/TransitionImage.jsx'
 
-const TSHIRT_SIZES = APPAREL_SIZES
+const VARIANT_PRESETS = {
+  tshirt: ['XS', 'S', 'M', 'L', 'XL'],
+  kids_tshirt: ['3–4 ans', '5–6 ans', '7–8 ans', '9–11 ans', '12–13 ans'],
+  cd: ['CD'],
+  other: ['Taille unique'],
+}
 
-function formatSizeLabel(size, t) {
+const COLOR_PRESETS = [
+  'black',
+  'white',
+  'red',
+  'blue',
+  'navy',
+  'green',
+  'beige',
+  'grey',
+  'yellow',
+  'pink',
+]
+
+function presetVariants(typeSelect) {
+  const labels = VARIANT_PRESETS[typeSelect] ?? VARIANT_PRESETS.other
+  return labels.map((label) => ({ label, stock: '0' }))
+}
+
+function formatVariantLabel(variant, t) {
+  if (variant?.label) return variant.label
+  const size = variant?.size ?? ''
   const key = `shop.size.${size}`
   const label = t(key)
   return label === key ? size : label
@@ -33,16 +57,15 @@ function emptyNewProduct() {
     name: '',
     typeSelect: 'tshirt',
     typeCustom: '',
-    color: '',
+    colorSelect: '',
+    colorCustom: '',
     price: '',
     onSale: false,
     frontFile: null,
     backFile: null,
     frontPreview: '',
     backPreview: '',
-    stocks: Object.fromEntries([...TSHIRT_SIZES, ...KIDS_SIZES].map((size) => [size, '0'])),
-    stockCd: '0',
-    stockUnique: '0',
+    variants: presetVariants('tshirt'),
   }
 }
 
@@ -67,6 +90,8 @@ function AdminStocks() {
   const [error, setError] = useState('')
   const [stockMessage, setStockMessage] = useState('')
   const [stockDrafts, setStockDrafts] = useState({})
+  const [variantLabelDrafts, setVariantLabelDrafts] = useState({})
+  const [newVariantDrafts, setNewVariantDrafts] = useState({})
   const [priceDrafts, setPriceDrafts] = useState({})
   const [orderDrafts, setOrderDrafts] = useState({})
   const [shippingDrafts, setShippingDrafts] = useState({})
@@ -106,6 +131,16 @@ function AdminStocks() {
     setStockDrafts(drafts)
   }
 
+  function syncVariantLabelDrafts(nextInventory) {
+    const drafts = {}
+    for (const product of nextInventory ?? []) {
+      for (const variant of product.variants ?? []) {
+        drafts[variant.variantId] = formatVariantLabel(variant, t)
+      }
+    }
+    setVariantLabelDrafts(drafts)
+  }
+
   function syncPriceDrafts(nextInventory) {
     const drafts = {}
     for (const product of nextInventory ?? []) {
@@ -133,6 +168,7 @@ function AdminStocks() {
   function applyInventory(nextInventory) {
     setInventory(nextInventory ?? [])
     syncStockDrafts(nextInventory)
+    syncVariantLabelDrafts(nextInventory)
     syncPriceDrafts(nextInventory)
     syncOrderDrafts(nextInventory)
   }
@@ -252,6 +288,97 @@ function AdminStocks() {
         setStockBusy(false)
       }
     }, delayMs)
+  }
+
+  async function saveVariantLabel(variant) {
+    const nextLabel = String(variantLabelDrafts[variant.variantId] ?? '').trim()
+    if (!nextLabel || nextLabel.length > 80) {
+      setVariantLabelDrafts((current) => ({
+        ...current,
+        [variant.variantId]: formatVariantLabel(variant, t),
+      }))
+      setStockMessage(t('admin.variantLabelInvalid'))
+      return
+    }
+    if (nextLabel === formatVariantLabel(variant, t)) return
+
+    setStockBusy(true)
+    setError('')
+    setStockMessage('')
+    try {
+      const result = await adminStats('update_variant', {
+        variantId: variant.variantId,
+        variantLabel: nextLabel,
+        variantActive: variant.active,
+      })
+      if (result.inventory) applyInventory(result.inventory)
+      else await loadInventory()
+      setStockMessage(t('admin.variantSaved'))
+    } catch (caught) {
+      setStockMessage(caught?.message === 'variant_exists' ? t('admin.variantExists') : '')
+      if (caught?.message !== 'variant_exists') setError(t('admin.error'))
+      setVariantLabelDrafts((current) => ({
+        ...current,
+        [variant.variantId]: formatVariantLabel(variant, t),
+      }))
+    } finally {
+      setStockBusy(false)
+    }
+  }
+
+  async function toggleVariantActive(variant) {
+    const label = String(variantLabelDrafts[variant.variantId] ?? formatVariantLabel(variant, t)).trim()
+    setStockBusy(true)
+    setError('')
+    setStockMessage('')
+    try {
+      const result = await adminStats('update_variant', {
+        variantId: variant.variantId,
+        variantLabel: label,
+        variantActive: !variant.active,
+      })
+      if (result.inventory) applyInventory(result.inventory)
+      else await loadInventory()
+      setStockMessage(variant.active ? t('admin.variantHidden') : t('admin.variantShown'))
+    } catch {
+      setError(t('admin.error'))
+    } finally {
+      setStockBusy(false)
+    }
+  }
+
+  async function addVariant(productId) {
+    const draft = newVariantDrafts[productId] ?? { label: '', stock: '0' }
+    const label = String(draft.label ?? '').trim()
+    const stock = Number(draft.stock)
+    if (!label || label.length > 80) {
+      setStockMessage(t('admin.variantLabelInvalid'))
+      return
+    }
+    if (!Number.isInteger(stock) || stock < 0 || stock > 100000) {
+      setStockMessage(t('admin.salesStockInvalid'))
+      return
+    }
+
+    setStockBusy(true)
+    setError('')
+    setStockMessage('')
+    try {
+      const result = await adminStats('add_variant', {
+        productId,
+        variantLabel: label,
+        variantStock: stock,
+      })
+      if (result.inventory) applyInventory(result.inventory)
+      else await loadInventory()
+      setNewVariantDrafts((current) => ({ ...current, [productId]: { label: '', stock: '0' } }))
+      setStockMessage(t('admin.variantAdded'))
+    } catch (caught) {
+      setStockMessage(caught?.message === 'variant_exists' ? t('admin.variantExists') : '')
+      if (caught?.message !== 'variant_exists') setError(t('admin.error'))
+    } finally {
+      setStockBusy(false)
+    }
   }
 
   function schedulePriceSave(productId, rawValue, delayMs = 900) {
@@ -441,7 +568,10 @@ function AdminStocks() {
   async function createProduct() {
     const id = String(newProduct.id || '').trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
     const name = String(newProduct.name || '').trim()
-    const color = String(newProduct.color || '').trim()
+    const colorKey = COLOR_PRESETS.includes(newProduct.colorSelect) ? newProduct.colorSelect : ''
+    const color = colorKey
+      ? t(`shop.color.${colorKey}`)
+      : String(newProduct.colorCustom || '').trim()
     const priceCents = eurosToCents(newProduct.price)
     const { typeKey, type } = resolveNewProductType(newProduct)
     if (!id || !name || priceCents == null || priceCents < 50) {
@@ -456,14 +586,17 @@ function AdminStocks() {
       setStockMessage(t('admin.stockImageRequired'))
       return
     }
-    const sizeKind = newProduct.typeSelect === 'kids_tshirt' ? 'kids'
-      : typeKey === 'cd' ? 'cd'
-        : typeKey === 'other' ? 'unique' : 'adult'
-    const stocks = sizeKind === 'cd' ? { CD: Number(newProduct.stockCd) }
-      : sizeKind === 'unique' ? { U: Number(newProduct.stockUnique) }
-        : Object.fromEntries((sizeKind === 'kids' ? KIDS_SIZES : TSHIRT_SIZES)
-          .map((size) => [size, Number(newProduct.stocks[size])]))
-    if (Object.values(stocks).some((stock) => !Number.isInteger(stock) || stock < 0 || stock > 100000)) {
+    const variants = (newProduct.variants ?? []).map((variant) => ({
+      label: String(variant.label || '').trim(),
+      stock: Number(variant.stock),
+    }))
+    if (!variants.length || variants.length > 40
+      || variants.some((variant) => !variant.label || variant.label.length > 80)
+      || new Set(variants.map((variant) => variant.label.toLocaleLowerCase())).size !== variants.length) {
+      setStockMessage(t('admin.variantListInvalid'))
+      return
+    }
+    if (variants.some((variant) => !Number.isInteger(variant.stock) || variant.stock < 0 || variant.stock > 100000)) {
       setStockMessage(t('admin.salesStockInvalid'))
       return
     }
@@ -497,11 +630,10 @@ function AdminStocks() {
           id,
           name,
           typeKey,
-          sizeKind,
           type,
-          colorKey: color
-            ? color.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'custom'
-            : 'default',
+          colorKey: colorKey || (color
+            ? color.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'custom'
+            : 'default'),
           color: color || '',
           priceCents,
           onSale: newProduct.onSale,
@@ -510,7 +642,7 @@ function AdminStocks() {
           imageBackUrl: backUrl,
           imageWidth: width,
           imageHeight: height,
-          stocks,
+          variants,
         },
       })
       if (result.inventory) applyInventory(result.inventory)
@@ -521,6 +653,7 @@ function AdminStocks() {
       const code = caught?.message
       if (code === 'invalid_product' || code === 'invalid_product_name') setStockMessage(t('admin.stockProductInvalid'))
       else if (code === 'invalid_product_type') setStockMessage(t('admin.stockCreateTypeCustomInvalid'))
+      else if (code === 'invalid_variants' || code === 'invalid_variant_label' || code === 'variant_exists') setStockMessage(t('admin.variantListInvalid'))
       else if (code === 'invalid_product_image' || code === 'invalid_image_type') setStockMessage(t('admin.stockImageInvalid'))
       else setError(t('admin.error'))
     } finally {
@@ -687,10 +820,20 @@ function AdminStocks() {
 
                   <div className="admin-stock-grid">
                     {product.variants.map((variant) => (
-                      <label key={variant.variantId} className="admin-stock-field">
-                        <span className="admin-stock-size">
-                          {formatSizeLabel(variant.size, t)}
-                        </span>
+                      <div key={variant.variantId} className={`admin-stock-field${variant.active ? '' : ' is-hidden'}`}>
+                        <input
+                          className="admin-control"
+                          type="text"
+                          maxLength={80}
+                          value={variantLabelDrafts[variant.variantId] ?? ''}
+                          disabled={stockBusy}
+                          aria-label={t('admin.variantLabelAria', { product: product.name })}
+                          onChange={(event) => setVariantLabelDrafts((current) => ({
+                            ...current,
+                            [variant.variantId]: event.target.value,
+                          }))}
+                          onBlur={() => saveVariantLabel(variant)}
+                        />
                         <input
                           className="admin-control"
                           type="number"
@@ -701,7 +844,7 @@ function AdminStocks() {
                           disabled={stockBusy}
                           aria-label={t('admin.salesStockQtyLabel', {
                             product: product.name,
-                            size: formatSizeLabel(variant.size, t),
+                            size: variantLabelDrafts[variant.variantId] || formatVariantLabel(variant, t),
                           })}
                           onChange={(event) => {
                             const nextValue = event.target.value
@@ -710,6 +853,15 @@ function AdminStocks() {
                           }}
                           onBlur={(event) => scheduleStockSave(variant.variantId, event.target.value, 0)}
                         />
+                        <button
+                          type="button"
+                          className={`admin-stock-toggle${variant.active ? ' is-on' : ''}`}
+                          disabled={stockBusy}
+                          aria-pressed={variant.active}
+                          onClick={() => toggleVariantActive(variant)}
+                        >
+                          {variant.active ? t('admin.variantHide') : t('admin.variantShow')}
+                        </button>
                         {variant.reserved > 0 ? (
                           <span className="admin-stock-meta">
                             {t('admin.salesStockReserved', { count: variant.reserved })}
@@ -721,8 +873,49 @@ function AdminStocks() {
                             })}
                           </span>
                         )}
-                      </label>
+                      </div>
                     ))}
+                    <div className="admin-stock-field">
+                      <input
+                        className="admin-control"
+                        type="text"
+                        maxLength={80}
+                        placeholder={t('admin.variantNewPlaceholder')}
+                        value={newVariantDrafts[product.productId]?.label ?? ''}
+                        disabled={stockBusy}
+                        onChange={(event) => setNewVariantDrafts((current) => ({
+                          ...current,
+                          [product.productId]: {
+                            ...(current[product.productId] ?? { stock: '0' }),
+                            label: event.target.value,
+                          },
+                        }))}
+                      />
+                      <input
+                        className="admin-control"
+                        type="number"
+                        min={0}
+                        step={1}
+                        value={newVariantDrafts[product.productId]?.stock ?? '0'}
+                        disabled={stockBusy}
+                        aria-label={t('admin.variantNewStockAria', { product: product.name })}
+                        onChange={(event) => setNewVariantDrafts((current) => ({
+                          ...current,
+                          [product.productId]: {
+                            ...(current[product.productId] ?? { label: '' }),
+                            stock: event.target.value,
+                          },
+                        }))}
+                      />
+                      <button
+                        type="button"
+                        className="admin-primary"
+                        disabled={stockBusy}
+                        onClick={() => addVariant(product.productId)}
+                      >
+                        {t('admin.variantAdd')}
+                      </button>
+                    </div>
                   </div>
                 </li>
               )
@@ -760,11 +953,15 @@ function AdminStocks() {
               className="admin-control"
               value={newProduct.typeSelect}
               disabled={creating}
-              onChange={(event) => setNewProduct((current) => ({
-                ...current,
-                typeSelect: event.target.value,
-                typeCustom: event.target.value === '__other__' ? current.typeCustom : '',
-              }))}
+              onChange={(event) => {
+                const nextType = event.target.value
+                setNewProduct((current) => ({
+                  ...current,
+                  typeSelect: nextType,
+                  typeCustom: nextType === '__other__' ? current.typeCustom : '',
+                  variants: presetVariants(VARIANT_PRESETS[nextType] ? nextType : 'other'),
+                }))
+              }}
             >
               <option value="tshirt">{t('shop.type.tshirt')}</option>
               <option value="kids_tshirt">{t('admin.stockCreateKidsTshirt')}</option>
@@ -790,14 +987,36 @@ function AdminStocks() {
           ) : null}
           <label>
             <span>{t('admin.stockCreateColorOptional')}</span>
-            <input
+            <select
               className="admin-control"
-              value={newProduct.color}
+              value={newProduct.colorSelect}
               disabled={creating}
-              placeholder={t('admin.stockCreateColorPlaceholder')}
-              onChange={(event) => setNewProduct((current) => ({ ...current, color: event.target.value }))}
-            />
+              onChange={(event) => setNewProduct((current) => ({
+                ...current,
+                colorSelect: event.target.value,
+                colorCustom: event.target.value === '__custom__' ? current.colorCustom : '',
+              }))}
+            >
+              <option value="">{t('admin.stockCreateColorNone')}</option>
+              {COLOR_PRESETS.map((colorKey) => (
+                <option key={colorKey} value={colorKey}>{t(`shop.color.${colorKey}`)}</option>
+              ))}
+              <option value="__custom__">{t('admin.stockCreateColorOther')}</option>
+            </select>
           </label>
+          {newProduct.colorSelect === '__custom__' ? (
+            <label>
+              <span>{t('admin.stockCreateColorCustom')}</span>
+              <input
+                className="admin-control"
+                value={newProduct.colorCustom}
+                disabled={creating}
+                maxLength={40}
+                placeholder={t('admin.stockCreateColorPlaceholder')}
+                onChange={(event) => setNewProduct((current) => ({ ...current, colorCustom: event.target.value }))}
+              />
+            </label>
+          ) : null}
           <label>
             <span>{t('admin.stockPrice')}</span>
             <input
@@ -831,39 +1050,65 @@ function AdminStocks() {
               {newProduct.backPreview ? <img src={newProduct.backPreview} alt="" /> : null}
             </label>
           </div>
-          <div className="admin-span-2 admin-stock-grid admin-stock-create-stocks">
-            {newProduct.typeSelect === 'cd' || newProduct.typeSelect !== 'tshirt' && newProduct.typeSelect !== 'kids_tshirt' ? (
-              <label className="admin-stock-field">
-                <span className="admin-stock-size">{newProduct.typeSelect === 'cd' ? formatSizeLabel('CD', t) : t('shop.uniqueSize')}</span>
-                <input
-                  className="admin-control"
-                  type="number"
-                  min={0}
-                  value={newProduct.typeSelect === 'cd' ? newProduct.stockCd : newProduct.stockUnique}
-                  disabled={creating}
-                  onChange={(event) => setNewProduct((current) => ({ ...current,
-                    [current.typeSelect === 'cd' ? 'stockCd' : 'stockUnique']: event.target.value,
-                  }))}
-                />
-              </label>
-            ) : (
-              (newProduct.typeSelect === 'kids_tshirt' ? KIDS_SIZES : TSHIRT_SIZES).map((size) => (
-                <label key={size} className="admin-stock-field">
-                  <span className="admin-stock-size">{formatSizeLabel(size, t)}</span>
+          <div className="admin-span-2">
+            <p className="admin-hint">{t('admin.variantCreateHelp')}</p>
+            <div className="admin-stock-grid admin-stock-create-stocks">
+              {(newProduct.variants ?? []).map((variant, index) => (
+                <div key={index} className="admin-stock-field">
+                  <input
+                    className="admin-control"
+                    type="text"
+                    maxLength={80}
+                    value={variant.label}
+                    disabled={creating}
+                    placeholder={t('admin.variantNewPlaceholder')}
+                    onChange={(event) => setNewProduct((current) => ({
+                      ...current,
+                      variants: current.variants.map((row, rowIndex) => (
+                        rowIndex === index ? { ...row, label: event.target.value } : row
+                      )),
+                    }))}
+                  />
                   <input
                     className="admin-control"
                     type="number"
                     min={0}
-                    value={newProduct.stocks[size]}
+                    step={1}
+                    value={variant.stock}
                     disabled={creating}
+                    aria-label={t('admin.variantNewStockAria', { product: newProduct.name || t('admin.stockCreateName') })}
                     onChange={(event) => setNewProduct((current) => ({
                       ...current,
-                      stocks: { ...current.stocks, [size]: event.target.value },
+                      variants: current.variants.map((row, rowIndex) => (
+                        rowIndex === index ? { ...row, stock: event.target.value } : row
+                      )),
                     }))}
                   />
-                </label>
-              ))
-            )}
+                  <button
+                    type="button"
+                    className="admin-stock-toggle"
+                    disabled={creating || newProduct.variants.length <= 1}
+                    onClick={() => setNewProduct((current) => ({
+                      ...current,
+                      variants: current.variants.filter((_, rowIndex) => rowIndex !== index),
+                    }))}
+                  >
+                    {t('admin.variantRemove')}
+                  </button>
+                </div>
+              ))}
+              <button
+                type="button"
+                className="admin-primary"
+                disabled={creating || newProduct.variants.length >= 40}
+                onClick={() => setNewProduct((current) => ({
+                  ...current,
+                  variants: [...current.variants, { label: '', stock: '0' }],
+                }))}
+              >
+                {t('admin.variantAdd')}
+              </button>
+            </div>
           </div>
           <div className="admin-span-2 admin-promo-create-foot">
             <label className="admin-check admin-check-inline">

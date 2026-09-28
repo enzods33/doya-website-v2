@@ -16,7 +16,7 @@ export const CART_LIMITS = {
   maxLineQuantity: 6,
   maxLines: 8,
   maxTotalQuantity: 12,
-  sizes: [...APPAREL_SIZES, ...KIDS_SIZES, ...MEDIA_SIZES, 'U'],
+  maxVariantKeyLength: 80,
   productIdPattern: /^[a-z0-9-]+$/,
   productIds: products.map((product) => product.id),
 }
@@ -46,11 +46,11 @@ export function validateCartItems(items) {
 
   for (const item of items) {
     const productId = typeof item?.productId === 'string' ? item.productId : ''
-    const size = typeof item?.size === 'string' ? item.size.toUpperCase() : ''
+    const size = typeof item?.size === 'string' ? item.size.trim() : ''
     const quantity = Number(item?.quantity)
     const key = `${productId}:${size}`
 
-    if (!CART_LIMITS.productIdPattern.test(productId) || !CART_LIMITS.sizes.includes(size)) {
+    if (!CART_LIMITS.productIdPattern.test(productId) || !size || size.length > CART_LIMITS.maxVariantKeyLength) {
       return { ok: false, error: 'invalid_cart' }
     }
     if (!Number.isInteger(quantity) || quantity < 1 || quantity > CART_LIMITS.maxLineQuantity) {
