@@ -40,7 +40,7 @@ type ZoneRow = {
 export async function loadShippingZones(db: {
   from: (table: string) => {
     select: (cols: string) => {
-      order: (col: string, opts?: { ascending?: boolean }) => Promise<{ data: ZoneRow[] | null; error: unknown }>
+      order: (col: string, opts?: { ascending?: boolean }) => PromiseLike<{ data: ZoneRow[] | null; error: unknown }>
     }
   }
 }): Promise<ShippingZone[]> {
