@@ -1,6 +1,6 @@
 import { assetUrl } from '../utils/assets.js'
 
-// Visuels boutique — CDN R2 uniquement (`shop/web/…`). Pas de fichiers locaux.
+// Visuels historiques sur le CDN R2 ; les nouveautés sont livrées avec le site.
 function shopImage(file) {
   const base = String(file).replace(/\.[^.]+$/, '')
   const isPng = /\.png$/i.test(file)
@@ -72,21 +72,21 @@ export const products = [
   {
     id: 'tee-luna-mini-red',
     typeKey: 'tshirt', colorKey: 'red', defaultView: 'front',
-    front: '/shop/tee-luna-mini-front.png', back: '/shop/tee-luna-mini-back.png',
-    width: 982, height: 855, price: null, url: null,
+    front: '/shop/tee-luna-mini-front-transparent.png', back: '/shop/tee-luna-mini-back-transparent.png',
+    width: 982, height: 953, price: null, url: null,
   },
   {
     id: 'cap-luna-black',
     typeKey: 'other', colorKey: 'black', defaultView: 'front',
     type: 'Casquette',
-    front: '/shop/cap-luna-front.png', back: '/shop/cap-luna-back.png',
+    front: '/shop/cap-luna-front-transparent.png', back: '/shop/cap-luna-back-transparent.png',
     width: 971, height: 715, price: null, url: null,
   },
   {
     id: 'tote-eclipse-black',
     typeKey: 'other', colorKey: 'black', defaultView: 'front',
     type: 'Tote bag',
-    front: '/shop/tote-eclipse-front.png', back: '/shop/tote-eclipse-back.png',
+    front: '/shop/tote-eclipse-front-transparent.png', back: '/shop/tote-eclipse-back-transparent.png',
     width: 620, height: 1031, price: null, url: null,
   },
 ]

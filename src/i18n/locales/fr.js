@@ -118,7 +118,7 @@ export default {
     productAlt: '{type} {name}, {color}, vue {view}.',
     viewFrontWord: 'de face',
     viewBackWord: 'de dos',
-    type: { tshirt: 'T-shirt', cd: 'CD', other: 'Article' },
+    type: { tshirt: 'T-shirt', adultTshirt: 'T-shirt adulte', kidsTshirt: 'T-shirt enfant', cap: 'Casquette', tote: 'Tote bag', cd: 'CD', other: 'Article' },
     size: { ENF: 'Enfant', CD: 'CD', VINYL: 'Vinyle', U: 'Taille unique' },
     color: { black: 'Noir', white: 'Blanc', red: 'Rouge', digipack: 'Édition physique avec pochette cartonnée et livret illustré', default: '' },
     product: {

@@ -15,12 +15,16 @@ export function commerceMessage(code, t) {
 export function translateProduct(t, product) {
   if (!product) return { name: '', type: '', color: '' }
   const nameKey = `shop.product.${product.id}`
-  const typeKey = `shop.type.${product.typeKey}`
+  const typeKey = product.id === 'tee-luna-mini-red' ? 'shop.type.kidsTshirt'
+    : product.typeKey === 'tshirt' ? 'shop.type.adultTshirt'
+      : product.id === 'cap-luna-black' ? 'shop.type.cap'
+        : product.id === 'tote-eclipse-black' ? 'shop.type.tote'
+          : `shop.type.${product.typeKey}`
   const colorKey = `shop.color.${product.colorKey}`
   const name = t(nameKey)
   const type = t(typeKey)
   const color = t(colorKey)
-  const customType = product.typeKey === 'other' && product.type
+  const customType = product.typeKey === 'other' && !['cap-luna-black', 'tote-eclipse-black'].includes(product.id) && product.type
     ? product.type
     : null
   return {
