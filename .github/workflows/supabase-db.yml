@@ -18,11 +18,11 @@ jobs:
           deno-version: v2.x
       - name: Vérifier les Edge Functions critiques
         run: |
-          deno check supabase/functions/create-checkout-session/index.ts
-          deno check supabase/functions/release-checkout/index.ts
-          deno check supabase/functions/stripe-webhook/index.ts
-          deno check supabase/functions/admin-brevo-campaign/index.ts
-          deno check supabase/functions/unsubscribe-newsletter/index.ts
+          deno check --node-modules-dir=auto supabase/functions/create-checkout-session/index.ts
+          deno check --node-modules-dir=auto supabase/functions/release-checkout/index.ts
+          deno check --node-modules-dir=auto supabase/functions/stripe-webhook/index.ts
+          deno check --node-modules-dir=auto supabase/functions/admin-brevo-campaign/index.ts
+          deno check --node-modules-dir=auto supabase/functions/unsubscribe-newsletter/index.ts
       - name: Rejouer les migrations dans une base jetable
         run: supabase db start
       - name: Tester la réservation du stock
