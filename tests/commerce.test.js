@@ -79,6 +79,11 @@ test('validation du panier et fusion des lignes', () => {
   assert.equal(merged.items[0].quantity, 3)
   const overflow = mergeCartLine([{ productId: 'doya-black', size: 'M', quantity: 6 }], 'doya-black', 'M', 1)
   assert.equal(overflow.ok, false)
+  for (const size of ['3/4', '5/6', '7/8', '9/11', '12/13']) {
+    assert.equal(validateCartItems([{ productId: 'tee-luna-mini-red', size, quantity: 1 }]).ok, true)
+  }
+  assert.equal(validateCartItems([{ productId: 'cap-luna-black', size: 'U', quantity: 1 }]).ok, true)
+  assert.equal(validateCartItems([{ productId: 'tote-eclipse-black', size: 'U', quantity: 1 }]).ok, true)
 })
 
 test('normalisation des codes et format monétaire', () => {

@@ -10,6 +10,7 @@ const DEFAULT_DAYS = 90
 const TRACKING_MAX = 64
 const MAX_IMAGE_BYTES = 4_500_000
 const TSHIRT_SIZES = ['ENF', 'XS', 'S', 'M', 'L', 'XL'] as const
+const KIDS_SIZES = ['3/4', '5/6', '7/8', '9/11', '12/13'] as const
 
 function slugFile(name: string) {
   const base = name.replace(/\.[^.]+$/, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
@@ -432,6 +433,7 @@ Deno.serve(async (req) => {
       type?: string
       color?: string
       typeKey?: string
+      sizeKind?: string
       colorKey?: string
       priceCents?: number
       onSale?: boolean
@@ -828,7 +830,11 @@ Deno.serve(async (req) => {
     }
 
     const stocks = product.stocks && typeof product.stocks === 'object' ? product.stocks : {}
-    const sizes = typeKey === 'cd' ? (['CD'] as const) : TSHIRT_SIZES
+    const sizeKind = product.sizeKind === 'kids' ? 'kids'
+      : typeKey === 'cd' ? 'cd' : typeKey === 'other' ? 'unique' : 'adult'
+    const sizes = sizeKind === 'cd' ? (['CD'] as const)
+      : sizeKind === 'unique' ? (['U'] as const)
+        : sizeKind === 'kids' ? KIDS_SIZES : TSHIRT_SIZES
     for (const size of sizes) {
       const stock = Number((stocks as Record<string, number>)[size] ?? 0)
       if (!Number.isInteger(stock) || stock < 0 || stock > 100000) {

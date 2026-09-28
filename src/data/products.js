@@ -69,4 +69,24 @@ export const products = [
     price: null,
     url: null,
   },
+  {
+    id: 'tee-luna-mini-red',
+    typeKey: 'tshirt', colorKey: 'red', defaultView: 'front',
+    front: '/shop/tee-luna-mini-front.png', back: '/shop/tee-luna-mini-back.png',
+    width: 982, height: 855, price: null, url: null,
+  },
+  {
+    id: 'cap-luna-black',
+    typeKey: 'other', colorKey: 'black', defaultView: 'front',
+    type: 'Casquette',
+    front: '/shop/cap-luna-front.png', back: '/shop/cap-luna-back.png',
+    width: 971, height: 715, price: null, url: null,
+  },
+  {
+    id: 'tote-eclipse-black',
+    typeKey: 'other', colorKey: 'black', defaultView: 'front',
+    type: 'Tote bag',
+    front: '/shop/tote-eclipse-front.png', back: '/shop/tote-eclipse-back.png',
+    width: 620, height: 1031, price: null, url: null,
+  },
 ]

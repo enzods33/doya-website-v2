@@ -9,6 +9,9 @@ const PRODUCT_BASE: Record<CheckoutLocale, Record<string, string>> = {
     'doya-white': 'Phases',
     'doya-black': 'Phases',
     'cd-luna-bohemia': 'Luna Bohemia',
+    'tee-luna-mini-red': 'Luna Mini',
+    'cap-luna-black': 'Luna Bohemia',
+    'tote-eclipse-black': 'Éclipse',
   },
   en: {
     'luna-bohemia-white': 'Stars',
@@ -16,6 +19,9 @@ const PRODUCT_BASE: Record<CheckoutLocale, Record<string, string>> = {
     'doya-white': 'Phases',
     'doya-black': 'Phases',
     'cd-luna-bohemia': 'Luna Bohemia',
+    'tee-luna-mini-red': 'Luna Mini',
+    'cap-luna-black': 'Luna Bohemia',
+    'tote-eclipse-black': 'Eclipse',
   },
   es: {
     'luna-bohemia-white': 'Estrellas',
@@ -23,6 +29,9 @@ const PRODUCT_BASE: Record<CheckoutLocale, Record<string, string>> = {
     'doya-white': 'Fases',
     'doya-black': 'Fases',
     'cd-luna-bohemia': 'Luna Bohemia',
+    'tee-luna-mini-red': 'Luna Mini',
+    'cap-luna-black': 'Luna Bohemia',
+    'tote-eclipse-black': 'Eclipse',
   },
   pt: {
     'luna-bohemia-white': 'Estrelas',
@@ -30,14 +39,17 @@ const PRODUCT_BASE: Record<CheckoutLocale, Record<string, string>> = {
     'doya-white': 'Fases',
     'doya-black': 'Fases',
     'cd-luna-bohemia': 'Luna Bohemia',
+    'tee-luna-mini-red': 'Luna Mini',
+    'cap-luna-black': 'Luna Bohemia',
+    'tote-eclipse-black': 'Eclipse',
   },
 }
 
 const COLOR: Record<CheckoutLocale, Record<string, string>> = {
-  fr: { white: 'Blanc', black: 'Noir', digipack: 'Digipack' },
-  en: { white: 'White', black: 'Black', digipack: 'Digipack' },
-  es: { white: 'Blanco', black: 'Negro', digipack: 'Digipack' },
-  pt: { white: 'Branco', black: 'Preto', digipack: 'Digipack' },
+  fr: { white: 'Blanc', black: 'Noir', red: 'Rouge', digipack: 'Digipack' },
+  en: { white: 'White', black: 'Black', red: 'Red', digipack: 'Digipack' },
+  es: { white: 'Blanco', black: 'Negro', red: 'Rojo', digipack: 'Digipack' },
+  pt: { white: 'Branco', black: 'Preto', red: 'Vermelho', digipack: 'Digipack' },
 }
 
 const SIZE_LABEL: Record<CheckoutLocale, string> = {
@@ -81,9 +93,10 @@ export function stripeCheckoutLocale(locale: CheckoutLocale): CheckoutLocale {
   return locale
 }
 
-function colorKey(productId: string): 'white' | 'black' | 'digipack' {
+function colorKey(productId: string): 'white' | 'black' | 'red' | 'digipack' {
   if (productId === 'cd-luna-bohemia') return 'digipack'
   if (productId.endsWith('-black')) return 'black'
+  if (productId.endsWith('-red')) return 'red'
   return 'white'
 }
 
@@ -94,7 +107,8 @@ export function stripeProductName(productId: string, locale: CheckoutLocale, fal
 }
 
 export function stripeLineDescription(size: string, locale: CheckoutLocale): string {
-  if (size === 'CD' || size === 'U') return COLOR[locale].digipack
+  if (size === 'CD') return COLOR[locale].digipack
+  if (size === 'U') return { fr: 'Taille unique', en: 'One size', es: 'Talla única', pt: 'Tamanho único' }[locale]
   if (size === 'VINYL') return SIZE_LABEL[locale] === 'Size' ? 'Vinyl' : 'Vinyle'
   if (size === 'ENF') {
     const labels: Record<CheckoutLocale, string> = {

@@ -1290,6 +1290,20 @@ a.concert-tickets:focus-visible {
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: clamp(22px, 2.4vw, 38px);
 }
+.shop-new-collection {
+  grid-column: 1 / -1;
+  border-top: 1px solid rgb(44 41 38 / 30%);
+  padding-top: clamp(22px, 3vw, 42px);
+}
+.shop-new-collection .eyebrow { color: var(--color-doya-red); }
+.shop-new-collection h3 {
+  margin-top: 8px;
+  font-family: var(--font-editorial);
+  font-size: clamp(26px, 3vw, 44px);
+  text-transform: uppercase;
+}
+.product.is-new-featured { grid-column: span 2; }
+.product.is-new-merch { border-color: rgb(130 32 34 / 45%); }
 .product {
   position: relative;
   min-width: 0;
@@ -2592,6 +2606,7 @@ a.concert-tickets:focus-visible {
     grid-template-columns: minmax(0, 1fr);
     gap: 22px;
   }
+  .product.is-new-featured { grid-column: 1 / -1; }
   .product { padding-bottom: 0; }
   .product-image-trigger { aspect-ratio: 4 / 3; }
   .product .product-image { max-width: 88%; max-height: 88%; }

@@ -75,8 +75,13 @@ test('les médias déclarés existent et ont des dimensions explicites', () => {
     assert.ok(image.width > 0 && image.height > 0 && image.alt.length > 10)
   }
   for (const product of products) {
-    assert.ok(String(product.front).startsWith('https://'), product.front)
-    assert.ok(String(product.back).startsWith('https://'), product.back)
+    for (const view of [product.front, product.back]) {
+      if (String(view).startsWith('/shop/')) {
+        assert.ok(existsSync(new URL(`../public${view}`, import.meta.url)), view)
+      } else {
+        assert.ok(String(view).startsWith('https://'), view)
+      }
+    }
   }
   assert.equal(new Set(galleryImages.map((image) => image.src)).size, galleryImages.length)
   assert.ok(galleryImages.length > 0)

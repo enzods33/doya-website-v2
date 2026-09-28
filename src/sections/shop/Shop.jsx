@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from 'react'
+import { Fragment, useEffect, useId, useRef, useState } from 'react'
 import { useReducedMotion } from 'motion/react'
 import { CART_LIMITS, formatEuros, isUniqueSize } from '../../commerce/cartRules.js'
 import { DEFAULT_AUTO_PROMOS, fetchAutoPromos } from '../../commerce/autoPromos.js'
@@ -223,6 +223,7 @@ function Shop() {
           const sizes = sizesFor(product)
           const uniqueOnly = sizes.length === 1 && isUniqueSize(sizes[0])
           const hasAnyStock = sizes.some((size) => availableFor(product, size) > 0)
+          const isNewMerch = ['tee-luna-mini-red', 'cap-luna-black', 'tote-eclipse-black'].includes(product.id)
           const productClassName = [
             'product',
             product.typeKey === 'cd' ? 'is-featured' : '',
@@ -235,7 +236,9 @@ function Shop() {
             color: String(labels.color || labels.type).toLowerCase(),
             view: displayedView === 'front' ? t('shop.viewFrontWord') : t('shop.viewBackWord'),
           })
-          return <Reveal as="article" className={productClassName} key={product.id} delay={(index % 2) * 0.08}
+          return <Fragment key={product.id}>
+          {product.id === 'tee-luna-mini-red' ? <div className="shop-new-collection"><span className="eyebrow">{t('shop.newCollectionLabel')}</span><h3>{t('shop.newCollectionTitle')}</h3></div> : null}
+          <Reveal as="article" className={`${productClassName}${isNewMerch ? ' is-new-merch' : ''}${product.id === 'tee-luna-mini-red' ? ' is-new-featured' : ''}`} delay={(index % 2) * 0.08}
             onPointerEnter={() => pauseAutoOnHover(product)}
             onPointerLeave={() => scheduleAutoResume(product)}>
           <button
@@ -254,7 +257,7 @@ function Shop() {
             <span aria-hidden="true">/</span>
             <button type="button" aria-pressed={displayedView === 'back'} disabled={!product.back} onClick={() => setProductView(product, 'back')}>{t('shop.viewBack')}</button>
           </div>
-          <div className="product-caption"><p className="eyebrow">{labels.type}</p><h3>{labels.name}</h3>
+          <div className="product-caption"><p className="eyebrow">{isNewMerch ? `${t('shop.newLabel')} · ` : ''}{labels.type}</p><h3>{labels.name}</h3>
             <div className="product-details">
               {labels.color ? <span>{labels.color}</span> : null}
               {sale ? <span>{formatEuros(sale.priceCents)}</span> : product.price !== null && <span>{new Intl.NumberFormat(intlLocale, { style: 'currency', currency: 'EUR' }).format(product.price)}</span>}
@@ -264,7 +267,7 @@ function Shop() {
                 {hasAnyStock ? (
                   <>
                     {uniqueOnly ? (
-                      <p className="size-unique-note product-cd-note">{t('shop.cdSignedNote')}</p>
+                      <p className="size-unique-note product-cd-note">{product.typeKey === 'cd' ? t('shop.cdSignedNote') : t('shop.uniqueSize')}</p>
                     ) : (
                       <div className="size-list" role="group" aria-label={t('shop.sizesAria', { name: labels.name })}>
                         {sizes.map((size) => {
@@ -292,7 +295,7 @@ function Shop() {
             )}
             {isExternalUrl(product.url) && <a className="text-link" href={product.url} target="_blank" rel="noopener noreferrer">{t('shop.viewPiece')} <span aria-hidden="true">↗</span></a>}
           </div>
-        </Reveal>})}
+        </Reveal></Fragment>})}
       </div>
       {purchasable && <p className="availability-note shop-note">{t('shop.stripeNote')}</p>}
       {feedback?.kind === 'error' ? (
@@ -315,7 +318,7 @@ function Shop() {
           <div className="cart-toast-copy">
             <span className="cart-toast-status">{t('shop.addedTitle')}</span>
             <strong>{feedback.labels.name}</strong>
-            <small>{t('shop.addedSize', { size: sizeLabel(feedback.size) })} · {feedback.price}</small>
+            <small>{isUniqueSize(feedback.size) ? sizeLabel(feedback.size) : t('shop.addedSize', { size: sizeLabel(feedback.size) })} · {feedback.price}</small>
             <Link href="/panier" className="cart-toast-link">{t('shop.viewCart')} <span aria-hidden="true">↗</span></Link>
           </div>
           <button type="button" className="cart-toast-close" onClick={() => setFeedback(null)} aria-label={t('shop.addedClose')}>×</button>
