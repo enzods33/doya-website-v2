@@ -29,7 +29,7 @@ const PRODUCT_BASE: Record<CheckoutLocale, Record<string, string>> = {
     'doya-white': 'Fases',
     'doya-black': 'Fases',
     'cd-luna-bohemia': 'Luna Bohemia',
-    'tee-luna-mini-red': 'Phases Kids',
+    'tee-luna-mini-red': 'Fases Kids',
     'cap-luna-black': 'Luna Bohemia',
     'tote-eclipse-black': 'DOYA',
   },
@@ -39,7 +39,7 @@ const PRODUCT_BASE: Record<CheckoutLocale, Record<string, string>> = {
     'doya-white': 'Fases',
     'doya-black': 'Fases',
     'cd-luna-bohemia': 'Luna Bohemia',
-    'tee-luna-mini-red': 'Phases Kids',
+    'tee-luna-mini-red': 'Fases Kids',
     'cap-luna-black': 'Luna Bohemia',
     'tote-eclipse-black': 'DOYA',
   },
@@ -49,51 +49,51 @@ const PRODUCT_BASE: Record<CheckoutLocale, Record<string, string>> = {
     'doya-white': 'Phasen',
     'doya-black': 'Phasen',
     'cd-luna-bohemia': 'Luna Bohemia',
-    'tee-luna-mini-red': 'Phases Kids',
+    'tee-luna-mini-red': 'Phasen Kids',
     'cap-luna-black': 'Luna Bohemia',
     'tote-eclipse-black': 'DOYA',
   },
   ja: {
-    'luna-bohemia-white': 'Stars',
-    'luna-bohemia-black': 'Stars',
-    'doya-white': 'Phases',
-    'doya-black': 'Phases',
-    'cd-luna-bohemia': 'Luna Bohemia',
-    'tee-luna-mini-red': 'Phases Kids',
-    'cap-luna-black': 'Luna Bohemia',
+    'luna-bohemia-white': '星',
+    'luna-bohemia-black': '星',
+    'doya-white': '月の満ち欠け',
+    'doya-black': '月の満ち欠け',
+    'cd-luna-bohemia': 'ルナ・ボエミア',
+    'tee-luna-mini-red': '月の満ち欠け キッズ',
+    'cap-luna-black': 'ルナ・ボエミア',
     'tote-eclipse-black': 'DOYA',
   },
   ko: {
-    'luna-bohemia-white': 'Stars',
-    'luna-bohemia-black': 'Stars',
-    'doya-white': 'Phases',
-    'doya-black': 'Phases',
-    'cd-luna-bohemia': 'Luna Bohemia',
-    'tee-luna-mini-red': 'Phases Kids',
-    'cap-luna-black': 'Luna Bohemia',
+    'luna-bohemia-white': '별',
+    'luna-bohemia-black': '별',
+    'doya-white': '달의 위상',
+    'doya-black': '달의 위상',
+    'cd-luna-bohemia': '루나 보헤미아',
+    'tee-luna-mini-red': '달의 위상 키즈',
+    'cap-luna-black': '루나 보헤미아',
     'tote-eclipse-black': 'DOYA',
   },
   zh: {
-    'luna-bohemia-white': 'Stars',
-    'luna-bohemia-black': 'Stars',
-    'doya-white': 'Phases',
-    'doya-black': 'Phases',
-    'cd-luna-bohemia': 'Luna Bohemia',
-    'tee-luna-mini-red': 'Phases Kids',
-    'cap-luna-black': 'Luna Bohemia',
+    'luna-bohemia-white': '星星',
+    'luna-bohemia-black': '星星',
+    'doya-white': '月相',
+    'doya-black': '月相',
+    'cd-luna-bohemia': '露娜·波希米亚',
+    'tee-luna-mini-red': '月相儿童款',
+    'cap-luna-black': '露娜·波希米亚',
     'tote-eclipse-black': 'DOYA',
   },
 }
 
 const COLOR: Record<CheckoutLocale, Record<string, string>> = {
-  fr: { white: 'Blanc', black: 'Noir', red: 'Rouge', digipack: 'Digipack' },
-  en: { white: 'White', black: 'Black', red: 'Red', digipack: 'Digipack' },
-  es: { white: 'Blanco', black: 'Negro', red: 'Rojo', digipack: 'Digipack' },
-  pt: { white: 'Branco', black: 'Preto', red: 'Vermelho', digipack: 'Digipack' },
-  de: { white: 'Weiß', black: 'Schwarz', red: 'Rot', digipack: 'Digipack' },
-  ja: { white: 'ホワイト', black: 'ブラック', red: 'レッド', digipack: 'デジパック' },
-  ko: { white: '화이트', black: '블랙', red: '레드', digipack: '디지팩' },
-  zh: { white: '白色', black: '黑色', red: '红色', digipack: 'Digipack' },
+  fr: { white: 'Blanc', black: 'Noir', red: 'Rouge', digipack: 'CD Digipack' },
+  en: { white: 'White', black: 'Black', red: 'Red', digipack: 'Digipak CD' },
+  es: { white: 'Blanco', black: 'Negro', red: 'Rojo', digipack: 'CD Digipack' },
+  pt: { white: 'Branco', black: 'Preto', red: 'Vermelho', digipack: 'CD Digipack' },
+  de: { white: 'Weiß', black: 'Schwarz', red: 'Rot', digipack: 'Digipak-CD' },
+  ja: { white: 'ホワイト', black: 'ブラック', red: 'レッド', digipack: 'CDデジパック' },
+  ko: { white: '화이트', black: '블랙', red: '레드', digipack: 'CD 디지팩' },
+  zh: { white: '白色', black: '黑色', red: '红色', digipack: 'CD 纸盒装' },
 }
 
 const SIZE_LABEL: Record<CheckoutLocale, string> = {
@@ -148,7 +148,7 @@ function colorKey(productId: string): 'white' | 'black' | 'red' | 'digipack' {
 }
 
 export function stripeProductName(productId: string, locale: CheckoutLocale, fallback = ''): string {
-  const base = fallback.trim() || PRODUCT_BASE[locale][productId] || productId
+  const base = PRODUCT_BASE[locale][productId] || fallback.trim() || productId
   const color = COLOR[locale][colorKey(productId)]
   return `${base} — ${color}`
 }
