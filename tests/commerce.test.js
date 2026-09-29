@@ -94,6 +94,7 @@ test('normalisation des codes et format monétaire', () => {
   assert.equal(isValidEmail('pas-un-email'), false)
   assert.match(formatEuros(4500), /45,00/)
   assert.match(formatEuros(4500), /€/)
+  assert.ok(formatEuros(4500, 'ar'))
   assert.equal(formatEuros(-1), null)
 })
 
@@ -116,7 +117,7 @@ test('les noms produits connus sont localisés et les nouveaux gardent le nom ca
 
   assert.match(messages, /const catalogName = product\.displayName \|\| product\.name/)
   assert.match(messages, /name: translatedName === nameKey \? \(catalogName \|\| product\.id\) : translatedName/)
-  assert.match(labels, /const base = PRODUCT_BASE\[locale\]\[productId\] \|\| fallback\.trim\(\) \|\| productId/)
+  assert.match(labels, /return PRODUCT_BASE\[locale\]\[productId\] \|\| fallback\.trim\(\) \|\| productId/)
   assert.match(migration, /set name = 'Phases Kids'/)
 
   const expected = {
@@ -128,6 +129,7 @@ test('les noms produits connus sont localisés et les nouveaux gardent le nom ca
     ja: ['月の満ち欠け キッズ', '星', '月の満ち欠け', 'ルナ・ボエミア — CDデジパック'],
     ko: ['달의 위상 키즈', '별', '달의 위상', '루나 보헤미아 — CD 디지팩'],
     zh: ['月相儿童款', '星星', '月相', '露娜·波希米亚 — CD 纸盒装'],
+    ar: ['الأطوار للأطفال', 'نجوم', 'الأطوار', 'لونا بوهيميا — CD ديجيباك'],
   }
   for (const [locale, names] of Object.entries(expected)) {
     const source = readFileSync(new URL(`../src/i18n/locales/${locale}.js`, import.meta.url), 'utf8')
@@ -202,25 +204,43 @@ test('le monitoring verrouille le contrat cache et 404 des assets', () => {
   assert.match(monitor, /!missingType\.includes\('text\/html'\)/)
 })
 
-test('Stripe, Brevo et la bio couvrent les 8 langues', () => {
+test('Stripe, Brevo et la bio couvrent les 9 langues', () => {
   const labels = readFileSync(new URL('../supabase/functions/_shared/checkoutLabels.ts', import.meta.url), 'utf8')
+  const checkout = readFileSync(new URL('../supabase/functions/create-checkout-session/index.ts', import.meta.url), 'utf8')
   const subscribe = readFileSync(new URL('../supabase/functions/subscribe-newsletter/index.ts', import.meta.url), 'utf8')
   const brevo = readFileSync(new URL('../supabase/functions/admin-brevo-campaign/index.ts', import.meta.url), 'utf8')
   const bioFn = readFileSync(new URL('../supabase/functions/admin-bio-photos/index.ts', import.meta.url), 'utf8')
-  const bioMigration = readFileSync(new URL('../supabase/migrations/20260929080000_site_bio_8_locales.sql', import.meta.url), 'utf8')
+  const bioMigration = readFileSync(new URL('../supabase/migrations/20260929143000_site_bio_ar_locale.sql', import.meta.url), 'utf8')
+  const orderMigration = readFileSync(new URL('../supabase/migrations/20260929143500_orders_locale.sql', import.meta.url), 'utf8')
+  const orderEmail = readFileSync(new URL('../supabase/functions/_shared/orderEmail.ts', import.meta.url), 'utf8')
+  const webhook = readFileSync(new URL('../supabase/functions/stripe-webhook/index.ts', import.meta.url), 'utf8')
+  const adminStats = readFileSync(new URL('../supabase/functions/admin-stats/index.ts', import.meta.url), 'utf8')
   const unsubscribe = readFileSync(new URL('../src/pages/UnsubscribePage.jsx', import.meta.url), 'utf8')
+  const rtl = readFileSync(new URL('../src/styles/rtl.css', import.meta.url), 'utf8')
 
-  assert.match(labels, /'fr' \| 'es' \| 'en' \| 'pt' \| 'de' \| 'ja' \| 'ko' \| 'zh'/)
-  for (const locale of ['de', 'ja', 'ko', 'zh']) {
+  assert.match(labels, /'fr' \| 'es' \| 'en' \| 'pt' \| 'de' \| 'ja' \| 'ko' \| 'zh' \| 'ar'/)
+  for (const locale of ['de', 'ja', 'ko', 'zh', 'ar']) {
     assert.match(labels, new RegExp(`\\b${locale}: \\{`))
     assert.match(subscribe, new RegExp(`\\n  ${locale}: \\{`))
     assert.match(unsubscribe, new RegExp(`\\n  ${locale}: \\{`))
   }
-  assert.match(brevo, /'de', 'ja', 'ko', 'zh'/)
-  assert.match(brevo, /de: 0, ja: 0, ko: 0, zh: 0/)
-  assert.match(bioFn, /'de', 'ja', 'ko', 'zh'/)
-  assert.match(bioMigration, /locale in \('fr', 'es', 'en', 'pt', 'de', 'ja', 'ko', 'zh'\)/)
+  assert.match(labels, /locale === 'ar' \? 'auto' : locale/)
+  assert.match(labels, /لونا بوهيميا/)
+  assert.match(labels, /الأطوار للأطفال/)
+  assert.match(checkout, /update\(\{ locale \}\)/)
+  assert.match(brevo, /'de', 'ja', 'ko', 'zh', 'ar'/)
+  assert.match(brevo, /de: 0, ja: 0, ko: 0, zh: 0, ar: 0/)
+  assert.match(bioFn, /'de', 'ja', 'ko', 'zh', 'ar'/)
+  assert.match(bioMigration, /locale in \('fr', 'es', 'en', 'pt', 'de', 'ja', 'ko', 'zh', 'ar'\)/)
   assert.match(bioMigration, /on conflict \(locale\) do nothing/)
+  assert.match(orderMigration, /add column if not exists locale text not null default 'fr'/)
+  assert.match(orderMigration, /orders_locale_check/)
+  assert.match(orderEmail, /ar: \{/)
+  assert.match(orderEmail, /dir="\$\{dir\}"/)
+  assert.match(orderEmail, /تم شحن الطلب/)
+  assert.match(webhook, /email, locale, shipping_name/)
+  assert.match(adminStats, /email, locale, status/)
+  assert.match(rtl, /html\[dir='rtl'\]/)
 })
 
 test('le back-office bio propose DeepL sans automatiser les traductions', () => {
@@ -229,7 +249,7 @@ test('le back-office bio propose DeepL sans automatiser les traductions', () => 
   assert.match(bioUi, /target="_blank"/)
   assert.match(bioUi, /rel="noopener noreferrer"/)
   assert.doesNotMatch(bioUi, /translate_bio|AZURE_TRANSLATOR/)
-  for (const locale of ['fr', 'es', 'en', 'pt', 'de', 'ja', 'ko', 'zh']) {
+  for (const locale of ['fr', 'es', 'en', 'pt', 'de', 'ja', 'ko', 'zh', 'ar']) {
     const messages = readFileSync(new URL(`../src/i18n/locales/${locale}.js`, import.meta.url), 'utf8')
     assert.match(messages, /bioTranslatorHelp:/)
     assert.match(messages, /bioTranslatorLink:/)
