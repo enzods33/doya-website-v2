@@ -203,6 +203,17 @@ function AdminBio() {
         <h3 className="admin-subtitle admin-span-2">{t('admin.bioTextTitle')}</h3>
         <p className="admin-hint admin-span-2">{t('admin.bioTextLead')}</p>
 
+        <p className="admin-bio-translator admin-span-2">
+          <span>{t('admin.bioTranslatorHelp')}</span>
+          <a
+            href="https://www.deepl.com/fr/translator"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {t('admin.bioTranslatorLink')} ↗
+          </a>
+        </p>
+
         <div className="admin-bio-locales admin-span-2" role="group" aria-label={t('admin.bioLocale')}>
           {BIO_LOCALES.map((code) => (
             <button
