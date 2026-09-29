@@ -117,7 +117,7 @@ export default {
     productAlt: '{type} {name}، {color}، عرض {view}.',
     viewFrontWord: 'أمامي',
     viewBackWord: 'خلفي',
-    type: { tshirt: 'تي شيرت', adultTshirt: 'تي شيرت للكبار', kidsTshirt: 'تي شيرت للأطفال', cap: 'قبعة', tote: 'حقيبة قماش', cd: 'CD', other: 'منتج' },
+    type: { tshirt: 'تي شيرت', adultTshirt: 'تي شيرت للكبار', kidsTshirt: 'تي شيرت للأطفال', cap: 'قبعة مطرزة', tote: 'حقيبة قماش', cd: 'CD', other: 'منتج' },
     size: { ENF: 'أطفال', CD: 'CD', VINYL: 'فينيل', U: 'مقاس واحد' },
     color: { black: 'أسود', white: 'أبيض', red: 'أحمر', blue: 'أزرق', navy: 'أزرق داكن', green: 'أخضر', beige: 'بيج', grey: 'رمادي', yellow: 'أصفر', pink: 'وردي', digipack: 'الألبوم الجديد على CD · كتيّب مرفق', default: '' },
     product: {
