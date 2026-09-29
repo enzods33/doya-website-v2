@@ -60,6 +60,7 @@ export default {
     open: '显示播放器',
   },
   music: {
+    albumTitle: '露娜·波希米亚',
     eyebrow: '专辑',
     tracksMeta: '{n} 首曲目',
     listenAlbum: '收听专辑',
@@ -201,6 +202,7 @@ export default {
     sendLangJa: '日语',
     sendLangKo: '韩语',
     sendLangZh: '简体中文',
+    sendLangAr: '阿拉伯语',
     sendLangAll: '全部（相同内容）',
   },
   commerce: {
