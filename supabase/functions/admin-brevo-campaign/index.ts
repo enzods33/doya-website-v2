@@ -17,12 +17,12 @@ type CampaignBody = {
   email?: string
   campaignId?: number | string
   scheduledAt?: string | null
-  /** fr | es | pt | en | de | ja | ko | zh | all — filtre destinataires via attribut Brevo LANG */
+  /** fr | es | pt | en | de | ja | ko | zh | ar | all — filtre destinataires via attribut Brevo LANG */
   lang?: string
   idempotencyKey?: string
 }
 
-const NEWSLETTER_LANGS = new Set(['fr', 'es', 'pt', 'en', 'de', 'ja', 'ko', 'zh'])
+const NEWSLETTER_LANGS = new Set(['fr', 'es', 'pt', 'en', 'de', 'ja', 'ko', 'zh', 'ar'])
 
 function normalizeSendLang(raw: unknown): string {
   const value = String(raw ?? 'all').trim().toLowerCase()
@@ -97,8 +97,11 @@ function brandHeaderHtml(logoSrc: string) {
   return `<img src="${escapeHtml(logoSrc)}" width="168" height="150" alt="DOYA" style="display:block;margin:0 auto;border:0;outline:none;text-decoration:none;width:168px;height:auto;max-width:55%;" />`
 }
 
-function buildNewsletterHtml(bodyText: string, signatureRaw = '— DOYA', logoSrc: string) {
+function buildNewsletterHtml(bodyText: string, signatureRaw = '— DOYA', logoSrc: string, locale = 'fr') {
   const signature = signatureRaw.trim() || '— DOYA'
+  const rtl = locale === 'ar'
+  const dir = rtl ? 'rtl' : 'ltr'
+  const align = rtl ? 'right' : 'left'
   const trimmed = bodyText.trim()
   const blocks = trimmed
     ? trimmed.split(/\n\s*\n/).map((block) => {
@@ -108,14 +111,14 @@ function buildNewsletterHtml(bodyText: string, signatureRaw = '— DOYA', logoSr
     : []
   if (!blocks.length) return ''
   return `<!DOCTYPE html>
-<html lang="fr"><head><meta charset="utf-8"></head>
-<body style="margin:0;padding:0;background:#f4f1ec;">
+<html lang="${locale}" dir="${dir}"><head><meta charset="utf-8"></head>
+<body dir="${dir}" style="margin:0;padding:0;background:#f4f1ec;">
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f4f1ec;"><tr><td align="center" style="padding:32px 16px;">
-<table role="presentation" width="100%" style="max-width:560px;background:#ffffff;border:1px solid #e4ddd3;">
+<table role="presentation" width="100%" dir="${dir}" style="max-width:560px;background:#ffffff;border:1px solid #e4ddd3;text-align:${align};">
 <tr><td align="center" style="padding:28px 28px 8px;">${brandHeaderHtml(logoSrc)}</td></tr>
-<tr><td style="padding:12px 28px 28px;font-family:Helvetica,Arial,sans-serif;">
+<tr><td style="padding:12px 28px 28px;font-family:Arial,Tahoma,sans-serif;">
 ${blocks.join('\n')}
-<p style="margin:24px 0 0;font-size:14px;line-height:1.5;letter-spacing:.04em;color:#2c2926;">${formatMultiline(signature)}</p>
+<p style="margin:24px 0 0;font-size:14px;line-height:1.5;${rtl ? 'letter-spacing:0;' : 'letter-spacing:.04em;'}color:#2c2926;">${formatMultiline(signature)}</p>
 </td></tr></table></td></tr></table></body></html>`
 }
 
@@ -164,7 +167,7 @@ async function fetchListEmails(
 
 /** Compteurs par langue (attribut Brevo LANG). Sans LANG → fr. */
 async function fetchLangStats(apiKey: string, listId: number) {
-  const stats = { fr: 0, es: 0, pt: 0, en: 0, de: 0, ja: 0, ko: 0, zh: 0, total: 0 }
+  const stats = { fr: 0, es: 0, pt: 0, en: 0, de: 0, ja: 0, ko: 0, zh: 0, ar: 0, total: 0 }
   let offset = 0
   const limit = 50
   for (;;) {
@@ -236,7 +239,7 @@ Deno.serve(async (req) => {
       return json(502, { error: 'brevo_list_failed' }, origin)
     }
     const subscribers = Number(listPayload.uniqueSubscribers ?? listPayload.totalSubscribers ?? 0)
-    let langStats = { fr: 0, es: 0, pt: 0, en: 0, de: 0, ja: 0, ko: 0, zh: 0, total: subscribers }
+    let langStats = { fr: 0, es: 0, pt: 0, en: 0, de: 0, ja: 0, ko: 0, zh: 0, ar: 0, total: subscribers }
     try {
       langStats = await fetchLangStats(apiKey, listId)
     } catch {
@@ -366,7 +369,7 @@ Deno.serve(async (req) => {
     }
     const logoSrc = emailLogoPublicUrl()
     const htmlContent = rewriteEmailLogoSrc(
-      htmlFromClient || (bodyText ? buildNewsletterHtml(bodyText, signature, logoSrc) : ''),
+      htmlFromClient || (bodyText ? buildNewsletterHtml(bodyText, signature, logoSrc, sendLang === 'all' ? 'fr' : sendLang) : ''),
       logoSrc,
     )
     let previewText = typeof body.previewText === 'string' ? body.previewText.trim() : ''
