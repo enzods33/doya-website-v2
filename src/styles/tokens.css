@@ -41,3 +41,9 @@ html:lang(zh-CN) {
   --font-editorial: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
   --font-functional: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
 }
+
+
+html:lang(ar) {
+  --font-editorial: "Noto Sans Arabic", Tahoma, "Segoe UI", Arial, sans-serif;
+  --font-functional: "Noto Sans Arabic", Tahoma, "Segoe UI", Arial, sans-serif;
+}
