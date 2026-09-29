@@ -60,6 +60,7 @@ export default {
     open: 'إظهار المشغل',
   },
   music: {
+    albumTitle: 'لونا بوهيميا',
     eyebrow: 'الألبوم',
     tracksMeta: '{n} مقطعًا',
     listenAlbum: 'استمع إلى الألبوم',
@@ -119,7 +120,7 @@ export default {
     size: { ENF: 'أطفال', CD: 'CD', VINYL: 'فينيل', U: 'مقاس واحد' },
     color: { black: 'أسود', white: 'أبيض', red: 'أحمر', blue: 'أزرق', navy: 'أزرق داكن', green: 'أخضر', beige: 'بيج', grey: 'رمادي', yellow: 'أصفر', pink: 'وردي', digipack: 'الألبوم الجديد على CD · كتيّب مرفق', default: '' },
     product: {
-      'tee-luna-mini-red': 'Phases Kids',
+      'tee-luna-mini-red': 'الأطوار للأطفال',
       'cap-luna-black': 'لونا بوهيميا',
       'tote-eclipse-black': 'DOYA',
       'luna-bohemia-white': 'نجوم',
