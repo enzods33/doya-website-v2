@@ -189,6 +189,8 @@ export default {
     menuSubmit: 'Anmelden',
   },
   admin: {
+    bioTranslatorHelp: 'Möchtest du die Bio übersetzen?',
+    bioTranslatorLink: 'DeepL öffnen',
     fieldSendLang: 'Senden an',
     fieldSendLangHelp: 'Basierend auf der beim Anmelden gewählten Websitesprache. Verfasse die Nachricht in dieser Sprache.',
     sendLangFr: 'Französisch',
