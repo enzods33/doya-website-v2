@@ -117,7 +117,7 @@ export default {
     productAlt: '{type} {name}, {color}, vista {view}.',
     viewFrontWord: 'de frente',
     viewBackWord: 'de costas',
-    type: { tshirt: 'T-shirt', adultTshirt: 'T-shirt adulto', kidsTshirt: 'T-shirt infantil', cap: 'Boné', tote: 'Saco de pano', cd: 'CD', other: 'Artigo' },
+    type: { tshirt: 'T-shirt', adultTshirt: 'T-shirt adulto', kidsTshirt: 'T-shirt infantil', cap: 'Boné bordado', tote: 'Saco de pano', cd: 'CD', other: 'Artigo' },
     size: { ENF: 'Infantil', CD: 'CD', VINYL: 'Vinil', U: 'Tamanho único' },
     color: { black: 'Preto', white: 'Branco', red: 'Vermelho', blue: 'Azul', navy: 'Azul-marinho', green: 'Verde', beige: 'Bege', grey: 'Cinzento', yellow: 'Amarelo', pink: 'Rosa', digipack: 'Novo álbum em CD · Livreto incluído', default: '' },
     product: {
