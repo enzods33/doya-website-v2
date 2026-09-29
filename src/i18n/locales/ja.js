@@ -117,7 +117,7 @@ export default {
     productAlt: '{type} {name}、{color}、{view}。',
     viewFrontWord: '正面',
     viewBackWord: '背面',
-    type: { tshirt: 'Tシャツ', adultTshirt: '大人用Tシャツ', kidsTshirt: 'キッズTシャツ', cap: 'キャップ', tote: 'トートバッグ', cd: 'CD', other: '商品' },
+    type: { tshirt: 'Tシャツ', adultTshirt: '大人用Tシャツ', kidsTshirt: 'キッズTシャツ', cap: '刺繍キャップ', tote: 'トートバッグ', cd: 'CD', other: '商品' },
     size: { ENF: 'キッズ', CD: 'CD', VINYL: 'レコード', U: 'ワンサイズ' },
     color: { black: 'ブラック', white: 'ホワイト', red: 'レッド', blue: 'ブルー', navy: 'ネイビー', green: 'グリーン', beige: 'ベージュ', grey: 'グレー', yellow: 'イエロー', pink: 'ピンク', digipack: 'ニューアルバムCD · ブックレット付き', default: '' },
     product: {
