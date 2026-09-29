@@ -996,7 +996,7 @@ Deno.serve(async (req) => {
 
     const { data: order, error: orderError } = await db
       .from('orders')
-      .select('id, order_number, email, status, shipping_name, shipping_phone, shipping_address, subtotal_cents, discount_cents, shipping_cents, total_cents, promo_code, fulfillment_status, tracking_number, order_items (product_id, size, variant_label, quantity, unit_price_cents)')
+      .select('id, order_number, email, locale, status, shipping_name, shipping_phone, shipping_address, subtotal_cents, discount_cents, shipping_cents, total_cents, promo_code, fulfillment_status, tracking_number, order_items (product_id, size, variant_label, quantity, unit_price_cents)')
       .eq('id', orderId)
       .maybeSingle()
 
@@ -1038,6 +1038,7 @@ Deno.serve(async (req) => {
       quantity: number
       unit_price_cents: number
     }) => ({
+      productId: item.product_id,
       name: names.get(item.product_id) ?? item.product_id,
       size: item.size,
       variantLabel: item.variant_label || item.size,
@@ -1050,6 +1051,7 @@ Deno.serve(async (req) => {
       emailSent = await sendShippedOrderEmail({
         orderNumber: order.order_number,
         email: order.email,
+        locale: order.locale ?? 'fr',
         shippingName: order.shipping_name,
         shippingPhone: order.shipping_phone,
         shippingAddress: (order.shipping_address as Record<string, unknown> | null) ?? null,
