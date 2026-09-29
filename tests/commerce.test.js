@@ -222,7 +222,7 @@ test('Stripe, Brevo et la bio couvrent les 9 langues', () => {
     assert.match(unsubscribe, new RegExp(`\\n  ${locale}: \\{`))
   }
   assert.match(labels, /locale === 'ar' \? 'auto' : locale/)
-  assert.match(labels, /لونا بوهيميا/)
+  assert.match(labels, /'cd-luna-bohemia': 'Luna Bohemia'/)
   assert.match(labels, /الأطوار للأطفال/)
   assert.match(checkout, /update\(\{ locale \}\)/)
   assert.match(brevo, /'de', 'ja', 'ko', 'zh', 'ar'/)
