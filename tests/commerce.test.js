@@ -207,6 +207,11 @@ test('le back-office bio propose DeepL sans automatiser les traductions', () => 
   assert.match(bioUi, /target="_blank"/)
   assert.match(bioUi, /rel="noopener noreferrer"/)
   assert.doesNotMatch(bioUi, /translate_bio|AZURE_TRANSLATOR/)
+  for (const locale of ['fr', 'es', 'en', 'pt', 'de', 'ja', 'ko', 'zh']) {
+    const messages = readFileSync(new URL(`../src/i18n/locales/${locale}.js`, import.meta.url), 'utf8')
+    assert.match(messages, /bioTranslatorHelp:/)
+    assert.match(messages, /bioTranslatorLink:/)
+  }
 })
 
 test('aucune clé secrète n’est embarquée dans le client', () => {
