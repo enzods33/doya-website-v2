@@ -170,7 +170,7 @@ function About() {
             <p className="about-gallery-kicker" aria-hidden="true">
               <span>{siteContent.name}</span>
               <span>×</span>
-              <span>{siteContent.albumTitle}</span>
+              <span>{t('music.albumTitle')}</span>
             </p>
             <p className="eyebrow about-gallery-count" aria-live="polite" aria-atomic="true">
               <span>{String(index + 1).padStart(2, '0')}</span>
