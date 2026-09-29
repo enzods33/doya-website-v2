@@ -376,3 +376,18 @@ html[dir='rtl'] .gallery-title::after {
     transform: translate(50%, -50%);
   }
 }
+
+
+@media (min-width: 768px) and (max-width: 1050px) {
+  html[dir='rtl'] .header-stars {
+    margin-left: .2rem;
+    margin-right: .1rem;
+  }
+
+  html[dir='rtl'] .header-nav-language {
+    margin-left: 0;
+    padding-left: 0;
+    margin-right: .45rem;
+    padding-right: .2rem;
+  }
+}
