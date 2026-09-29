@@ -2680,15 +2680,15 @@ a.concert-tickets:focus-visible {
   .product-caption { padding: 16px 16px 18px; }
   .product-caption h3 { font-size: 24px; line-height: 1.1; }
   .product-details {
-    grid-template-columns: minmax(0, 1fr) minmax(72px, max-content);
-    column-gap: clamp(18px, 5vw, 28px);
+    grid-template-columns: minmax(0, 1fr) minmax(62px, max-content);
+    column-gap: clamp(14px, 4vw, 20px);
     font-size: 11px;
   }
   .product.is-featured .product-detail-copy {
-    max-width: 25ch;
+    max-width: 31ch;
   }
   .product-detail-price {
-    min-width: 72px;
+    min-width: 62px;
     text-align: right;
   }
   .shop-section .size-list button { min-width: 40px; min-height: 40px; }
