@@ -38,6 +38,7 @@ export default {
     live: 'Dates',
     shop: 'Boutique',
     about: 'Bio',
+    gallery: 'Galerie',
     contact: 'Contact',
     cart: 'Panier',
     cartWithCount: 'Panier ({count})',

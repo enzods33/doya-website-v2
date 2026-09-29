@@ -38,6 +38,7 @@ export default {
     live: 'Datas',
     shop: 'Loja',
     about: 'Bio',
+    gallery: 'Galeria',
     contact: 'Contacto',
     cart: 'Carrinho',
     cartWithCount: 'Carrinho ({count})',

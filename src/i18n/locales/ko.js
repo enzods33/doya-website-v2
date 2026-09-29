@@ -38,6 +38,7 @@ export default {
     live: '공연',
     shop: '스토어',
     about: '소개',
+    gallery: '갤러리',
     contact: '문의',
     cart: '장바구니',
     cartWithCount: '장바구니 ({count})',

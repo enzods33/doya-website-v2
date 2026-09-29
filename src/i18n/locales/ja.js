@@ -38,6 +38,7 @@ export default {
     live: 'ライブ',
     shop: 'ショップ',
     about: 'プロフィール',
+    gallery: 'ギャラリー',
     contact: 'お問い合わせ',
     cart: 'カート',
     cartWithCount: 'カート（{count}）',

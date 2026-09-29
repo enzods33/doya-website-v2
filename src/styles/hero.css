@@ -1275,3 +1275,52 @@
     letter-spacing: .04em;
   }
 }
+
+
+/* Navigation desktop intermédiaire : 6 sections + langue sans chevauchement. */
+@media (min-width: 768px) and (max-width: 1050px) {
+  .site-header {
+    gap: 10px;
+    padding-inline: clamp(.7rem, 1.6vw, 1rem);
+  }
+  .header-start {
+    gap: .35rem;
+  }
+  .header-home {
+    min-width: 2.1rem;
+    min-height: 2.25rem;
+  }
+  .header-home-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+  .header-brand-wordmark {
+    width: clamp(58px, 6vw, 70px);
+  }
+  .header-stars {
+    width: 24px;
+    margin-left: .1rem;
+    margin-right: .2rem;
+  }
+  .desktop-navigation {
+    font-size: 13px;
+  }
+  .desktop-navigation a {
+    min-height: 2.25rem;
+    padding-inline: .48rem;
+  }
+  .desktop-navigation a::after {
+    left: .48rem;
+    right: .48rem;
+  }
+  .header-nav-language {
+    margin-left: .45rem;
+    padding-left: .2rem;
+  }
+  .header-language-switcher .language-trigger {
+    min-height: 2.25rem;
+    height: 2.25rem;
+    padding-inline: .38rem;
+    font-size: 13px;
+  }
+}

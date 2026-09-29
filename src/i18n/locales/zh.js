@@ -38,6 +38,7 @@ export default {
     live: '演出',
     shop: '商店',
     about: '简介',
+    gallery: '图集',
     contact: '联系',
     cart: '购物车',
     cartWithCount: '购物车（{count}）',

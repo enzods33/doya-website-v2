@@ -29,6 +29,8 @@ function pageLabel(path, t) {
       return t('nav.shop')
     case '/#about':
       return t('nav.about')
+    case '/#gallery':
+      return t('nav.gallery')
     case '/#contact':
       return t('nav.contact')
     case '/panier':
