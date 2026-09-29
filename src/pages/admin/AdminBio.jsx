@@ -5,6 +5,7 @@ import { useI18n } from '../../i18n/I18nProvider.jsx'
 import { LocaleFlag } from '../../components/LocaleFlag.jsx'
 
 const BIO_LOCALES = ['fr', 'es', 'en', 'pt', 'de', 'ja', 'ko', 'zh']
+const BIO_TARGET_LOCALES = BIO_LOCALES.filter((locale) => locale !== 'fr')
 
 const EMPTY_BIO = Object.fromEntries(BIO_LOCALES.map((locale) => [locale, { lead: '', body: '' }]))
 
@@ -20,6 +21,8 @@ function AdminBio() {
   const [bioLocale, setBioLocale] = useState('fr')
   const [busy, setBusy] = useState(false)
   const [bioBusy, setBioBusy] = useState(false)
+  const [translateBusy, setTranslateBusy] = useState(false)
+  const [translationState, setTranslationState] = useState({})
   const [error, setError] = useState('')
   const [ok, setOk] = useState('')
 
@@ -166,6 +169,45 @@ function AdminBio() {
         [field]: value,
       },
     }))
+    if (bioLocale !== 'fr' && ['generated', 'edited'].includes(translationState[bioLocale])) {
+      setTranslationState((prev) => ({ ...prev, [bioLocale]: 'edited' }))
+    }
+  }
+
+  async function onTranslateBio() {
+    const source = bioByLocale.fr ?? { lead: '', body: '' }
+    if (!source.lead.trim() || !source.body.trim()) {
+      setError(t('admin.bioInvalid'))
+      return
+    }
+
+    const hasExistingTranslations = BIO_TARGET_LOCALES.some((locale) => {
+      const draft = bioByLocale[locale]
+      return Boolean(draft?.lead?.trim() || draft?.body?.trim())
+    })
+    if (hasExistingTranslations && !window.confirm(t('admin.bioTranslateConfirm'))) return
+
+    setTranslateBusy(true)
+    setError('')
+    setOk('')
+    try {
+      const payload = await adminBioPhotos('translate_bio', {
+        lead: source.lead,
+        body: source.body,
+        targets: BIO_TARGET_LOCALES,
+      })
+      const translations = payload.translations ?? {}
+      setBioByLocale((prev) => ({ ...prev, ...translations }))
+      setTranslationState(Object.fromEntries(BIO_TARGET_LOCALES.map((locale) => [locale, 'generated'])))
+      setOk(t('admin.bioTranslated'))
+    } catch (caught) {
+      if (caught.message === 'translator_not_configured') setError(t('admin.bioTranslatorUnavailable'))
+      else if (caught.message === 'invalid_bio_copy') setError(t('admin.bioInvalid'))
+      else if (caught.message === 'bio_copy_too_long') setError(t('admin.bioTooLong'))
+      else setError(t('admin.bioTranslateFailed'))
+    } finally {
+      setTranslateBusy(false)
+    }
   }
 
   async function onSaveBio(event) {
@@ -180,6 +222,7 @@ function AdminBio() {
         lead: draft.lead,
         body: draft.body,
       })
+      setTranslationState((prev) => ({ ...prev, [bioLocale]: 'saved' }))
       setOk(t('admin.bioSaved', { locale: bioLocale.toUpperCase() }))
     } catch (caught) {
       if (caught.message === 'invalid_bio_copy') setError(t('admin.bioInvalid'))
@@ -203,6 +246,21 @@ function AdminBio() {
         <h3 className="admin-subtitle admin-span-2">{t('admin.bioTextTitle')}</h3>
         <p className="admin-hint admin-span-2">{t('admin.bioTextLead')}</p>
 
+        <div className="admin-bio-translate admin-span-2">
+          <div>
+            <strong>{t('admin.bioSourceTitle')}</strong>
+            <p>{t('admin.bioSourceHelp')}</p>
+          </div>
+          <button
+            type="button"
+            className="admin-secondary"
+            disabled={translateBusy || bioBusy}
+            onClick={onTranslateBio}
+          >
+            {translateBusy ? t('admin.bioTranslating') : t('admin.bioTranslate')}
+          </button>
+        </div>
+
         <div className="admin-bio-locales admin-span-2" role="group" aria-label={t('admin.bioLocale')}>
           {BIO_LOCALES.map((code) => (
             <button
@@ -213,9 +271,22 @@ function AdminBio() {
             >
               <LocaleFlag code={code} className="admin-bio-locale-flag" />
               <span>{code.toUpperCase()}</span>
+              {translationState[code] === 'generated' || translationState[code] === 'edited'
+                ? <span className="admin-bio-draft-dot" aria-hidden="true" />
+                : null}
             </button>
           ))}
         </div>
+
+        <p className="admin-bio-language-status admin-span-2">
+          {bioLocale === 'fr'
+            ? t('admin.bioSourceStatus')
+            : translationState[bioLocale] === 'saved'
+              ? t('admin.bioSavedStatus')
+              : ['generated', 'edited'].includes(translationState[bioLocale])
+                ? t('admin.bioReviewStatus')
+                : t('admin.bioExistingStatus')}
+        </p>
 
         <label className="admin-span-2">
           <span>{t('admin.bioLeadLabel')}</span>
