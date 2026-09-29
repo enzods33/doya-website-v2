@@ -303,3 +303,14 @@ test('aucune clé secrète n’est embarquée dans le client', () => {
   assert.match(clients, /Authorization: `Bearer \$\{key\}`/)
   assert.doesNotMatch(clients, /SHIPPING_CENTS/)
 })
+
+
+test('la ligne produit mobile réserve une colonne dédiée au prix', () => {
+  const shop = readFileSync(new URL('../src/sections/shop/Shop.jsx', import.meta.url), 'utf8')
+  const styles = readFileSync(new URL('../src/styles/sections.css', import.meta.url), 'utf8')
+  assert.match(shop, /className="product-detail-copy"/)
+  assert.match(shop, /className="product-detail-price"/)
+  assert.match(styles, /grid-template-columns:\s*minmax\(0, 1fr\) minmax\(72px, max-content\)/)
+  assert.match(styles, /\.product\.is-featured \.product-detail-copy\s*\{[\s\S]*max-width:\s*25ch/)
+  assert.match(styles, /\.product-detail-price\s*\{[\s\S]*white-space:\s*nowrap/)
+})
