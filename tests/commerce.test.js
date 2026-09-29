@@ -201,6 +201,26 @@ test('Stripe, Brevo et la bio couvrent les 8 langues', () => {
   assert.match(bioMigration, /on conflict \(locale\) do nothing/)
 })
 
+test('la traduction de bio reste côté serveur et ne publie pas automatiquement', () => {
+  const bioFn = readFileSync(new URL('../supabase/functions/admin-bio-photos/index.ts', import.meta.url), 'utf8')
+  const bioUi = readFileSync(new URL('../src/pages/admin/AdminBio.jsx', import.meta.url), 'utf8')
+  const adminClient = readFileSync(new URL('../src/commerce/admin.js', import.meta.url), 'utf8')
+
+  assert.match(bioFn, /AZURE_TRANSLATOR_KEY/)
+  assert.match(bioFn, /api\.cognitive\.microsofttranslator\.com/)
+  assert.match(bioFn, /'Ocp-Apim-Subscription-Key'/)
+  assert.match(bioFn, /zh-Hans/)
+  assert.match(bioFn, /action === 'translate_bio'/)
+  const translationStart = bioFn.indexOf("if (action === 'translate_bio')")
+  const translationEnd = bioFn.indexOf("if (action === 'get_bio')")
+  const translationSection = bioFn.slice(translationStart, translationEnd)
+  assert.doesNotMatch(translationSection, /\.from\('site_bio'\)|\.upsert\(/)
+  assert.match(bioUi, /adminBioPhotos\('translate_bio'/)
+  assert.match(bioUi, /window\.confirm/)
+  assert.match(bioUi, /BIO_TARGET_LOCALES/)
+  assert.doesNotMatch(bioUi + adminClient, /AZURE_TRANSLATOR_KEY/)
+})
+
 test('aucune clé secrète n’est embarquée dans le client', () => {
   const client = readFileSync(new URL('../src/commerce/checkout.js', import.meta.url), 'utf8')
     + readFileSync(new URL('../src/commerce/config.js', import.meta.url), 'utf8')
