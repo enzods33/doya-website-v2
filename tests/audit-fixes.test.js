@@ -34,6 +34,16 @@ test('une newsletter sépare les adresses et donne à chaque abonné son lien', 
   assert.equal(await verifyNewsletterAddress(decodeURIComponent(first), 'secret'), 'a@example.com')
   assert.equal(await verifyNewsletterAddress(decodeURIComponent(second), 'secret'), 'b@example.com')
   assert.doesNotMatch(versions[0].htmlContent, /b@example.com/)
+  const ja = await newsletterMessageVersions(
+    ['a@example.com'], '<html><body><p>こんにちは</p></body></html>',
+    'https://doya.example', 'secret', 'ja',
+  )
+  const zh = await newsletterMessageVersions(
+    ['a@example.com'], '<html><body><p>你好</p></body></html>',
+    'https://doya.example', 'secret', 'zh',
+  )
+  assert.match(ja[0].htmlContent, /配信停止/)
+  assert.match(zh[0].htmlContent, /退订/)
   await assert.rejects(() => newsletterMessageVersions(Array(1001).fill('a@example.com'), '', 'https://doya.example', 'secret', 'fr'), /list_too_large/)
 })
 
