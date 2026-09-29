@@ -206,7 +206,7 @@ function AdminBio() {
         <p className="admin-bio-translator admin-span-2">
           <span>{t('admin.bioTranslatorHelp')}</span>
           <a
-            href="https://www.deepl.com/fr/translator"
+            href="https://www.deepl.com/fr/translate"
             target="_blank"
             rel="noopener noreferrer"
           >
