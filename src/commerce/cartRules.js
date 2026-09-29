@@ -77,7 +77,7 @@ export function mergeCartLine(items, productId, size, quantity = 1) {
   return validateCartItems(next)
 }
 
-export function formatEuros(cents) {
+export function formatEuros(cents, locale = 'fr-FR') {
   if (!Number.isInteger(cents) || cents < 0) return null
-  return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(cents / 100)
+  return new Intl.NumberFormat(locale, { style: 'currency', currency: 'EUR' }).format(cents / 100)
 }
