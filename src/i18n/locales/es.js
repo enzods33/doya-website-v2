@@ -260,7 +260,7 @@ export default {
     bioLeadLabel: 'Apertura (primera línea)',
     bioBodyLabel: 'Cuerpo del texto',
     bioBodyHint: 'Doble salto de línea = nuevos párrafos.',
-    bioSave: 'Guardar la bio',
+    bioSave: 'Guardar este idioma',
     bioSaved: 'Bio {locale} guardada.',
     bioInvalid: 'La apertura y el cuerpo son obligatorios.',
     bioTooLong: 'Texto demasiado largo.',
