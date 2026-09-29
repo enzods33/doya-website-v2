@@ -119,6 +119,16 @@ Deno.serve(async (req) => {
     return json(code ? 409 : 400, { error: code ?? 'order_failed' }, origin)
   }
 
+  const { error: localeError } = await admin
+    .from('orders')
+    .update({ locale })
+    .eq('id', order.orderId)
+  if (localeError) {
+    console.error('order_locale_update_failed', localeError)
+    await admin.rpc('release_reservation', { p_order_id: order.orderId })
+    return json(500, { error: 'order_failed' }, origin)
+  }
+
   const site = checkoutReturnOrigin(origin)
   const stripe = stripeClient()
   const lineItems = (order.lines as { name: string; productId: string; size: string; variantLabel?: string; quantity: number; unitPriceCents: number }[]).map((line) => ({
