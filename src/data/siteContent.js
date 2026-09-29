@@ -1,4 +1,4 @@
-// Hrefs stables (#music, etc.) — seuls les labels passent par i18n (labelKey).
+// Ancres publiques stables : ne jamais renommer #music, #about, #gallery, #live, #shop, #contact.
 export const navigation = [
   { labelKey: 'nav.music', href: '#music' },
   { labelKey: 'nav.about', href: '#about' },
