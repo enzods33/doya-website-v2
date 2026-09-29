@@ -4,6 +4,87 @@ import { serviceClient } from '../_shared/clients.ts'
 import { r2DeleteObject, r2PutObject } from '../_shared/r2.ts'
 
 const MAX_BYTES = 4_500_000
+const BIO_LOCALES = ['fr', 'es', 'en', 'pt', 'de', 'ja', 'ko', 'zh'] as const
+const BIO_TARGET_LOCALES = ['es', 'en', 'pt', 'de', 'ja', 'ko', 'zh'] as const
+const AZURE_LANGUAGE: Record<string, string> = {
+  es: 'es',
+  en: 'en',
+  pt: 'pt',
+  de: 'de',
+  ja: 'ja',
+  ko: 'ko',
+  zh: 'zh-Hans',
+}
+
+function splitBioParagraphs(copy: string) {
+  return copy
+    .split(/\n\s*\n/g)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean)
+}
+
+async function translateBioDrafts(
+  lead: string,
+  copy: string,
+  targets: string[],
+): Promise<Record<string, { lead: string; body: string }>> {
+  const key = Deno.env.get('AZURE_TRANSLATOR_KEY')?.trim() ?? ''
+  if (!key) throw new Error('translator_not_configured')
+
+  const endpoint = (Deno.env.get('AZURE_TRANSLATOR_ENDPOINT')?.trim()
+    || 'https://api.cognitive.microsofttranslator.com').replace(/\/+$/, '')
+  const region = Deno.env.get('AZURE_TRANSLATOR_REGION')?.trim() ?? ''
+  const azureTargets = targets.map((target) => AZURE_LANGUAGE[target])
+
+  const paragraphs = splitBioParagraphs(copy)
+  const segments = [lead, ...paragraphs]
+  const params = new URLSearchParams({ 'api-version': '3.0', from: 'fr' })
+  for (const target of azureTargets) params.append('to', target)
+
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json; charset=UTF-8',
+    'Ocp-Apim-Subscription-Key': key,
+  }
+  if (region) headers['Ocp-Apim-Subscription-Region'] = region
+
+  const response = await fetch(`${endpoint}/translate?${params.toString()}`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(segments.map((Text) => ({ Text }))),
+  })
+
+  if (!response.ok) {
+    const detail = (await response.text().catch(() => '')).slice(0, 300)
+    console.error('azure_translator_failed', response.status, detail)
+    throw new Error('translator_request_failed')
+  }
+
+  const payload = await response.json() as Array<{
+    translations?: Array<{ text?: string; to?: string }>
+  }>
+
+  if (!Array.isArray(payload) || payload.length !== segments.length) {
+    throw new Error('translator_invalid_response')
+  }
+
+  const translated: Record<string, { lead: string; body: string }> = {}
+  for (const target of targets) {
+    const azureTarget = AZURE_LANGUAGE[target]
+    const parts = payload.map((entry) => {
+      const match = entry.translations?.find(
+        (item) => String(item.to ?? '').toLowerCase() === azureTarget.toLowerCase(),
+      )
+      return String(match?.text ?? '').trim()
+    })
+    if (parts.some((part) => !part)) throw new Error('translator_invalid_response')
+    translated[target] = {
+      lead: parts[0],
+      body: parts.slice(1).join('\n\n'),
+    }
+  }
+
+  return translated
+}
 
 function slugFile(name: string) {
   const base = name.replace(/\.[^.]+$/, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
@@ -76,6 +157,7 @@ Deno.serve(async (req) => {
     locale?: string
     lead?: string
     body?: string
+    targets?: string[]
     order?: { id: string; sort_order: number }[]
     photos?: {
       public_url?: string
@@ -202,6 +284,39 @@ Deno.serve(async (req) => {
     return json(200, { ok: true }, origin)
   }
 
+  if (action === 'translate_bio') {
+    const lead = typeof body.lead === 'string' ? body.lead.trim() : ''
+    const copy = typeof body.body === 'string' ? body.body.trim() : ''
+    if (!lead || !copy) return json(400, { error: 'invalid_bio_copy' }, origin)
+    if (lead.length > 400 || copy.length > 6000) {
+      return json(400, { error: 'bio_copy_too_long' }, origin)
+    }
+
+    const requestedTargets = Array.isArray(body.targets) ? body.targets : [...BIO_TARGET_LOCALES]
+    const targets = [...new Set(
+      requestedTargets
+        .map((target) => String(target).trim().toLowerCase())
+        .filter((target) => BIO_TARGET_LOCALES.includes(target as typeof BIO_TARGET_LOCALES[number])),
+    )]
+    if (!targets.length || targets.length !== requestedTargets.length) {
+      return json(400, { error: 'invalid_translation_targets' }, origin)
+    }
+
+    try {
+      const translations = await translateBioDrafts(lead, copy, targets)
+      // Important : cette action ne touche jamais à site_bio.
+      // Les traductions restent des brouillons tant que l'admin ne les enregistre pas langue par langue.
+      return json(200, { translations }, origin)
+    } catch (error) {
+      const code = error instanceof Error ? error.message : 'translator_request_failed'
+      if (code === 'translator_not_configured') {
+        return json(503, { error: code }, origin)
+      }
+      console.error('bio_translation_failed', code)
+      return json(502, { error: 'bio_translation_failed' }, origin)
+    }
+  }
+
   if (action === 'get_bio') {
     const { data, error } = await db
       .from('site_bio')
@@ -213,7 +328,7 @@ Deno.serve(async (req) => {
 
   if (action === 'save_bio') {
     const locale = typeof body.locale === 'string' ? body.locale.trim().toLowerCase() : ''
-    if (!['fr', 'es', 'en', 'pt', 'de', 'ja', 'ko', 'zh'].includes(locale)) {
+    if (!BIO_LOCALES.includes(locale as typeof BIO_LOCALES[number])) {
       return json(400, { error: 'invalid_locale' }, origin)
     }
     const lead = typeof body.lead === 'string' ? body.lead.trim() : ''
