@@ -1818,6 +1818,9 @@ a.concert-tickets:focus-visible {
   background: #211e1b;
   border-top: 1px solid rgb(244 240 234 / 12%);
 }
+.about-gallery-loading {
+  min-height: clamp(15rem, 36vw, 28rem);
+}
 .site-footer {
   background: var(--color-taupe);
   color: var(--ink);
