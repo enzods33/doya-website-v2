@@ -220,7 +220,7 @@ function About() {
               ref={viewportRef}
               role="region"
               aria-roledescription="carousel"
-              aria-label={t('about.eyebrow')}
+              aria-label={t('nav.gallery')}
               onPointerDown={onPointerDown}
               onPointerMove={onPointerMove}
               onKeyDown={onGalleryKeyDown}
