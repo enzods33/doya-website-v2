@@ -132,6 +132,7 @@ export function applyDocumentSeo({ path, locale, intlLocale, t, indexable }) {
 
   setLink('canonical', canonical)
   document.documentElement.lang = intlLocale || locale
+  document.documentElement.dir = locale === 'ar' ? 'rtl' : 'ltr'
 }
 
 /** Graphe JSON-LD (injecté au build). */
@@ -174,7 +175,7 @@ export function buildJsonLd(origin = siteOrigin()) {
         '@id': `${origin}/#website`,
         name: `${siteContent.name} — ${siteContent.albumTitle}`,
         url: `${origin}/`,
-        inLanguage: ['fr', 'es', 'en', 'pt', 'de', 'ja', 'ko', 'zh-CN'],
+        inLanguage: ['fr', 'es', 'en', 'pt', 'de', 'ja', 'ko', 'zh-CN', 'ar'],
         publisher: {
           '@type': 'Organization',
           name: 'ALMENA PROD',

@@ -60,6 +60,7 @@ export default {
     open: '플레이어 보기',
   },
   music: {
+    albumTitle: '루나 보헤미아',
     eyebrow: '앨범',
     tracksMeta: '{n}곡',
     listenAlbum: '앨범 듣기',
@@ -201,6 +202,7 @@ export default {
     sendLangJa: '일본어',
     sendLangKo: '한국어',
     sendLangZh: '중국어(간체)',
+    sendLangAr: '아랍어',
     sendLangAll: '전체 (동일한 내용)',
   },
   commerce: {

@@ -1,6 +1,6 @@
 /** Libellés Stripe Checkout — alignés sur `shop.product.*` / `shop.color.*` i18n. */
 
-export type CheckoutLocale = 'fr' | 'es' | 'en' | 'pt' | 'de' | 'ja' | 'ko' | 'zh'
+export type CheckoutLocale = 'fr' | 'es' | 'en' | 'pt' | 'de' | 'ja' | 'ko' | 'zh' | 'ar'
 
 const PRODUCT_BASE: Record<CheckoutLocale, Record<string, string>> = {
   fr: {
@@ -73,6 +73,16 @@ const PRODUCT_BASE: Record<CheckoutLocale, Record<string, string>> = {
     'cap-luna-black': '루나 보헤미아',
     'tote-eclipse-black': 'DOYA',
   },
+  ar: {
+    'luna-bohemia-white': 'نجوم',
+    'luna-bohemia-black': 'نجوم',
+    'doya-white': 'الأطوار',
+    'doya-black': 'الأطوار',
+    'cd-luna-bohemia': 'لونا بوهيميا',
+    'tee-luna-mini-red': 'الأطوار للأطفال',
+    'cap-luna-black': 'لونا بوهيميا',
+    'tote-eclipse-black': 'DOYA',
+  },
   zh: {
     'luna-bohemia-white': '星星',
     'luna-bohemia-black': '星星',
@@ -94,6 +104,7 @@ const COLOR: Record<CheckoutLocale, Record<string, string>> = {
   ja: { white: 'ホワイト', black: 'ブラック', red: 'レッド', digipack: 'CDデジパック' },
   ko: { white: '화이트', black: '블랙', red: '레드', digipack: 'CD 디지팩' },
   zh: { white: '白色', black: '黑色', red: '红色', digipack: 'CD 纸盒装' },
+  ar: { white: 'أبيض', black: 'أسود', red: 'أحمر', digipack: 'CD ديجيباك' },
 }
 
 const SIZE_LABEL: Record<CheckoutLocale, string> = {
@@ -105,6 +116,7 @@ const SIZE_LABEL: Record<CheckoutLocale, string> = {
   ja: 'サイズ',
   ko: '사이즈',
   zh: '尺码',
+  ar: 'المقاس',
 }
 
 const SPECIAL_SIZE: Record<CheckoutLocale, { U: string; VINYL: string; ENF: string }> = {
@@ -116,6 +128,7 @@ const SPECIAL_SIZE: Record<CheckoutLocale, { U: string; VINYL: string; ENF: stri
   ja: { U: 'ワンサイズ', VINYL: 'レコード', ENF: 'キッズサイズ' },
   ko: { U: '원사이즈', VINYL: '바이닐', ENF: '키즈 사이즈' },
   zh: { U: '均码', VINYL: '黑胶', ENF: '儿童尺码' },
+  ar: { U: 'مقاس واحد', VINYL: 'فينيل', ENF: 'مقاس أطفال' },
 }
 
 const SHIPPING_NAME: Record<CheckoutLocale, Record<string, string>> = {
@@ -127,17 +140,20 @@ const SHIPPING_NAME: Record<CheckoutLocale, Record<string, string>> = {
   ja: { fr: 'フランス本土', eu: 'ヨーロッパ（EU + スイス）', dom: 'フランス海外領土' },
   ko: { fr: '프랑스 본토', eu: '유럽 (EU + 스위스)', dom: '프랑스 해외 영토' },
   zh: { fr: '法国本土', eu: '欧洲（欧盟 + 瑞士）', dom: '法国海外领地' },
+  ar: { fr: 'فرنسا القارية', eu: 'أوروبا (الاتحاد الأوروبي + سويسرا)', dom: 'الأقاليم الفرنسية ما وراء البحار' },
 }
 
 export function normalizeCheckoutLocale(value: unknown): CheckoutLocale {
   const code = typeof value === 'string' ? value.trim().toLowerCase().split('-')[0] : ''
-  if (code === 'es' || code === 'en' || code === 'pt' || code === 'de' || code === 'ja' || code === 'ko' || code === 'zh') return code
+  if (code === 'es' || code === 'en' || code === 'pt' || code === 'de' || code === 'ja' || code === 'ko' || code === 'zh' || code === 'ar') return code
   return 'fr'
 }
 
 /** Locale Stripe Checkout Session (API). */
-export function stripeCheckoutLocale(locale: CheckoutLocale): CheckoutLocale {
-  return locale
+export function stripeCheckoutLocale(locale: CheckoutLocale): CheckoutLocale | 'auto' {
+  // Stripe Checkout ne supporte pas actuellement la locale `ar`.
+  // `auto` évite une erreur API tout en conservant nos libellés personnalisés en arabe.
+  return locale === 'ar' ? 'auto' : locale
 }
 
 function colorKey(productId: string): 'white' | 'black' | 'red' | 'digipack' {
@@ -147,8 +163,12 @@ function colorKey(productId: string): 'white' | 'black' | 'red' | 'digipack' {
   return 'white'
 }
 
+export function localizedProductName(productId: string, locale: CheckoutLocale, fallback = ''): string {
+  return PRODUCT_BASE[locale][productId] || fallback.trim() || productId
+}
+
 export function stripeProductName(productId: string, locale: CheckoutLocale, fallback = ''): string {
-  const base = PRODUCT_BASE[locale][productId] || fallback.trim() || productId
+  const base = localizedProductName(productId, locale, fallback)
   const color = COLOR[locale][colorKey(productId)]
   return `${base} — ${color}`
 }
@@ -178,6 +198,7 @@ export function stripeShippingCountryHint(locale: CheckoutLocale, _cartUrl?: str
     ja: '配送先は選択した地域に限定されています。別の国へ配送する場合はこの支払いをキャンセルしてください。同じタブでカートに戻り、請求は発生しません。',
     ko: '배송 국가는 선택한 지역으로 제한됩니다. 다른 국가로 배송하려면 결제를 취소하세요. 같은 탭에서 장바구니로 돌아가며 결제 금액은 청구되지 않습니다.',
     zh: '配送国家/地区仅限所选区域。如需更换国家/地区，请取消本次支付；系统会在同一标签页返回购物车，且不会扣款。',
+    ar: 'يقتصر الشحن على المنطقة التي اخترتها. لاختيار بلد آخر، ألغِ عملية الدفع للعودة إلى السلة في علامة التبويب نفسها من دون خصم أي مبلغ.',
   }
   return messages[locale] ?? messages.fr
 }

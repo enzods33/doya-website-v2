@@ -60,6 +60,7 @@ export default {
     open: 'プレーヤーを表示',
   },
   music: {
+    albumTitle: 'ルナ・ボエミア',
     eyebrow: 'アルバム',
     tracksMeta: '{n}曲',
     listenAlbum: 'アルバムを聴く',
@@ -201,6 +202,7 @@ export default {
     sendLangJa: '日本語',
     sendLangKo: '韓国語',
     sendLangZh: '中国語（簡体字）',
+    sendLangAr: 'アラビア語',
     sendLangAll: '全員（同じ本文）',
   },
   commerce: {

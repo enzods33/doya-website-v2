@@ -195,7 +195,7 @@ function Shop() {
         size,
         variantLabel: sizeLabel(product, size),
         singleVariant: sizes.length === 1,
-        price: formatEuros(product.sale.priceCents),
+        price: formatEuros(product.sale.priceCents, intlLocale),
       })
       return
     }
@@ -278,14 +278,14 @@ function Shop() {
           <p className="eyebrow shop-collection">
             <span>{t('shop.label')}</span>
             <span className="small-separator" aria-hidden="true">/</span>
-            <span>{siteContent.albumTitle}</span>
+            <span>{t('music.albumTitle')}</span>
           </p>
         </div>
         {purchasable && autoPromos.length > 0 ? (
           <ul className="shop-promo">
             {autoPromos.map((promo) => (
               <li key={promo.id}>
-                {t(promo.shopMessageKey, { amount: formatEuros(promo.amountOffCents) })}
+                {t(promo.shopMessageKey, { amount: formatEuros(promo.amountOffCents, intlLocale) })}
               </li>
             ))}
           </ul>
@@ -334,7 +334,7 @@ function Shop() {
           <div className="product-caption"><p className="eyebrow">{labels.type}</p><h3>{labels.name}</h3>
             <div className="product-details">
               {labels.color ? <span>{labels.color}</span> : null}
-              {sale ? <span>{formatEuros(sale.priceCents)}</span> : product.price !== null && <span>{new Intl.NumberFormat(intlLocale, { style: 'currency', currency: 'EUR' }).format(product.price)}</span>}
+              {sale ? <span>{formatEuros(sale.priceCents, intlLocale)}</span> : product.price !== null && <span>{new Intl.NumberFormat(intlLocale, { style: 'currency', currency: 'EUR' }).format(product.price)}</span>}
             </div>
             {sale && (
               <div className="product-buy">

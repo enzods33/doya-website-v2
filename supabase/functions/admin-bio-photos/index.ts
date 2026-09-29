@@ -213,7 +213,7 @@ Deno.serve(async (req) => {
 
   if (action === 'save_bio') {
     const locale = typeof body.locale === 'string' ? body.locale.trim().toLowerCase() : ''
-    if (!['fr', 'es', 'en', 'pt', 'de', 'ja', 'ko', 'zh'].includes(locale)) {
+    if (!['fr', 'es', 'en', 'pt', 'de', 'ja', 'ko', 'zh', 'ar'].includes(locale)) {
       return json(400, { error: 'invalid_locale' }, origin)
     }
     const lead = typeof body.lead === 'string' ? body.lead.trim() : ''

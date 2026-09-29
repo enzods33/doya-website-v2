@@ -39,7 +39,9 @@ export function I18nProvider({ children }) {
   const messages = useLocaleMessages(locale)
 
   useEffect(() => {
-    document.documentElement.lang = localeCatalog[locale]?.intl ?? locale
+    const meta = localeCatalog[locale]
+    document.documentElement.lang = meta?.intl ?? locale
+    document.documentElement.dir = meta?.dir ?? 'ltr'
   }, [locale])
 
   function setLocale(next) {

@@ -1,6 +1,6 @@
 import fr from './locales/fr.js'
 
-export const LOCALES = ['fr', 'es', 'en', 'pt', 'de', 'ja', 'ko', 'zh']
+export const LOCALES = ['fr', 'es', 'en', 'pt', 'de', 'ja', 'ko', 'zh', 'ar']
 export const DEFAULT_LOCALE = 'fr'
 export const STORAGE_KEY = 'doya-locale'
 
@@ -13,6 +13,7 @@ const LOCALE_META = {
   ja: { intl: 'ja-JP', label: 'JA' },
   ko: { intl: 'ko-KR', label: 'KO' },
   zh: { intl: 'zh-CN', label: 'ZH' },
+  ar: { intl: 'ar', label: 'AR', dir: 'rtl' },
 }
 
 /** Métadonnées légères (labels / BCP47) — messages chargés à la demande. */
@@ -57,6 +58,7 @@ const localeLoaders = {
   ja: () => loadExtendedLocale(() => import('./locales/ja.js')),
   ko: () => loadExtendedLocale(() => import('./locales/ko.js')),
   zh: () => loadExtendedLocale(() => import('./locales/zh.js')),
+  ar: () => loadExtendedLocale(() => import('./locales/ar.js')),
 }
 
 const localeCache = new Map([['fr', fr]])

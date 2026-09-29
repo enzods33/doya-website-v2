@@ -8,7 +8,7 @@ import Link from '../components/Link.jsx'
 
 function OrderPage() {
   const { clear } = useCart()
-  const { t } = useI18n()
+  const { intlLocale, t } = useI18n()
   const clearCart = useRef(clear)
   const sessionId = new URLSearchParams(window.location.search).get('session_id') ?? ''
   const [state, setState] = useState({ loading: true, order: null, error: '' })
@@ -46,7 +46,7 @@ function OrderPage() {
               <p className="availability-note"><strong>{t('order.orderNumber', { number: state.order.orderNumber })}</strong></p>
             ) : null}
             <p className="availability-note">{t('order.receiptNote', { email: state.order.email })}</p>
-            <p className="cart-total"><span>{t('order.total')}</span><strong>{formatEuros(state.order.totalCents)}</strong></p>
+            <p className="cart-total"><span>{t('order.total')}</span><strong>{formatEuros(state.order.totalCents, intlLocale)}</strong></p>
             <ul className="order-list">
               {(state.order.items ?? []).map((item) => {
                 const nameKey = `shop.product.${item.product_id}`

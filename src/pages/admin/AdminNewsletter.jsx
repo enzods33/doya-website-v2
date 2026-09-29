@@ -70,12 +70,12 @@ function AdminNewsletter() {
 
   const previewLogoBase = typeof window !== 'undefined' ? window.location.origin : ''
   const previewOptions = useMemo(
-    () => ({ signature, logoBase: previewLogoBase }),
-    [signature, previewLogoBase],
+    () => ({ signature, logoBase: previewLogoBase, locale: sendLang === 'all' ? 'fr' : sendLang }),
+    [signature, previewLogoBase, sendLang],
   )
   const sendOptions = useMemo(
-    () => ({ signature, logoUrl: EMAIL_LOGO_PUBLIC_URL }),
-    [signature],
+    () => ({ signature, logoUrl: EMAIL_LOGO_PUBLIC_URL, locale: sendLang === 'all' ? 'fr' : sendLang }),
+    [signature, sendLang],
   )
   const previewHtml = useMemo(
     () => buildNewsletterHtml(bodyText || t('admin.newsletterPreviewPlaceholder'), previewOptions),
@@ -257,6 +257,7 @@ function AdminNewsletter() {
         <AdminStatCard label={t('admin.sendLangJa')} value={langStats?.ja ?? '—'} loading={statsBusy} />
         <AdminStatCard label={t('admin.sendLangKo')} value={langStats?.ko ?? '—'} loading={statsBusy} />
         <AdminStatCard label={t('admin.sendLangZh')} value={langStats?.zh ?? '—'} loading={statsBusy} />
+        <AdminStatCard label={t('admin.sendLangAr')} value={langStats?.ar ?? '—'} loading={statsBusy} />
       </div>
 
       <div className="admin-newsletter-layout">
@@ -297,6 +298,7 @@ function AdminNewsletter() {
               <option value="ja">{t('admin.sendLangJa')}</option>
               <option value="ko">{t('admin.sendLangKo')}</option>
               <option value="zh">{t('admin.sendLangZh')}</option>
+              <option value="ar">{t('admin.sendLangAr')}</option>
               <option value="all">{t('admin.sendLangAll')}</option>
             </select>
             <span className="admin-field-help">{t('admin.fieldSendLangHelp')}</span>

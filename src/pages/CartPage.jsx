@@ -19,7 +19,7 @@ import { Stars } from '../components/Brand.jsx'
 function CartPage() {
   const { items, setQuantity, removeItem } = useCart()
   const { items: catalog, revision } = useCatalog()
-  const { locale, t } = useI18n()
+  const { locale, intlLocale, t } = useI18n()
   const zoomTitleId = useId()
   const [email, setEmail] = useState('')
   const [newsletter, setNewsletter] = useState(false)
@@ -320,7 +320,7 @@ function CartPage() {
                       <h2>{labels.name || line.productId}</h2>
                       <p className="cart-meta">
                         {[labels.color || labels.type || '—', line.variantLabel].filter(Boolean).join(' · ')}
-                        {line.priceCents ? ` · ${formatEuros(line.priceCents)}` : ''}
+                        {line.priceCents ? ` · ${formatEuros(line.priceCents, intlLocale)}` : ''}
                       </p>
                       <div className="cart-actions">
                         <div className="cart-qty" role="group" aria-label={t('cart.quantity')}>
@@ -465,7 +465,7 @@ function CartPage() {
                           key={zone.id}
                           label={t('cart.zoneWithAmount', {
                             name: t(`cart.zone.${zone.id}`),
-                            amount: formatEuros(zone.amountCents),
+                            amount: formatEuros(zone.amountCents, intlLocale),
                           })}
                         >
                           {zone.countries.map((code) => (
@@ -481,7 +481,7 @@ function CartPage() {
 
                 {appliedPromo ? (
                   <p className="cart-promo-msg" role="status">
-                    <strong>{t(appliedPromo.messageKey, { amount: formatEuros(appliedPromo.amountOffCents) })}</strong>
+                    <strong>{t(appliedPromo.messageKey, { amount: formatEuros(appliedPromo.amountOffCents, intlLocale) })}</strong>
                   </p>
                 ) : null}
               </div>
@@ -489,16 +489,16 @@ function CartPage() {
               <div className="cart-aside-totals">
                 <p className="cart-total">
                   <span>{t('cart.subtotal')}</span>
-                  <strong>{formatEuros(subtotal - autoDiscountCents) ?? '—'}</strong>
+                  <strong>{formatEuros(subtotal - autoDiscountCents, intlLocale) ?? '—'}</strong>
                 </p>
                 <p className="cart-total cart-shipping">
                   <span>{t('cart.shippingLabel')}</span>
-                  <strong>{needsShippingQuote ? t('cart.shippingQuote') : formatEuros(shippingCents)}</strong>
+                  <strong>{needsShippingQuote ? t('cart.shippingQuote') : formatEuros(shippingCents, intlLocale)}</strong>
                 </p>
                 {!needsShippingQuote ? (
                   <p className="cart-total cart-grand">
                     <span>{t('cart.totalDue')}</span>
-                    <strong>{formatEuros(subtotal - autoDiscountCents + shippingCents) ?? '—'}</strong>
+                    <strong>{formatEuros(subtotal - autoDiscountCents + shippingCents, intlLocale) ?? '—'}</strong>
                   </p>
                 ) : null}
               </div>

@@ -36,10 +36,14 @@ function brandHeaderHtml(options = {}) {
 /**
  * Construit un HTML e-mail simple (pas de code à écrire côté client).
  * @param {string} bodyText message en texte libre (paragraphes séparés par une ligne vide)
- * @param {{ signature?: string, logoBase?: string, logoUrl?: string }} [options]
+ * @param {{ signature?: string, logoBase?: string, logoUrl?: string, locale?: string }} [options]
  */
 export function buildNewsletterHtml(bodyText, options = {}) {
   const signature = String(options.signature ?? DEFAULT_NEWSLETTER_SIGNATURE).trim() || DEFAULT_NEWSLETTER_SIGNATURE
+  const locale = String(options.locale || 'fr').trim().toLowerCase()
+  const rtl = locale === 'ar'
+  const dir = rtl ? 'rtl' : 'ltr'
+  const align = rtl ? 'right' : 'left'
   const trimmed = String(bodyText || '').trim()
   const blocks = trimmed
     ? trimmed.split(/\n\s*\n/).map((block) => {
@@ -49,22 +53,22 @@ export function buildNewsletterHtml(bodyText, options = {}) {
     : ['<p style="margin:0 0 16px;font-size:16px;line-height:1.55;color:#2c2926;">&nbsp;</p>']
 
   return `<!DOCTYPE html>
-<html lang="fr">
+<html lang="${locale}" dir="${dir}">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width"></head>
-<body style="margin:0;padding:0;background:#f4f1ec;">
+<body dir="${dir}" style="margin:0;padding:0;background:#f4f1ec;">
   <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f4f1ec;">
     <tr>
       <td align="center" style="padding:32px 16px;">
-        <table role="presentation" width="100%" style="max-width:560px;background:#ffffff;border:1px solid #e4ddd3;">
+        <table role="presentation" width="100%" dir="${dir}" style="max-width:560px;background:#ffffff;border:1px solid #e4ddd3;text-align:${align};">
           <tr>
             <td align="center" style="padding:28px 28px 8px;">
               ${brandHeaderHtml(options)}
             </td>
           </tr>
           <tr>
-            <td style="padding:12px 28px 28px;font-family:Helvetica,Arial,sans-serif;">
+            <td style="padding:12px 28px 28px;font-family:Arial,Tahoma,sans-serif;">
               ${blocks.join('\n')}
-              <p style="margin:24px 0 0;font-size:14px;line-height:1.5;letter-spacing:.04em;color:#2c2926;">${formatMultiline(signature)}</p>
+              <p style="margin:24px 0 0;font-size:14px;line-height:1.5;${rtl ? 'letter-spacing:0;' : 'letter-spacing:.04em;'}color:#2c2926;">${formatMultiline(signature)}</p>
             </td>
           </tr>
         </table>

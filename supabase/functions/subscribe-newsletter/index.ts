@@ -125,6 +125,17 @@ const WELCOME = {
     ],
     sign: '— DOYA',
   },
+  ar: {
+    subject: 'مرحبًا بك في دائرة DOYA',
+    preview: 'ستكون من أوائل من يتلقون أخبار DOYA.',
+    title: 'مرحبًا',
+    body: [
+      'شكرًا لاشتراكك.',
+      'أصبحت الآن جزءًا من دائرة DOYA، وستكون من أوائل من يتلقون أخبار الإصدارات ومواعيد الحفلات والمفاجآت الصغيرة على طول الطريق.',
+      'نلتقي قريبًا،',
+    ],
+    sign: '— DOYA',
+  },
 } as const
 
 function escapeHtml(value: string) {
@@ -137,19 +148,22 @@ function escapeHtml(value: string) {
 
 function welcomeHtml(locale: keyof typeof WELCOME, logoUrl: string) {
   const copy = WELCOME[locale] ?? WELCOME.fr
+  const rtl = locale === 'ar'
+  const dir = rtl ? 'rtl' : 'ltr'
+  const align = rtl ? 'right' : 'left'
   const paragraphs = copy.body
     .map((line) => `<p style="margin:0 0 16px;font-size:16px;line-height:1.55;color:#2c2926;">${escapeHtml(line)}</p>`)
     .join('')
   return `<!DOCTYPE html>
-<html lang="${locale === 'zh' ? 'zh-CN' : locale}"><head><meta charset="utf-8"></head>
-<body style="margin:0;padding:0;background:#f4f1ec;">
+<html lang="${locale === 'zh' ? 'zh-CN' : locale}" dir="${dir}"><head><meta charset="utf-8"></head>
+<body dir="${dir}" style="margin:0;padding:0;background:#f4f1ec;">
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f4f1ec;"><tr><td align="center" style="padding:32px 16px;">
-<table role="presentation" width="100%" style="max-width:560px;background:#ffffff;border:1px solid #e4ddd3;">
+<table role="presentation" width="100%" dir="${dir}" style="max-width:560px;background:#ffffff;border:1px solid #e4ddd3;text-align:${align};">
 <tr><td align="center" style="padding:28px 28px 8px;">
 <img src="${escapeHtml(logoUrl)}" width="168" height="150" alt="DOYA" style="display:block;margin:0 auto;border:0;width:168px;height:auto;max-width:55%;" />
 </td></tr>
-<tr><td style="padding:8px 28px 28px;font-family:Helvetica,Arial,sans-serif;">
-<p style="margin:0 0 18px;font-family:Georgia,serif;font-size:22px;letter-spacing:.06em;text-transform:uppercase;color:#2c2926;">${escapeHtml(copy.title)}</p>
+<tr><td style="padding:8px 28px 28px;font-family:Arial,Tahoma,sans-serif;">
+<p style="margin:0 0 18px;font-size:22px;${rtl ? 'letter-spacing:0;text-transform:none;' : 'letter-spacing:.06em;text-transform:uppercase;'}color:#2c2926;">${escapeHtml(copy.title)}</p>
 ${paragraphs}
 <p style="margin:24px 0 0;font-size:14px;letter-spacing:.04em;color:#2c2926;">${escapeHtml(copy.sign)}</p>
 </td></tr></table></td></tr></table></body></html>`

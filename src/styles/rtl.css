@@ -1,0 +1,343 @@
+/* Arabic / RTL: mirror layout flow without reversing media, codes or brand marks. */
+html[dir='rtl'] body {
+  direction: rtl;
+  text-align: right;
+}
+
+html[dir='rtl'] .eyebrow,
+html[dir='rtl'] .editorial-title,
+html[dir='rtl'] .section-kicker,
+html[dir='rtl'] .page-title,
+html[dir='rtl'] .newsletter-signup-title,
+html[dir='rtl'] .newsletter-menu-lead,
+html[dir='rtl'] .footer-cta,
+html[dir='rtl'] .commerce-button,
+html[dir='rtl'] .commerce-button-small,
+html[dir='rtl'] .cart-remove,
+html[dir='rtl'] .product-caption,
+html[dir='rtl'] .product-details,
+html[dir='rtl'] .admin-section,
+html[dir='rtl'] .admin-panel {
+  letter-spacing: 0;
+}
+
+html[dir='rtl'] .language-menu {
+  right: auto;
+  left: 0;
+}
+
+html[dir='rtl'] .mobile-language-switcher .language-menu {
+  right: auto;
+  left: 0;
+}
+
+html[dir='rtl'] .language-menu .language-option {
+  justify-content: flex-start;
+  text-align: right;
+}
+
+html[dir='rtl'] .about-title::after {
+  left: auto;
+  right: 0;
+}
+
+html[dir='rtl'] .about-intro-stars {
+  left: auto;
+  right: 19.5%;
+  transform: translate(50%, -50%);
+}
+
+html[dir='rtl'] .live-featured {
+  border-left: 1px solid rgb(44 41 38 / 15%);
+  border-right: 2px solid var(--color-doya-red);
+}
+
+html[dir='rtl'] .live-featured-place {
+  padding-left: 0;
+  padding-right: clamp(28px, 3vw, 48px);
+  border-left: 0;
+  border-right: 1px solid rgb(44 41 38 / 14%);
+}
+
+html[dir='rtl'] .live-featured .concert-tickets {
+  justify-self: start;
+}
+
+html[dir='rtl'] .shop-note {
+  padding-left: 0;
+  padding-right: 18px;
+}
+
+html[dir='rtl'] .shop-note::before {
+  left: auto;
+  right: 0;
+}
+
+html[dir='rtl'] .product-zoom-close span,
+html[dir='rtl'] .photo-lightbox-close span {
+  margin-left: 0;
+  margin-right: .35rem;
+}
+
+html[dir='rtl'] .about-gallery-nav.is-prev {
+  left: auto;
+  right: calc(50% - (var(--about-landscape-slide) / 2) + 56px);
+}
+
+html[dir='rtl'] .about-gallery-nav.is-next {
+  right: auto;
+  left: calc(50% - (var(--about-landscape-slide) / 2) + 56px);
+}
+
+html[dir='rtl'] .photo-lightbox-nav.is-prev {
+  left: auto;
+  right: clamp(8px, 2vw, 24px);
+}
+
+html[dir='rtl'] .photo-lightbox-nav.is-next {
+  right: auto;
+  left: clamp(8px, 2vw, 24px);
+}
+
+html[dir='rtl'] .listen-dock,
+html[dir='rtl'] .listen-dock-reopen {
+  left: auto;
+  right: var(--page-gutter);
+}
+
+html[dir='rtl'] .listen-dock::before {
+  left: auto;
+  right: -1px;
+  background: linear-gradient(270deg, var(--color-doya-red), rgb(194 5 15 / 0%));
+}
+
+html[dir='rtl'] .cart-toast,
+html[dir='rtl'] .shop-error-toast {
+  right: auto;
+  left: clamp(1rem, 2vw, 2rem);
+}
+
+html[dir='rtl'] .cart-toast::after {
+  transform-origin: right;
+}
+
+html[dir='rtl'] .cart-toast-media > span {
+  right: auto;
+  left: -.48rem;
+}
+
+html[dir='rtl'] .cart-toast-link {
+  text-align: right;
+}
+
+html[dir='rtl'] .cart-list {
+  padding-right: 0;
+  padding-left: 8px;
+}
+
+html[dir='rtl'] .cart-field select {
+  padding-right: 14px;
+  padding-left: 32px;
+}
+
+html[dir='rtl'] input[type='email'],
+html[dir='rtl'] input[type='url'],
+html[dir='rtl'] input[type='tel'],
+html[dir='rtl'] input[name*='promo' i],
+html[dir='rtl'] input[name*='tracking' i],
+html[dir='rtl'] a[href^='mailto:'],
+html[dir='rtl'] a[href^='http'],
+html[dir='rtl'] code {
+  direction: ltr;
+  text-align: left;
+  unicode-bidi: isolate;
+}
+
+html[dir='rtl'] .language-code,
+html[dir='rtl'] .track-number,
+html[dir='rtl'] .about-gallery-count,
+html[dir='rtl'] .cart-qty,
+html[dir='rtl'] .cart-total strong,
+html[dir='rtl'] .admin-stat-value {
+  unicode-bidi: isolate;
+}
+
+@media (max-width: 767px) {
+  html[dir='rtl'] .cart-list {
+    padding-left: 0;
+  }
+}
+
+
+/* Directional details not covered by document direction alone. */
+html[dir='rtl'] .skip-link {
+  left: auto;
+  right: 16px;
+}
+
+html[dir='rtl'] .header-stars {
+  margin-left: clamp(0.25rem, 0.8vw, 0.6rem);
+  margin-right: clamp(0.15rem, 0.5vw, 0.4rem);
+}
+
+html[dir='rtl'] .desktop-navigation a + a::before {
+  left: auto;
+  right: -0.05rem;
+}
+
+html[dir='rtl'] .desktop-navigation a::after,
+html[dir='rtl'] .language-trigger::after {
+  transform-origin: left;
+}
+
+html[dir='rtl'] .desktop-navigation a:hover::after,
+html[dir='rtl'] .desktop-navigation a:focus-visible::after,
+html[dir='rtl'] .language-switcher.is-open .language-trigger::after,
+html[dir='rtl'] .language-trigger:focus-visible::after {
+  transform-origin: right;
+}
+
+html[dir='rtl'] .header-nav-language {
+  margin-left: 0;
+  padding-left: 0;
+  margin-right: clamp(1.1rem, 2vw, 1.85rem);
+  padding-right: clamp(0.35rem, 0.8vw, 0.75rem);
+}
+
+html[dir='rtl'] .track-play-icon {
+  margin-left: 0;
+  margin-right: .08rem;
+}
+
+html[dir='rtl'] .track-listen-panel {
+  right: auto;
+  left: calc(100% + .25rem);
+  justify-content: flex-start;
+  transform-origin: left center;
+}
+
+html[dir='rtl'] .gallery-controls p {
+  margin-right: 0;
+  margin-left: 26px;
+}
+
+html[dir='rtl'] .about-gallery-viewport {
+  padding-left: 50vw;
+  padding-right: calc((100vw - var(--about-portrait-slide)) / 2);
+}
+
+html[dir='rtl'] .music-meta {
+  text-align: left;
+}
+
+html[dir='rtl'] .shop-heading-meta {
+  justify-items: start;
+}
+
+html[dir='rtl'] .shop-collection {
+  text-align: left;
+}
+
+html[dir='rtl'] .shop-promo li + li {
+  border-left: 0;
+  border-right: 1px solid rgb(44 41 38 / 10%);
+}
+
+html[dir='rtl'] .site-footer .footer-brand,
+html[dir='rtl'] .site-footer .footer-contact-item {
+  align-items: flex-end;
+  text-align: right;
+}
+
+html[dir='rtl'] .site-footer .footer-newsletter,
+html[dir='rtl'] .site-footer .footer-meta {
+  text-align: right;
+}
+
+html[dir='rtl'] .site-footer .newsletter-signup-copy {
+  justify-items: end;
+}
+
+html[dir='rtl'] .site-footer .socials + .socials {
+  padding-left: 0;
+  padding-right: 18px;
+  border-left: 0;
+  border-right: 1px solid var(--footer-rule);
+}
+
+html[dir='rtl'] .admin-login-actions .admin-google-btn-label,
+html[dir='rtl'] .admin-google-btn-label,
+html[dir='rtl'] .admin-order-toggle,
+html[dir='rtl'] .admin-campaign-btn,
+html[dir='rtl'] .admin-modal-card-wide {
+  text-align: right;
+}
+
+html[dir='rtl'] .admin-google-btn-label {
+  padding-right: 0;
+  padding-left: 8px;
+}
+
+html[dir='rtl'] .admin-promo-create-foot .admin-primary {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+html[dir='rtl'] .admin-bio-translator {
+  border-left: 0;
+  border-right: 2px solid rgb(44 41 38 / 22%);
+}
+
+html[dir='rtl'] .admin-badge.is-edit {
+  margin-left: 0;
+  margin-right: 8px;
+}
+
+@media (max-width: 767px) {
+  html[dir='rtl'] .header-brand {
+    margin-left: 0;
+    margin-right: .55rem;
+  }
+
+  html[dir='rtl'] .header-stars {
+    margin-left: 0;
+    margin-right: .45rem;
+  }
+
+  html[dir='rtl'] .site-footer .footer-brand {
+    align-items: center;
+    text-align: center;
+  }
+
+  html[dir='rtl'] .site-footer .footer-newsletter,
+  html[dir='rtl'] .site-footer .footer-contact-item,
+  html[dir='rtl'] .site-footer .footer-meta {
+    text-align: right;
+  }
+
+  html[dir='rtl'] .site-footer .footer-contact-item {
+    align-items: flex-end;
+  }
+
+  html[dir='rtl'] .site-footer .socials + .socials {
+    padding: 4px 0 0;
+    border-right: 0;
+    border-top: 1px solid var(--footer-rule);
+  }
+
+  html[dir='rtl'] .site-footer .footer-meta-primary {
+    align-items: flex-end;
+  }
+
+  html[dir='rtl'] .site-footer .footer-legal {
+    justify-content: flex-end;
+  }
+
+  html[dir='rtl'] .admin-promo-create-foot .admin-primary {
+    margin-right: 0;
+  }
+
+  html[dir='rtl'] .admin-sales-figures {
+    text-align: right;
+  }
+}
