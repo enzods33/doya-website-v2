@@ -1500,9 +1500,10 @@ a.concert-tickets:focus-visible {
 .product-caption > .eyebrow { font-size: 10px; color: var(--muted); letter-spacing: .16em; }
 .product-caption h3 { margin-top: 5px; font-family: var(--font-editorial); font-size: clamp(21px, 1.7vw, 27px); text-transform: uppercase; }
 .product-details {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) max-content;
+  align-items: start;
+  column-gap: clamp(20px, 3vw, 36px);
   margin-top: 12px;
   padding-top: 11px;
   border-top: 1px solid rgb(44 41 38 / 12%);
@@ -1511,7 +1512,16 @@ a.concert-tickets:focus-visible {
   letter-spacing: .08em;
   text-transform: uppercase;
 }
-.product.is-featured .product-details > span:first-child {
+.product-detail-copy {
+  min-width: 0;
+}
+.product-detail-price {
+  justify-self: end;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+}
+.product.is-featured .product-detail-copy {
   max-width: 32rem;
   font-family: var(--font-editorial);
   font-size: 13px;
@@ -2667,7 +2677,18 @@ a.concert-tickets:focus-visible {
   .product-view-controls { margin-top: 0; }
   .product-caption { padding: 16px 16px 18px; }
   .product-caption h3 { font-size: 24px; line-height: 1.1; }
-  .product-details { font-size: 11px; }
+  .product-details {
+    grid-template-columns: minmax(0, 1fr) minmax(72px, max-content);
+    column-gap: clamp(18px, 5vw, 28px);
+    font-size: 11px;
+  }
+  .product.is-featured .product-detail-copy {
+    max-width: 25ch;
+  }
+  .product-detail-price {
+    min-width: 72px;
+    text-align: right;
+  }
   .shop-section .size-list button { min-width: 40px; min-height: 40px; }
   .shop-note { max-width: 290px; text-align: center; }
   .shop-error-toast {
