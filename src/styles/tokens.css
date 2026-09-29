@@ -26,3 +26,18 @@
   --motion-duration: 240ms;
   --motion-ease: cubic-bezier(.22, 1, .36, 1);
 }
+
+
+/* Piles système CJK : couverture fiable sans ajouter de webfont lourde. */
+html:lang(ja-JP) {
+  --font-editorial: "Hiragino Kaku Gothic ProN", "Yu Gothic", YuGothic, "Noto Sans JP", sans-serif;
+  --font-functional: "Hiragino Kaku Gothic ProN", "Yu Gothic", YuGothic, "Noto Sans JP", sans-serif;
+}
+html:lang(ko-KR) {
+  --font-editorial: "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
+  --font-functional: "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
+}
+html:lang(zh-CN) {
+  --font-editorial: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+  --font-functional: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+}

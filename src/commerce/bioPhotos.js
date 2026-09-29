@@ -47,7 +47,7 @@ export async function loadBioGallery() {
 /** Texte bio pour une locale ; `null` si absent → i18n. Cache local après succès. */
 export async function loadBioCopy(locale) {
   const code = String(locale || 'fr').toLowerCase()
-  if (!['fr', 'es', 'en', 'pt'].includes(code)) return null
+  if (!['fr', 'es', 'en', 'pt', 'de', 'ja', 'ko', 'zh'].includes(code)) return null
   const cacheKey = `bio-copy:${code}`
 
   try {

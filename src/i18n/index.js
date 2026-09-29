@@ -1,6 +1,6 @@
 import fr from './locales/fr.js'
 
-export const LOCALES = ['fr', 'es', 'en', 'pt']
+export const LOCALES = ['fr', 'es', 'en', 'pt', 'de', 'ja', 'ko', 'zh']
 export const DEFAULT_LOCALE = 'fr'
 export const STORAGE_KEY = 'doya-locale'
 
@@ -9,6 +9,10 @@ const LOCALE_META = {
   es: { intl: 'es-ES', label: 'ES' },
   en: { intl: 'en-GB', label: 'EN' },
   pt: { intl: 'pt-PT', label: 'PT' },
+  de: { intl: 'de-DE', label: 'DE' },
+  ja: { intl: 'ja-JP', label: 'JA' },
+  ko: { intl: 'ko-KR', label: 'KO' },
+  zh: { intl: 'zh-CN', label: 'ZH' },
 }
 
 /** Métadonnées légères (labels / BCP47) — messages chargés à la demande. */
@@ -16,11 +20,43 @@ export const localeCatalog = Object.fromEntries(
   LOCALES.map((code) => [code, { ...LOCALE_META[code], messages: code === 'fr' ? fr : null }]),
 )
 
+function mergeMessages(base, overrides) {
+  if (Array.isArray(overrides)) return overrides
+  if (!overrides || typeof overrides !== 'object') return overrides ?? base
+  const next = { ...base }
+  for (const [key, value] of Object.entries(overrides)) {
+    const current = base?.[key]
+    next[key] = (
+      value
+      && typeof value === 'object'
+      && !Array.isArray(value)
+      && current
+      && typeof current === 'object'
+      && !Array.isArray(current)
+    )
+      ? mergeMessages(current, value)
+      : value
+  }
+  return next
+}
+
+async function loadExtendedLocale(path) {
+  const [english, overrides] = await Promise.all([
+    import('./locales/en.js'),
+    path(),
+  ])
+  return mergeMessages(english.default, overrides.default)
+}
+
 const localeLoaders = {
   fr: () => Promise.resolve(fr),
   es: () => import('./locales/es.js').then((m) => m.default),
   en: () => import('./locales/en.js').then((m) => m.default),
   pt: () => import('./locales/pt.js').then((m) => m.default),
+  de: () => loadExtendedLocale(() => import('./locales/de.js')),
+  ja: () => loadExtendedLocale(() => import('./locales/ja.js')),
+  ko: () => loadExtendedLocale(() => import('./locales/ko.js')),
+  zh: () => loadExtendedLocale(() => import('./locales/zh.js')),
 }
 
 const localeCache = new Map([['fr', fr]])
@@ -55,23 +91,30 @@ export function translate(messages, key, vars, fallbackMessages = fr) {
   return interpolate(raw, vars)
 }
 
+export function normalizeLocaleCode(raw) {
+  const tag = String(raw ?? '').trim().toLowerCase().replaceAll('_', '-')
+  if (!tag) return null
+  if (tag === 'zh' || tag.startsWith('zh-')) return 'zh'
+  const primary = tag.split('-')[0]
+  return LOCALES.includes(primary) ? primary : null
+}
+
 /** Mappe navigator.language → locale supportée (fallback FR). */
 export function detectBrowserLocale(languages = typeof navigator !== 'undefined' ? navigator.languages : null) {
   const list = languages?.length
     ? [...languages]
     : [typeof navigator !== 'undefined' ? navigator.language : DEFAULT_LOCALE]
   for (const raw of list) {
-    if (!raw) continue
-    const code = String(raw).toLowerCase().split('-')[0]
-    if (LOCALES.includes(code)) return code
+    const code = normalizeLocaleCode(raw)
+    if (code) return code
   }
   return DEFAULT_LOCALE
 }
 
 export function readStoredLocale() {
   try {
-    const stored = localStorage.getItem(STORAGE_KEY)
-    if (LOCALES.includes(stored)) return stored
+    const stored = normalizeLocaleCode(localStorage.getItem(STORAGE_KEY))
+    if (stored) return stored
   } catch {
     /* private mode */
   }

@@ -180,6 +180,27 @@ test('le monitoring verrouille le contrat cache et 404 des assets', () => {
   assert.match(monitor, /!missingType\.includes\('text\/html'\)/)
 })
 
+test('Stripe, Brevo et la bio couvrent les 8 langues', () => {
+  const labels = readFileSync(new URL('../supabase/functions/_shared/checkoutLabels.ts', import.meta.url), 'utf8')
+  const subscribe = readFileSync(new URL('../supabase/functions/subscribe-newsletter/index.ts', import.meta.url), 'utf8')
+  const brevo = readFileSync(new URL('../supabase/functions/admin-brevo-campaign/index.ts', import.meta.url), 'utf8')
+  const bioFn = readFileSync(new URL('../supabase/functions/admin-bio-photos/index.ts', import.meta.url), 'utf8')
+  const bioMigration = readFileSync(new URL('../supabase/migrations/20260929080000_site_bio_8_locales.sql', import.meta.url), 'utf8')
+  const unsubscribe = readFileSync(new URL('../src/pages/UnsubscribePage.jsx', import.meta.url), 'utf8')
+
+  assert.match(labels, /'fr' \| 'es' \| 'en' \| 'pt' \| 'de' \| 'ja' \| 'ko' \| 'zh'/)
+  for (const locale of ['de', 'ja', 'ko', 'zh']) {
+    assert.match(labels, new RegExp(`\\b${locale}: \\{`))
+    assert.match(subscribe, new RegExp(`\\n  ${locale}: \\{`))
+    assert.match(unsubscribe, new RegExp(`\\n  ${locale}: \\{`))
+  }
+  assert.match(brevo, /'de', 'ja', 'ko', 'zh'/)
+  assert.match(brevo, /de: 0, ja: 0, ko: 0, zh: 0/)
+  assert.match(bioFn, /'de', 'ja', 'ko', 'zh'/)
+  assert.match(bioMigration, /locale in \('fr', 'es', 'en', 'pt', 'de', 'ja', 'ko', 'zh'\)/)
+  assert.match(bioMigration, /on conflict \(locale\) do nothing/)
+})
+
 test('aucune clé secrète n’est embarquée dans le client', () => {
   const client = readFileSync(new URL('../src/commerce/checkout.js', import.meta.url), 'utf8')
     + readFileSync(new URL('../src/commerce/config.js', import.meta.url), 'utf8')

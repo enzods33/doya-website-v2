@@ -27,6 +27,7 @@ const LANG_DEFAULT_COUNTRY = {
   es: 'ES',
   pt: 'PT',
   en: 'IE',
+  de: 'DE',
 }
 
 export function zoneForCountry(country, zones = DEFAULT_SHIPPING_ZONES) {

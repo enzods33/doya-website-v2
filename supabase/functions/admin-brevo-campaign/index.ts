@@ -17,12 +17,12 @@ type CampaignBody = {
   email?: string
   campaignId?: number | string
   scheduledAt?: string | null
-  /** fr | es | pt | en | all — filtre destinataires via attribut Brevo LANG */
+  /** fr | es | pt | en | de | ja | ko | zh | all — filtre destinataires via attribut Brevo LANG */
   lang?: string
   idempotencyKey?: string
 }
 
-const NEWSLETTER_LANGS = new Set(['fr', 'es', 'pt', 'en'])
+const NEWSLETTER_LANGS = new Set(['fr', 'es', 'pt', 'en', 'de', 'ja', 'ko', 'zh'])
 
 function normalizeSendLang(raw: unknown): string {
   const value = String(raw ?? 'all').trim().toLowerCase()
@@ -164,7 +164,7 @@ async function fetchListEmails(
 
 /** Compteurs par langue (attribut Brevo LANG). Sans LANG → fr. */
 async function fetchLangStats(apiKey: string, listId: number) {
-  const stats = { fr: 0, es: 0, pt: 0, en: 0, total: 0 }
+  const stats = { fr: 0, es: 0, pt: 0, en: 0, de: 0, ja: 0, ko: 0, zh: 0, total: 0 }
   let offset = 0
   const limit = 50
   for (;;) {
@@ -236,7 +236,7 @@ Deno.serve(async (req) => {
       return json(502, { error: 'brevo_list_failed' }, origin)
     }
     const subscribers = Number(listPayload.uniqueSubscribers ?? listPayload.totalSubscribers ?? 0)
-    let langStats = { fr: 0, es: 0, pt: 0, en: 0, total: subscribers }
+    let langStats = { fr: 0, es: 0, pt: 0, en: 0, de: 0, ja: 0, ko: 0, zh: 0, total: subscribers }
     try {
       langStats = await fetchLangStats(apiKey, listId)
     } catch {

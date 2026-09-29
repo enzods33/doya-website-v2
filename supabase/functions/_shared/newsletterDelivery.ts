@@ -1,7 +1,14 @@
 import { signNewsletterAddress } from './newsletterUnsubscribe.ts'
 
 const UNSUBSCRIBE_LABELS: Record<string, string> = {
-  fr: 'Se désabonner', es: 'Cancelar suscripción', pt: 'Cancelar subscrição', en: 'Unsubscribe',
+  fr: 'Se désabonner',
+  es: 'Cancelar suscripción',
+  pt: 'Cancelar subscrição',
+  en: 'Unsubscribe',
+  de: 'Abmelden',
+  ja: '配信停止',
+  ko: '구독 해지',
+  zh: '退订',
 }
 
 /** Chaque version a exactement un destinataire, avec un lien personnel. */

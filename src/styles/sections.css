@@ -2090,6 +2090,9 @@ a.concert-tickets:focus-visible {
   padding: 0.4rem 0;
   list-style: none;
   min-width: 4.75rem;
+  max-height: min(70vh, 24rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
   background: var(--color-mist);
   border: 1px solid var(--hairline);
   opacity: 0;
