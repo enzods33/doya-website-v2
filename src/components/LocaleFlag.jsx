@@ -62,13 +62,19 @@ const FLAGS = {
       <circle cx="3.05" cy="2.8" r=".18" fill="#ffde00" />
     </svg>
   ),
+  ar: (
+    <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+      <circle cx="8" cy="8" r="6.35" fill="none" stroke="currentColor" strokeWidth="1.25" />
+      <path d="M1.9 8h12.2M8 1.65c2 1.75 3.05 3.87 3.05 6.35S10 12.6 8 14.35M8 1.65C6 3.4 4.95 5.52 4.95 8S6 12.6 8 14.35M3.1 4.55h9.8M3.1 11.45h9.8" fill="none" stroke="currentColor" strokeWidth="1.05" strokeLinecap="round" />
+    </svg>
+  ),
 }
 
 export function LocaleFlag({ code, className = '' }) {
   const flag = FLAGS[code]
   if (!flag) return null
   return (
-    <span className={`language-flag${className ? ` ${className}` : ''}`} aria-hidden="true">
+    <span className={`language-flag${code === 'ar' ? ' is-language-symbol' : ''}${className ? ` ${className}` : ''}`} aria-hidden="true">
       {flag}
     </span>
   )
