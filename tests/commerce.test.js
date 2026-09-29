@@ -201,6 +201,14 @@ test('Stripe, Brevo et la bio couvrent les 8 langues', () => {
   assert.match(bioMigration, /on conflict \(locale\) do nothing/)
 })
 
+test('le back-office bio propose DeepL sans automatiser les traductions', () => {
+  const bioUi = readFileSync(new URL('../src/pages/admin/AdminBio.jsx', import.meta.url), 'utf8')
+  assert.match(bioUi, /https:\/\/www\.deepl\.com\/fr\/translate/)
+  assert.match(bioUi, /target="_blank"/)
+  assert.match(bioUi, /rel="noopener noreferrer"/)
+  assert.doesNotMatch(bioUi, /translate_bio|AZURE_TRANSLATOR/)
+})
+
 test('aucune clé secrète n’est embarquée dans le client', () => {
   const client = readFileSync(new URL('../src/commerce/checkout.js', import.meta.url), 'utf8')
     + readFileSync(new URL('../src/commerce/config.js', import.meta.url), 'utf8')
