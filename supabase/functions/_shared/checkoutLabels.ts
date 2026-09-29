@@ -163,8 +163,12 @@ function colorKey(productId: string): 'white' | 'black' | 'red' | 'digipack' {
   return 'white'
 }
 
+export function localizedProductName(productId: string, locale: CheckoutLocale, fallback = ''): string {
+  return PRODUCT_BASE[locale][productId] || fallback.trim() || productId
+}
+
 export function stripeProductName(productId: string, locale: CheckoutLocale, fallback = ''): string {
-  const base = PRODUCT_BASE[locale][productId] || fallback.trim() || productId
+  const base = localizedProductName(productId, locale, fallback)
   const color = COLOR[locale][colorKey(productId)]
   return `${base} — ${color}`
 }
