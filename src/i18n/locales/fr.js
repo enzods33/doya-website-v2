@@ -260,7 +260,7 @@ export default {
     bioLeadLabel: 'Accroche (première ligne)',
     bioBodyLabel: 'Corps de texte',
     bioBodyHint: 'Sauts de ligne doubles = nouveaux paragraphes.',
-    bioSave: 'Enregistrer la bio',
+    bioSave: 'Enregistrer cette langue',
     bioSaved: 'Bio {locale} enregistrée.',
     bioInvalid: 'Accroche et corps sont obligatoires.',
     bioTooLong: 'Texte trop long.',
