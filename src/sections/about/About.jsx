@@ -146,6 +146,7 @@ function About() {
   }
 
   return (
+    <>
     <section id="about" className="about-section" aria-labelledby="about-title">
       <div className="section-shell about-intro">
         <Stars color="white" className="about-intro-stars" />
@@ -154,24 +155,31 @@ function About() {
           <Wordmark decorative className="about-wordmark" />
           <div className="about-biography">
             <p className="about-biography-lead">{biographyText(biographyLead)}</p>
-            {biographyBody.split(/\n\n+/).map((paragraph) => (
-              <p key={paragraph.slice(0, 24)} className="about-biography-body">{biographyText(paragraph)}</p>
-            ))}
+            <div className="about-biography-body-flow">
+              {biographyBody.split(/\n\n+/).map((paragraph) => (
+                <p key={paragraph.slice(0, 24)} className="about-biography-body">{biographyText(paragraph)}</p>
+              ))}
+            </div>
           </div>
         </Reveal>
       </div>
+    </section>
 
       {total > 0 ? (
-        <div className={`about-gallery${activeImageIsPortrait ? ' has-portrait-active' : ' has-landscape-active'}`}>
+        <section id="gallery" className="gallery-section" aria-labelledby="gallery-title">
+          <div className={`about-gallery${activeImageIsPortrait ? ' has-portrait-active' : ' has-landscape-active'}`}>
           <div className="about-gallery-backdrop" aria-hidden="true">
             <img key={activeImage?.src} src={activeImage?.src} alt="" />
           </div>
           <div className="about-gallery-toolbar section-shell">
-            <p className="about-gallery-kicker" aria-hidden="true">
-              <span>{siteContent.name}</span>
-              <span>×</span>
-              <span>{t('music.albumTitle')}</span>
-            </p>
+            <div className="about-gallery-heading">
+              <h2 id="gallery-title" className="editorial-title gallery-title">{t('nav.gallery')}</h2>
+              <p className="about-gallery-kicker" aria-hidden="true">
+                <span>{siteContent.name}</span>
+                <span>×</span>
+                <span>{t('music.albumTitle')}</span>
+              </p>
+            </div>
             <p className="eyebrow about-gallery-count" aria-live="polite" aria-atomic="true">
               <span>{String(index + 1).padStart(2, '0')}</span>
               <span aria-hidden="true"> / </span>
@@ -257,6 +265,7 @@ function About() {
             </div>
           </div>
         </div>
+        </section>
       ) : null}
 
       {lightbox !== null && total > 0 ? (
@@ -267,7 +276,7 @@ function About() {
           onIndexChange={setLightbox}
         />
       ) : null}
-    </section>
+    </>
   )
 }
 
