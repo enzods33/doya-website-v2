@@ -113,7 +113,7 @@ function ListenDock() {
   return (
     <m.aside
       className={`listen-dock${excludedSectionVisible ? ' is-suppressed' : ''}`}
-      aria-label={t('listenDock.label', { title: album.title })}
+      aria-label={t('listenDock.label', { title: t('music.albumTitle') })}
       initial={false}
     >
       <div className="listen-dock-copy">
@@ -121,7 +121,7 @@ function ListenDock() {
           <i className="listen-dock-equalizer" aria-hidden="true"><b /><b /><b /></i>
           {t('listenDock.eyebrow')}
         </span>
-        <strong>{album.title}</strong>
+        <strong>{t('music.albumTitle')}</strong>
         <small>{album.artist} · {album.year}</small>
       </div>
       <div className="listen-dock-platforms" aria-label={t('listenDock.platforms')}>
