@@ -9,7 +9,7 @@ export default defineConfig({
   retries: 1,
   reporter: [['list'], ['html', { open: 'never' }]],
   use: {
-    baseURL: process.env.DOYA_BASE_URL || 'https://doya.guzzler-bot.cloud',
+    baseURL: process.env.DOYA_BASE_URL || 'https://doyaofficial.com',
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: 'off',
