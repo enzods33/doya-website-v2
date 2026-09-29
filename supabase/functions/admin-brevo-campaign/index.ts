@@ -22,7 +22,7 @@ type CampaignBody = {
   idempotencyKey?: string
 }
 
-const NEWSLETTER_LANGS = new Set(['fr', 'es', 'pt', 'en'])
+const NEWSLETTER_LANGS = new Set(['fr', 'es', 'pt', 'en', 'de', 'ja', 'ko', 'zh'])
 
 function normalizeSendLang(raw: unknown): string {
   const value = String(raw ?? 'all').trim().toLowerCase()
