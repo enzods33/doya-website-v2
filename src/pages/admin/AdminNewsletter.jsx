@@ -253,6 +253,10 @@ function AdminNewsletter() {
         <AdminStatCard label={t('admin.sendLangEs')} value={langStats?.es ?? '—'} loading={statsBusy} />
         <AdminStatCard label={t('admin.sendLangPt')} value={langStats?.pt ?? '—'} loading={statsBusy} />
         <AdminStatCard label={t('admin.sendLangEn')} value={langStats?.en ?? '—'} loading={statsBusy} />
+        <AdminStatCard label={t('admin.sendLangDe')} value={langStats?.de ?? '—'} loading={statsBusy} />
+        <AdminStatCard label={t('admin.sendLangJa')} value={langStats?.ja ?? '—'} loading={statsBusy} />
+        <AdminStatCard label={t('admin.sendLangKo')} value={langStats?.ko ?? '—'} loading={statsBusy} />
+        <AdminStatCard label={t('admin.sendLangZh')} value={langStats?.zh ?? '—'} loading={statsBusy} />
       </div>
 
       <div className="admin-newsletter-layout">
@@ -289,6 +293,10 @@ function AdminNewsletter() {
               <option value="es">{t('admin.sendLangEs')}</option>
               <option value="pt">{t('admin.sendLangPt')}</option>
               <option value="en">{t('admin.sendLangEn')}</option>
+              <option value="de">{t('admin.sendLangDe')}</option>
+              <option value="ja">{t('admin.sendLangJa')}</option>
+              <option value="ko">{t('admin.sendLangKo')}</option>
+              <option value="zh">{t('admin.sendLangZh')}</option>
               <option value="all">{t('admin.sendLangAll')}</option>
             </select>
             <span className="admin-field-help">{t('admin.fieldSendLangHelp')}</span>
