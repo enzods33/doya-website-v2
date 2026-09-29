@@ -1,5 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
+import { readFileSync } from 'node:fs'
 import {
   LOCALES,
   detectBrowserLocale,
@@ -19,19 +20,26 @@ function collectKeys(value, prefix = '') {
   return Object.entries(value).flatMap(([key, nested]) => collectKeys(nested, prefix ? `${prefix}.${key}` : key))
 }
 
-test('les 9 locales résolues exposent les mêmes clés', async () => {
+test('les 9 locales gardent les mêmes clés publiques et le back-office reste français', async () => {
   assert.deepEqual(LOCALES, ['fr', 'es', 'en', 'pt', 'de', 'ja', 'ko', 'zh', 'ar'])
-  const reference = collectKeys(fr).sort()
+  const { admin: _admin, ...frPublic } = fr
+  const reference = collectKeys(frPublic).sort()
   for (const locale of LOCALES) {
     const messages = await loadLocaleMessages(locale)
-    assert.deepEqual(collectKeys(messages).sort(), reference, locale)
+    const { admin, ...publicMessages } = messages
+    assert.deepEqual(collectKeys(publicMessages).sort(), reference, locale)
+    if (locale === 'fr') assert.ok(admin)
+    else assert.equal(admin, undefined, locale)
+    assert.equal(translate(messages, 'admin.tabCatalog', {}, fr), fr.admin.tabCatalog, locale)
   }
 })
 
-test('les locales historiques restent complètes sans fallback étendu', () => {
-  const reference = collectKeys(fr).sort()
+test('les locales historiques restent complètes sur le site public', () => {
+  const { admin: _admin, ...frPublic } = fr
+  const reference = collectKeys(frPublic).sort()
   for (const [locale, messages] of Object.entries({ es, en, pt })) {
-    assert.deepEqual(collectKeys(messages).sort(), reference, locale)
+    const { admin: _translatedAdmin, ...publicMessages } = messages
+    assert.deepEqual(collectKeys(publicMessages).sort(), reference, locale)
   }
 })
 
@@ -82,4 +90,15 @@ test('translate interpole et retombe sur le FR', () => {
   assert.equal(translate(es, 'cart.lineMeta', { color: 'Negro', size: 'M' }), 'Negro · talla M')
   assert.equal(translate({}, 'hero.label', {}, fr), 'Nouvel album')
   assert.equal(getByPath(fr, 'live.emptyTitle'), 'Bientôt sur scène.')
+})
+
+
+test('le back-office est encapsulé dans le scope français sans écraser la préférence publique', () => {
+  const app = readFileSync(new URL('../src/App.jsx', import.meta.url), 'utf8')
+  const provider = readFileSync(new URL('../src/i18n/I18nProvider.jsx', import.meta.url), 'utf8')
+  assert.match(app, /path === '\/admin'[\s\S]*<FrenchI18nProvider>[\s\S]*<AppFrame path=\{path\} \/>/)
+  assert.match(provider, /locale: 'fr'/)
+  assert.match(provider, /intlLocale: 'fr-FR'/)
+  assert.match(provider, /setLocale: \(\) => \{\}/)
+  assert.doesNotMatch(provider.slice(provider.indexOf('export function FrenchI18nProvider')), /localStorage\.setItem/)
 })

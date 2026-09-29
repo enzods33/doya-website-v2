@@ -78,7 +78,7 @@ export const products = [
   {
     id: 'cap-luna-black',
     typeKey: 'other', colorKey: 'black', defaultView: 'front',
-    type: 'Casquette',
+    type: 'Casquette brodée',
     front: '/shop/cap-luna-front-transparent.png', back: '/shop/cap-luna-back-transparent.png',
     width: 971, height: 715, price: null, url: null,
   },

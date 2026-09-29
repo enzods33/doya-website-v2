@@ -246,10 +246,13 @@ test('le back-office bio propose DeepL sans automatiser les traductions', () => 
   assert.match(bioUi, /target="_blank"/)
   assert.match(bioUi, /rel="noopener noreferrer"/)
   assert.doesNotMatch(bioUi, /translate_bio|AZURE_TRANSLATOR/)
-  for (const locale of ['fr', 'es', 'en', 'pt', 'de', 'ja', 'ko', 'zh', 'ar']) {
+  const frMessages = readFileSync(new URL('../src/i18n/locales/fr.js', import.meta.url), 'utf8')
+  assert.match(frMessages, /bioTranslatorHelp:/)
+  assert.match(frMessages, /bioTranslatorLink:/)
+  for (const locale of ['es', 'en', 'pt', 'de', 'ja', 'ko', 'zh', 'ar']) {
     const messages = readFileSync(new URL(`../src/i18n/locales/${locale}.js`, import.meta.url), 'utf8')
-    assert.match(messages, /bioTranslatorHelp:/)
-    assert.match(messages, /bioTranslatorLink:/)
+    assert.doesNotMatch(messages, /bioTranslatorHelp:/)
+    assert.doesNotMatch(messages, /bioTranslatorLink:/)
   }
 })
 

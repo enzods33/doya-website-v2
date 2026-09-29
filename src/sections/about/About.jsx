@@ -3,7 +3,7 @@ import { useReducedMotion } from 'motion/react'
 import { siteContent } from '../../data/siteContent.js'
 import { loadBioGallery, loadBioCopy } from '../../commerce/bioPhotos.js'
 import { useI18n } from '../../i18n/I18nProvider.jsx'
-import { Stars, Wordmark } from '../../components/Brand.jsx'
+import { Lockup, Stars } from '../../components/Brand.jsx'
 import Reveal from '../../components/Reveal.jsx'
 import PhotoLightbox from '../../components/PhotoLightbox.jsx'
 
@@ -152,7 +152,7 @@ function About() {
         <Stars color="white" className="about-intro-stars" />
         <Reveal className="about-copy" delay={0.1}>
           <h2 id="about-title" className="editorial-title about-title">{t('about.eyebrow')}</h2>
-          <Wordmark decorative className="about-wordmark" />
+          <Lockup decorative className="about-wordmark about-wordmark-lockup" />
           <div className="about-biography">
             <p className="about-biography-lead">{biographyText(biographyLead)}</p>
             <div className="about-biography-body-flow">
