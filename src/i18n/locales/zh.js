@@ -189,6 +189,8 @@ export default {
     menuSubmit: '订阅',
   },
   admin: {
+    bioTranslatorHelp: '需要翻译简介吗？',
+    bioTranslatorLink: '打开 DeepL',
     fieldSendLang: '发送给',
     fieldSendLangHelp: '按订阅时的网站语言分类。请使用对应语言撰写内容。',
     sendLangFr: '法语',
