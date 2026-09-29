@@ -131,7 +131,7 @@ export function applyDocumentSeo({ path, locale, intlLocale, t, indexable }) {
   setNamedMeta('name', 'twitter:image', cover)
 
   setLink('canonical', canonical)
-  document.documentElement.lang = locale
+  document.documentElement.lang = intlLocale || locale
 }
 
 /** Graphe JSON-LD (injecté au build). */
@@ -174,7 +174,7 @@ export function buildJsonLd(origin = siteOrigin()) {
         '@id': `${origin}/#website`,
         name: `${siteContent.name} — ${siteContent.albumTitle}`,
         url: `${origin}/`,
-        inLanguage: ['fr', 'es', 'en', 'pt'],
+        inLanguage: ['fr', 'es', 'en', 'pt', 'de', 'ja', 'ko', 'zh-CN'],
         publisher: {
           '@type': 'Organization',
           name: 'ALMENA PROD',
