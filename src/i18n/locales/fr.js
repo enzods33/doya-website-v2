@@ -119,7 +119,7 @@ export default {
     size: { ENF: 'Enfant', CD: 'CD', VINYL: 'Vinyle', U: 'Taille unique' },
     color: { black: 'Noir', white: 'Blanc', red: 'Rouge', blue: 'Bleu', navy: 'Bleu marine', green: 'Vert', beige: 'Beige', grey: 'Gris', yellow: 'Jaune', pink: 'Rose', digipack: 'Édition physique de l’album, incluant un livret illustré exclusif', default: '' },
     product: {
-      'tee-luna-mini-red': 'Luna Mini',
+      'tee-luna-mini-red': 'Phases Kids',
       'cap-luna-black': 'Luna Bohemia',
       'tote-eclipse-black': 'DOYA',
       'luna-bohemia-white': 'Étoiles',
