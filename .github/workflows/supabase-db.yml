@@ -25,6 +25,7 @@ jobs:
           deno check --node-modules-dir=auto supabase/functions/get-order/index.ts
           deno check --node-modules-dir=auto supabase/functions/request-shipping-quote/index.ts
           deno check --node-modules-dir=auto supabase/functions/admin-brevo-campaign/index.ts
+          deno check --node-modules-dir=auto supabase/functions/admin-bio-photos/index.ts
           deno check --node-modules-dir=auto supabase/functions/unsubscribe-newsletter/index.ts
       - name: Rejouer les migrations dans une base jetable
         run: supabase db start
