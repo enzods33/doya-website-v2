@@ -117,7 +117,7 @@ export default {
     productAlt: '{type} {name}, {color}, {view}.',
     viewFrontWord: '앞면',
     viewBackWord: '뒷면',
-    type: { tshirt: '티셔츠', adultTshirt: '성인 티셔츠', kidsTshirt: '키즈 티셔츠', cap: '캡', tote: '토트백', cd: 'CD', other: '상품' },
+    type: { tshirt: '티셔츠', adultTshirt: '성인 티셔츠', kidsTshirt: '키즈 티셔츠', cap: '자수 캡', tote: '토트백', cd: 'CD', other: '상품' },
     size: { ENF: '키즈', CD: 'CD', VINYL: '바이닐', U: '원사이즈' },
     color: { black: '블랙', white: '화이트', red: '레드', blue: '블루', navy: '네이비', green: '그린', beige: '베이지', grey: '그레이', yellow: '옐로', pink: '핑크', digipack: '새 앨범 CD · 부클릿 포함', default: '' },
     product: {
