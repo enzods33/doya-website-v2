@@ -341,3 +341,38 @@ html[dir='rtl'] .admin-badge.is-edit {
     text-align: right;
   }
 }
+
+
+html[dir='rtl'] .about-biography-lead,
+html[dir='rtl'] .about-biography-body,
+html[dir='rtl'] .about-intro {
+  text-align: right;
+}
+
+html[dir='rtl'] .about-biography-body-flow {
+  direction: rtl;
+}
+
+html[dir='rtl'] .about-gallery-heading {
+  justify-items: start;
+  text-align: right;
+}
+
+html[dir='rtl'] .gallery-title::after {
+  left: auto;
+  right: 0;
+}
+
+@media (max-width: 767px) {
+  html[dir='rtl'] .about-intro,
+  html[dir='rtl'] .about-biography-lead,
+  html[dir='rtl'] .about-biography-body {
+    text-align: right;
+  }
+
+  html[dir='rtl'] .about-intro-stars {
+    left: auto;
+    right: 50%;
+    transform: translate(50%, -50%);
+  }
+}
