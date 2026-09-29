@@ -333,8 +333,8 @@ function Shop() {
           </div>
           <div className="product-caption"><p className="eyebrow">{labels.type}</p><h3>{labels.name}</h3>
             <div className="product-details">
-              {labels.color ? <span>{labels.color}</span> : null}
-              {sale ? <span>{formatEuros(sale.priceCents, intlLocale)}</span> : product.price !== null && <span>{new Intl.NumberFormat(intlLocale, { style: 'currency', currency: 'EUR' }).format(product.price)}</span>}
+              {labels.color ? <span className="product-detail-copy">{labels.color}</span> : null}
+              {sale ? <span className="product-detail-price">{formatEuros(sale.priceCents, intlLocale)}</span> : product.price !== null && <span className="product-detail-price">{new Intl.NumberFormat(intlLocale, { style: 'currency', currency: 'EUR' }).format(product.price)}</span>}
             </div>
             {sale && (
               <div className="product-buy">
