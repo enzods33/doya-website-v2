@@ -117,7 +117,7 @@ export default {
     productAlt: '{type} {name}, {color}, Ansicht {view}.',
     viewFrontWord: 'vorne',
     viewBackWord: 'hinten',
-    type: { tshirt: 'T-Shirt', adultTshirt: 'T-Shirt Erwachsene', kidsTshirt: 'Kinder-T-Shirt', cap: 'Cap', tote: 'Stofftasche', cd: 'CD', other: 'Artikel' },
+    type: { tshirt: 'T-Shirt', adultTshirt: 'T-Shirt Erwachsene', kidsTshirt: 'Kinder-T-Shirt', cap: 'Bestickte Kappe', tote: 'Stofftasche', cd: 'CD', other: 'Artikel' },
     size: { ENF: 'Kinder', CD: 'CD', VINYL: 'Vinyl', U: 'Einheitsgröße' },
     color: { black: 'Schwarz', white: 'Weiß', red: 'Rot', blue: 'Blau', navy: 'Marineblau', green: 'Grün', beige: 'Beige', grey: 'Grau', yellow: 'Gelb', pink: 'Rosa', digipack: 'Neues Album auf CD · Booklet inklusive', default: '' },
     product: {
