@@ -165,8 +165,8 @@ function About() {
       </div>
     </section>
 
-      {total > 0 ? (
-        <section id="gallery" className="gallery-section" aria-labelledby="gallery-title">
+      <section id="gallery" className="gallery-section" aria-labelledby="gallery-title">
+        {total > 0 ? (
           <div className={`about-gallery${activeImageIsPortrait ? ' has-portrait-active' : ' has-landscape-active'}`}>
           <div className="about-gallery-backdrop" aria-hidden="true">
             <img key={activeImage?.src} src={activeImage?.src} alt="" />
@@ -265,8 +265,21 @@ function About() {
             </div>
           </div>
         </div>
-        </section>
-      ) : null}
+        ) : (
+          <div className="about-gallery about-gallery-loading" aria-busy="true">
+            <div className="about-gallery-toolbar section-shell">
+              <div className="about-gallery-heading">
+                <h2 id="gallery-title" className="editorial-title gallery-title">{t('nav.gallery')}</h2>
+                <p className="about-gallery-kicker" aria-hidden="true">
+                  <span>{siteContent.name}</span>
+                  <span>×</span>
+                  <span>{t('music.albumTitle')}</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+      </section>
 
       {lightbox !== null && total > 0 ? (
         <PhotoLightbox
