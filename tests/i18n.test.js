@@ -19,19 +19,26 @@ function collectKeys(value, prefix = '') {
   return Object.entries(value).flatMap(([key, nested]) => collectKeys(nested, prefix ? `${prefix}.${key}` : key))
 }
 
-test('les 9 locales résolues exposent les mêmes clés', async () => {
+test('les 9 locales gardent les mêmes clés publiques et le back-office reste français', async () => {
   assert.deepEqual(LOCALES, ['fr', 'es', 'en', 'pt', 'de', 'ja', 'ko', 'zh', 'ar'])
-  const reference = collectKeys(fr).sort()
+  const { admin: _admin, ...frPublic } = fr
+  const reference = collectKeys(frPublic).sort()
   for (const locale of LOCALES) {
     const messages = await loadLocaleMessages(locale)
-    assert.deepEqual(collectKeys(messages).sort(), reference, locale)
+    const { admin, ...publicMessages } = messages
+    assert.deepEqual(collectKeys(publicMessages).sort(), reference, locale)
+    if (locale === 'fr') assert.ok(admin)
+    else assert.equal(admin, undefined, locale)
+    assert.equal(translate(messages, 'admin.tabCatalog', {}, fr), fr.admin.tabCatalog, locale)
   }
 })
 
-test('les locales historiques restent complètes sans fallback étendu', () => {
-  const reference = collectKeys(fr).sort()
+test('les locales historiques restent complètes sur le site public', () => {
+  const { admin: _admin, ...frPublic } = fr
+  const reference = collectKeys(frPublic).sort()
   for (const [locale, messages] of Object.entries({ es, en, pt })) {
-    assert.deepEqual(collectKeys(messages).sort(), reference, locale)
+    const { admin: _translatedAdmin, ...publicMessages } = messages
+    assert.deepEqual(collectKeys(publicMessages).sort(), reference, locale)
   }
 })
 
