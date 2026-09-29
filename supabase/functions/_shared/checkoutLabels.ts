@@ -1,6 +1,6 @@
 /** Libellés Stripe Checkout — alignés sur `shop.product.*` / `shop.color.*` i18n. */
 
-export type CheckoutLocale = 'fr' | 'es' | 'en' | 'pt'
+export type CheckoutLocale = 'fr' | 'es' | 'en' | 'pt' | 'de' | 'ja' | 'ko' | 'zh'
 
 const PRODUCT_BASE: Record<CheckoutLocale, Record<string, string>> = {
   fr: {
@@ -9,7 +9,7 @@ const PRODUCT_BASE: Record<CheckoutLocale, Record<string, string>> = {
     'doya-white': 'Phases',
     'doya-black': 'Phases',
     'cd-luna-bohemia': 'Luna Bohemia',
-    'tee-luna-mini-red': 'Luna Mini',
+    'tee-luna-mini-red': 'Phases Kids',
     'cap-luna-black': 'Luna Bohemia',
     'tote-eclipse-black': 'DOYA',
   },
@@ -19,7 +19,7 @@ const PRODUCT_BASE: Record<CheckoutLocale, Record<string, string>> = {
     'doya-white': 'Phases',
     'doya-black': 'Phases',
     'cd-luna-bohemia': 'Luna Bohemia',
-    'tee-luna-mini-red': 'Luna Mini',
+    'tee-luna-mini-red': 'Phases Kids',
     'cap-luna-black': 'Luna Bohemia',
     'tote-eclipse-black': 'DOYA',
   },
@@ -29,7 +29,7 @@ const PRODUCT_BASE: Record<CheckoutLocale, Record<string, string>> = {
     'doya-white': 'Fases',
     'doya-black': 'Fases',
     'cd-luna-bohemia': 'Luna Bohemia',
-    'tee-luna-mini-red': 'Luna Mini',
+    'tee-luna-mini-red': 'Phases Kids',
     'cap-luna-black': 'Luna Bohemia',
     'tote-eclipse-black': 'DOYA',
   },
@@ -39,7 +39,47 @@ const PRODUCT_BASE: Record<CheckoutLocale, Record<string, string>> = {
     'doya-white': 'Fases',
     'doya-black': 'Fases',
     'cd-luna-bohemia': 'Luna Bohemia',
-    'tee-luna-mini-red': 'Luna Mini',
+    'tee-luna-mini-red': 'Phases Kids',
+    'cap-luna-black': 'Luna Bohemia',
+    'tote-eclipse-black': 'DOYA',
+  },
+  de: {
+    'luna-bohemia-white': 'Sterne',
+    'luna-bohemia-black': 'Sterne',
+    'doya-white': 'Phasen',
+    'doya-black': 'Phasen',
+    'cd-luna-bohemia': 'Luna Bohemia',
+    'tee-luna-mini-red': 'Phases Kids',
+    'cap-luna-black': 'Luna Bohemia',
+    'tote-eclipse-black': 'DOYA',
+  },
+  ja: {
+    'luna-bohemia-white': 'Stars',
+    'luna-bohemia-black': 'Stars',
+    'doya-white': 'Phases',
+    'doya-black': 'Phases',
+    'cd-luna-bohemia': 'Luna Bohemia',
+    'tee-luna-mini-red': 'Phases Kids',
+    'cap-luna-black': 'Luna Bohemia',
+    'tote-eclipse-black': 'DOYA',
+  },
+  ko: {
+    'luna-bohemia-white': 'Stars',
+    'luna-bohemia-black': 'Stars',
+    'doya-white': 'Phases',
+    'doya-black': 'Phases',
+    'cd-luna-bohemia': 'Luna Bohemia',
+    'tee-luna-mini-red': 'Phases Kids',
+    'cap-luna-black': 'Luna Bohemia',
+    'tote-eclipse-black': 'DOYA',
+  },
+  zh: {
+    'luna-bohemia-white': 'Stars',
+    'luna-bohemia-black': 'Stars',
+    'doya-white': 'Phases',
+    'doya-black': 'Phases',
+    'cd-luna-bohemia': 'Luna Bohemia',
+    'tee-luna-mini-red': 'Phases Kids',
     'cap-luna-black': 'Luna Bohemia',
     'tote-eclipse-black': 'DOYA',
   },
@@ -50,6 +90,10 @@ const COLOR: Record<CheckoutLocale, Record<string, string>> = {
   en: { white: 'White', black: 'Black', red: 'Red', digipack: 'Digipack' },
   es: { white: 'Blanco', black: 'Negro', red: 'Rojo', digipack: 'Digipack' },
   pt: { white: 'Branco', black: 'Preto', red: 'Vermelho', digipack: 'Digipack' },
+  de: { white: 'Weiß', black: 'Schwarz', red: 'Rot', digipack: 'Digipack' },
+  ja: { white: 'ホワイト', black: 'ブラック', red: 'レッド', digipack: 'デジパック' },
+  ko: { white: '화이트', black: '블랙', red: '레드', digipack: '디지팩' },
+  zh: { white: '白色', black: '黑色', red: '红色', digipack: 'Digipack' },
 }
 
 const SIZE_LABEL: Record<CheckoutLocale, string> = {
@@ -57,34 +101,37 @@ const SIZE_LABEL: Record<CheckoutLocale, string> = {
   en: 'Size',
   es: 'Talla',
   pt: 'Tamanho',
+  de: 'Größe',
+  ja: 'サイズ',
+  ko: '사이즈',
+  zh: '尺码',
+}
+
+const SPECIAL_SIZE: Record<CheckoutLocale, { U: string; VINYL: string; ENF: string }> = {
+  fr: { U: 'Taille unique', VINYL: 'Vinyle', ENF: 'Taille enfant' },
+  en: { U: 'One size', VINYL: 'Vinyl', ENF: 'Kids size' },
+  es: { U: 'Talla única', VINYL: 'Vinilo', ENF: 'Talla infantil' },
+  pt: { U: 'Tamanho único', VINYL: 'Vinil', ENF: 'Tamanho criança' },
+  de: { U: 'Einheitsgröße', VINYL: 'Vinyl', ENF: 'Kindergröße' },
+  ja: { U: 'ワンサイズ', VINYL: 'レコード', ENF: 'キッズサイズ' },
+  ko: { U: '원사이즈', VINYL: '바이닐', ENF: '키즈 사이즈' },
+  zh: { U: '均码', VINYL: '黑胶', ENF: '儿童尺码' },
 }
 
 const SHIPPING_NAME: Record<CheckoutLocale, Record<string, string>> = {
-  fr: {
-    fr: 'France métropole',
-    eu: 'Europe (UE + Suisse)',
-    dom: 'DOM-TOM (Réunion, Antilles…)',
-  },
-  en: {
-    fr: 'Mainland France',
-    eu: 'Europe (EU + Switzerland)',
-    dom: 'French overseas (Réunion, Antilles…)',
-  },
-  es: {
-    fr: 'Francia metropolitana',
-    eu: 'Europa (UE + Suiza)',
-    dom: 'Ultramar francés (Reunión, Antillas…)',
-  },
-  pt: {
-    fr: 'França continental',
-    eu: 'Europa (UE + Suíça)',
-    dom: 'Ultramar francês (Reunião, Antilhas…)',
-  },
+  fr: { fr: 'France métropole', eu: 'Europe (UE + Suisse)', dom: 'DOM-TOM (Réunion, Antilles…)' },
+  en: { fr: 'Mainland France', eu: 'Europe (EU + Switzerland)', dom: 'French overseas (Réunion, Antilles…)' },
+  es: { fr: 'Francia metropolitana', eu: 'Europa (UE + Suiza)', dom: 'Ultramar francés (Reunión, Antillas…)' },
+  pt: { fr: 'França continental', eu: 'Europa (UE + Suíça)', dom: 'Ultramar francês (Reunião, Antilhas…)' },
+  de: { fr: 'Französisches Festland', eu: 'Europa (EU + Schweiz)', dom: 'Französische Überseegebiete' },
+  ja: { fr: 'フランス本土', eu: 'ヨーロッパ（EU + スイス）', dom: 'フランス海外領土' },
+  ko: { fr: '프랑스 본토', eu: '유럽 (EU + 스위스)', dom: '프랑스 해외 영토' },
+  zh: { fr: '法国本土', eu: '欧洲（欧盟 + 瑞士）', dom: '法国海外领地' },
 }
 
 export function normalizeCheckoutLocale(value: unknown): CheckoutLocale {
-  const code = typeof value === 'string' ? value.trim().toLowerCase() : ''
-  if (code === 'es' || code === 'en' || code === 'pt') return code
+  const code = typeof value === 'string' ? value.trim().toLowerCase().split('-')[0] : ''
+  if (code === 'es' || code === 'en' || code === 'pt' || code === 'de' || code === 'ja' || code === 'ko' || code === 'zh') return code
   return 'fr'
 }
 
@@ -110,17 +157,9 @@ export function stripeLineDescription(size: string, locale: CheckoutLocale, vari
   const customLabel = variantLabel.trim()
   if (customLabel && !['CD', 'U', 'VINYL', 'ENF'].includes(size)) return customLabel
   if (size === 'CD') return COLOR[locale].digipack
-  if (size === 'U') return { fr: 'Taille unique', en: 'One size', es: 'Talla única', pt: 'Tamanho único' }[locale]
-  if (size === 'VINYL') return SIZE_LABEL[locale] === 'Size' ? 'Vinyl' : 'Vinyle'
-  if (size === 'ENF') {
-    const labels: Record<CheckoutLocale, string> = {
-      fr: 'Taille enfant',
-      en: 'Kids size',
-      es: 'Talla infantil',
-      pt: 'Tamanho criança',
-    }
-    return labels[locale]
-  }
+  if (size === 'U') return SPECIAL_SIZE[locale].U
+  if (size === 'VINYL') return SPECIAL_SIZE[locale].VINYL
+  if (size === 'ENF') return SPECIAL_SIZE[locale].ENF
   return `${SIZE_LABEL[locale]} ${size}`
 }
 
@@ -135,6 +174,10 @@ export function stripeShippingCountryHint(locale: CheckoutLocale, _cartUrl?: str
     en: 'Shipping is limited to the zone you chose. For another country, cancel this payment to return to the cart in the same tab (nothing is charged).',
     es: 'El envío está limitado a la zona elegida. Para otro país, cancela este pago y volverás al carrito en la misma pestaña (sin cargo).',
     pt: 'O envio está limitado à zona escolhida. Para outro país, cancela este pagamento e voltas ao carrinho no mesmo separador (sem débito).',
+    de: 'Der Versand ist auf die gewählte Zone beschränkt. Für ein anderes Land brich diese Zahlung ab; du kehrst im selben Tab zum Warenkorb zurück (keine Belastung).',
+    ja: '配送先は選択した地域に限定されています。別の国へ配送する場合はこの支払いをキャンセルしてください。同じタブでカートに戻り、請求は発生しません。',
+    ko: '배송 국가는 선택한 지역으로 제한됩니다. 다른 국가로 배송하려면 결제를 취소하세요. 같은 탭에서 장바구니로 돌아가며 결제 금액은 청구되지 않습니다.',
+    zh: '配送国家/地区仅限所选区域。如需更换国家/地区，请取消本次支付；系统会在同一标签页返回购物车，且不会扣款。',
   }
   return messages[locale] ?? messages.fr
 }
