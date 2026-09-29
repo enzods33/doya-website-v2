@@ -30,6 +30,11 @@ function presetVariants(typeSelect) {
   return labels.map((label) => ({ label, stock: '0' }))
 }
 
+function adminProductType(product) {
+  if (product?.productId === 'cap-luna-black') return 'Casquette brodée'
+  return product?.type || ''
+}
+
 function formatVariantLabel(variant, t) {
   if (variant?.label) return variant.label
   const size = variant?.size ?? ''
@@ -748,7 +753,7 @@ function AdminStocks() {
                         <div className="admin-stock-copy">
                           <p className="admin-list-title">{product.name}</p>
                           <p className="admin-list-meta">
-                            {[product.type, product.color].filter(Boolean).join(' · ') || '—'}
+                            {[adminProductType(product), product.color].filter(Boolean).join(' · ') || '—'}
                           </p>
                         </div>
                       </div>
