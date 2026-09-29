@@ -64,6 +64,7 @@ test('aucun faux lien ou prix inventé', () => {
     assert.equal(new URL(track.links.youtube).hostname, 'www.youtube.com')
   }
   assert.ok(products.every((product) => product.price === null))
+  assert.equal(products.find((product) => product.id === 'cap-luna-black')?.type, 'Casquette brodée')
   assert.equal(isExternalUrl('#'), false)
   assert.equal(isExternalUrl('javascript:alert(1)'), false)
   assert.equal(isExternalUrl('http://insecure.invalid'), false)
