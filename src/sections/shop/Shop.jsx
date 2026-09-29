@@ -278,7 +278,7 @@ function Shop() {
           <p className="eyebrow shop-collection">
             <span>{t('shop.label')}</span>
             <span className="small-separator" aria-hidden="true">/</span>
-            <span>{siteContent.albumTitle}</span>
+            <span>{t('music.albumTitle')}</span>
           </p>
         </div>
         {purchasable && autoPromos.length > 0 ? (
