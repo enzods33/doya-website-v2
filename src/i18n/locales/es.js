@@ -117,7 +117,7 @@ export default {
     productAlt: '{type} {name}, {color}, vista {view}.',
     viewFrontWord: 'frontal',
     viewBackWord: 'trasera',
-    type: { tshirt: 'Camiseta', adultTshirt: 'Camiseta adulto', kidsTshirt: 'Camiseta infantil', cap: 'Gorra', tote: 'Bolsa de tela', cd: 'CD', other: 'Artículo' },
+    type: { tshirt: 'Camiseta', adultTshirt: 'Camiseta adulto', kidsTshirt: 'Camiseta infantil', cap: 'Gorra bordada', tote: 'Bolsa de tela', cd: 'CD', other: 'Artículo' },
     size: { ENF: 'Infantil', CD: 'CD', VINYL: 'Vinilo', U: 'Talla única' },
     color: { black: 'Negro', white: 'Blanco', red: 'Rojo', blue: 'Azul', navy: 'Azul marino', green: 'Verde', beige: 'Beige', grey: 'Gris', yellow: 'Amarillo', pink: 'Rosa', digipack: 'Nuevo álbum en CD · Libreto incluido', default: '' },
     product: {
