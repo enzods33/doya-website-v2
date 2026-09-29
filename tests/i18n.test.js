@@ -1,33 +1,74 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { LOCALES, detectBrowserLocale, getByPath, translate } from '../src/i18n/index.js'
+import {
+  LOCALES,
+  detectBrowserLocale,
+  getByPath,
+  loadLocaleMessages,
+  localeCatalog,
+  normalizeLocaleCode,
+  translate,
+} from '../src/i18n/index.js'
 import fr from '../src/i18n/locales/fr.js'
 import es from '../src/i18n/locales/es.js'
 import en from '../src/i18n/locales/en.js'
 import pt from '../src/i18n/locales/pt.js'
-
-const catalogs = { fr, es, en, pt }
 
 function collectKeys(value, prefix = '') {
   if (value == null || typeof value !== 'object' || Array.isArray(value)) return [prefix].filter(Boolean)
   return Object.entries(value).flatMap(([key, nested]) => collectKeys(nested, prefix ? `${prefix}.${key}` : key))
 }
 
-test('les locales FR ES EN PT exposent les mêmes clés', () => {
+test('les 8 locales résolues exposent les mêmes clés', async () => {
+  assert.deepEqual(LOCALES, ['fr', 'es', 'en', 'pt', 'de', 'ja', 'ko', 'zh'])
   const reference = collectKeys(fr).sort()
   for (const locale of LOCALES) {
-    assert.deepEqual(collectKeys(catalogs[locale]).sort(), reference, locale)
+    const messages = await loadLocaleMessages(locale)
+    assert.deepEqual(collectKeys(messages).sort(), reference, locale)
   }
 })
 
-test('la détection navigateur mappe vers une locale supportée', () => {
-  assert.equal(detectBrowserLocale(['es-ES', 'fr']), 'es')
-  assert.equal(detectBrowserLocale(['pt-BR']), 'pt')
-  assert.equal(detectBrowserLocale(['de-DE', 'en-US']), 'en')
-  assert.equal(detectBrowserLocale(['de-DE', 'it-IT']), 'fr')
+test('les locales historiques restent complètes sans fallback étendu', () => {
+  const reference = collectKeys(fr).sort()
+  for (const [locale, messages] of Object.entries({ es, en, pt })) {
+    assert.deepEqual(collectKeys(messages).sort(), reference, locale)
+  }
 })
 
-test('translate interpolates et retombe sur le FR', () => {
+test('la détection navigateur mappe les variantes régionales vers les 8 langues', () => {
+  assert.equal(detectBrowserLocale(['es-ES', 'fr']), 'es')
+  assert.equal(detectBrowserLocale(['pt-BR']), 'pt')
+  assert.equal(detectBrowserLocale(['de-DE', 'en-US']), 'de')
+  assert.equal(detectBrowserLocale(['ja-JP']), 'ja')
+  assert.equal(detectBrowserLocale(['ko-KR']), 'ko')
+  assert.equal(detectBrowserLocale(['zh-CN']), 'zh')
+  assert.equal(detectBrowserLocale(['zh-Hans-CN']), 'zh')
+  assert.equal(detectBrowserLocale(['zh-TW']), 'zh')
+  assert.equal(detectBrowserLocale(['it-IT']), 'fr')
+  assert.equal(normalizeLocaleCode('ZH_cn'), 'zh')
+})
+
+test('les métadonnées BCP47 sont correctes', () => {
+  assert.equal(localeCatalog.de.intl, 'de-DE')
+  assert.equal(localeCatalog.ja.intl, 'ja-JP')
+  assert.equal(localeCatalog.ko.intl, 'ko-KR')
+  assert.equal(localeCatalog.zh.intl, 'zh-CN')
+})
+
+test('les nouvelles langues traduisent les parcours publics critiques', async () => {
+  const de = await loadLocaleMessages('de')
+  const ja = await loadLocaleMessages('ja')
+  const ko = await loadLocaleMessages('ko')
+  const zh = await loadLocaleMessages('zh')
+
+  assert.equal(getByPath(de, 'cart.pay'), 'Bezahlen')
+  assert.equal(getByPath(ja, 'shop.add'), 'カートに追加')
+  assert.equal(getByPath(ko, 'newsletter.submit'), '구독하기')
+  assert.equal(getByPath(zh, 'legal.privacy.title'), '隐私政策')
+  assert.equal(translate(ja, 'cart.quoteBody', { items: 'X', country: 'JP', email: 'a@b.c', message: 'M' }).includes('JP'), true)
+})
+
+test('translate interpole et retombe sur le FR', () => {
   assert.equal(translate(en, 'nav.music'), 'Music')
   assert.equal(translate(es, 'cart.lineMeta', { color: 'Negro', size: 'M' }), 'Negro · talla M')
   assert.equal(translate({}, 'hero.label', {}, fr), 'Nouvel album')
