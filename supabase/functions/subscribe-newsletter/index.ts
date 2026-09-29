@@ -81,6 +81,50 @@ const WELCOME = {
     ],
     sign: '— DOYA',
   },
+  de: {
+    subject: 'Willkommen im DOYA-Kreis',
+    preview: 'Du erfährst Neuigkeiten mit als Erste/r.',
+    title: 'Willkommen',
+    body: [
+      'Danke für deine Anmeldung.',
+      'Du bist jetzt Teil des DOYA-Kreises — und erfährst als eine/r der Ersten von neuen Veröffentlichungen, Live-Terminen und kleinen Überraschungen unterwegs.',
+      'Bis bald,',
+    ],
+    sign: '— DOYA',
+  },
+  ja: {
+    subject: 'DOYAのサークルへようこそ',
+    preview: '最新情報をいち早くお届けします。',
+    title: 'ようこそ',
+    body: [
+      'ご登録ありがとうございます。',
+      'DOYAのサークルへようこそ。リリース、ライブ日程、そして旅の途中の小さなサプライズなど、最新情報をいち早くお届けします。',
+      'またすぐに、',
+    ],
+    sign: '— DOYA',
+  },
+  ko: {
+    subject: 'DOYA 서클에 오신 것을 환영합니다',
+    preview: '새로운 소식을 가장 먼저 받아보세요.',
+    title: '환영합니다',
+    body: [
+      '구독해 주셔서 감사합니다.',
+      '이제 DOYA 서클의 일원입니다. 새 음원, 라이브 일정, 그리고 여정 속 작은 소식들을 가장 먼저 받아보실 수 있습니다.',
+      '곧 다시 만나요,',
+    ],
+    sign: '— DOYA',
+  },
+  zh: {
+    subject: '欢迎加入 DOYA',
+    preview: '第一时间收到 DOYA 的最新消息。',
+    title: '欢迎',
+    body: [
+      '感谢你的订阅。',
+      '你现在已经加入 DOYA。新作品、现场演出日期，以及旅途中那些小小的惊喜，我们都会尽早与你分享。',
+      '很快再见，',
+    ],
+    sign: '— DOYA',
+  },
 } as const
 
 function escapeHtml(value: string) {
@@ -97,7 +141,7 @@ function welcomeHtml(locale: keyof typeof WELCOME, logoUrl: string) {
     .map((line) => `<p style="margin:0 0 16px;font-size:16px;line-height:1.55;color:#2c2926;">${escapeHtml(line)}</p>`)
     .join('')
   return `<!DOCTYPE html>
-<html lang="${locale}"><head><meta charset="utf-8"></head>
+<html lang="${locale === 'zh' ? 'zh-CN' : locale}"><head><meta charset="utf-8"></head>
 <body style="margin:0;padding:0;background:#f4f1ec;">
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f4f1ec;"><tr><td align="center" style="padding:32px 16px;">
 <table role="presentation" width="100%" style="max-width:560px;background:#ffffff;border:1px solid #e4ddd3;">
