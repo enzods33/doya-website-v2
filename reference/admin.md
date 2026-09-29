@@ -70,3 +70,16 @@ L’expéditeur Brevo doit être **vérifié** dans Brevo (Senders).
 - `subscribe-newsletter` (inscription + e-mail de bienvenue)
 
 Toutes les fonctions admin vérifient JWT + allowlist avant toute écriture.
+
+
+## Traduction automatique de la bio
+
+La bio française est la source éditoriale. Dans **Bio**, le bouton **Générer / actualiser les 7 traductions**
+appelle Azure Translator côté serveur via `admin-bio-photos`.
+
+- Les cibles sont ES, EN, PT, DE, JA, KO et chinois simplifié.
+- La clé Azure reste exclusivement dans les secrets Supabase (`AZURE_TRANSLATOR_KEY`).
+- Les traductions retournées sont des **brouillons dans le navigateur** : aucune ligne `site_bio` n'est modifiée par l'action de traduction.
+- L'admin relit/corrige chaque langue puis utilise **Enregistrer la bio** pour publier cette langue uniquement.
+- Une génération remplace les brouillons affichés après confirmation, mais ne remplace jamais une version publique sans enregistrement explicite.
+- Pour une ressource Translator régionale, renseigner aussi `AZURE_TRANSLATOR_REGION`. `AZURE_TRANSLATOR_ENDPOINT` reste optionnel ; l'endpoint global est utilisé par défaut.
