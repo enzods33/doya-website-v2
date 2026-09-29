@@ -4,7 +4,7 @@ import { prepareBioImage } from '../../commerce/prepareBioImage.js'
 import { useI18n } from '../../i18n/I18nProvider.jsx'
 import { LocaleFlag } from '../../components/LocaleFlag.jsx'
 
-const BIO_LOCALES = ['fr', 'es', 'en', 'pt']
+const BIO_LOCALES = ['fr', 'es', 'en', 'pt', 'de', 'ja', 'ko', 'zh']
 
 const EMPTY_BIO = Object.fromEntries(BIO_LOCALES.map((locale) => [locale, { lead: '', body: '' }]))
 
