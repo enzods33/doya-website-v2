@@ -1,5 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
+import { readFileSync } from 'node:fs'
 import {
   LOCALES,
   detectBrowserLocale,
@@ -89,4 +90,15 @@ test('translate interpole et retombe sur le FR', () => {
   assert.equal(translate(es, 'cart.lineMeta', { color: 'Negro', size: 'M' }), 'Negro · talla M')
   assert.equal(translate({}, 'hero.label', {}, fr), 'Nouvel album')
   assert.equal(getByPath(fr, 'live.emptyTitle'), 'Bientôt sur scène.')
+})
+
+
+test('le back-office est encapsulé dans le scope français sans écraser la préférence publique', () => {
+  const app = readFileSync(new URL('../src/App.jsx', import.meta.url), 'utf8')
+  const provider = readFileSync(new URL('../src/i18n/I18nProvider.jsx', import.meta.url), 'utf8')
+  assert.match(app, /path === '\/admin'[\s\S]*<FrenchI18nProvider>[\s\S]*<AppFrame path=\{path\} \/>/)
+  assert.match(provider, /locale: 'fr'/)
+  assert.match(provider, /intlLocale: 'fr-FR'/)
+  assert.match(provider, /setLocale: \(\) => \{\}/)
+  assert.doesNotMatch(provider.slice(provider.indexOf('export function FrenchI18nProvider')), /localStorage\.setItem/)
 })
