@@ -2078,6 +2078,15 @@ a.concert-tickets:focus-visible {
   width: 100%;
   height: 100%;
 }
+.language-flag.is-language-symbol {
+  width: .82rem;
+  height: .82rem;
+  overflow: visible;
+  border-radius: 50%;
+  box-shadow: none;
+  color: currentColor;
+  opacity: .82;
+}
 .language-code {
   letter-spacing: .1em;
   line-height: 1;
