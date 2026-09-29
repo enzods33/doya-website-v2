@@ -1413,6 +1413,10 @@
   height: 0.64rem;
   opacity: 0.9;
 }
+.admin-bio-locale-flag.is-language-symbol {
+  width: .82rem;
+  height: .82rem;
+}
 .admin-bio-locale.is-active {
   border-color: var(--ink);
   background: var(--ink);

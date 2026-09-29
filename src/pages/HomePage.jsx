@@ -12,9 +12,9 @@ function HomePage() {
       <Hero />
       <Suspense fallback={null}>
         <Music />
+        <About />
         <Live />
         <Shop />
-        <About />
       </Suspense>
     </main>
   )

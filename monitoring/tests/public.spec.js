@@ -10,8 +10,13 @@ test.describe('Doya public et back-office — lecture seule', () => {
     await page.goto('/', { waitUntil: 'domcontentloaded' })
     await expect(page.locator('#main')).toBeVisible()
     await expect(page.locator('#music')).toBeVisible()
+    await expect(page.locator('#about')).toBeVisible()
+    await expect(page.locator('#gallery')).toBeVisible()
+    await expect(page.locator('#live')).toBeVisible()
     await expect(page.locator('#shop')).toBeVisible()
     await expect(page.locator('footer#contact')).toBeVisible()
+    const sectionOrder = await page.locator('#music, #about, #gallery, #live, #shop, footer#contact').evaluateAll((nodes) => nodes.map((node) => node.id))
+    expect(sectionOrder).toEqual(['music', 'about', 'gallery', 'live', 'shop', 'contact'])
     await expect(page.locator('img').first()).toHaveJSProperty('complete', true)
 
     expect(errors).toEqual([])

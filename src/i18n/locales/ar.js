@@ -38,6 +38,7 @@ export default {
     live: 'المواعيد',
     shop: 'المتجر',
     about: 'السيرة',
+    gallery: 'المعرض',
     contact: 'اتصال',
     cart: 'السلة',
     cartWithCount: 'السلة ({count})',
