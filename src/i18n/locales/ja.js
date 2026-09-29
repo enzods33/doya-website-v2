@@ -189,6 +189,8 @@ export default {
     menuSubmit: '登録する',
   },
   admin: {
+    bioTranslatorHelp: 'プロフィールを翻訳しますか？',
+    bioTranslatorLink: 'DeepLを開く',
     fieldSendLang: '送信先',
     fieldSendLangHelp: '登録時に選択されていたサイト言語で分類します。その言語で本文を作成してください。',
     sendLangFr: 'フランス語',
