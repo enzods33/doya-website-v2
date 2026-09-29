@@ -13,9 +13,10 @@
 
 /* Ancres : offset = hauteur header (sync live via ResizeObserver). JS mesure aussi. */
 #music,
+#about,
+#gallery,
 #live,
 #shop,
-#about,
 #contact {
   scroll-margin-top: var(--header-height);
 }
