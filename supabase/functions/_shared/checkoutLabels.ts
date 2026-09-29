@@ -79,7 +79,7 @@ const PRODUCT_BASE: Record<CheckoutLocale, Record<string, string>> = {
     'doya-white': 'الأطوار',
     'doya-black': 'الأطوار',
     'cd-luna-bohemia': 'لونا بوهيميا',
-    'tee-luna-mini-red': 'Phases Kids',
+    'tee-luna-mini-red': 'الأطوار للأطفال',
     'cap-luna-black': 'لونا بوهيميا',
     'tote-eclipse-black': 'DOYA',
   },
