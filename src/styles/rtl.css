@@ -370,6 +370,12 @@ html[dir='rtl'] .gallery-title::after {
     text-align: right;
   }
 
+  html[dir='rtl'] .about-intro::before {
+    background:
+      linear-gradient(270deg, transparent 9px, rgb(44 41 38 / 8%) 10px, transparent 11px),
+      linear-gradient(180deg, transparent calc(100% - 1px), rgb(44 41 38 / 10%) 100%);
+  }
+
   html[dir='rtl'] .about-intro-stars {
     left: auto;
     right: 50%;
