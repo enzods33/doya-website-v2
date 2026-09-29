@@ -752,27 +752,27 @@
   font-weight: 600;
   letter-spacing: .1em;
   text-transform: uppercase;
-  color: #fff;
-  border-radius: 0.45rem;
-  border: 1px solid rgb(255 255 255 / 28%);
-  border-top-color: rgb(255 255 255 / 38%);
-  border-bottom-color: rgb(0 0 0 / 45%);
+  color: rgb(44 41 38 / 94%);
+  border-radius: 0.5rem;
+  border: 1px solid rgb(255 255 255 / 54%);
+  border-top-color: rgb(255 255 255 / 78%);
+  border-bottom-color: rgb(255 255 255 / 34%);
   background:
     linear-gradient(
       180deg,
-      rgb(92 88 84 / 58%) 0%,
-      rgb(72 68 64 / 62%) 52%,
-      rgb(58 55 52 / 68%) 100%
+      rgb(255 255 255 / 34%) 0%,
+      rgb(255 255 255 / 24%) 58%,
+      rgb(255 255 255 / 18%) 100%
     );
-  backdrop-filter: blur(14px) saturate(1.05);
-  -webkit-backdrop-filter: blur(14px) saturate(1.05);
+  backdrop-filter: blur(16px) saturate(1.08);
+  -webkit-backdrop-filter: blur(16px) saturate(1.08);
   box-shadow:
-    0 1px 0 rgb(255 255 255 / 22%),
-    0 10px 24px rgb(0 0 0 / 26%),
-    0 3px 8px rgb(0 0 0 / 18%),
-    inset 0 1px 0 rgb(255 255 255 / 28%),
-    inset 0 -1px 0 rgb(0 0 0 / 22%);
-  text-shadow: 0 1px 1px rgb(0 0 0 / 30%);
+    0 1px 0 rgb(255 255 255 / 66%),
+    0 10px 26px rgb(0 0 0 / 16%),
+    0 3px 9px rgb(0 0 0 / 10%),
+    inset 0 1px 0 rgb(255 255 255 / 48%),
+    inset 0 -1px 0 rgb(255 255 255 / 12%);
+  text-shadow: 0 1px 0 rgb(255 255 255 / 44%);
   position: relative;
   transform: translateZ(0);
   transition:
@@ -789,21 +789,21 @@
   padding: 0.8rem clamp(1.6rem, 3vw, 2.25rem);
   font-size: clamp(13px, 0.4vw + 12px, 15px);
   letter-spacing: .12em;
-  border-color: rgb(255 255 255 / 42%);
-  border-top-color: rgb(255 255 255 / 52%);
+  border-color: rgb(255 255 255 / 68%);
+  border-top-color: rgb(255 255 255 / 88%);
   background:
     linear-gradient(
       180deg,
-      rgb(108 103 98 / 72%) 0%,
-      rgb(78 74 70 / 76%) 52%,
-      rgb(52 49 46 / 82%) 100%
+      rgb(255 255 255 / 48%) 0%,
+      rgb(255 255 255 / 34%) 58%,
+      rgb(255 255 255 / 26%) 100%
     );
   box-shadow:
-    0 1px 0 rgb(255 255 255 / 28%),
-    0 14px 32px rgb(0 0 0 / 34%),
-    0 4px 12px rgb(0 0 0 / 22%),
-    inset 0 1px 0 rgb(255 255 255 / 34%),
-    inset 0 -1px 0 rgb(0 0 0 / 24%);
+    0 1px 0 rgb(255 255 255 / 76%),
+    0 14px 34px rgb(0 0 0 / 18%),
+    0 4px 12px rgb(0 0 0 / 11%),
+    inset 0 1px 0 rgb(255 255 255 / 60%),
+    inset 0 -1px 0 rgb(255 255 255 / 16%);
   overflow: hidden;
 }
 .hero-cta-discover::before {
@@ -842,21 +842,21 @@
   font-size: clamp(11px, 0.25vw + 10px, 13px);
   letter-spacing: .09em;
   font-weight: 500;
-  color: rgb(255 255 255 / 92%);
-  border-color: rgb(255 255 255 / 20%);
-  border-top-color: rgb(255 255 255 / 28%);
+  color: rgb(44 41 38 / 90%);
+  border-color: rgb(255 255 255 / 50%);
+  border-top-color: rgb(255 255 255 / 72%);
   background:
     linear-gradient(
       180deg,
-      rgb(80 76 72 / 42%) 0%,
-      rgb(62 59 56 / 46%) 52%,
-      rgb(48 45 42 / 52%) 100%
+      rgb(255 255 255 / 30%) 0%,
+      rgb(255 255 255 / 21%) 58%,
+      rgb(255 255 255 / 16%) 100%
     );
   box-shadow:
-    0 1px 0 rgb(255 255 255 / 14%),
-    0 6px 16px rgb(0 0 0 / 18%),
-    inset 0 1px 0 rgb(255 255 255 / 16%),
-    inset 0 -1px 0 rgb(0 0 0 / 16%);
+    0 1px 0 rgb(255 255 255 / 58%),
+    0 7px 18px rgb(0 0 0 / 13%),
+    inset 0 1px 0 rgb(255 255 255 / 42%),
+    inset 0 -1px 0 rgb(255 255 255 / 10%);
 }
 .hero-cta-secondary::after {
   left: 20%;
@@ -879,39 +879,39 @@
 }
 .hero-cta:hover,
 .hero-cta:focus-visible {
-  color: #fff;
-  border-color: rgb(255 255 255 / 44%);
-  border-top-color: rgb(255 255 255 / 55%);
-  border-bottom-color: rgb(0 0 0 / 36%);
+  color: var(--ink);
+  border-color: rgb(255 255 255 / 78%);
+  border-top-color: rgb(255 255 255 / 94%);
+  border-bottom-color: rgb(255 255 255 / 48%);
   background:
     linear-gradient(
       180deg,
-      rgb(110 105 100 / 66%) 0%,
-      rgb(84 80 76 / 70%) 52%,
-      rgb(68 64 60 / 74%) 100%
+      rgb(255 255 255 / 58%) 0%,
+      rgb(255 255 255 / 43%) 58%,
+      rgb(255 255 255 / 32%) 100%
     );
   box-shadow:
-    0 1px 0 rgb(255 255 255 / 28%),
-    0 14px 30px rgb(0 0 0 / 30%),
-    0 4px 10px rgb(0 0 0 / 20%),
-    inset 0 1px 0 rgb(255 255 255 / 32%),
-    inset 0 -1px 0 rgb(0 0 0 / 20%);
+    0 1px 0 rgb(255 255 255 / 84%),
+    0 14px 30px rgb(0 0 0 / 18%),
+    0 4px 10px rgb(0 0 0 / 11%),
+    inset 0 1px 0 rgb(255 255 255 / 70%),
+    inset 0 -1px 0 rgb(255 255 255 / 16%);
 }
 .hero-cta-discover:hover,
 .hero-cta-discover:focus-visible {
   background:
     linear-gradient(
       180deg,
-      rgb(122 117 112 / 78%) 0%,
-      rgb(90 86 82 / 82%) 52%,
-      rgb(60 57 54 / 86%) 100%
+      rgb(255 255 255 / 68%) 0%,
+      rgb(255 255 255 / 52%) 58%,
+      rgb(255 255 255 / 40%) 100%
     );
   box-shadow:
-    0 1px 0 rgb(255 255 255 / 34%),
-    0 16px 36px rgb(0 0 0 / 38%),
-    0 5px 14px rgb(0 0 0 / 24%),
-    inset 0 1px 0 rgb(255 255 255 / 38%),
-    inset 0 -1px 0 rgb(0 0 0 / 22%);
+    0 1px 0 rgb(255 255 255 / 90%),
+    0 16px 36px rgb(0 0 0 / 20%),
+    0 5px 14px rgb(0 0 0 / 12%),
+    inset 0 1px 0 rgb(255 255 255 / 78%),
+    inset 0 -1px 0 rgb(255 255 255 / 18%);
   transform: translateY(-1px);
 }
 .hero-cta-secondary:hover,
@@ -919,9 +919,9 @@
   background:
     linear-gradient(
       180deg,
-      rgb(96 92 88 / 56%) 0%,
-      rgb(74 70 66 / 60%) 52%,
-      rgb(58 55 52 / 66%) 100%
+      rgb(255 255 255 / 52%) 0%,
+      rgb(255 255 255 / 38%) 58%,
+      rgb(255 255 255 / 28%) 100%
     );
 }
 @media (hover: hover) and (pointer: fine) {

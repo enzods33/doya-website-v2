@@ -126,20 +126,17 @@ test('les noms produits connus sont localisés et les nouveaux gardent le nom ca
     en: ['Phases Kids', 'Stars', 'Phases', 'Luna Bohemia — Digipak CD'],
     pt: ['Fases Kids', 'Estrelas', 'Fases', 'Luna Bohemia — CD Digipack'],
     de: ['Phasen Kids', 'Sterne', 'Phasen', 'Luna Bohemia — Digipak-CD'],
-    ja: ['月の満ち欠け キッズ', '星', '月の満ち欠け', 'ルナ・ボエミア — CDデジパック'],
-    ko: ['달의 위상 키즈', '별', '달의 위상', '루나 보헤미아 — CD 디지팩'],
-    zh: ['月相儿童款', '星星', '月相', '露娜·波希米亚 — CD 纸盒装'],
-    ar: ['الأطوار للأطفال', 'نجوم', 'الأطوار', 'لونا بوهيميا — CD ديجيباك'],
+    ja: ['月の満ち欠け キッズ', '星', '月の満ち欠け', 'Luna Bohemia — CDデジパック'],
+    ko: ['달의 위상 키즈', '별', '달의 위상', 'Luna Bohemia — CD 디지팩'],
+    zh: ['月相儿童款', '星星', '月相', 'Luna Bohemia — CD 纸盒装'],
+    ar: ['الأطوار للأطفال', 'نجوم', 'الأطوار', 'Luna Bohemia — CD ديجيباك'],
   }
   for (const [locale, names] of Object.entries(expected)) {
     const source = readFileSync(new URL(`../src/i18n/locales/${locale}.js`, import.meta.url), 'utf8')
     for (const name of names) assert.ok(source.includes(name), `${locale}: ${name}`)
   }
 
-  assert.match(labels, /'cap-luna-black': 'ルナ・ボエミア'/)
-  assert.match(labels, /'cap-luna-black': '루나 보헤미아'/)
-  assert.match(labels, /'cap-luna-black': '露娜·波希米亚'/)
-  assert.match(labels, /digipack: 'CDデジパック'/)
+        assert.match(labels, /digipack: 'CDデジパック'/)
   assert.match(labels, /digipack: 'CD 디지팩'/)
   assert.match(labels, /digipack: 'CD 纸盒装'/)
 })
@@ -225,7 +222,7 @@ test('Stripe, Brevo et la bio couvrent les 9 langues', () => {
     assert.match(unsubscribe, new RegExp(`\\n  ${locale}: \\{`))
   }
   assert.match(labels, /locale === 'ar' \? 'auto' : locale/)
-  assert.match(labels, /لونا بوهيميا/)
+  assert.match(labels, /'cd-luna-bohemia': 'Luna Bohemia'/)
   assert.match(labels, /الأطوار للأطفال/)
   assert.match(checkout, /update\(\{ locale \}\)/)
   assert.match(brevo, /'de', 'ja', 'ko', 'zh', 'ar'/)
