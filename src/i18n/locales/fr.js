@@ -244,6 +244,8 @@ export default {
     photosImported: '{count} photos du site importées.',
     bioTextTitle: 'Texte de la bio',
     bioTextLead: 'Choisis une langue, édite, puis enregistre. Une ligne vide sépare les paragraphes sur le site.',
+    bioTranslatorHelp: 'Besoin de traduire la bio ?',
+    bioTranslatorLink: 'Ouvrir DeepL',
     bioLocale: 'Langue de la bio',
     bioLeadLabel: 'Accroche (première ligne)',
     bioBodyLabel: 'Corps de texte',
