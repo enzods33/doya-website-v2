@@ -189,7 +189,7 @@ function Music() {
       <div className="music-shell section-shell">
         <Reveal as="header" className="music-heading">
           <p className="eyebrow">{t('music.eyebrow')}</p>
-          <h2 id="music-title" className="editorial-title">{album.title}</h2>
+          <h2 id="music-title" className="editorial-title">{t('music.albumTitle')}</h2>
           <p className="eyebrow music-meta">{album.artist} <span className="small-separator">/</span> {album.year} <span className="small-separator">/</span> {t('music.tracksMeta', { n: album.tracks.length })}</p>
         </Reveal>
         <div className="music-layout">
