@@ -3,7 +3,7 @@ import { LazyMotion, MotionConfig, domAnimation } from 'motion/react'
 import { CartProvider } from './commerce/CartProvider.jsx'
 import { CatalogProvider } from './commerce/CatalogProvider.jsx'
 import { startPageAnalytics } from './commerce/pageAnalytics.js'
-import { I18nProvider, useI18n } from './i18n/I18nProvider.jsx'
+import { FrenchI18nProvider, I18nProvider, useI18n } from './i18n/I18nProvider.jsx'
 import ErrorBoundary from './components/ErrorBoundary.jsx'
 import OfflineBanner from './components/OfflineBanner.jsx'
 import Header from './components/Header.jsx'
@@ -35,8 +35,7 @@ const pages = {
 
 const indexable = import.meta.env.VITE_INDEXABLE === 'true'
 
-function AppShell() {
-  const { path } = useRoute()
+function AppFrame({ path }) {
   const { t, locale, intlLocale } = useI18n()
   const Page = pages[path] ?? NotFoundPage
   const isAdmin = path === '/admin'
@@ -67,6 +66,18 @@ function AppShell() {
       {path === '/' ? <ListenDock /> : null}
     </div>
   )
+}
+
+function AppShell() {
+  const { path } = useRoute()
+  if (path === '/admin') {
+    return (
+      <FrenchI18nProvider>
+        <AppFrame path={path} />
+      </FrenchI18nProvider>
+    )
+  }
+  return <AppFrame path={path} />
 }
 
 function App() {
