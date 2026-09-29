@@ -112,10 +112,13 @@ test('les profils officiels sont distincts et prêts pour le footer', () => {
 })
 
 test('la navigation et le contact officiels sont en place', () => {
-  assert.deepEqual(navigation.map((item) => item.labelKey), ['nav.music', 'nav.live', 'nav.shop', 'nav.about', 'nav.contact'])
+  const expected = ['nav.music', 'nav.about', 'nav.gallery', 'nav.live', 'nav.shop', 'nav.contact']
+  assert.deepEqual(navigation.map((item) => item.labelKey), expected)
+  assert.deepEqual(navigation.map((item) => item.href), ['#music', '#about', '#gallery', '#live', '#shop', '#contact'])
   assert.equal(navigation.at(-1).href, '#contact')
-  assert.deepEqual(mobileNavigation.map((item) => item.labelKey), ['nav.music', 'nav.live', 'nav.shop', 'nav.about', 'nav.contact'])
+  assert.deepEqual(mobileNavigation.map((item) => item.labelKey), expected)
   assert.equal(mobileNavigation.find((item) => item.labelKey === 'nav.about').href, '#about')
+  assert.equal(mobileNavigation.find((item) => item.labelKey === 'nav.gallery').href, '#gallery')
   assert.deepEqual(contacts.map((contact) => contact.email), ['almenaprod@gmail.com', 'doyamusicofficial@gmail.com'])
   assert.deepEqual(contacts.map((contact) => contact.id), ['booking', 'press'])
   assert.ok(pressKit.href === null || pressKit.href.startsWith('/') || pressKit.href.startsWith('https://'))
