@@ -38,6 +38,7 @@ export default {
     live: 'Dates',
     shop: 'Shop',
     about: 'Bio',
+    gallery: 'Gallery',
     contact: 'Contact',
     cart: 'Cart',
     cartWithCount: 'Cart ({count})',
