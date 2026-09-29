@@ -11,6 +11,7 @@ const copy = {
   ja: { title: '配信停止', text: '今後DOYAのニュースレターは届きません。', action: '配信停止を確認', busy: '処理中…', success: '配信停止を受け付けました。', error: 'リンクが無効、またはサービスを利用できません。もう一度試すかDOYAへお問い合わせください。' },
   ko: { title: '구독 해지', text: '앞으로 DOYA 뉴스레터를 받지 않습니다.', action: '구독 해지 확인', busy: '처리 중…', success: '구독 해지가 완료되었습니다.', error: '링크가 유효하지 않거나 서비스를 이용할 수 없습니다. 다시 시도하거나 DOYA에 문의하세요.' },
   zh: { title: '退订', text: '你将不再收到 DOYA 新闻邮件。', action: '确认退订', busy: '处理中…', success: '退订已完成。', error: '链接无效或服务暂时不可用。请重试或联系 DOYA。' },
+  ar: { title: 'إلغاء الاشتراك', text: 'لن تتلقى نشرة DOYA بعد الآن.', action: 'تأكيد إلغاء الاشتراك', busy: 'جارٍ التنفيذ…', success: 'تم إلغاء اشتراكك.', error: 'الرابط غير صالح أو الخدمة غير متاحة. حاول مجددًا أو تواصل مع DOYA.' },
 }
 
 export default function UnsubscribePage() {
