@@ -67,6 +67,29 @@ export function I18nProvider({ children }) {
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>
 }
 
+export function FrenchI18nProvider({ children }) {
+  useEffect(() => {
+    const previousLang = document.documentElement.lang
+    const previousDir = document.documentElement.dir
+    document.documentElement.lang = 'fr-FR'
+    document.documentElement.dir = 'ltr'
+    return () => {
+      document.documentElement.lang = previousLang
+      document.documentElement.dir = previousDir
+    }
+  }, [])
+
+  const value = {
+    locale: 'fr',
+    locales: LOCALES,
+    intlLocale: 'fr-FR',
+    setLocale: () => {},
+    t: (key, vars) => translate(fr, key, vars, fr),
+  }
+
+  return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>
+}
+
 export function useI18n() {
   const ctx = useContext(I18nContext)
   if (!ctx) throw new Error('useI18n must be used within I18nProvider')
