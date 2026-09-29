@@ -397,3 +397,17 @@ html[dir='rtl'] .gallery-title::after {
     padding-right: .2rem;
   }
 }
+
+
+html[dir='rtl'] .product-detail-price {
+  justify-self: start;
+  text-align: left;
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+@media (max-width: 767px) {
+  html[dir='rtl'] .product-detail-copy {
+    text-align: right;
+  }
+}
