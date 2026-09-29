@@ -1749,6 +1749,9 @@ a.concert-tickets:focus-visible {
   max-width: 260px;
   margin-top: clamp(30px, 5vw, 64px);
 }
+.about-wordmark-lockup {
+  filter: brightness(0);
+}
 .about-biography {
   grid-column: 2;
   grid-row: 1 / span 2;
