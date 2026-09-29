@@ -29,7 +29,7 @@ export function translateProduct(t, product) {
     : null
   const catalogName = product.displayName || product.name
   return {
-    name: catalogName || (translatedName === nameKey ? product.id : translatedName),
+    name: translatedName === nameKey ? (catalogName || product.id) : translatedName,
     type: customType || (type === typeKey ? (product.type || product.typeKey || '') : type),
     color: color === colorKey ? (product.color || product.colorKey || '') : color,
   }

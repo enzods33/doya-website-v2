@@ -119,7 +119,7 @@ export default {
     size: { ENF: 'Enfant', CD: 'CD', VINYL: 'Vinyle', U: 'Taille unique' },
     color: { black: 'Noir', white: 'Blanc', red: 'Rouge', blue: 'Bleu', navy: 'Bleu marine', green: 'Vert', beige: 'Beige', grey: 'Gris', yellow: 'Jaune', pink: 'Rose', digipack: 'Édition physique de l’album, incluant un livret illustré exclusif', default: '' },
     product: {
-      'tee-luna-mini-red': 'Luna Mini',
+      'tee-luna-mini-red': 'Phases Kids',
       'cap-luna-black': 'Luna Bohemia',
       'tote-eclipse-black': 'DOYA',
       'luna-bohemia-white': 'Étoiles',
@@ -244,6 +244,8 @@ export default {
     photosImported: '{count} photos du site importées.',
     bioTextTitle: 'Texte de la bio',
     bioTextLead: 'Choisis une langue, édite, puis enregistre. Une ligne vide sépare les paragraphes sur le site.',
+    bioTranslatorHelp: 'Besoin de traduire la bio ?',
+    bioTranslatorLink: 'Ouvrir DeepL',
     bioLocale: 'Langue de la bio',
     bioLeadLabel: 'Accroche (première ligne)',
     bioBodyLabel: 'Corps de texte',

@@ -109,15 +109,37 @@ test('la vue produit reprend automatiquement 5 s après un choix manuel avec un 
   assert.match(transition, /scale: 0\.985/)
 })
 
-test('le nom catalogue/back-office reste prioritaire sur les anciens libellés codés', () => {
+test('les noms produits connus sont localisés et les nouveaux gardent le nom catalogue en fallback', () => {
   const messages = readFileSync(new URL('../src/commerce/messages.js', import.meta.url), 'utf8')
   const labels = readFileSync(new URL('../supabase/functions/_shared/checkoutLabels.ts', import.meta.url), 'utf8')
-  const migration = readFileSync(new URL('../supabase/migrations/20260928152000_rename_luna_mini_to_phases_mini.sql', import.meta.url), 'utf8')
+  const migration = readFileSync(new URL('../supabase/migrations/20260928193500_rename_phases_mini_to_phases_kids.sql', import.meta.url), 'utf8')
+
   assert.match(messages, /const catalogName = product\.displayName \|\| product\.name/)
-  assert.match(messages, /name: catalogName \|\|/)
-  assert.match(labels, /const base = fallback\.trim\(\) \|\| PRODUCT_BASE/)
-  assert.match(migration, /set name = 'Phases Mini'/)
-  assert.match(migration, /tee-luna-mini-red/)
+  assert.match(messages, /name: translatedName === nameKey \? \(catalogName \|\| product\.id\) : translatedName/)
+  assert.match(labels, /const base = PRODUCT_BASE\[locale\]\[productId\] \|\| fallback\.trim\(\) \|\| productId/)
+  assert.match(migration, /set name = 'Phases Kids'/)
+
+  const expected = {
+    fr: ['Phases Kids', 'Étoiles', 'Phases', 'Luna Bohemia — CD Digipack'],
+    es: ['Fases Kids', 'Estrellas', 'Fases', 'Luna Bohemia — CD Digipack'],
+    en: ['Phases Kids', 'Stars', 'Phases', 'Luna Bohemia — Digipak CD'],
+    pt: ['Fases Kids', 'Estrelas', 'Fases', 'Luna Bohemia — CD Digipack'],
+    de: ['Phasen Kids', 'Sterne', 'Phasen', 'Luna Bohemia — Digipak-CD'],
+    ja: ['月の満ち欠け キッズ', '星', '月の満ち欠け', 'ルナ・ボエミア — CDデジパック'],
+    ko: ['달의 위상 키즈', '별', '달의 위상', '루나 보헤미아 — CD 디지팩'],
+    zh: ['月相儿童款', '星星', '月相', '露娜·波希米亚 — CD 纸盒装'],
+  }
+  for (const [locale, names] of Object.entries(expected)) {
+    const source = readFileSync(new URL(`../src/i18n/locales/${locale}.js`, import.meta.url), 'utf8')
+    for (const name of names) assert.ok(source.includes(name), `${locale}: ${name}`)
+  }
+
+  assert.match(labels, /'cap-luna-black': 'ルナ・ボエミア'/)
+  assert.match(labels, /'cap-luna-black': '루나 보헤미아'/)
+  assert.match(labels, /'cap-luna-black': '露娜·波希米亚'/)
+  assert.match(labels, /digipack: 'CDデジパック'/)
+  assert.match(labels, /digipack: 'CD 디지팩'/)
+  assert.match(labels, /digipack: 'CD 纸盒装'/)
 })
 
 test('le tote bag utilise DOYA comme nom commercial', () => {
@@ -199,6 +221,19 @@ test('Stripe, Brevo et la bio couvrent les 8 langues', () => {
   assert.match(bioFn, /'de', 'ja', 'ko', 'zh'/)
   assert.match(bioMigration, /locale in \('fr', 'es', 'en', 'pt', 'de', 'ja', 'ko', 'zh'\)/)
   assert.match(bioMigration, /on conflict \(locale\) do nothing/)
+})
+
+test('le back-office bio propose DeepL sans automatiser les traductions', () => {
+  const bioUi = readFileSync(new URL('../src/pages/admin/AdminBio.jsx', import.meta.url), 'utf8')
+  assert.match(bioUi, /https:\/\/www\.deepl\.com\/fr\/translate/)
+  assert.match(bioUi, /target="_blank"/)
+  assert.match(bioUi, /rel="noopener noreferrer"/)
+  assert.doesNotMatch(bioUi, /translate_bio|AZURE_TRANSLATOR/)
+  for (const locale of ['fr', 'es', 'en', 'pt', 'de', 'ja', 'ko', 'zh']) {
+    const messages = readFileSync(new URL(`../src/i18n/locales/${locale}.js`, import.meta.url), 'utf8')
+    assert.match(messages, /bioTranslatorHelp:/)
+    assert.match(messages, /bioTranslatorLink:/)
+  }
 })
 
 test('aucune clé secrète n’est embarquée dans le client', () => {
