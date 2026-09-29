@@ -117,7 +117,7 @@ export default {
     productAlt: '{type} {name}, {color}, vue {view}.',
     viewFrontWord: 'de face',
     viewBackWord: 'de dos',
-    type: { tshirt: 'T-shirt', adultTshirt: 'T-shirt adulte', kidsTshirt: 'T-shirt enfant', cap: 'Casquette', tote: 'Tote bag', cd: 'CD', other: 'Article' },
+    type: { tshirt: 'T-shirt', adultTshirt: 'T-shirt adulte', kidsTshirt: 'T-shirt enfant', cap: 'Casquette brodée', tote: 'Tote bag', cd: 'CD', other: 'Article' },
     size: { ENF: 'Enfant', CD: 'CD', VINYL: 'Vinyle', U: 'Taille unique' },
     color: { black: 'Noir', white: 'Blanc', red: 'Rouge', blue: 'Bleu', navy: 'Bleu marine', green: 'Vert', beige: 'Beige', grey: 'Gris', yellow: 'Jaune', pink: 'Rose', digipack: 'Édition physique de l’album, incluant un livret illustré exclusif', default: '' },
     product: {
