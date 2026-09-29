@@ -60,6 +60,7 @@ export default {
     open: 'Mostrar o leitor',
   },
   music: {
+    albumTitle: 'Luna Bohemia',
     eyebrow: 'O álbum',
     tracksMeta: '{n} faixas',
     listenAlbum: 'Ouvir o álbum',
@@ -477,6 +478,7 @@ export default {
     sendLangJa: 'Japonês',
     sendLangKo: 'Coreano',
     sendLangZh: 'Chinês simplificado',
+    sendLangAr: 'Árabe',
     sendLangAll: 'Toda a gente (mesmo texto)',
     newsletterSendTest: 'Enviar teste para o meu email',
     newsletterTestSent: 'Teste enviado para {email}.',
