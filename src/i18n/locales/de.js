@@ -60,6 +60,7 @@ export default {
     open: 'Player anzeigen',
   },
   music: {
+    albumTitle: 'Luna Bohemia',
     eyebrow: 'Das Album',
     tracksMeta: '{n} Titel',
     listenAlbum: 'Album anhören',
@@ -201,6 +202,7 @@ export default {
     sendLangJa: 'Japanisch',
     sendLangKo: 'Koreanisch',
     sendLangZh: 'Chinesisch (vereinfacht)',
+    sendLangAr: 'Arabisch',
     sendLangAll: 'Alle (gleicher Text)',
   },
   commerce: {
