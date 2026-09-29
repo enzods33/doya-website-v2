@@ -7,7 +7,8 @@ import { LocaleFlag } from '../../components/LocaleFlag.jsx'
 const BIO_LOCALES = ['fr', 'es', 'en', 'pt', 'de', 'ja', 'ko', 'zh']
 const BIO_TARGET_LOCALES = BIO_LOCALES.filter((locale) => locale !== 'fr')
 
-const EMPTY_BIO = Object.fromEntries(BIO_LOCALES.map((locale) => [locale, { lead: '', body: '' }]))
+const EMPTY_BIO = Object.fromEntries(BIO_LOCALES.map((locale) => [locale, { lead: '', body: '', updatedAt: null }]))
+const BIO_REVIEW_FEATURE_START = Date.parse('2026-09-29T10:30:00Z')
 
 function orderPayload(list) {
   return list.map((photo, i) => ({ id: photo.id, sort_order: (i + 1) * 10 }))
@@ -49,6 +50,7 @@ function AdminBio() {
       next[row.locale] = {
         lead: row.lead ?? '',
         body: row.body ?? '',
+        updatedAt: row.updated_at ?? null,
       }
     }
     setBioByLocale(next)
@@ -175,7 +177,7 @@ function AdminBio() {
   }
 
   async function onTranslateBio() {
-    const source = bioByLocale.fr ?? { lead: '', body: '' }
+    const source = bioByLocale.fr ?? { lead: '', body: '', updatedAt: null }
     if (!source.lead.trim() || !source.body.trim()) {
       setError(t('admin.bioInvalid'))
       return
@@ -216,13 +218,26 @@ function AdminBio() {
     setError('')
     setOk('')
     try {
-      const draft = bioByLocale[bioLocale] ?? { lead: '', body: '' }
-      await adminBioPhotos('save_bio', {
+      const draft = bioByLocale[bioLocale] ?? { lead: '', body: '', updatedAt: null }
+      const payload = await adminBioPhotos('save_bio', {
         locale: bioLocale,
         lead: draft.lead,
         body: draft.body,
       })
-      setTranslationState((prev) => ({ ...prev, [bioLocale]: 'saved' }))
+      if (payload.row?.updated_at) {
+        setBioByLocale((prev) => ({
+          ...prev,
+          [bioLocale]: {
+            ...prev[bioLocale],
+            updatedAt: payload.row.updated_at,
+          },
+        }))
+      }
+      setTranslationState((prev) => {
+        const next = { ...prev }
+        delete next[bioLocale]
+        return next
+      })
       setOk(t('admin.bioSaved', { locale: bioLocale.toUpperCase() }))
     } catch (caught) {
       if (caught.message === 'invalid_bio_copy') setError(t('admin.bioInvalid'))
@@ -233,7 +248,14 @@ function AdminBio() {
     }
   }
 
-  const bioDraft = bioByLocale[bioLocale] ?? { lead: '', body: '' }
+  const bioDraft = bioByLocale[bioLocale] ?? { lead: '', body: '', updatedAt: null }
+  const sourceUpdatedAt = Date.parse(bioByLocale.fr?.updatedAt ?? '') || 0
+  const localeUpdatedAt = Date.parse(bioDraft.updatedAt ?? '') || 0
+  const localeReviewed = (
+    bioLocale !== 'fr'
+    && localeUpdatedAt >= BIO_REVIEW_FEATURE_START
+    && localeUpdatedAt >= sourceUpdatedAt
+  )
 
   return (
     <section className="admin-section admin-bio">
@@ -281,10 +303,10 @@ function AdminBio() {
         <p className="admin-bio-language-status admin-span-2">
           {bioLocale === 'fr'
             ? t('admin.bioSourceStatus')
-            : translationState[bioLocale] === 'saved'
-              ? t('admin.bioSavedStatus')
-              : ['generated', 'edited'].includes(translationState[bioLocale])
-                ? t('admin.bioReviewStatus')
+            : ['generated', 'edited'].includes(translationState[bioLocale])
+              ? t('admin.bioReviewStatus')
+              : localeReviewed
+                ? t('admin.bioSavedStatus')
                 : t('admin.bioExistingStatus')}
         </p>
 
