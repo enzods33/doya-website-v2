@@ -260,7 +260,7 @@ export default {
     bioLeadLabel: 'Lead line',
     bioBodyLabel: 'Body text',
     bioBodyHint: 'Double line breaks = new paragraphs.',
-    bioSave: 'Save bio',
+    bioSave: 'Save this language',
     bioSaved: 'Bio {locale} saved.',
     bioInvalid: 'Lead and body are required.',
     bioTooLong: 'Text is too long.',
