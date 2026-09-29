@@ -189,6 +189,8 @@ export default {
     menuSubmit: '구독하기',
   },
   admin: {
+    bioTranslatorHelp: '소개글을 번역하시겠어요?',
+    bioTranslatorLink: 'DeepL 열기',
     fieldSendLang: '발송 대상',
     fieldSendLangHelp: '구독 당시 사이트 언어를 기준으로 분류됩니다. 해당 언어로 메시지를 작성하세요.',
     sendLangFr: '프랑스어',
