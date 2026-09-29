@@ -11,7 +11,7 @@ const PRODUCT_BASE: Record<CheckoutLocale, Record<string, string>> = {
     'cd-luna-bohemia': 'Luna Bohemia',
     'tee-luna-mini-red': 'Luna Mini',
     'cap-luna-black': 'Luna Bohemia',
-    'tote-eclipse-black': 'Éclipse',
+    'tote-eclipse-black': 'DOYA',
   },
   en: {
     'luna-bohemia-white': 'Stars',
@@ -21,7 +21,7 @@ const PRODUCT_BASE: Record<CheckoutLocale, Record<string, string>> = {
     'cd-luna-bohemia': 'Luna Bohemia',
     'tee-luna-mini-red': 'Luna Mini',
     'cap-luna-black': 'Luna Bohemia',
-    'tote-eclipse-black': 'Eclipse',
+    'tote-eclipse-black': 'DOYA',
   },
   es: {
     'luna-bohemia-white': 'Estrellas',
@@ -31,7 +31,7 @@ const PRODUCT_BASE: Record<CheckoutLocale, Record<string, string>> = {
     'cd-luna-bohemia': 'Luna Bohemia',
     'tee-luna-mini-red': 'Luna Mini',
     'cap-luna-black': 'Luna Bohemia',
-    'tote-eclipse-black': 'Eclipse',
+    'tote-eclipse-black': 'DOYA',
   },
   pt: {
     'luna-bohemia-white': 'Estrelas',
@@ -41,7 +41,7 @@ const PRODUCT_BASE: Record<CheckoutLocale, Record<string, string>> = {
     'cd-luna-bohemia': 'Luna Bohemia',
     'tee-luna-mini-red': 'Luna Mini',
     'cap-luna-black': 'Luna Bohemia',
-    'tote-eclipse-black': 'Eclipse',
+    'tote-eclipse-black': 'DOYA',
   },
 }
 

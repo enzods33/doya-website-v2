@@ -121,7 +121,7 @@ export default {
     product: {
       'tee-luna-mini-red': 'Luna Mini',
       'cap-luna-black': 'Luna Bohemia',
-      'tote-eclipse-black': 'Eclipse',
+      'tote-eclipse-black': 'DOYA',
       'luna-bohemia-white': 'Estrellas',
       'luna-bohemia-black': 'Estrellas',
       'doya-white': 'Fases',

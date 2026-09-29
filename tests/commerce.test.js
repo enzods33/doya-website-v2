@@ -120,6 +120,19 @@ test('le nom catalogue/back-office reste prioritaire sur les anciens libellés c
   assert.match(migration, /tee-luna-mini-red/)
 })
 
+test('le tote bag utilise DOYA comme nom commercial', () => {
+  const labels = readFileSync(new URL('../supabase/functions/_shared/checkoutLabels.ts', import.meta.url), 'utf8')
+  const fr = readFileSync(new URL('../src/i18n/locales/fr.js', import.meta.url), 'utf8')
+  const en = readFileSync(new URL('../src/i18n/locales/en.js', import.meta.url), 'utf8')
+  const migration = readFileSync(new URL('../supabase/migrations/20260929074200_rename_tote_eclipse_to_doya.sql', import.meta.url), 'utf8')
+
+  assert.match(labels, /'tote-eclipse-black': 'DOYA'/)
+  assert.match(fr, /'tote-eclipse-black': 'DOYA'/)
+  assert.match(en, /'tote-eclipse-black': 'DOYA'/)
+  assert.match(migration, /set name = 'DOYA'/)
+  assert.match(migration, /tote-eclipse-black/)
+})
+
 test('le panier présente un opt-in newsletter explicite et non bloquant', () => {
   const cart = readFileSync(new URL('../src/pages/CartPage.jsx', import.meta.url), 'utf8')
   const fr = readFileSync(new URL('../src/i18n/locales/fr.js', import.meta.url), 'utf8')
