@@ -117,7 +117,7 @@ export default {
     productAlt: '{type} {name}，{color}，{view}。',
     viewFrontWord: '正面',
     viewBackWord: '背面',
-    type: { tshirt: 'T 恤', adultTshirt: '成人 T 恤', kidsTshirt: '儿童 T 恤', cap: '帽子', tote: '帆布袋', cd: 'CD', other: '商品' },
+    type: { tshirt: 'T 恤', adultTshirt: '成人 T 恤', kidsTshirt: '儿童 T 恤', cap: '刺绣帽', tote: '帆布袋', cd: 'CD', other: '商品' },
     size: { ENF: '儿童', CD: 'CD', VINYL: '黑胶', U: '均码' },
     color: { black: '黑色', white: '白色', red: '红色', blue: '蓝色', navy: '藏青色', green: '绿色', beige: '米色', grey: '灰色', yellow: '黄色', pink: '粉色', digipack: '新专辑 CD · 含小册子', default: '' },
     product: {
