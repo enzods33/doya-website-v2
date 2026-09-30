@@ -165,7 +165,9 @@ function About() {
       </div>
     </section>
 
-      <div className="section-bridge section-bridge--about-gallery" aria-hidden="true" />
+      <div className="section-bridge section-bridge--about-gallery" aria-hidden="true">
+        <Stars color="red" className="section-bridge-stars" />
+      </div>
 
       <section id="gallery" className="gallery-section" aria-labelledby="gallery-title">
         {total > 0 ? (
