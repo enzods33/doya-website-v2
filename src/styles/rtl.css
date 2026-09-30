@@ -411,3 +411,19 @@ html[dir='rtl'] .product-detail-price {
     text-align: right;
   }
 }
+
+
+html[dir='rtl'] .about-pullquote {
+  text-align: right;
+}
+
+html[dir='rtl'] .about-pullquote::before {
+  left: auto;
+  right: 0;
+  padding-left: .65rem;
+  padding-right: 0;
+}
+
+html[dir='rtl'] .about-pullquote footer {
+  justify-content: flex-start;
+}
