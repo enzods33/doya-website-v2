@@ -3768,3 +3768,266 @@ a.concert-tickets:focus-visible {
     font-size: 12.5px;
   }
 }
+
+
+/* —— DOYA editorial polish : lookbook, fashion motion, section bridges —— */
+.section-bridge {
+  position: relative;
+  z-index: 2;
+  height: clamp(30px, 4vw, 58px);
+  margin: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.section-bridge::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 12%;
+  bottom: 12%;
+  width: 1px;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgb(194 5 15 / 48%) 32%,
+    rgb(194 5 15 / 78%) 50%,
+    rgb(194 5 15 / 48%) 68%,
+    transparent
+  );
+  transform: translateX(-50%);
+}
+.section-bridge::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  border: 1px solid rgb(194 5 15 / 70%);
+  background: rgb(244 240 234 / 58%);
+  transform: translate(-50%, -50%) rotate(45deg);
+  box-shadow: 0 0 22px rgb(194 5 15 / 18%);
+}
+.section-bridge--music-about {
+  background:
+    radial-gradient(circle at 50% 50%, rgb(255 255 255 / 18%), transparent 34%),
+    linear-gradient(180deg, var(--color-stone), #d8d3cc);
+}
+.section-bridge--about-gallery {
+  background:
+    radial-gradient(circle at 50% 38%, rgb(194 5 15 / 4%), transparent 36%),
+    linear-gradient(180deg, #d8d3cc, #211e1b);
+}
+.section-bridge--gallery-live {
+  background:
+    radial-gradient(circle at 50% 58%, rgb(255 255 255 / 5%), transparent 34%),
+    linear-gradient(180deg, #211e1b, var(--color-sand));
+}
+.section-bridge--live-shop {
+  background:
+    radial-gradient(circle at 50% 42%, rgb(255 255 255 / 18%), transparent 36%),
+    linear-gradient(180deg, #d2cdc6, var(--color-stone));
+}
+.about-section,
+.gallery-section,
+.live-section,
+.shop-section {
+  border-top-color: transparent;
+}
+
+/* Boutique : composition lookbook, tout le commerce reste inchangé. */
+.product-folio {
+  position: absolute;
+  z-index: 6;
+  inset-inline-start: 14px;
+  top: 14px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 0 9px;
+  color: rgb(44 41 38 / 68%);
+  border: 1px solid rgb(255 255 255 / 44%);
+  background: rgb(244 240 234 / 64%);
+  box-shadow: 0 8px 24px rgb(44 41 38 / 10%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: .14em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+.product {
+  border-color: rgb(44 41 38 / 22%);
+  outline-color: rgb(255 255 255 / 42%);
+  background: rgb(244 240 234 / 90%);
+  box-shadow:
+    0 1px 0 rgb(255 255 255 / 74%) inset,
+    0 14px 34px rgb(44 41 38 / 9%),
+    0 40px 92px rgb(44 41 38 / 11%);
+}
+.product-caption {
+  background:
+    linear-gradient(145deg, rgb(255 255 255 / 38%), transparent 58%),
+    rgb(240 236 229 / 90%);
+}
+.product-image-trigger {
+  background:
+    radial-gradient(circle at 48% 38%, rgb(255 255 255 / 42%), transparent 40%),
+    linear-gradient(145deg, #c8c2ba, #ded9d2);
+}
+.product.is-featured .product-image-trigger {
+  background:
+    radial-gradient(circle at 46% 36%, rgb(255 255 255 / 48%), transparent 38%),
+    linear-gradient(145deg, #c1bbb3, #ddd7cf);
+}
+.product.is-featured .product-image-trigger::after {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  inset: -28%;
+  pointer-events: none;
+  background: linear-gradient(
+    112deg,
+    transparent 33%,
+    rgb(255 255 255 / 4%) 43%,
+    rgb(255 255 255 / 20%) 49%,
+    rgb(255 255 255 / 5%) 55%,
+    transparent 66%
+  );
+  transform: translate3d(-17%, 0, 0) rotate(5deg);
+  animation: doya-lookbook-light 15s ease-in-out infinite alternate;
+}
+.product.is-featured .product-image,
+.product.is-featured .product-caption,
+.product.is-featured .product-view-controls {
+  position: relative;
+  z-index: 2;
+}
+
+@media (min-width: 1200px) {
+  .products {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-template-rows: none;
+    grid-auto-rows: auto;
+    gap: clamp(24px, 2.6vw, 42px);
+    align-items: stretch;
+  }
+  .products > .product {
+    grid-row: auto;
+    min-height: 100%;
+  }
+  .products > .product.is-featured {
+    grid-column: span 7;
+    grid-row: span 2;
+  }
+  .products > .product:nth-child(2),
+  .products > .product:nth-child(3) {
+    grid-column: span 5;
+  }
+  .products > .product:nth-child(4),
+  .products > .product:nth-child(5),
+  .products > .product:nth-child(6) {
+    grid-column: span 4;
+  }
+  .products > .product:nth-child(7),
+  .products > .product:nth-child(8) {
+    grid-column: span 6;
+  }
+  .products > .product:nth-child(2) .product-image-trigger,
+  .products > .product:nth-child(3) .product-image-trigger {
+    aspect-ratio: 5 / 4;
+  }
+  .products > .product:nth-child(4) .product-image-trigger,
+  .products > .product:nth-child(5) .product-image-trigger,
+  .products > .product:nth-child(6) .product-image-trigger {
+    aspect-ratio: 1;
+  }
+  .products > .product:nth-child(7) .product-image-trigger,
+  .products > .product:nth-child(8) .product-image-trigger {
+    aspect-ratio: 16 / 10;
+  }
+  .product.is-featured .product-image-trigger {
+    min-height: clamp(35rem, 52vw, 48rem);
+    aspect-ratio: auto;
+  }
+  .product.is-featured .product-image {
+    max-width: min(78%, 39rem);
+    max-height: min(78%, 39rem);
+  }
+  .product.is-featured .product-caption h3 {
+    font-size: clamp(28px, 2.4vw, 38px);
+  }
+}
+
+/* Mouvements très lents : matière, lumière, photographie. */
+.shop-section::after {
+  animation: doya-fashion-atmosphere 28s ease-in-out infinite alternate;
+}
+.about-gallery-backdrop {
+  animation: doya-fashion-gallery 24s ease-in-out infinite alternate;
+}
+.about-intro-stars {
+  animation: doya-fashion-stars 18s ease-in-out infinite alternate;
+}
+.live-featured::after {
+  animation: doya-fashion-live 20s ease-in-out infinite alternate;
+}
+
+@keyframes doya-fashion-atmosphere {
+  from { transform: scale(1.085) translate3d(-.45%, .15%, 0); }
+  to { transform: scale(1.12) translate3d(.65%, -.45%, 0); }
+}
+@keyframes doya-fashion-gallery {
+  from { transform: translate3d(-.35%, .15%, 0) scale(1.005); }
+  to { transform: translate3d(.45%, -.25%, 0) scale(1.02); }
+}
+@keyframes doya-fashion-stars {
+  from { transform: translate(-50%, -50%) rotate(-.7deg) scale(.985); opacity: .38; }
+  to { transform: translate(-50%, -50%) rotate(.7deg) scale(1.015); opacity: .46; }
+}
+@keyframes doya-fashion-live {
+  from { transform: translate3d(-1.1%, .3%, 0); opacity: .64; }
+  to { transform: translate3d(1.1%, -.3%, 0); opacity: .78; }
+}
+@keyframes doya-lookbook-light {
+  from { transform: translate3d(-19%, 0, 0) rotate(5deg); opacity: .48; }
+  to { transform: translate3d(17%, 0, 0) rotate(5deg); opacity: .82; }
+}
+
+@media (max-width: 1199px) {
+  .product-folio {
+    top: 12px;
+    inset-inline-start: 12px;
+  }
+}
+@media (max-width: 767px) {
+  .section-bridge {
+    height: 30px;
+  }
+  .section-bridge::before {
+    top: 8%;
+    bottom: 8%;
+  }
+  .product-folio {
+    min-height: 24px;
+    padding-inline: 8px;
+    font-size: 8px;
+  }
+  .product {
+    box-shadow:
+      0 1px 0 rgb(255 255 255 / 68%) inset,
+      0 16px 42px rgb(44 41 38 / 10%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shop-section::after,
+  .about-gallery-backdrop,
+  .about-intro-stars,
+  .live-featured::after,
+  .product.is-featured .product-image-trigger::after {
+    animation: none;
+  }
+}

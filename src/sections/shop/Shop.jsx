@@ -313,8 +313,13 @@ function Shop() {
             view: displayedView === 'front' ? t('shop.viewFrontWord') : t('shop.viewBackWord'),
           })
           return <Reveal key={product.id} as="article" className={productClassName} delay={(index % 2) * 0.08}
+            distance={18}
+            duration={1.05}
             onPointerEnter={() => pauseAutoOnHover(product)}
             onPointerLeave={() => scheduleAutoResume(product)}>
+          <span className="product-folio" aria-hidden="true">
+            {String(index + 1).padStart(2, '0')} / {String(items.length).padStart(2, '0')}
+          </span>
           <button
             type="button"
             className="product-image-trigger"
