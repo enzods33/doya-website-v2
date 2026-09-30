@@ -137,6 +137,7 @@ export default {
     eyebrow: 'Bio',
     biographyLead:
       'Two sisters. Two voices. One pulse.',
+    pullQuote: 'Two voices. One breath.',
     biographyBody:
       'Marina and Mélissa grew up in France in a Spanish family, with flamenco as their first shared language. Trained at the Tarbes Conservatory, they learned violin, saxophone and percussion. Their teenage years in Andalusia added singing, guitar and cajón to that palette. From the start, their music has lived in the conversation between classical discipline, popular instinct and freedom.\n\nIn 2018, that bond became DOYA. The duo combines the force of two voices with flamenco, Latin, pop and electronic colours. Their connection is immediate on stage. From Spain to Portugal, from the Salle Pleyel to the Zénith arenas, they have shaped a sound that feels warm, physical and precise.\n\nTheir appearance on The Voice France in 2023, followed by a performance at Lollapalooza Paris, brought their music to a wider audience. The EP Tú conmigo arrived in 2024 after the success of No anda sola, establishing a songwriting style that moves naturally between French and Spanish.\n\nWith Luna Bohemia, their first album distributed by Universal Music France, DOYA opens a new chapter. Across twelve tracks, roots meet movement and acoustic textures meet electronics. Carried by their bond, their music makes heritage dance in the present. Two voices answering and carrying each other until they become a single breath.',
   },
