@@ -3920,28 +3920,6 @@ a.concert-tickets:focus-visible {
 }
 
 /* Boutique : composition lookbook, tout le commerce reste inchangé. */
-.product-folio {
-  position: absolute;
-  z-index: 6;
-  inset-inline-start: 14px;
-  top: 14px;
-  display: inline-flex;
-  align-items: center;
-  min-height: 26px;
-  padding: 0 9px;
-  color: rgb(44 41 38 / 68%);
-  border: 1px solid rgb(255 255 255 / 44%);
-  background: rgb(244 240 234 / 64%);
-  box-shadow: 0 8px 24px rgb(44 41 38 / 10%);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  font-size: 9px;
-  font-weight: 600;
-  letter-spacing: .14em;
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-  pointer-events: none;
-}
 .product {
   border-color: rgb(44 41 38 / 22%);
   outline-color: rgb(255 255 255 / 42%);
@@ -4081,10 +4059,6 @@ a.concert-tickets:focus-visible {
 }
 
 @media (max-width: 1199px) {
-  .product-folio {
-    top: 12px;
-    inset-inline-start: 12px;
-  }
 }
 @media (max-width: 767px) {
   .section-bridge {
@@ -4095,11 +4069,6 @@ a.concert-tickets:focus-visible {
   }
   .section-bridge-stars {
     width: 26px;
-  }
-  .product-folio {
-    min-height: 24px;
-    padding-inline: 8px;
-    font-size: 8px;
   }
   .product {
     box-shadow:

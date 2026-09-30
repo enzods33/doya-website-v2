@@ -8,7 +8,8 @@ test('le polish éditorial garde le lookbook et les transitions réversibles', (
   const about = readFileSync(new URL('../src/sections/about/About.jsx', import.meta.url), 'utf8')
   const styles = readFileSync(new URL('../src/styles/sections.css', import.meta.url), 'utf8')
 
-  assert.match(shop, /className="product-folio"/)
+  assert.doesNotMatch(shop, /product-folio/)
+  assert.doesNotMatch(styles, /\.product-folio\s*\{/)
   assert.match(home, /section-bridge--music-about/)
   assert.match(home, /section-bridge--gallery-live/)
   assert.match(home, /section-bridge--live-shop/)
