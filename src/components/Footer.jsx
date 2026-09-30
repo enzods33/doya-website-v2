@@ -12,38 +12,10 @@ import PublisherCredit from './PublisherCredit.jsx'
 import StudioCredit from './StudioCredit.jsx'
 import { PlatformIcon } from './PlatformIcon.jsx'
 import { trackEvent } from '../commerce/pageAnalytics.js'
+import lunaPhases from '../assets/hero/luna-phases.webp'
 
 function mailto(email, subject) {
   return `mailto:${email}?subject=${encodeURIComponent(subject)}`
-}
-
-function FooterOrbit({ label }) {
-  const orbitText = `DOYA · LUNA BOHEMIA · ${siteContent.year} · DOYA · LUNA BOHEMIA · ${siteContent.year} · `
-
-  return (
-    <Link href="#top" className="footer-orbit" aria-label={label}>
-      <span className="footer-orbit-ring" aria-hidden="true">
-        <svg viewBox="0 0 180 180" role="presentation">
-          <defs>
-            <path
-              id="footer-orbit-path"
-              d="M90 90m-67 0a67 67 0 1 1 134 0a67 67 0 1 1-134 0"
-            />
-          </defs>
-          <circle className="footer-orbit-hairline" cx="90" cy="90" r="73" />
-          <text className="footer-orbit-copy">
-            <textPath href="#footer-orbit-path" startOffset="0%">{orbitText}</textPath>
-          </text>
-        </svg>
-      </span>
-      <span className="footer-orbit-core" aria-hidden="true">
-        <svg className="footer-orbit-arrow" viewBox="0 0 32 32" fill="none">
-          <path d="M16 24V8" stroke="currentColor" strokeWidth="1.35" strokeLinecap="round" />
-          <path d="m9.5 14.5 6.5-6.5 6.5 6.5" stroke="currentColor" strokeWidth="1.35" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      </span>
-    </Link>
-  )
 }
 
 function SocialRow({ items, eventName, startIndex = 0 }) {
@@ -86,13 +58,24 @@ function Footer() {
       <div className="section-shell">
         <div className="footer-stage footer-stage-editorial">
           <div className="footer-cover">
-            <div className="footer-brand">
-              <Link href="#top" aria-label={t('a11y.footerHome')}>
-                <Lockup className="footer-wordmark" />
-              </Link>
-              <LunaBohemiaMark className="footer-album-mark" />
+            <div className="footer-cover-copy">
+              <p className="footer-cover-folio" aria-hidden="true">
+                <span>DOYA</span>
+                <span>LUNA BOHEMIA</span>
+                <span>{siteContent.year}</span>
+              </p>
+              <div className="footer-brand">
+                <Link href="#top" aria-label={t('a11y.footerHome')}>
+                  <Lockup className="footer-wordmark" />
+                </Link>
+                <LunaBohemiaMark className="footer-album-mark" />
+              </div>
             </div>
-            <FooterOrbit label={t('footer.backToTop')} />
+
+            <div className="footer-lunar-stage" aria-hidden="true">
+              <span className="footer-lunar-rule" />
+              <img src={lunaPhases} alt="" className="footer-lunar-phases" />
+            </div>
           </div>
 
           <NewsletterSignup className="footer-newsletter" />
@@ -155,6 +138,10 @@ function Footer() {
           </div>
           <div className="footer-meta-tools">
             <LanguageSwitcher className="footer-language-switcher" />
+            <Link href="#top" className="footer-back-top-link">
+              <span>{t('footer.backToTop')}</span>
+              <span aria-hidden="true">↑</span>
+            </Link>
           </div>
           <div className="footer-studio-line">
             <StudioCredit className="footer-studio" />
