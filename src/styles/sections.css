@@ -3834,12 +3834,14 @@ a.concert-tickets:focus-visible {
   transform: translate(-50%, -50%);
 }
 .section-bridge-stars {
-  position: relative;
+  position: absolute;
   z-index: 2;
+  left: 50%;
+  top: 50%;
   width: clamp(22px, 1.8vw, 27px);
   height: auto;
-  opacity: .88;
-  filter: drop-shadow(0 4px 10px rgb(194 5 15 / 10%));
+  opacity: .92;
+  filter: drop-shadow(0 3px 8px rgb(194 5 15 / 10%));
   transform-origin: center;
   animation: doya-bridge-stars 14s ease-in-out infinite alternate;
 }
@@ -3861,7 +3863,7 @@ a.concert-tickets:focus-visible {
   z-index: 1;
   left: 50%;
   top: 50%;
-  width: clamp(10rem, 14vw, 13rem);
+  width: clamp(7rem, 10vw, 9rem);
   height: 1px;
   background: linear-gradient(
     90deg,
@@ -3909,12 +3911,12 @@ a.concert-tickets:focus-visible {
 }
 @keyframes doya-bridge-stars {
   from {
-    opacity: .8;
-    transform: scale(.992);
+    opacity: .86;
+    transform: translate(-50%, -50%) scale(.992);
   }
   to {
-    opacity: .9;
-    transform: scale(1.008);
+    opacity: .94;
+    transform: translate(-50%, -50%) scale(1.008);
   }
 }
 
@@ -4146,7 +4148,7 @@ a.concert-tickets:focus-visible {
   }
   .section-bridge--music-about::after,
   .section-bridge--live-shop::after {
-    width: min(42vw, 10rem);
+    width: min(34vw, 7.5rem);
   }
   .section-bridge::after {
     width: min(52vw, 13rem);
