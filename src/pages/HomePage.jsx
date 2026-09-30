@@ -17,9 +17,7 @@ function HomePage() {
           <Stars color="red" className="section-bridge-stars" />
         </div>
         <About />
-        <div className="section-bridge section-bridge--gallery-live" aria-hidden="true">
-          <Stars color="red" className="section-bridge-stars" />
-        </div>
+        <div className="section-bridge section-bridge--gallery-live" aria-hidden="true" />
         <Live />
         <div className="section-bridge section-bridge--live-shop" aria-hidden="true">
           <Stars color="red" className="section-bridge-stars" />
