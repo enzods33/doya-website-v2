@@ -12,7 +12,6 @@ import PublisherCredit from './PublisherCredit.jsx'
 import StudioCredit from './StudioCredit.jsx'
 import { PlatformIcon } from './PlatformIcon.jsx'
 import { trackEvent } from '../commerce/pageAnalytics.js'
-import lunaPhases from '../assets/hero/luna-phases.webp'
 
 function mailto(email, subject) {
   return `mailto:${email}?subject=${encodeURIComponent(subject)}`
@@ -56,26 +55,12 @@ function Footer() {
   return (
     <footer id="contact" className="site-footer">
       <div className="section-shell">
-        <div className="footer-stage footer-stage-editorial">
-          <div className="footer-cover">
-            <div className="footer-cover-copy">
-              <p className="footer-cover-folio" aria-hidden="true">
-                <span>DOYA</span>
-                <span>LUNA BOHEMIA</span>
-                <span>{siteContent.year}</span>
-              </p>
-              <div className="footer-brand">
-                <Link href="#top" aria-label={t('a11y.footerHome')}>
-                  <Lockup className="footer-wordmark" />
-                </Link>
-                <LunaBohemiaMark className="footer-album-mark" />
-              </div>
-            </div>
-
-            <div className="footer-lunar-stage" aria-hidden="true">
-              <span className="footer-lunar-rule" />
-              <img src={lunaPhases} alt="" className="footer-lunar-phases" />
-            </div>
+        <div className="footer-stage">
+          <div className="footer-brand">
+            <Link href="#top" aria-label={t('a11y.footerHome')}>
+              <Lockup className="footer-wordmark" />
+            </Link>
+            <LunaBohemiaMark className="footer-album-mark" />
           </div>
 
           <NewsletterSignup className="footer-newsletter" />
@@ -138,9 +123,14 @@ function Footer() {
           </div>
           <div className="footer-meta-tools">
             <LanguageSwitcher className="footer-language-switcher" />
-            <Link href="#top" className="footer-back-top-link">
-              <span>{t('footer.backToTop')}</span>
-              <span aria-hidden="true">↑</span>
+            <Link href="#top" className="back-to-top">
+              <span className="back-to-top-label">{t('footer.backToTop')}</span>
+              <span className="back-to-top-mark" aria-hidden="true">
+                <svg className="back-to-top-icon" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" fill="none">
+                  <path d="M8 12.5V3.5" stroke="currentColor" strokeWidth="1.35" strokeLinecap="round" />
+                  <path d="M4.25 7.25 8 3.5l3.75 3.75" stroke="currentColor" strokeWidth="1.35" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </span>
             </Link>
           </div>
           <div className="footer-studio-line">
