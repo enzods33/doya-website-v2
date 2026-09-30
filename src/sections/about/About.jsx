@@ -155,6 +155,14 @@ function About() {
           <Lockup decorative className="about-wordmark about-wordmark-lockup" />
           <div className="about-biography">
             <p className="about-biography-lead">{biographyText(biographyLead)}</p>
+            <blockquote className="about-pullquote">
+              <p>{t('about.pullQuote')}</p>
+              <footer>
+                <span>DOYA</span>
+                <span aria-hidden="true">—</span>
+                <span>{t('music.albumTitle')}</span>
+              </footer>
+            </blockquote>
             <div className="about-biography-body-flow">
               {biographyBody.split(/\n\n+/).map((paragraph) => (
                 <p key={paragraph.slice(0, 24)} className="about-biography-body">{biographyText(paragraph)}</p>
