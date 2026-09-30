@@ -165,6 +165,8 @@ function About() {
       </div>
     </section>
 
+      <div className="section-bridge section-bridge--about-gallery" aria-hidden="true" />
+
       <section id="gallery" className="gallery-section" aria-labelledby="gallery-title">
         {total > 0 ? (
           <div className={`about-gallery${activeImageIsPortrait ? ' has-portrait-active' : ' has-landscape-active'}`}>
