@@ -305,6 +305,29 @@ test('aucune clé secrète n’est embarquée dans le client', () => {
 })
 
 
+test('le catalogue résiste aux erreurs réseau transitoires', () => {
+  const catalog = readFileSync(new URL('../src/commerce/catalog.js', import.meta.url), 'utf8')
+  const provider = readFileSync(new URL('../src/commerce/CatalogProvider.jsx', import.meta.url), 'utf8')
+
+  assert.match(catalog, /CATALOG_RETRY_DELAYS = \[0, 450, 1200\]/)
+  assert.match(catalog, /for \(const delay of CATALOG_RETRY_DELAYS\)/)
+  assert.match(catalog, /source: 'remote'/)
+  assert.match(catalog, /source: 'local'/)
+  assert.match(provider, /RECOVERY_DELAYS = \[2000, 5000, 15000, 30000\]/)
+  assert.match(provider, /next\.source !== 'remote' && current\.source === 'remote'/)
+  assert.match(provider, /window\.addEventListener\('online', onOnline\)/)
+})
+
+test('les icônes sociales du footer ont un rendu mobile stable', () => {
+  const platform = readFileSync(new URL('../src/components/PlatformIcon.jsx', import.meta.url), 'utf8')
+  const styles = readFileSync(new URL('../src/styles/sections.css', import.meta.url), 'utf8')
+
+  assert.match(platform, /loading="eager"/)
+  assert.match(platform, /fetchPriority="high"/)
+  assert.match(styles, /\.site-footer \.socials \.platform-icon\s*\{[\s\S]*?display:\s*block;[\s\S]*?visibility:\s*visible;/)
+  assert.match(styles, /@media \(max-width: 767px\)[\s\S]*?\.site-footer \.socials \.platform-icon\s*\{[\s\S]*?animation:\s*none;[\s\S]*?will-change:\s*auto;/)
+})
+
 test('la ligne produit mobile réserve une colonne dédiée au prix', () => {
   const shop = readFileSync(new URL('../src/sections/shop/Shop.jsx', import.meta.url), 'utf8')
   const styles = readFileSync(new URL('../src/styles/sections.css', import.meta.url), 'utf8')
