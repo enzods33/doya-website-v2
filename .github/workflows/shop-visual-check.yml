@@ -23,16 +23,16 @@ jobs:
         run: >
           npx -y playwright@1.55.0 screenshot
           --browser chromium
-          --viewport-size="1440,1000"
+          --viewport-size="3840,2160"
           --wait-for-timeout=5000
           --full-page
           "https://doya.guzzler-bot.cloud/#shop"
-          "/tmp/doya-visual-check/shop-desktop.png"
+          "/tmp/doya-visual-check/shop-4k.png"
 
       - name: Upload screenshot
         uses: actions/upload-artifact@v4
         with:
-          name: doya-shop-desktop
-          path: /tmp/doya-visual-check/shop-desktop.png
+          name: doya-shop-4k
+          path: /tmp/doya-visual-check/shop-4k.png
           if-no-files-found: error
           retention-days: 1
