@@ -1870,6 +1870,10 @@ a.concert-tickets:focus-visible {
   .about-biography-lead {
     font-size: clamp(1.4rem, 3vw, 1.75rem);
   }
+  .about-pullquote p {
+    max-width: 10ch;
+    font-size: clamp(2.35rem, 5.7vw, 3.7rem);
+  }
 }
 
 .gallery-section {
@@ -2554,6 +2558,25 @@ a.concert-tickets:focus-visible {
     padding-bottom: 24px;
     font-size: clamp(1.28rem, 5.8vw, 1.5rem);
     line-height: 1.35;
+  }
+  .about-pullquote {
+    margin-block: 32px 34px;
+    padding-block: 24px 22px;
+  }
+  .about-pullquote::before {
+    background: var(--color-sand);
+  }
+  .about-pullquote p {
+    max-width: 11ch;
+    font-size: clamp(2.25rem, 10.6vw, 3.15rem);
+    line-height: .96;
+  }
+  .about-pullquote footer {
+    flex-wrap: wrap;
+    gap: .42rem;
+    margin-top: 18px;
+    font-size: .62rem;
+    letter-spacing: .15em;
   }
   .about-biography-body { font-size: .98rem; line-height: 1.62; }
   .about-title {
