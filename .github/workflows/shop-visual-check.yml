@@ -1,38 +1,36 @@
 name: Shop Visual Check
 
 on:
-  workflow_run:
-    workflows: ["Deploy to VPS"]
-    types: [completed]
+  push:
+    branches: ["ci/shop-visual-hosted-once"]
 
 jobs:
   screenshot:
-    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'master' }}
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
-      PLAYWRIGHT_BROWSERS_PATH: /home/stef/data/playwright-browsers
-      npm_config_cache: /home/stef/data/npm-cache
+      PLAYWRIGHT_BROWSERS_PATH: ${{ runner.temp }}/playwright-browsers
+      npm_config_cache: ${{ runner.temp }}/npm-cache
     steps:
       - name: Préparer le bac à sable
         run: |
-          mkdir -p "$PLAYWRIGHT_BROWSERS_PATH" "$npm_config_cache" /home/stef/data/doya-visual-check
+          mkdir -p "$PLAYWRIGHT_BROWSERS_PATH" "$npm_config_cache" ${{ runner.temp }}/doya-visual-check
 
       - name: Installer Playwright Chromium dans le volume de travail
         run: npx -y playwright@1.55.0 install chromium
 
       - name: Capturer la boutique desktop en production
         run: |
-          npx -y playwright@1.55.0 screenshot             --browser chromium             --viewport-size="1440,1000"             --wait-for-timeout=5000             --full-page             "https://doya.guzzler-bot.cloud/#shop"             "/home/stef/data/doya-visual-check/shop-desktop-${GITHUB_RUN_ID}.png"
+          npx -y playwright@1.55.0 screenshot             --browser chromium             --viewport-size="1440,1000"             --wait-for-timeout=5000             --full-page             "https://doya.guzzler-bot.cloud/#shop"             "${{ runner.temp }}/doya-visual-check/shop-desktop-${GITHUB_RUN_ID}.png"
 
       - name: Publier la capture
         uses: actions/upload-artifact@v4
         with:
           name: doya-shop-desktop
-          path: /home/stef/data/doya-visual-check/shop-desktop-${{ github.run_id }}.png
+          path: ${{ runner.temp }}/doya-visual-check/shop-desktop-${{ github.run_id }}.png
           if-no-files-found: error
           retention-days: 1
 
       - name: Nettoyer la capture locale
         if: always()
-        run: rm -f "/home/stef/data/doya-visual-check/shop-desktop-${GITHUB_RUN_ID}.png"
+        run: rm -f "${{ runner.temp }}/doya-visual-check/shop-desktop-${GITHUB_RUN_ID}.png"
