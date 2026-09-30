@@ -5,11 +5,13 @@ import { commerceConfigured } from './config.js'
 import { supabase } from './supabase.js'
 
 const empty = products.map((product) => ({ ...product, sale: null, variants: [] }))
+const RECOVERY_DELAYS = [2000, 5000, 15000, 30000]
 const CatalogContext = createContext({
   items: empty,
   purchasable: false,
   ready: true,
   revision: 0,
+  source: 'local',
   reload: () => {},
 })
 
@@ -19,21 +21,54 @@ export function CatalogProvider({ children }) {
     purchasable: false,
     ready: !commerceConfigured,
     revision: 0,
+    source: 'local',
   })
   const activeRef = useRef(true)
   const debounceRef = useRef(null)
+  const recoveryRef = useRef(null)
+  const recoveryAttemptRef = useRef(0)
+
+  function clearRecovery() {
+    if (recoveryRef.current) window.clearTimeout(recoveryRef.current)
+    recoveryRef.current = null
+  }
+
+  function scheduleRecovery() {
+    if (!activeRef.current || recoveryRef.current) return
+    const index = Math.min(recoveryAttemptRef.current, RECOVERY_DELAYS.length - 1)
+    const delay = RECOVERY_DELAYS[index]
+    recoveryAttemptRef.current += 1
+    recoveryRef.current = window.setTimeout(() => {
+      recoveryRef.current = null
+      reload().catch(() => scheduleRecovery())
+    }, delay)
+  }
 
   function applyCatalog(next) {
-    setCatalog((current) => ({
-      ...next,
-      ready: true,
-      revision: current.revision + 1,
-    }))
+    if (next.source === 'remote') {
+      clearRecovery()
+      recoveryAttemptRef.current = 0
+    } else {
+      scheduleRecovery()
+    }
+
+    setCatalog((current) => {
+      // Une panne transitoire ne doit jamais effacer un catalogue déjà chargé.
+      if (next.source !== 'remote' && current.source === 'remote') {
+        return { ...current, ready: true }
+      }
+      return {
+        ...next,
+        ready: true,
+        revision: current.revision + 1,
+      }
+    })
   }
 
   function reload() {
     return loadCatalog().then((next) => {
       if (activeRef.current) applyCatalog(next)
+      return next
     })
   }
 
@@ -52,9 +87,7 @@ export function CatalogProvider({ children }) {
     }
 
     reload().catch(() => {
-      if (activeRef.current) {
-        setCatalog({ items: empty, purchasable: false, ready: true, revision: 1 })
-      }
+      if (activeRef.current) scheduleRecovery()
     })
 
     const channel = supabase
@@ -69,12 +102,21 @@ export function CatalogProvider({ children }) {
     function onVisible() {
       if (document.visibilityState === 'visible') scheduleReload()
     }
+    function onOnline() {
+      recoveryAttemptRef.current = 0
+      clearRecovery()
+      scheduleReload()
+    }
+
     document.addEventListener('visibilitychange', onVisible)
+    window.addEventListener('online', onOnline)
 
     return () => {
       activeRef.current = false
       if (debounceRef.current) window.clearTimeout(debounceRef.current)
+      clearRecovery()
       document.removeEventListener('visibilitychange', onVisible)
+      window.removeEventListener('online', onOnline)
       supabase.removeChannel(channel)
     }
   }, [])
