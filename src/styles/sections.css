@@ -4024,6 +4024,33 @@ a.concert-tickets:focus-visible {
   }
 }
 
+/* Très grands desktops / 4K : cadence alignée, sans mosaïque en zigzag. */
+@media (min-width: 1800px) {
+  .products > .product.is-featured {
+    grid-column: span 6;
+  }
+  .products > .product:nth-child(2),
+  .products > .product:nth-child(3) {
+    grid-column: span 3;
+  }
+  .products > .product:nth-child(4),
+  .products > .product:nth-child(5),
+  .products > .product:nth-child(6) {
+    grid-column: span 4;
+  }
+  .products > .product:nth-child(7),
+  .products > .product:nth-child(8) {
+    grid-column: span 6;
+  }
+  .product.is-featured .product-image-trigger {
+    aspect-ratio: 2 / 1;
+  }
+  .product.is-featured .product-image {
+    max-width: min(72%, 30rem);
+    max-height: min(72%, 30rem);
+  }
+}
+
 /* Mouvements très lents : matière, lumière, photographie. */
 .shop-section::after {
   animation: doya-fashion-atmosphere 28s ease-in-out infinite alternate;
