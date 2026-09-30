@@ -12,8 +12,11 @@ function HomePage() {
       <Hero />
       <Suspense fallback={null}>
         <Music />
+        <div className="section-bridge section-bridge--music-about" aria-hidden="true" />
         <About />
+        <div className="section-bridge section-bridge--gallery-live" aria-hidden="true" />
         <Live />
+        <div className="section-bridge section-bridge--live-shop" aria-hidden="true" />
         <Shop />
       </Suspense>
     </main>
