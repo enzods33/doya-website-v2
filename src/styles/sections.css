@@ -3297,7 +3297,8 @@ a.concert-tickets:focus-visible {
   letter-spacing: .02em;
 }
 .site-footer .newsletter-signup-status.is-ok {
-  color: var(--footer-ink);
+  color: rgb(255 255 255 / 96%);
+  text-shadow: 0 1px 10px rgb(255 255 255 / 8%);
 }
 .site-footer .newsletter-signup-status.is-error {
   color: #f06b72;
