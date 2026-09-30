@@ -154,6 +154,9 @@ function TrackListen({ track, open, onToggle }) {
 function Music() {
   const { t } = useI18n()
   const [openTrack, setOpenTrack] = useState(null)
+  const albumTitle = t('music.albumTitle')
+  const [albumTitleLead, ...albumTitleTailParts] = albumTitle.trim().split(/\s+/)
+  const albumTitleTail = albumTitleTailParts.join(' ')
   const albumPlatforms = album.platforms.filter(
     (platform) => platform.id !== 'youtube' && isExternalUrl(platform.url),
   )
@@ -187,9 +190,16 @@ function Music() {
       style={{ '--music-atmosphere-image': `url("${media.hero.src}")` }}
     >
       <div className="music-shell section-shell">
-        <Reveal as="header" className="music-heading">
+        <Reveal as="header" className="music-heading music-heading-editorial">
           <p className="eyebrow">{t('music.eyebrow')}</p>
-          <h2 id="music-title" className="editorial-title">{t('music.albumTitle')}</h2>
+          <h2 id="music-title" className="editorial-title music-editorial-title" aria-label={albumTitle}>
+            <span className="music-title-line" aria-hidden="true">{albumTitleLead}</span>
+            {albumTitleTail ? <span className="music-title-line music-title-line-offset" aria-hidden="true">{albumTitleTail}</span> : null}
+          </h2>
+          <div className="music-folio" aria-hidden="true">
+            <span className="music-folio-number">01</span>
+            <span className="music-folio-copy">{album.artist} / {album.year}</span>
+          </div>
           <p className="eyebrow music-meta">{album.artist} <span className="small-separator">/</span> {album.year} <span className="small-separator">/</span> {t('music.tracksMeta', { n: album.tracks.length })}</p>
         </Reveal>
         <div className="music-layout">
@@ -225,21 +235,31 @@ function Music() {
           </Reveal>
           <Reveal className="tracklist-column" delay={0.12} distance={28} duration={1}>
             <VinylDisc className="music-tracklist-vinyl" />
-            <ol className="tracklist">
-              {album.tracks.map((track) => (
-                <li key={track.number}>
-                  <div className={`track-row${openTrack === track.number ? ' is-open' : ''}`}>
-                    <span className="track-number">{track.number}</span>
-                    <span className="track-title" lang={track.number === '03' ? 'fr' : 'es'}>{track.title}</span>
-                    <TrackListen
-                      track={track}
-                      open={openTrack === track.number}
-                      onToggle={toggleTrack}
-                    />
-                  </div>
-                </li>
-              ))}
-            </ol>
+            <div className="music-liner-sheet">
+              <div className="music-liner-head" aria-hidden="true">
+                <span>{album.artist}</span>
+                <span>{t('music.tracksMeta', { n: album.tracks.length })}</span>
+              </div>
+              <ol className="tracklist">
+                {album.tracks.map((track) => (
+                  <li key={track.number}>
+                    <div className={`track-row${openTrack === track.number ? ' is-open' : ''}`}>
+                      <span className="track-number">{track.number}</span>
+                      <span className="track-title" lang={track.number === '03' ? 'fr' : 'es'}>{track.title}</span>
+                      <TrackListen
+                        track={track}
+                        open={openTrack === track.number}
+                        onToggle={toggleTrack}
+                      />
+                    </div>
+                  </li>
+                ))}
+              </ol>
+              <div className="music-liner-foot" aria-hidden="true">
+                <span>{album.title}</span>
+                <span>{album.year}</span>
+              </div>
+            </div>
           </Reveal>
         </div>
       </div>

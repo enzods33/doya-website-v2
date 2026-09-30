@@ -3451,3 +3451,319 @@ a.concert-tickets:focus-visible {
   .site-footer .footer-meta-primary { align-items: flex-start; }
   .site-footer .footer-legal { justify-content: flex-start; }
 }
+
+
+/* —— Luna Bohemia : livret éditorial / liner notes —— */
+.music-section {
+  overflow-x: clip;
+}
+.music-heading-editorial {
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto auto auto;
+  column-gap: clamp(30px, 5vw, 84px);
+  align-items: end;
+}
+.music-heading-editorial > .eyebrow:first-child {
+  grid-column: 1;
+  grid-row: 1;
+}
+.music-editorial-title {
+  grid-column: 1;
+  grid-row: 2 / 4;
+  display: grid;
+  width: max-content;
+  max-width: 100%;
+  margin: 0;
+  font-size: clamp(52px, 5.7vw, 88px) !important;
+  line-height: .82 !important;
+  letter-spacing: .005em !important;
+}
+.music-title-line {
+  display: block;
+  white-space: nowrap;
+}
+.music-title-line-offset {
+  margin-left: clamp(28px, 5vw, 92px);
+  font-style: italic;
+  font-weight: 400;
+}
+.music-folio {
+  grid-column: 2;
+  grid-row: 1;
+  display: grid;
+  justify-items: end;
+  gap: 3px;
+  min-width: 8.8rem;
+  padding-top: 8px;
+  border-top: 1px solid rgb(44 41 38 / 38%);
+  color: var(--ink);
+  text-align: right;
+}
+.music-folio-number {
+  font-family: var(--font-editorial);
+  font-size: clamp(23px, 2vw, 31px);
+  line-height: .9;
+  font-variant-numeric: tabular-nums;
+}
+.music-folio-copy {
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+.music-heading-editorial .music-meta {
+  grid-column: 2;
+  grid-row: 2 / 4;
+  align-self: end;
+  padding-bottom: 3px;
+}
+
+.tracklist-column {
+  isolation: isolate;
+  overflow: visible;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.tracklist-column::before {
+  content: none;
+}
+.music-liner-sheet {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  padding: clamp(16px, 1.55vw, 22px) clamp(16px, 1.8vw, 26px) clamp(14px, 1.35vw, 20px);
+  border: 1px solid rgb(44 41 38 / 15%);
+  background:
+    linear-gradient(118deg, rgb(255 255 255 / 62%), transparent 29%),
+    repeating-linear-gradient(0deg, rgb(44 41 38 / 1.6%) 0 1px, transparent 1px 5px),
+    rgb(245 242 236 / 94%);
+  box-shadow:
+    0 30px 72px rgb(44 41 38 / 16%),
+    0 8px 22px rgb(44 41 38 / 8%),
+    inset 0 1px 0 rgb(255 255 255 / 78%);
+}
+.music-liner-sheet::after {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  z-index: -1;
+  pointer-events: none;
+  border: 1px solid rgb(44 41 38 / 5%);
+}
+.music-liner-head,
+.music-liner-foot {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  color: rgb(44 41 38 / 58%);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: .17em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+.music-liner-head {
+  margin-bottom: clamp(10px, 1.2vh, 15px);
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgb(44 41 38 / 20%);
+}
+.music-liner-head::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 2.4rem;
+  height: 1px;
+  background: var(--color-doya-red);
+}
+.music-liner-foot {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgb(44 41 38 / 16%);
+}
+.music-liner-foot span:first-child {
+  font-family: var(--font-editorial);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .11em;
+}
+.music-liner-sheet .tracklist {
+  position: relative;
+  z-index: 2;
+}
+.music-liner-sheet .track-row {
+  padding-inline: .15rem;
+  border-bottom-color: rgb(44 41 38 / 13%);
+  font-size: clamp(12.5px, .92vw, 14px);
+  line-height: 1.15;
+  letter-spacing: .015em;
+  text-transform: none;
+}
+.music-liner-sheet .track-title {
+  font-family: var(--font-editorial);
+  font-size: 1.04em;
+  font-weight: 500;
+  letter-spacing: .012em;
+}
+.music-liner-sheet .track-number {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .08em;
+}
+.music-liner-sheet .track-row.is-open {
+  background: rgb(255 255 255 / 43%);
+}
+
+.music-tracklist-vinyl {
+  z-index: 0;
+  left: 90%;
+  top: 50%;
+  width: clamp(20rem, 25vw, 27rem);
+  filter:
+    drop-shadow(0 28px 38px rgb(44 41 38 / 30%))
+    drop-shadow(0 8px 14px rgb(44 41 38 / 18%));
+}
+.music-tracklist-vinyl-disc {
+  opacity: .58;
+  mix-blend-mode: multiply;
+}
+.music-tracklist-vinyl-mark {
+  width: 29%;
+  opacity: 1;
+  filter: drop-shadow(0 3px 8px rgb(44 41 38 / 48%));
+}
+.music-tracklist-vinyl::after {
+  opacity: .9;
+}
+.music-tracklist-vinyl-rotor {
+  animation-duration: 48s;
+}
+
+@media (min-width: 1101px) {
+  .music-layout {
+    grid-template-columns: minmax(23rem, var(--music-photo)) minmax(35rem, 41rem);
+    column-gap: clamp(56px, 5vw, 86px);
+  }
+  .music-cover-column {
+    align-self: center;
+  }
+  .tracklist-column {
+    align-self: stretch;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1100px) {
+  .music-editorial-title {
+    font-size: clamp(44px, 7vw, 66px) !important;
+  }
+  .music-title-line-offset {
+    margin-left: clamp(22px, 4vw, 48px);
+  }
+  .music-tracklist-vinyl {
+    left: 88%;
+    width: clamp(15rem, 30vw, 19rem);
+  }
+  .music-liner-sheet {
+    height: auto;
+  }
+}
+
+@media (max-width: 767px) {
+  .music-heading-editorial {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
+    margin-bottom: 34px;
+  }
+  .music-editorial-title {
+    grid-column: 1;
+    grid-row: 2;
+    font-size: clamp(46px, 14vw, 62px) !important;
+    line-height: .84 !important;
+  }
+  .music-title-line-offset {
+    margin-left: clamp(24px, 11vw, 48px);
+  }
+  .music-folio {
+    display: none;
+  }
+  .music-heading-editorial .music-meta {
+    grid-column: 1;
+    grid-row: 3;
+    margin-top: 18px;
+    padding-bottom: 0;
+  }
+  .tracklist-column {
+    margin-top: clamp(26px, 8vw, 44px);
+    padding: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+  .music-liner-sheet {
+    position: relative;
+    z-index: 2;
+    padding: 18px 14px 15px;
+    background:
+      linear-gradient(118deg, rgb(255 255 255 / 64%), transparent 31%),
+      repeating-linear-gradient(0deg, rgb(44 41 38 / 1.5%) 0 1px, transparent 1px 5px),
+      rgb(245 242 236 / 96%);
+    box-shadow:
+      0 24px 56px rgb(44 41 38 / 14%),
+      inset 0 1px 0 rgb(255 255 255 / 80%);
+  }
+  .music-liner-head,
+  .music-liner-foot {
+    font-size: 8px;
+    letter-spacing: .13em;
+  }
+  .music-liner-head {
+    margin-bottom: 9px;
+  }
+  .music-liner-foot {
+    margin-top: 8px;
+    padding-top: 9px;
+  }
+  .music-liner-sheet .track-row {
+    padding-block: .2rem;
+    font-size: 13.5px;
+  }
+  .music-liner-sheet .track-title {
+    font-size: 1em;
+  }
+  .music-tracklist-vinyl {
+    left: 88%;
+    top: 1%;
+    width: min(74vw, 18rem);
+    transform: translate(-50%, -42%);
+    filter:
+      drop-shadow(0 22px 28px rgb(44 41 38 / 26%))
+      drop-shadow(0 6px 10px rgb(44 41 38 / 15%));
+  }
+  .music-tracklist-vinyl-disc {
+    opacity: .62;
+  }
+  .music-tracklist-vinyl-mark {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 359px) {
+  .music-editorial-title {
+    font-size: clamp(42px, 13.5vw, 50px) !important;
+  }
+  .music-title-line-offset {
+    margin-left: 18px;
+  }
+  .music-liner-sheet .track-row {
+    font-size: 12.5px;
+  }
+}
