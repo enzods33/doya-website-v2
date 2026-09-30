@@ -19,6 +19,7 @@ test.describe('Doya écoute, réseaux et Brevo — sans appel externe mutatif', 
     for (const [name, host] of Object.entries(expectedHosts)) {
       const link = page.locator(`footer a[aria-label="${name}"]`).first()
       await expect(link).toBeVisible()
+      await expect(link.locator('.platform-icon')).toBeVisible()
       const href = await link.getAttribute('href')
       expect(new URL(href).hostname).toBe(host)
       await expect(link).toHaveAttribute('target', '_blank')

@@ -3352,10 +3352,18 @@ a.concert-tickets:focus-visible {
   border-left: 1px solid var(--footer-rule);
 }
 .site-footer .socials a { width: 42px; height: 42px; }
-.site-footer .socials .platform-icon { color: var(--footer-ink); }
+.site-footer .socials .platform-icon {
+  display: block;
+  color: var(--footer-ink);
+  opacity: .92;
+  visibility: visible;
+}
+.site-footer .socials svg.platform-icon {
+  fill: currentColor;
+}
 .site-footer .socials img.platform-icon {
   filter: grayscale(1) brightness(0) invert(1);
-  opacity: .88;
+  opacity: .92;
 }
 .site-footer .footer-meta { border-color: var(--footer-rule); }
 .site-footer .footer-meta-tools { border-color: var(--footer-rule); }
@@ -3465,6 +3473,17 @@ a.concert-tickets:focus-visible {
     border-radius: 18px;
   }
   .site-footer .socials { justify-content: center; }
+  .site-footer .socials .platform-icon {
+    animation: none;
+    will-change: auto;
+    transform: none;
+    opacity: .94;
+  }
+  .site-footer .socials li,
+  .site-footer .socials a {
+    min-width: 42px;
+    min-height: 42px;
+  }
   .site-footer .socials + .socials {
     padding: 4px 0 0;
     border-left: 0;

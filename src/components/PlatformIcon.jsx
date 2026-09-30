@@ -45,6 +45,8 @@ export function PlatformIcon({ id, className = '' }) {
       width="40"
       height="40"
       decoding="async"
+      loading="eager"
+      fetchPriority="high"
     />
   )
 }
