@@ -3853,42 +3853,33 @@ a.concert-tickets:focus-visible {
   );
 }
 .section-bridge--about-gallery {
-  height: clamp(68px, 7.5vw, 102px);
+  height: clamp(46px, 5.2vw, 72px);
   background: linear-gradient(
     180deg,
     #d8d3cc 0%,
-    #cfc9c2 16%,
-    #bbb5ae 31%,
-    #9d9790 47%,
-    #76706a 63%,
-    #504b46 80%,
+    #c9c3bc 18%,
+    #aaa49d 38%,
+    #7f7972 60%,
+    #514c47 80%,
     #211e1b 100%
   );
 }
+.section-bridge--about-gallery::before,
 .section-bridge--about-gallery::after,
+.section-bridge--gallery-live::before,
 .section-bridge--gallery-live::after {
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgb(194 5 15 / 11%) 28%,
-    rgb(194 5 15 / 25%) 42%,
-    transparent 47%,
-    transparent 53%,
-    rgb(194 5 15 / 25%) 58%,
-    rgb(194 5 15 / 11%) 72%,
-    transparent 100%
-  );
+  content: none;
+  display: none;
 }
 .section-bridge--gallery-live {
-  height: clamp(68px, 7.5vw, 102px);
+  height: clamp(46px, 5.2vw, 72px);
   background: linear-gradient(
     180deg,
     #211e1b 0%,
-    #3a3632 17%,
-    #5d5852 34%,
-    #807a73 52%,
-    #a29c94 69%,
-    #beb8b0 85%,
+    #45403c 20%,
+    #6f6963 40%,
+    #969088 62%,
+    #b6b0a8 82%,
     var(--color-sand) 100%
   );
 }
@@ -4095,7 +4086,7 @@ a.concert-tickets:focus-visible {
   }
   .section-bridge--about-gallery,
   .section-bridge--gallery-live {
-    height: 54px;
+    height: 38px;
   }
   .section-bridge::after {
     width: min(52vw, 13rem);
