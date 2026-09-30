@@ -3541,9 +3541,9 @@ a.concert-tickets:focus-visible {
   padding: clamp(16px, 1.55vw, 22px) clamp(16px, 1.8vw, 26px) clamp(14px, 1.35vw, 20px);
   border: 1px solid rgb(44 41 38 / 15%);
   background:
-    linear-gradient(118deg, rgb(255 255 255 / 62%), transparent 29%),
-    repeating-linear-gradient(0deg, rgb(44 41 38 / 1.6%) 0 1px, transparent 1px 5px),
-    rgb(245 242 236 / 94%);
+    linear-gradient(118deg, rgb(255 255 255 / 38%), transparent 29%),
+    repeating-linear-gradient(0deg, rgb(44 41 38 / 1.8%) 0 1px, transparent 1px 5px),
+    rgb(239 235 227 / 82%);
   box-shadow:
     0 30px 72px rgb(44 41 38 / 16%),
     0 8px 22px rgb(44 41 38 / 8%),
@@ -3626,16 +3626,17 @@ a.concert-tickets:focus-visible {
 
 .music-tracklist-vinyl {
   z-index: 0;
-  left: 90%;
-  top: 50%;
-  width: clamp(20rem, 25vw, 27rem);
+  left: 86%;
+  top: 48%;
+  width: clamp(22rem, 29vw, 31rem);
   filter:
-    drop-shadow(0 28px 38px rgb(44 41 38 / 30%))
-    drop-shadow(0 8px 14px rgb(44 41 38 / 18%));
+    drop-shadow(0 32px 44px rgb(31 28 26 / 34%))
+    drop-shadow(0 9px 16px rgb(31 28 26 / 22%));
 }
 .music-tracklist-vinyl-disc {
-  opacity: .58;
-  mix-blend-mode: multiply;
+  opacity: .94;
+  mix-blend-mode: normal;
+  filter: contrast(1.06) saturate(.82);
 }
 .music-tracklist-vinyl-mark {
   width: 29%;
@@ -3713,9 +3714,9 @@ a.concert-tickets:focus-visible {
     z-index: 2;
     padding: 18px 14px 15px;
     background:
-      linear-gradient(118deg, rgb(255 255 255 / 64%), transparent 31%),
-      repeating-linear-gradient(0deg, rgb(44 41 38 / 1.5%) 0 1px, transparent 1px 5px),
-      rgb(245 242 236 / 96%);
+      linear-gradient(118deg, rgb(255 255 255 / 36%), transparent 31%),
+      repeating-linear-gradient(0deg, rgb(44 41 38 / 1.8%) 0 1px, transparent 1px 5px),
+      rgb(239 235 227 / 80%);
     box-shadow:
       0 24px 56px rgb(44 41 38 / 14%),
       inset 0 1px 0 rgb(255 255 255 / 80%);
@@ -3740,16 +3741,16 @@ a.concert-tickets:focus-visible {
     font-size: 1em;
   }
   .music-tracklist-vinyl {
-    left: 88%;
-    top: 1%;
-    width: min(74vw, 18rem);
-    transform: translate(-50%, -42%);
+    left: 86%;
+    top: -1%;
+    width: min(88vw, 21rem);
+    transform: translate(-50%, -40%);
     filter:
-      drop-shadow(0 22px 28px rgb(44 41 38 / 26%))
-      drop-shadow(0 6px 10px rgb(44 41 38 / 15%));
+      drop-shadow(0 26px 34px rgb(31 28 26 / 32%))
+      drop-shadow(0 7px 12px rgb(31 28 26 / 20%));
   }
   .music-tracklist-vinyl-disc {
-    opacity: .62;
+    opacity: .96;
   }
   .music-tracklist-vinyl-mark {
     opacity: 1;
