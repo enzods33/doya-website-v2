@@ -1,5 +1,12 @@
 import { products } from '../data/products.js'
 
+const CATALOG_RETRY_DELAYS = [0, 450, 1200]
+
+function wait(ms) {
+  if (!ms) return Promise.resolve()
+  return new Promise((resolve) => window.setTimeout(resolve, ms))
+}
+
 function normalizeDefaultView(value, fallback = 'front') {
   return value === 'back' || value === 'front' ? value : fallback
 }
@@ -23,6 +30,7 @@ function localCatalog() {
       variants: [],
     })),
     purchasable: false,
+    source: 'local',
   }
 }
 
@@ -72,6 +80,45 @@ function remoteToItem(row, local) {
   }
 }
 
+async function fetchRemoteCatalog(supabase, local) {
+  const [{ data: remoteProducts, error: productError }, { data: remoteVariants, error: variantError }] = await Promise.all([
+    supabase.from('catalog_products').select(
+      'id, name, type, color, price_cents, currency, default_view, sort_order, image_front_url, image_back_url, image_width, image_height, type_key, color_key',
+    ),
+    supabase.from('catalog_variants').select('product_id, size, label, sort_order, available'),
+  ])
+
+  if (productError || variantError || !remoteProducts) {
+    throw new Error(productError?.message || variantError?.message || 'catalog_unavailable')
+  }
+
+  const items = []
+  for (const row of remoteProducts) {
+    if (row.currency !== 'eur' || !Number.isInteger(row.price_cents) || row.price_cents <= 0) continue
+    const current = remoteToItem(row, local.get(row.id))
+    if (!current.front && !current.back) continue
+    current.sale = { priceCents: row.price_cents, currency: row.currency }
+    current.variants = (remoteVariants ?? [])
+      .filter((variant) => variant.product_id === row.id)
+      .map((variant) => ({
+        size: variant.size,
+        label: variant.label || variant.size,
+        sortOrder: Number.isInteger(variant.sort_order) ? variant.sort_order : 100,
+        available: Math.max(0, variant.available ?? 0),
+      }))
+      .sort((a, b) => a.sortOrder - b.sortOrder || a.label.localeCompare(b.label))
+    items.push(current)
+  }
+
+  items.sort((a, b) => (a.sortOrder ?? 100) - (b.sortOrder ?? 100) || a.id.localeCompare(b.id))
+
+  return {
+    items,
+    purchasable: items.some((item) => item.sale && item.variants.some((variant) => variant.available > 0)),
+    source: 'remote',
+  }
+}
+
 export async function loadCatalog() {
   const local = new Map(
     products.map((product, index) => [
@@ -91,41 +138,15 @@ export async function loadCatalog() {
     const { supabase } = await import('./supabase.js')
     if (!supabase) return localCatalog()
 
-    const [{ data: remoteProducts, error: productError }, { data: remoteVariants, error: variantError }] = await Promise.all([
-      supabase.from('catalog_products').select(
-        'id, name, type, color, price_cents, currency, default_view, sort_order, image_front_url, image_back_url, image_width, image_height, type_key, color_key',
-      ),
-      supabase.from('catalog_variants').select('product_id, size, label, sort_order, available'),
-    ])
-
-    if (productError || variantError || !remoteProducts) return localCatalog()
-
-    // catalogue_products = on_sale only → les articles masqués n’apparaissent pas
-    const items = []
-    for (const row of remoteProducts) {
-      if (row.currency !== 'eur' || !Number.isInteger(row.price_cents) || row.price_cents <= 0) continue
-      const current = remoteToItem(row, local.get(row.id))
-      // Au moins une photo (face ou dos) pour apparaître en boutique
-      if (!current.front && !current.back) continue
-      current.sale = { priceCents: row.price_cents, currency: row.currency }
-      current.variants = (remoteVariants ?? [])
-        .filter((variant) => variant.product_id === row.id)
-        .map((variant) => ({
-          size: variant.size,
-          label: variant.label || variant.size,
-          sortOrder: Number.isInteger(variant.sort_order) ? variant.sort_order : 100,
-          available: Math.max(0, variant.available ?? 0),
-        }))
-        .sort((a, b) => a.sortOrder - b.sortOrder || a.label.localeCompare(b.label))
-      items.push(current)
+    for (const delay of CATALOG_RETRY_DELAYS) {
+      try {
+        await wait(delay)
+        return await fetchRemoteCatalog(supabase, local)
+      } catch {
+        // Une connexion mobile ou un réveil Supabase peut échouer brièvement.
+      }
     }
-
-    items.sort((a, b) => (a.sortOrder ?? 100) - (b.sortOrder ?? 100) || a.id.localeCompare(b.id))
-
-    return {
-      items,
-      purchasable: items.some((item) => item.sale && item.variants.some((variant) => variant.available > 0)),
-    }
+    return localCatalog()
   } catch {
     return localCatalog()
   }
