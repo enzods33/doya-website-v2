@@ -3282,6 +3282,29 @@ a.concert-tickets:focus-visible {
   color: #181513;
   background: var(--footer-ink);
 }
+.site-footer .newsletter-signup-status {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  max-width: 100%;
+  margin: 12px 0 0;
+  padding: 8px 10px;
+  border: 1px solid rgb(244 240 234 / 14%);
+  background: rgb(255 255 255 / 5%);
+  color: var(--footer-ink);
+  font-size: 12px;
+  line-height: 1.4;
+  letter-spacing: .02em;
+}
+.site-footer .newsletter-signup-status.is-ok {
+  color: rgb(255 255 255 / 96%);
+  text-shadow: 0 1px 10px rgb(255 255 255 / 8%);
+}
+.site-footer .newsletter-signup-status.is-error {
+  color: #f06b72;
+  border-color: rgb(194 5 15 / 34%);
+  background: rgb(194 5 15 / 8%);
+}
 .site-footer .footer-contact {
   max-width: none;
   gap: 1px;

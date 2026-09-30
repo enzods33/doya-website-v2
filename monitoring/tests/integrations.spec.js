@@ -45,6 +45,20 @@ test.describe('Doya écoute, réseaux et Brevo — sans appel externe mutatif', 
     safety.assertSafe()
   })
 
+  test('le formulaire newsletter affiche déjà inscrit', async ({ page }) => {
+    const safety = await protectProduction(page, {
+      'subscribe-newsletter': { status: 200, body: { ok: true, already: true } },
+    })
+    await page.goto('/', { waitUntil: 'domcontentloaded' })
+    const form = page.locator('footer .newsletter-signup-form')
+    await form.locator('input[name="email"]').fill('already@example.invalid')
+    await form.locator('button[type="submit"]').click()
+    const status = page.locator('footer .newsletter-signup-status.is-ok')
+    await expect(status).toBeVisible()
+    await expect(status).toContainText(/déjà|already|apuntad|bereits|登録|구독|订阅|مشترك/i)
+    safety.assertSafe()
+  })
+
   test('le fallback newsletter est compréhensible', async ({ page }) => {
     const safety = await protectProduction(page, {
       'subscribe-newsletter': { status: 503, body: { error: 'newsletter_failed' } },
