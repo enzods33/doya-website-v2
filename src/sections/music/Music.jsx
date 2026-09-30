@@ -17,38 +17,49 @@ const PLATFORM_NAMES = {
   youtube: 'YouTube',
 }
 
-const VINYL_GROOVES = [42, 48, 54, 60, 66, 72, 78, 84, 90]
+const VINYL_GROOVES = [38, 42, 46, 50, 54, 58, 62, 66, 70, 74, 78, 82, 86, 90, 94]
 
 function VinylDisc({ className = '' }) {
   const vinylId = useId().replace(/:/g, '')
   const shellGradientId = `vinyl-shell-${vinylId}`
   const labelGradientId = `vinyl-label-${vinylId}`
+  const sheenGradientId = `vinyl-sheen-${vinylId}`
 
   return (
     <div className={className} aria-hidden="true">
       <div className="music-tracklist-vinyl-rotor">
         <svg className="music-tracklist-vinyl-disc" viewBox="0 0 200 200" focusable="false">
           <defs>
-            <radialGradient id={shellGradientId} cx="39%" cy="32%" r="72%">
-              <stop offset="0" stopColor="#f8f5f0" stopOpacity=".76" />
-              <stop offset=".28" stopColor="#c9c5bf" stopOpacity=".64" />
-              <stop offset=".72" stopColor="#5f5b57" stopOpacity=".78" />
-              <stop offset="1" stopColor="#292725" stopOpacity=".9" />
+            <radialGradient id={shellGradientId} cx="34%" cy="28%" r="78%">
+              <stop offset="0" stopColor="#8f8a84" stopOpacity=".74" />
+              <stop offset=".22" stopColor="#4e4a46" stopOpacity=".94" />
+              <stop offset=".68" stopColor="#242220" stopOpacity=".98" />
+              <stop offset="1" stopColor="#11100f" />
             </radialGradient>
-            <radialGradient id={labelGradientId} cx="35%" cy="30%" r="78%">
-              <stop offset="0" stopColor="#8c8781" />
-              <stop offset="1" stopColor="#4b4743" />
+            <radialGradient id={labelGradientId} cx="34%" cy="28%" r="78%">
+              <stop offset="0" stopColor="#66615c" />
+              <stop offset=".58" stopColor="#34312e" />
+              <stop offset="1" stopColor="#1d1b1a" />
             </radialGradient>
+            <linearGradient id={sheenGradientId} x1="8%" y1="4%" x2="94%" y2="96%">
+              <stop offset="0" stopColor="#fff" stopOpacity=".02" />
+              <stop offset=".28" stopColor="#fff" stopOpacity=".05" />
+              <stop offset=".43" stopColor="#fff" stopOpacity=".34" />
+              <stop offset=".5" stopColor="#fff" stopOpacity=".07" />
+              <stop offset=".73" stopColor="#e6d8c7" stopOpacity=".18" />
+              <stop offset="1" stopColor="#fff" stopOpacity=".02" />
+            </linearGradient>
           </defs>
           <circle cx="100" cy="100" r="98" fill={`url(#${shellGradientId})`} />
-          <circle cx="100" cy="100" r="97" fill="none" stroke="#fff" strokeWidth="1.15" opacity=".62" />
-          <circle cx="100" cy="100" r="93" fill="none" stroke="#282522" strokeWidth=".65" opacity=".62" />
-          <g fill="none" stroke="#fff" strokeWidth="0.62" opacity="0.48">
+          <circle cx="100" cy="100" r="98" fill={`url(#${sheenGradientId})`} />
+          <circle cx="100" cy="100" r="97" fill="none" stroke="#fff" strokeWidth=".8" opacity=".42" />
+          <circle cx="100" cy="100" r="93" fill="none" stroke="#0b0a0a" strokeWidth=".7" opacity=".74" />
+          <g fill="none" stroke="#f4eee6" strokeWidth="0.42" opacity="0.38">
             {VINYL_GROOVES.map((r) => (
               <circle key={r} cx="100" cy="100" r={r} />
             ))}
           </g>
-          <g fill="none" stroke="#282522" strokeWidth=".42" opacity=".38">
+          <g fill="none" stroke="#090808" strokeWidth=".44" opacity=".62">
             <circle cx="100" cy="100" r="45" />
             <circle cx="100" cy="100" r="57" />
             <circle cx="100" cy="100" r="69" />
