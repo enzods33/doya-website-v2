@@ -3651,6 +3651,14 @@ a.concert-tickets:focus-visible {
 }
 
 @media (min-width: 1101px) {
+  .music-section {
+    height: auto;
+    min-height: calc(100svh - var(--header-height));
+    max-height: none;
+    overflow-x: clip;
+    overflow-y: visible;
+    padding-bottom: clamp(28px, 3.6vh, 48px);
+  }
   .music-layout {
     grid-template-columns: minmax(23rem, var(--music-photo)) minmax(35rem, 41rem);
     column-gap: clamp(56px, 5vw, 86px);
@@ -3659,7 +3667,11 @@ a.concert-tickets:focus-visible {
     align-self: center;
   }
   .tracklist-column {
-    align-self: stretch;
+    height: auto;
+    align-self: start;
+  }
+  .music-liner-sheet {
+    height: auto;
   }
 }
 
@@ -3776,118 +3788,127 @@ a.concert-tickets:focus-visible {
   z-index: 2;
   display: grid;
   place-items: center;
-  height: clamp(54px, 6vw, 88px);
-  margin: 0;
+  height: clamp(58px, 6.4vw, 88px);
+  margin: -1px 0;
   overflow: hidden;
+  isolation: isolate;
   pointer-events: none;
 }
 .section-bridge::before {
   content: '';
   position: absolute;
+  z-index: 0;
   left: 50%;
   top: 50%;
-  width: min(72vw, 62rem);
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgb(44 41 38 / 8%) 12%,
-    rgb(194 5 15 / 24%) 34%,
-    rgb(194 5 15 / 40%) 43%,
-    transparent 47%,
-    transparent 53%,
-    rgb(194 5 15 / 40%) 57%,
-    rgb(194 5 15 / 24%) 66%,
-    rgb(44 41 38 / 8%) 88%,
-    transparent 100%
+  width: clamp(6rem, 13vw, 10rem);
+  height: clamp(2.4rem, 3.6vw, 3.5rem);
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    rgb(194 5 15 / 5.5%) 0,
+    rgb(194 5 15 / 2%) 42%,
+    transparent 74%
   );
+  filter: blur(11px);
   transform: translate(-50%, -50%);
 }
 .section-bridge::after {
   content: '';
   position: absolute;
+  z-index: 1;
   left: 50%;
   top: 50%;
-  width: clamp(7rem, 11vw, 10rem);
-  height: clamp(2.6rem, 4vw, 3.6rem);
-  border-radius: 50%;
-  background: radial-gradient(
-    ellipse at center,
-    rgb(194 5 15 / 9%) 0,
-    rgb(194 5 15 / 3%) 44%,
-    transparent 74%
+  width: min(34vw, 22rem);
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgb(194 5 15 / 10%) 28%,
+    rgb(194 5 15 / 23%) 42%,
+    transparent 47%,
+    transparent 53%,
+    rgb(194 5 15 / 23%) 58%,
+    rgb(194 5 15 / 10%) 72%,
+    transparent 100%
   );
-  filter: blur(8px);
   transform: translate(-50%, -50%);
 }
 .section-bridge-stars {
   position: relative;
   z-index: 2;
-  width: clamp(26px, 2.4vw, 34px);
+  width: clamp(22px, 1.8vw, 27px);
   height: auto;
-  filter:
-    drop-shadow(0 5px 14px rgb(194 5 15 / 16%))
-    drop-shadow(0 1px 0 rgb(255 255 255 / 24%));
-  animation: doya-bridge-stars 9s ease-in-out infinite alternate;
+  opacity: .88;
+  filter: drop-shadow(0 4px 10px rgb(194 5 15 / 10%));
+  transform-origin: center;
+  animation: doya-bridge-stars 14s ease-in-out infinite alternate;
 }
 .section-bridge--music-about {
-  background:
-    radial-gradient(ellipse at 50% 48%, rgb(255 255 255 / 16%), transparent 48%),
-    linear-gradient(180deg, var(--color-stone) 0%, #d9d4cd 52%, #d8d3cc 100%);
+  background: linear-gradient(
+    180deg,
+    var(--color-stone) 0%,
+    color-mix(in srgb, var(--color-stone) 78%, #d8d3cc) 28%,
+    color-mix(in srgb, var(--color-stone) 42%, #d8d3cc) 66%,
+    #d8d3cc 100%
+  );
 }
 .section-bridge--about-gallery {
-  background:
-    radial-gradient(ellipse at 50% 54%, rgb(194 5 15 / 4%), transparent 44%),
-    linear-gradient(180deg, #d8d3cc 0%, #8c8781 48%, #211e1b 100%);
+  height: clamp(68px, 7.5vw, 102px);
+  background: linear-gradient(
+    180deg,
+    #d8d3cc 0%,
+    #cfc9c2 16%,
+    #bbb5ae 31%,
+    #9d9790 47%,
+    #76706a 63%,
+    #504b46 80%,
+    #211e1b 100%
+  );
 }
-.section-bridge--about-gallery::before {
+.section-bridge--about-gallery::after,
+.section-bridge--gallery-live::after {
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgb(244 240 234 / 6%) 14%,
-    rgb(194 5 15 / 28%) 35%,
-    rgb(194 5 15 / 48%) 43%,
+    rgb(194 5 15 / 11%) 28%,
+    rgb(194 5 15 / 25%) 42%,
     transparent 47%,
     transparent 53%,
-    rgb(194 5 15 / 48%) 57%,
-    rgb(194 5 15 / 28%) 65%,
-    rgb(244 240 234 / 6%) 86%,
+    rgb(194 5 15 / 25%) 58%,
+    rgb(194 5 15 / 11%) 72%,
     transparent 100%
   );
 }
 .section-bridge--gallery-live {
-  background:
-    radial-gradient(ellipse at 50% 46%, rgb(244 240 234 / 7%), transparent 46%),
-    linear-gradient(180deg, #211e1b 0%, #77716b 48%, var(--color-sand) 100%);
-}
-.section-bridge--gallery-live::before {
+  height: clamp(68px, 7.5vw, 102px);
   background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgb(244 240 234 / 7%) 14%,
-    rgb(194 5 15 / 26%) 35%,
-    rgb(194 5 15 / 46%) 43%,
-    transparent 47%,
-    transparent 53%,
-    rgb(194 5 15 / 46%) 57%,
-    rgb(194 5 15 / 26%) 65%,
-    rgb(44 41 38 / 8%) 86%,
-    transparent 100%
+    180deg,
+    #211e1b 0%,
+    #3a3632 17%,
+    #5d5852 34%,
+    #807a73 52%,
+    #a29c94 69%,
+    #beb8b0 85%,
+    var(--color-sand) 100%
   );
 }
 .section-bridge--live-shop {
-  background:
-    radial-gradient(ellipse at 50% 48%, rgb(255 255 255 / 14%), transparent 46%),
-    linear-gradient(180deg, #d2cdc6 0%, #d8d3cc 48%, var(--color-stone) 100%);
+  background: linear-gradient(
+    180deg,
+    #d2cdc6 0%,
+    #d4cfc8 32%,
+    color-mix(in srgb, #d4cfc8 62%, var(--color-stone)) 68%,
+    var(--color-stone) 100%
+  );
 }
 @keyframes doya-bridge-stars {
   from {
-    opacity: .84;
-    transform: translateY(.6px) scale(.985);
+    opacity: .8;
+    transform: translateY(.35px) scale(.992);
   }
   to {
-    opacity: 1;
-    transform: translateY(-.6px) scale(1.015);
+    opacity: .9;
+    transform: translateY(-.35px) scale(1.008);
   }
 }
 
@@ -4095,5 +4116,22 @@ a.concert-tickets:focus-visible {
   .product.is-featured .product-image-trigger::after,
   .section-bridge-stars {
     animation: none;
+  }
+}
+
+
+@media (max-width: 767px) {
+  .section-bridge {
+    height: 46px;
+  }
+  .section-bridge--about-gallery,
+  .section-bridge--gallery-live {
+    height: 54px;
+  }
+  .section-bridge::after {
+    width: min(52vw, 13rem);
+  }
+  .section-bridge-stars {
+    width: 21px;
   }
 }

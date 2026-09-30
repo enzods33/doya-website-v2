@@ -20,5 +20,7 @@ test('le polish éditorial garde le lookbook et les transitions réversibles', (
   assert.match(styles, /@keyframes doya-lookbook-light/)
   assert.match(styles, /@keyframes doya-bridge-stars/)
   assert.match(styles, /\.section-bridge-stars\s*\{/)
+  assert.match(styles, /@media \(min-width: 1101px\)[\s\S]*?\.music-section\s*\{[\s\S]*?height:\s*auto;[\s\S]*?max-height:\s*none;/)
+  assert.match(styles, /\.section-bridge-stars\s*\{[\s\S]*?width:\s*clamp\(22px, 1\.8vw, 27px\)/)
   assert.match(styles, /@media \(prefers-reduced-motion: reduce\)/)
 })
