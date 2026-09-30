@@ -317,9 +317,6 @@ function Shop() {
             duration={1.05}
             onPointerEnter={() => pauseAutoOnHover(product)}
             onPointerLeave={() => scheduleAutoResume(product)}>
-          <span className="product-folio" aria-hidden="true">
-            {String(index + 1).padStart(2, '0')} / {String(items.length).padStart(2, '0')}
-          </span>
           <button
             type="button"
             className="product-image-trigger"
