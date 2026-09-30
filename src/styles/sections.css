@@ -4104,3 +4104,198 @@ a.concert-tickets:focus-visible {
     width: 21px;
   }
 }
+
+
+/* —— Footer éditorial : dernière page DOYA + cercle orbitant —— */
+.site-footer .footer-stage-editorial {
+  position: relative;
+}
+.site-footer .footer-cover {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: clamp(36px, 6vw, 92px);
+  padding: clamp(26px, 3.8vw, 48px) 0 clamp(34px, 4.8vw, 64px);
+  border-top: 1px solid rgb(44 41 38 / 22%);
+  border-bottom: 1px solid rgb(44 41 38 / 16%);
+}
+.site-footer .footer-brand {
+  align-items: flex-start;
+  text-align: left;
+  gap: clamp(13px, 1.8vw, 20px);
+  min-width: 0;
+}
+.site-footer .footer-brand > a {
+  display: inline-flex;
+  max-width: 100%;
+}
+.site-footer .footer-wordmark {
+  width: clamp(250px, 34vw, 490px);
+  max-width: 100%;
+}
+.site-footer .footer-album-mark {
+  width: clamp(146px, 18vw, 238px);
+  margin-inline-start: clamp(2px, .5vw, 8px);
+}
+.footer-orbit {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: clamp(144px, 15vw, 194px);
+  aspect-ratio: 1;
+  color: var(--ink);
+  text-decoration: none;
+  border-radius: 50%;
+  isolation: isolate;
+  flex: 0 0 auto;
+}
+.footer-orbit-ring {
+  position: absolute;
+  inset: 0;
+  display: block;
+  animation: footer-orbit-spin 34s linear infinite;
+  transform-origin: center;
+}
+.footer-orbit-ring svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.footer-orbit-hairline {
+  fill: none;
+  stroke: rgb(44 41 38 / 20%);
+  stroke-width: .8;
+  vector-effect: non-scaling-stroke;
+}
+.footer-orbit-copy {
+  fill: rgb(44 41 38 / 68%);
+  font-family: var(--font-functional);
+  font-size: 8.25px;
+  font-weight: 600;
+  letter-spacing: 2.05px;
+  text-transform: uppercase;
+}
+.footer-orbit-core {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 42%;
+  aspect-ratio: 1;
+  border: 1px solid rgb(194 5 15 / 42%);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 38% 32%, rgb(255 255 255 / 42%), transparent 42%),
+    rgb(238 233 226 / 66%);
+  color: var(--color-doya-red);
+  box-shadow:
+    0 12px 34px rgb(44 41 38 / 8%),
+    inset 0 1px 0 rgb(255 255 255 / 54%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition:
+    transform 600ms var(--motion-ease),
+    border-color 400ms var(--motion-ease),
+    box-shadow 500ms var(--motion-ease);
+}
+.footer-orbit-arrow {
+  width: 35%;
+  height: 35%;
+}
+@media (hover: hover) and (pointer: fine) {
+  .footer-orbit:hover .footer-orbit-core,
+  .footer-orbit:focus-visible .footer-orbit-core {
+    transform: scale(1.055);
+    border-color: rgb(194 5 15 / 68%);
+    box-shadow:
+      0 16px 38px rgb(44 41 38 / 11%),
+      0 0 0 7px rgb(194 5 15 / 4%),
+      inset 0 1px 0 rgb(255 255 255 / 62%);
+  }
+  .footer-orbit:hover .footer-orbit-copy {
+    fill: rgb(44 41 38 / 82%);
+  }
+}
+.footer-orbit:focus-visible {
+  outline: 2px solid var(--color-doya-red);
+  outline-offset: 6px;
+}
+.site-footer .footer-newsletter {
+  width: min(100%, 620px);
+  margin: clamp(32px, 4.2vw, 50px) 0 0;
+  text-align: left;
+}
+.site-footer .footer-newsletter .newsletter-signup-copy {
+  justify-items: start;
+}
+.site-footer .footer-newsletter .newsletter-signup-title {
+  max-width: 19ch;
+  font-size: clamp(24px, 2.8vw, 34px);
+}
+.site-footer .footer-newsletter .newsletter-signup-text {
+  max-width: 42ch;
+}
+.site-footer .footer-contact {
+  max-width: none;
+  justify-items: stretch;
+  gap: 0;
+  border-top-color: rgb(44 41 38 / 18%);
+}
+.site-footer .footer-contact-item {
+  padding-inline: clamp(18px, 3vw, 42px);
+}
+.site-footer .footer-contact-item + .footer-contact-item {
+  border-inline-start: 1px solid rgb(44 41 38 / 14%);
+}
+.site-footer .footer-socials {
+  padding-block: clamp(10px, 1vw, 18px);
+}
+.site-footer .footer-meta {
+  gap: 18px;
+}
+.site-footer .footer-meta-tools {
+  justify-content: flex-start;
+}
+@keyframes footer-orbit-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 767px) {
+  .site-footer .footer-cover {
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: 28px;
+    padding-top: 24px;
+  }
+  .site-footer .footer-brand {
+    gap: 12px;
+  }
+  .site-footer .footer-wordmark {
+    width: min(78vw, 330px);
+  }
+  .site-footer .footer-album-mark {
+    width: min(47vw, 190px);
+  }
+  .footer-orbit {
+    width: 132px;
+    justify-self: end;
+    margin-top: -10px;
+  }
+  .site-footer .footer-newsletter {
+    width: 100%;
+    margin-top: 34px;
+  }
+  .site-footer .footer-contact-item + .footer-contact-item {
+    border-inline-start: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer-orbit-ring {
+    animation: none;
+  }
+  .footer-orbit-core {
+    transition: none;
+  }
+}
