@@ -3776,118 +3776,136 @@ a.concert-tickets:focus-visible {
   z-index: 2;
   display: grid;
   place-items: center;
-  height: clamp(54px, 6vw, 88px);
-  margin: 0;
+  height: clamp(72px, 8vw, 118px);
+  margin: -1px 0;
   overflow: hidden;
+  isolation: isolate;
   pointer-events: none;
 }
 .section-bridge::before {
   content: '';
   position: absolute;
+  z-index: 0;
   left: 50%;
   top: 50%;
-  width: min(72vw, 62rem);
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgb(44 41 38 / 8%) 12%,
-    rgb(194 5 15 / 24%) 34%,
-    rgb(194 5 15 / 40%) 43%,
-    transparent 47%,
-    transparent 53%,
-    rgb(194 5 15 / 40%) 57%,
-    rgb(194 5 15 / 24%) 66%,
-    rgb(44 41 38 / 8%) 88%,
-    transparent 100%
-  );
+  width: clamp(8rem, 18vw, 15rem);
+  height: clamp(3.2rem, 5vw, 4.8rem);
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      ellipse at center,
+      rgb(194 5 15 / 9%) 0,
+      rgb(194 5 15 / 3.5%) 38%,
+      transparent 72%
+    );
+  filter: blur(10px);
   transform: translate(-50%, -50%);
 }
 .section-bridge::after {
   content: '';
   position: absolute;
+  z-index: 1;
   left: 50%;
   top: 50%;
-  width: clamp(7rem, 11vw, 10rem);
-  height: clamp(2.6rem, 4vw, 3.6rem);
-  border-radius: 50%;
-  background: radial-gradient(
-    ellipse at center,
-    rgb(194 5 15 / 9%) 0,
-    rgb(194 5 15 / 3%) 44%,
-    transparent 74%
+  width: min(48vw, 32rem);
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgb(44 41 38 / 5%) 8%,
+    rgb(194 5 15 / 18%) 25%,
+    rgb(194 5 15 / 34%) 39%,
+    transparent 47%,
+    transparent 53%,
+    rgb(194 5 15 / 34%) 61%,
+    rgb(194 5 15 / 18%) 75%,
+    rgb(44 41 38 / 5%) 92%,
+    transparent 100%
   );
-  filter: blur(8px);
   transform: translate(-50%, -50%);
 }
 .section-bridge-stars {
   position: relative;
   z-index: 2;
-  width: clamp(26px, 2.4vw, 34px);
+  width: clamp(29px, 2.5vw, 37px);
   height: auto;
   filter:
-    drop-shadow(0 5px 14px rgb(194 5 15 / 16%))
-    drop-shadow(0 1px 0 rgb(255 255 255 / 24%));
-  animation: doya-bridge-stars 9s ease-in-out infinite alternate;
+    drop-shadow(0 7px 18px rgb(194 5 15 / 14%))
+    drop-shadow(0 1px 0 rgb(255 255 255 / 20%));
+  transform-origin: center;
+  animation: doya-bridge-stars 12s ease-in-out infinite alternate;
 }
 .section-bridge--music-about {
   background:
-    radial-gradient(ellipse at 50% 48%, rgb(255 255 255 / 16%), transparent 48%),
-    linear-gradient(180deg, var(--color-stone) 0%, #d9d4cd 52%, #d8d3cc 100%);
+    radial-gradient(ellipse at 50% 46%, rgb(255 255 255 / 14%), transparent 40%),
+    linear-gradient(
+      180deg,
+      var(--color-stone) 0%,
+      color-mix(in srgb, var(--color-stone) 68%, #d8d3cc) 35%,
+      #d8d3cc 100%
+    );
 }
 .section-bridge--about-gallery {
   background:
-    radial-gradient(ellipse at 50% 54%, rgb(194 5 15 / 4%), transparent 44%),
-    linear-gradient(180deg, #d8d3cc 0%, #8c8781 48%, #211e1b 100%);
+    radial-gradient(ellipse at 50% 48%, rgb(194 5 15 / 4.5%), transparent 38%),
+    linear-gradient(
+      180deg,
+      #d8d3cc 0%,
+      #c9c3bc 18%,
+      #a9a39c 36%,
+      #77716b 57%,
+      #4a4541 76%,
+      #211e1b 100%
+    );
 }
-.section-bridge--about-gallery::before {
+.section-bridge--about-gallery::after,
+.section-bridge--gallery-live::after {
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgb(244 240 234 / 6%) 14%,
-    rgb(194 5 15 / 28%) 35%,
-    rgb(194 5 15 / 48%) 43%,
+    rgb(244 240 234 / 4%) 8%,
+    rgb(194 5 15 / 20%) 25%,
+    rgb(194 5 15 / 38%) 39%,
     transparent 47%,
     transparent 53%,
-    rgb(194 5 15 / 48%) 57%,
-    rgb(194 5 15 / 28%) 65%,
-    rgb(244 240 234 / 6%) 86%,
+    rgb(194 5 15 / 38%) 61%,
+    rgb(194 5 15 / 20%) 75%,
+    rgb(244 240 234 / 4%) 92%,
     transparent 100%
   );
 }
 .section-bridge--gallery-live {
   background:
-    radial-gradient(ellipse at 50% 46%, rgb(244 240 234 / 7%), transparent 46%),
-    linear-gradient(180deg, #211e1b 0%, #77716b 48%, var(--color-sand) 100%);
-}
-.section-bridge--gallery-live::before {
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgb(244 240 234 / 7%) 14%,
-    rgb(194 5 15 / 26%) 35%,
-    rgb(194 5 15 / 46%) 43%,
-    transparent 47%,
-    transparent 53%,
-    rgb(194 5 15 / 46%) 57%,
-    rgb(194 5 15 / 26%) 65%,
-    rgb(44 41 38 / 8%) 86%,
-    transparent 100%
-  );
+    radial-gradient(ellipse at 50% 52%, rgb(244 240 234 / 5.5%), transparent 40%),
+    linear-gradient(
+      180deg,
+      #211e1b 0%,
+      #3d3935 20%,
+      #625d57 40%,
+      #8b857e 61%,
+      #b5afa7 81%,
+      var(--color-sand) 100%
+    );
 }
 .section-bridge--live-shop {
   background:
-    radial-gradient(ellipse at 50% 48%, rgb(255 255 255 / 14%), transparent 46%),
-    linear-gradient(180deg, #d2cdc6 0%, #d8d3cc 48%, var(--color-stone) 100%);
+    radial-gradient(ellipse at 50% 48%, rgb(255 255 255 / 12%), transparent 42%),
+    linear-gradient(
+      180deg,
+      #d2cdc6 0%,
+      #d5d0c9 42%,
+      color-mix(in srgb, #d5d0c9 58%, var(--color-stone)) 68%,
+      var(--color-stone) 100%
+    );
 }
 @keyframes doya-bridge-stars {
   from {
-    opacity: .84;
-    transform: translateY(.6px) scale(.985);
+    opacity: .88;
+    transform: translateY(.7px) scale(.988);
   }
   to {
     opacity: 1;
-    transform: translateY(-.6px) scale(1.015);
+    transform: translateY(-.7px) scale(1.012);
   }
 }
 
