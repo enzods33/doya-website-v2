@@ -941,7 +941,7 @@
   .hero-copy { top: 2.75rem; width: min(70vw, 15rem); max-width: 15rem; }
   .hero-album-stage {
     --hero-cycle-size: 106%;
-    --hero-cycle-offset-y: -2px;
+    --hero-cycle-offset-y: 3px;
     padding: 1.25rem .7rem .85rem;
   }
   .hero-subtitle { font-size: 9px; }
