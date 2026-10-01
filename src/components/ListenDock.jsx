@@ -6,7 +6,7 @@ import { PlatformIcon } from './PlatformIcon.jsx'
 import { trackEvent } from '../commerce/pageAnalytics.js'
 
 const STORAGE_KEY = 'doya.listen-dock.hidden'
-const AUDIO_PLATFORM_ORDER = ['spotify', 'apple', 'deezer']
+const AUDIO_PLATFORM_ORDER = ['spotify', 'apple', 'deezer', 'youtubemusic']
 const MUSIC_SECTION_REVEAL_PROGRESS = 0.6
 
 function readHidden() {
