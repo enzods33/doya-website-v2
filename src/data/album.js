@@ -11,7 +11,6 @@ export const album = {
         apple: 'https://music.apple.com/fr/album/solo-t%C3%BA/6812817734?i=6812817939',
         deezer: 'https://www.deezer.com/track/4304248972',
         youtubemusic: 'https://music.youtube.com/watch?v=_zP8gyGShhc',
-        youtube: 'https://www.youtube.com/watch?v=_zP8gyGShhc',
       },
     },
     {
@@ -22,7 +21,6 @@ export const album = {
         apple: 'https://music.apple.com/fr/album/%C3%A1ngel-de-la-guarda/6812817734?i=6812818197',
         deezer: 'https://www.deezer.com/track/4304248982',
         youtubemusic: 'https://music.youtube.com/watch?v=aEkdevx8YPg',
-        youtube: 'https://www.youtube.com/watch?v=aEkdevx8YPg',
       },
     },
     {
@@ -33,7 +31,6 @@ export const album = {
         apple: 'https://music.apple.com/fr/album/guerri%C3%A8res/6812817734?i=6812818199',
         deezer: 'https://www.deezer.com/track/4304248992',
         youtubemusic: 'https://music.youtube.com/watch?v=B7PDhj04mqM',
-        youtube: 'https://www.youtube.com/watch?v=B7PDhj04mqM',
       },
     },
     {
@@ -44,7 +41,6 @@ export const album = {
         apple: 'https://music.apple.com/fr/album/casa-de-los-limoneros/6812817734?i=6812818202',
         deezer: 'https://www.deezer.com/track/4304249002',
         youtubemusic: 'https://music.youtube.com/watch?v=QMpY_4wYFbY',
-        youtube: 'https://www.youtube.com/watch?v=QMpY_4wYFbY',
       },
     },
     {
@@ -55,7 +51,6 @@ export const album = {
         apple: 'https://music.apple.com/fr/album/todo-de-mi/6812817734?i=6812818205',
         deezer: 'https://www.deezer.com/track/4304249022',
         youtubemusic: 'https://music.youtube.com/watch?v=_p--JCV3xyY',
-        youtube: 'https://www.youtube.com/watch?v=_p--JCV3xyY',
       },
     },
     {
@@ -66,7 +61,6 @@ export const album = {
         apple: 'https://music.apple.com/fr/album/mariposa/6812817734?i=6812818214',
         deezer: 'https://www.deezer.com/track/4304249042',
         youtubemusic: 'https://music.youtube.com/watch?v=w3R8leGVyRk',
-        youtube: 'https://www.youtube.com/watch?v=w3R8leGVyRk',
       },
     },
     {
@@ -77,7 +71,6 @@ export const album = {
         apple: 'https://music.apple.com/fr/album/lo-vi-venir/6812817734?i=6812818215',
         deezer: 'https://www.deezer.com/track/4304249062',
         youtubemusic: 'https://music.youtube.com/watch?v=iBmWuygOPc8',
-        youtube: 'https://www.youtube.com/watch?v=iBmWuygOPc8',
       },
     },
     {
@@ -88,7 +81,6 @@ export const album = {
         apple: 'https://music.apple.com/fr/album/ahora/6812817734?i=6812818216',
         deezer: 'https://www.deezer.com/track/4304249092',
         youtubemusic: 'https://music.youtube.com/watch?v=_UmwhS4vL-Q',
-        youtube: 'https://www.youtube.com/watch?v=_UmwhS4vL-Q',
       },
     },
     {
@@ -99,7 +91,6 @@ export const album = {
         apple: 'https://music.apple.com/fr/album/d%C3%B3nde-se-va/6812817734?i=6812818218',
         deezer: 'https://www.deezer.com/track/4304249112',
         youtubemusic: 'https://music.youtube.com/watch?v=cxRVWEaeNWM',
-        youtube: 'https://www.youtube.com/watch?v=cxRVWEaeNWM',
       },
     },
     {
@@ -110,7 +101,6 @@ export const album = {
         apple: 'https://music.apple.com/fr/album/mueve/6812817734?i=6812818219',
         deezer: 'https://www.deezer.com/track/4304249132',
         youtubemusic: 'https://music.youtube.com/watch?v=koxJ52T-nZ8',
-        youtube: 'https://www.youtube.com/watch?v=koxJ52T-nZ8',
       },
     },
     {
@@ -121,7 +111,6 @@ export const album = {
         apple: 'https://music.apple.com/fr/album/luna-bohemia/6812817734?i=6812818220',
         deezer: 'https://www.deezer.com/track/4304249152',
         youtubemusic: 'https://music.youtube.com/watch?v=_90CB3rsz7E',
-        youtube: 'https://www.youtube.com/watch?v=_90CB3rsz7E',
       },
     },
     {
@@ -132,7 +121,6 @@ export const album = {
         apple: 'https://music.apple.com/fr/album/amor-y-libertad/6812817734?i=6812818221',
         deezer: 'https://www.deezer.com/track/4304249182',
         youtubemusic: 'https://music.youtube.com/watch?v=Kws8lZSUnb4',
-        youtube: 'https://www.youtube.com/watch?v=Kws8lZSUnb4',
       },
     },
   ],
@@ -141,7 +129,6 @@ export const album = {
     { id: 'apple', name: 'Apple Music', url: 'https://music.apple.com/fr/album/luna-bohemia/6812817734' },
     { id: 'deezer', name: 'Deezer', url: 'https://www.deezer.com/album/1103695662' },
     { id: 'youtubemusic', name: 'YouTube Music', url: 'https://music.youtube.com/playlist?list=OLAK5uy_nxkmhM9LOIoSBzJ2lOXZDpLSrSHnTTKuw' },
-    { id: 'youtube', name: 'YouTube', url: 'https://www.youtube.com/playlist?list=OLAK5uy_mEdebXGMPk-qC5LBFA0xLpUH2gJkPVdz4' },
   ],
   listeningNote: 'Luna Bohemia est disponible sur les principales plateformes d’écoute.',
   buyHref: '#shop',
@@ -150,5 +137,5 @@ export const album = {
 
 /** Première URL d’écoute disponible pour un titre (compat tests / liens principaux). */
 export function trackPrimaryUrl(track) {
-  return track.links?.spotify || track.links?.apple || track.links?.deezer || track.links?.youtubemusic || track.links?.youtube || null
+  return track.links?.spotify || track.links?.apple || track.links?.deezer || track.links?.youtubemusic || null
 }
