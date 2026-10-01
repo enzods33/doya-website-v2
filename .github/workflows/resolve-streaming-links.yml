@@ -8,48 +8,97 @@ on:
 jobs:
   resolve:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     steps:
-      - name: Resolve album and track links from Apple Music canonical URLs
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install YouTube Music resolver
+        run: pip install --disable-pip-version-check ytmusicapi==1.11.1
+
+      - name: Resolve Deezer and YouTube Music
+        shell: bash
+        run: |
+          python <<'PY'
+          import json, urllib.request
+          from ytmusicapi import YTMusic
+
+          def get_json(url):
+              req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+              with urllib.request.urlopen(req, timeout=20) as r:
+                  return json.load(r)
+
+          print('=== DEEZER ===')
+          album = get_json('https://api.deezer.com/album/upc:00044003516540')
+          print(json.dumps({
+              'album': album.get('link'),
+              'title': album.get('title'),
+              'artist': (album.get('artist') or {}).get('name'),
+              'tracks': [
+                  {'title': t.get('title'), 'isrc': t.get('isrc'), 'link': t.get('link')}
+                  for t in (album.get('tracks') or {}).get('data', [])
+              ]
+          }, ensure_ascii=False))
+
+          print('=== YOUTUBE_MUSIC ===')
+          ytm = YTMusic()
+          results = ytm.search('LUNA BOHEMIA Doya', filter='albums', limit=10)
+          for candidate in results:
+              print('CANDIDATE', json.dumps(candidate, ensure_ascii=False))
+          exact = next((x for x in results if x.get('title','').upper() == 'LUNA BOHEMIA' and any(a.get('name','').lower() == 'doya' for a in x.get('artists',[]))), None)
+          if exact:
+              details = ytm.get_album(exact['browseId'])
+              print('ALBUM', 'https://music.youtube.com/browse/' + exact['browseId'])
+              for t in details.get('tracks', []):
+                  vid = t.get('videoId')
+                  print(json.dumps({
+                      'title': t.get('title'),
+                      'youtubeMusic': ('https://music.youtube.com/watch?v=' + vid) if vid else None,
+                      'youtube': ('https://www.youtube.com/watch?v=' + vid) if vid else None,
+                  }, ensure_ascii=False))
+          PY
+
+      - name: Resolve Spotify
         shell: bash
         run: |
           node <<'NODE'
-          const entries = [
-            ['ALBUM', 'https://music.apple.com/fr/album/luna-bohemia/6812817734'],
-            ['01 SOLO TÚ', 'https://music.apple.com/fr/album/solo-t%C3%BA/6812817734?i=6812817939'],
-            ['02 ÁNGEL DE LA GUARDA', 'https://music.apple.com/fr/album/%C3%A1ngel-de-la-guarda/6812817734?i=6812818197'],
-            ['03 GUERRIÈRES', 'https://music.apple.com/fr/album/guerri%C3%A8res/6812817734?i=6812818199'],
-            ['04 CASA DE LOS LIMONEROS', 'https://music.apple.com/fr/album/casa-de-los-limoneros/6812817734?i=6812818202'],
-            ['05 TODO DE MI', 'https://music.apple.com/fr/album/todo-de-mi/6812817734?i=6812818205'],
-            ['06 MARIPOSA', 'https://music.apple.com/fr/album/mariposa/6812817734?i=6812818214'],
-            ['07 LO VI VENIR', 'https://music.apple.com/fr/album/lo-vi-venir/6812817734?i=6812818215'],
-            ['08 AHORA', 'https://music.apple.com/fr/album/ahora/6812817734?i=6812818216'],
-            ['09 DÓNDE SE VA', 'https://music.apple.com/fr/album/d%C3%B3nde-se-va/6812817734?i=6812818218'],
-            ['10 MUEVE', 'https://music.apple.com/fr/album/mueve/6812817734?i=6812818219'],
-            ['11 LUNA BOHEMIA', 'https://music.apple.com/fr/album/luna-bohemia/6812817734?i=6812818220'],
-            ['12 AMOR Y LIBERTAD', 'https://music.apple.com/fr/album/amor-y-libertad/6812817734?i=6812818221'],
+          const isrcs = [
+            ['01','SOLO TÚ','FR9W12636349'],
+            ['02','ÁNGEL DE LA GUARDA','FR9W12636326'],
+            ['03','GUERRIÈRES','FR9W12636329'],
+            ['04','CASA DE LOS LIMONEROS','FR9W12636327'],
+            ['05','TODO DE MI','FR9W12569990'],
+            ['06','MARIPOSA','FR9W12553171'],
+            ['07','LO VI VENIR','FR9W12623989'],
+            ['08','AHORA','FR9W12636324'],
+            ['09','DÓNDE SE VA','FR9W12636328'],
+            ['10','MUEVE','FR9W12562965'],
+            ['11','LUNA BOHEMIA','FR9W12636330'],
+            ['12','AMOR Y LIBERTAD','FR9W12636325'],
           ]
+          const tokenRes = await fetch('https://open.spotify.com/get_access_token?reason=transport&productType=web_player', {
+            headers: { 'user-agent': 'Mozilla/5.0' }
+          })
+          console.log('TOKEN_STATUS', tokenRes.status)
+          if (!tokenRes.ok) process.exit(2)
+          const tokenJson = await tokenRes.json()
+          const token = tokenJson.accessToken
+          const auth = { headers: { authorization: 'Bearer ' + token } }
 
-          const wanted = ['spotify', 'appleMusic', 'deezer', 'youtube', 'youtubeMusic']
+          const albumQuery = encodeURIComponent('album:"LUNA BOHEMIA" artist:Doya')
+          const albumRes = await fetch('https://api.spotify.com/v1/search?q=' + albumQuery + '&type=album&limit=10', auth)
+          console.log('ALBUM_STATUS', albumRes.status)
+          const albumJson = await albumRes.json()
+          for (const item of albumJson.albums?.items ?? []) {
+            console.log('ALBUM', JSON.stringify({name:item.name, artist:item.artists?.map(a=>a.name), url:item.external_urls?.spotify, id:item.id, release_date:item.release_date}))
+          }
 
-          for (const [label, sourceUrl] of entries) {
-            const endpoint = 'https://api.song.link/v1-alpha.1/links?userCountry=FR&url=' + encodeURIComponent(sourceUrl)
-            try {
-              const response = await fetch(endpoint, { headers: { 'user-agent': 'doya-link-resolver/1.0' } })
-              if (!response.ok) {
-                console.log(JSON.stringify({ label, error: response.status }))
-                continue
-              }
-              const data = await response.json()
-              const links = {}
-              for (const id of wanted) {
-                const url = data.linksByPlatform?.[id]?.url
-                if (url) links[id] = url
-              }
-              console.log(JSON.stringify({ label, sourceUrl, links }))
-            } catch (error) {
-              console.log(JSON.stringify({ label, error: String(error) }))
-            }
-            await new Promise((resolve) => setTimeout(resolve, 800))
+          for (const [number,title,isrc] of isrcs) {
+            const q = encodeURIComponent('isrc:' + isrc)
+            const res = await fetch('https://api.spotify.com/v1/search?q=' + q + '&type=track&limit=5', auth)
+            const json = await res.json()
+            const items = json.tracks?.items ?? []
+            console.log('TRACK', JSON.stringify({number,title,isrc,status:res.status,matches:items.map(x=>({name:x.name,artists:x.artists?.map(a=>a.name),album:x.album?.name,url:x.external_urls?.spotify,id:x.id}))}))
           }
           NODE
