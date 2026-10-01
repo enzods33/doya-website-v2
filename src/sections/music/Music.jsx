@@ -169,7 +169,9 @@ function Music() {
   const albumTitle = t('music.albumTitle')
   const [albumTitleLead, ...albumTitleTailParts] = albumTitle.trim().split(/\s+/)
   const albumTitleTail = albumTitleTailParts.join(' ')
-  const albumPlatforms = album.platforms.filter((platform) => isExternalUrl(platform.url))
+  const albumPlatforms = album.platforms.filter(
+    (platform) => platform.id !== 'youtube' && isExternalUrl(platform.url),
+  )
 
   useEffect(() => {
     if (!openTrack) return undefined
