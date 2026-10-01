@@ -5,6 +5,7 @@ const expectedHosts = {
   Spotify: 'open.spotify.com',
   'Apple Music': 'music.apple.com',
   Deezer: 'www.deezer.com',
+  'YouTube Music': 'music.youtube.com',
   YouTube: 'www.youtube.com',
   Instagram: 'www.instagram.com',
   TikTok: 'www.tiktok.com',

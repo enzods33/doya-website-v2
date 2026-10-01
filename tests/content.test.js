@@ -50,18 +50,16 @@ test('aucun faux lien ou prix inventé', () => {
     assert.ok(entry.url === null || isExternalUrl(entry.url))
   }
   const tracksWithLinks = album.tracks.filter((track) => Object.values(track.links || {}).some((url) => isExternalUrl(url)))
-  assert.deepEqual(
-    tracksWithLinks.map((track) => track.title),
-    ['Todo de mí', 'Mariposa', 'Lo vi venir', 'Mueve'],
-    'uniquement les titres déjà publiés ont des liens',
-  )
+  assert.equal(tracksWithLinks.length, 12, 'les 12 titres de Luna Bohemia ont leurs liens d’écoute')
   for (const track of tracksWithLinks) {
     assert.ok(isExternalUrl(track.links.spotify))
+    assert.ok(isExternalUrl(track.links.apple))
     assert.ok(isExternalUrl(track.links.deezer))
-    assert.ok(isExternalUrl(track.links.youtube), 'clip YouTube officiel attendu')
+    assert.ok(isExternalUrl(track.links.youtubemusic), 'lien YouTube Music attendu')
     assert.equal(new URL(track.links.spotify).hostname, 'open.spotify.com')
+    assert.equal(new URL(track.links.apple).hostname, 'music.apple.com')
     assert.equal(new URL(track.links.deezer).hostname, 'www.deezer.com')
-    assert.equal(new URL(track.links.youtube).hostname, 'www.youtube.com')
+    assert.equal(new URL(track.links.youtubemusic).hostname, 'music.youtube.com')
   }
   assert.ok(products.every((product) => product.price === null))
   assert.equal(products.find((product) => product.id === 'cap-luna-black')?.type, 'Casquette brodée')
@@ -95,19 +93,21 @@ test('les médias déclarés existent et ont des dimensions explicites', () => {
 })
 
 test('les profils officiels sont distincts et prêts pour le footer', () => {
-  assert.deepEqual(socials.map((social) => social.name), ['Spotify', 'Apple Music', 'Deezer', 'YouTube', 'Instagram', 'TikTok', 'Facebook'])
-  assert.deepEqual(socials.filter((social) => social.group === 'listen').map((social) => social.name), ['Spotify', 'Apple Music', 'Deezer', 'YouTube'])
+  assert.deepEqual(socials.map((social) => social.name), ['Spotify', 'Apple Music', 'Deezer', 'YouTube Music', 'YouTube', 'Instagram', 'TikTok', 'Facebook'])
+  assert.deepEqual(socials.filter((social) => social.group === 'listen').map((social) => social.name), ['Spotify', 'Apple Music', 'Deezer', 'YouTube Music', 'YouTube'])
   assert.deepEqual(socials.filter((social) => social.group === 'social').map((social) => social.name), ['Instagram', 'TikTok', 'Facebook'])
   assert.ok(socials.every((social) => isExternalUrl(social.url)))
   assert.equal(new Set(socials.map((social) => social.url)).size, socials.length)
   assert.deepEqual(socials.map((social) => new URL(social.url).hostname), [
-    'open.spotify.com', 'music.apple.com', 'www.deezer.com', 'www.youtube.com', 'www.instagram.com', 'www.tiktok.com', 'www.facebook.com',
+    'open.spotify.com', 'music.apple.com', 'www.deezer.com', 'music.youtube.com', 'www.youtube.com', 'www.instagram.com', 'www.tiktok.com', 'www.facebook.com',
   ])
   assert.ok(socials.find((social) => social.name === 'Spotify').url.endsWith('/1JGqJy0whUevjrA3Tw6OMA'))
   assert.ok(socials.find((social) => social.name === 'Apple Music').url.endsWith('/1646461706'))
   assert.ok(socials.find((social) => social.name === 'Deezer').url.endsWith('/184643787'))
-  assert.deepEqual(album.platforms.map((platform) => platform.id), ['spotify', 'apple', 'deezer', 'youtube'])
-  assert.ok(album.platforms.every((platform) => isExternalUrl(platform.url)), 'liens album temporaires = profils artistes jusqu’à la sortie')
+  assert.equal(socials.find((social) => social.name === 'YouTube Music').url, 'https://music.youtube.com/@DOYAofficial_')
+  assert.deepEqual(album.platforms.map((platform) => platform.id), ['spotify', 'apple', 'deezer', 'youtubemusic'])
+  assert.ok(album.platforms.every((platform) => isExternalUrl(platform.url)), 'liens directs officiels de Luna Bohemia')
+  assert.ok(album.platforms.every((platform) => platform.id !== 'youtube'), 'YouTube classique est réservé au footer')
   assert.equal(album.buyHref, '#shop')
   assert.equal(album.buyLabel, 'Boutique')
 })
