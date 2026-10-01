@@ -14,6 +14,7 @@ const PLATFORM_NAMES = {
   spotify: 'Spotify',
   apple: 'Apple Music',
   deezer: 'Deezer',
+  youtubemusic: 'YouTube Music',
   youtube: 'YouTube',
 }
 
