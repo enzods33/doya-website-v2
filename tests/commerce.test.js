@@ -336,6 +336,7 @@ test('le checkout verrouille montants, CGV, emails et maintenance Stripe', () =>
   assert.match(cart, /termsAccepted: acceptCgv/)
   assert.match(payment, /shippingCents !== order\.shipping_cents/)
   assert.match(payment, /totalCents === null \|\| totalCents !== order\.total_cents/)
+  assert.match(payment, /if \(!queued\) throw new Error\('order_email_queue_failed'\)/)
   assert.match(notifications, /claim_due_order_emails/)
   assert.match(notifications, /customer: row\.order_id/)
   assert.match(notifications, /merchant: row\.id/)
