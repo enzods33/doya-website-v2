@@ -182,7 +182,8 @@ Deno.serve(async (req) => {
       client_reference_id: order.orderNumber ?? order.orderId,
       success_url: `${site}/commande?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${site}/panier?canceled=1&session_id={CHECKOUT_SESSION_ID}`,
-      // Stripe exige au moins 30 min ; garder une marge évite la borne exacte en cas de léger décalage d'horloge.\n      expires_at: Math.floor(Date.now() / 1000) + 31 * 60,
+      // Stripe exige au moins 30 min ; garder une marge évite la borne exacte en cas de léger décalage d'horloge.
+      expires_at: Math.floor(Date.now() / 1000) + 31 * 60,
       billing_address_collection: 'required',
       phone_number_collection: { enabled: true },
       shipping_address_collection: {
