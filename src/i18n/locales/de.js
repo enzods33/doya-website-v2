@@ -181,7 +181,7 @@ export default {
     placeholder: 'du@email.de',
     submit: 'Anmelden',
     sending: 'Wird gesendet…',
-    success: 'Du erhältst jetzt die DOYA-News!',
+    success: 'Prüfe dein Postfach, um deine Anmeldung zu bestätigen.',
     already: 'Du bist bereits angemeldet.',
     error: 'Die Anmeldung ist derzeit nicht verfügbar.',
     unavailable: 'Die Anmeldung ist derzeit nicht verfügbar.',
