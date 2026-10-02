@@ -2,7 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { checkoutReleaseAction } from '../supabase/functions/_shared/checkoutRelease.ts'
 import { signNewsletterAddress, verifyNewsletterAddress } from '../supabase/functions/_shared/newsletterUnsubscribe.ts'
-import { newsletterMessageVersions } from '../supabase/functions/_shared/newsletterDelivery.ts'
+import { hashNewsletterToken, newOpaqueNewsletterToken } from '../supabase/functions/_shared/newsletterTokens.ts'
 import { prepareBioImage } from '../src/commerce/prepareBioImage.js'
 
 test('une session Stripe ouverte doit expirer avant la libération du stock', () => {
@@ -22,29 +22,19 @@ test('un lien de désabonnement n’autorise que son adresse et résiste aux alt
   assert.equal(await verifyNewsletterAddress('', secret), null)
 })
 
-test('une newsletter sépare les adresses et donne à chaque abonné son lien', async () => {
-  const versions = await newsletterMessageVersions(
-    ['a@example.com', 'b@example.com'], '<html><body><p>Bonjour</p></body></html>',
-    'https://doya.example', 'secret', 'fr',
-  )
-  assert.deepEqual(versions.map((version) => version.to), [[{ email: 'a@example.com' }], [{ email: 'b@example.com' }]])
-  const first = versions[0].htmlContent.match(/token=([^"&]+)/)?.[1]
-  const second = versions[1].htmlContent.match(/token=([^"&]+)/)?.[1]
+test('les nouveaux liens newsletter utilisent des tokens opaques non réversibles', async () => {
+  const first = newOpaqueNewsletterToken()
+  const second = newOpaqueNewsletterToken()
+  assert.match(first, /^[A-Za-z0-9_-]{43}$/)
+  assert.match(second, /^[A-Za-z0-9_-]{43}$/)
   assert.notEqual(first, second)
-  assert.equal(await verifyNewsletterAddress(decodeURIComponent(first), 'secret'), 'a@example.com')
-  assert.equal(await verifyNewsletterAddress(decodeURIComponent(second), 'secret'), 'b@example.com')
-  assert.doesNotMatch(versions[0].htmlContent, /b@example.com/)
-  const ja = await newsletterMessageVersions(
-    ['a@example.com'], '<html><body><p>こんにちは</p></body></html>',
-    'https://doya.example', 'secret', 'ja',
-  )
-  const zh = await newsletterMessageVersions(
-    ['a@example.com'], '<html><body><p>你好</p></body></html>',
-    'https://doya.example', 'secret', 'zh',
-  )
-  assert.match(ja[0].htmlContent, /配信停止/)
-  assert.match(zh[0].htmlContent, /退订/)
-  await assert.rejects(() => newsletterMessageVersions(Array(1001).fill('a@example.com'), '', 'https://doya.example', 'secret', 'fr'), /list_too_large/)
+
+  const firstHash = await hashNewsletterToken(first)
+  const secondHash = await hashNewsletterToken(second)
+  assert.match(firstHash, /^[a-f0-9]{64}$/)
+  assert.match(secondHash, /^[a-f0-9]{64}$/)
+  assert.notEqual(firstHash, secondHash)
+  assert.doesNotMatch(first, /@|example|fan/i)
 })
 
 test('la préparation produit garde alpha en WebP, la bio reste JPEG', async () => {

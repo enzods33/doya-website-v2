@@ -21,6 +21,7 @@ const MentionsLegalesPage = lazy(() => import('./pages/LegalPages.jsx').then((m)
 const CgvPage = lazy(() => import('./pages/LegalPages.jsx').then((m) => ({ default: m.CgvPage })))
 const PrivacyPage = lazy(() => import('./pages/LegalPages.jsx').then((m) => ({ default: m.PrivacyPage })))
 const UnsubscribePage = lazy(() => import('./pages/UnsubscribePage.jsx'))
+const NewsletterConfirmPage = lazy(() => import('./pages/NewsletterConfirmPage.jsx'))
 
 const pages = {
   '/': HomePage,
@@ -31,6 +32,7 @@ const pages = {
   '/cgv': CgvPage,
   '/confidentialite': PrivacyPage,
   '/desabonnement': UnsubscribePage,
+  '/confirmation-newsletter': NewsletterConfirmPage,
 }
 
 const indexable = import.meta.env.VITE_INDEXABLE === 'true'
