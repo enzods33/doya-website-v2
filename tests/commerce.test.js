@@ -163,7 +163,7 @@ test('le panier présente un opt-in newsletter explicite et non bloquant', () =>
 
   assert.match(cart, /checked=\{newsletter\}/)
   assert.match(cart, /cart\.newsletterHint/)
-  assert.match(cart, /await subscribeNewsletter\(email\.trim\(\), locale\)/)
+  assert.match(cart, /await subscribeNewsletter\(email\.trim\(\), locale, '', 'cart'\)/)
   assert.match(cart, /Ne bloque pas le paiement si Brevo échoue/)
   assert.match(fr, /Recevoir les actualités DOYA/)
   assert.match(fr, /Newsletter gratuite · désabonnement à tout moment/)
