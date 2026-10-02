@@ -284,7 +284,7 @@ export default {
   },
   notFound: { kicker: 'DOYA', title: 'Seite nicht gefunden', home: 'Zur Startseite' },
   legal: {
-    updated: 'Zuletzt aktualisiert: September 2026',
+    updated: 'Zuletzt aktualisiert: Oktober 2026',
     backHome: 'Zur Startseite',
     mentions: {
       kicker: 'Information',
@@ -354,7 +354,7 @@ export default {
       sections: [
         { heading: 'Verantwortlicher', paragraphs: ['Verantwortlicher: ALMENA PROD', 'Kontakt: almenaprod@gmail.com', 'Technischer Kontakt: reelazura@gmail.com'] },
         { heading: 'Erhobene Daten', paragraphs: [
-          'Newsletter: E-Mail-Adresse und Sprache der Oberfläche über Brevo.',
+          'Newsletter: E-Mail-Adresse und Sprache der Oberfläche über Brevo. Während der Bestätigung wird die Adresse vorübergehend in Supabase gespeichert (höchstens 30 Tage), zusammen mit einem technischen Nachweis der Einwilligung (geschützter Fingerabdruck, Quelle und Zeitangaben).',
           'Bestellungen: E-Mail, Lieferadresse und Bestellinhalt — über Stripe und Supabase.',
           'Reichweite (aggregiert): Seitenaufrufe und einige Aktionen (Newsletter, Warenkorb, Anhören, Kontakt …), ohne Besucher zu identifizieren.',
         ] },
@@ -364,7 +364,7 @@ export default {
           'Sicherheit der Website und Missbrauchsprävention.',
         ] },
         { heading: 'Empfänger', paragraphs: ['Dienstleister: Supabase, Stripe, Brevo, Hetzner und Cloudflare im Rahmen ihrer jeweiligen Leistungen.'] },
-        { heading: 'Speicherdauer', paragraphs: ['Daten werden so lange gespeichert, wie es für die genannten Zwecke erforderlich ist, und anschließend gemäß den gesetzlichen Pflichten archiviert oder gelöscht.'] },
+        { heading: 'Speicherdauer', paragraphs: ['Daten werden nur so lange gespeichert, wie es für die genannten Zwecke erforderlich ist. Eine nicht bestätigte Newsletter-Adresse wird spätestens nach 30 Tagen gelöscht; ein technischer Nachweis der Einwilligung oder ihres Widerrufs kann zu Dokumentationszwecken aufbewahrt werden. Pseudonymisierte Missbrauchsschutz-Zähler werden nach 48 Stunden gelöscht. Andere Daten werden gemäß den gesetzlichen Pflichten archiviert oder gelöscht.'] },
         { heading: 'Deine Rechte', paragraphs: [
           'Nach der DSGVO bestehen im gesetzlich vorgesehenen Umfang Rechte auf Auskunft, Berichtigung, Löschung, Widerspruch, Einschränkung und Datenübertragbarkeit.',
           'Newsletter: Abmeldung über den Link in der E-Mail oder per Nachricht an almenaprod@gmail.com.',
