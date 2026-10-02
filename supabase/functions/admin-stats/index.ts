@@ -4,6 +4,7 @@ import { serviceClient } from '../_shared/clients.ts'
 import { sendShippedOrderEmail, type OrderEmailLine } from '../_shared/orderEmail.ts'
 import { loadShippingZones } from '../_shared/shipping.ts'
 import { r2PublicBase, r2PutObject } from '../_shared/r2.ts'
+import { retryFailedOrderEmails } from '../_shared/orderEmailDelivery.ts'
 
 const MAX_DAYS = 366
 const DEFAULT_DAYS = 90
@@ -463,6 +464,14 @@ Deno.serve(async (req) => {
 
   const action = typeof body.action === 'string' ? body.action : 'overview'
   const rangeDays = parseDays(body.days)
+
+  if (action === 'overview') {
+    try {
+      await retryFailedOrderEmails(db, 4)
+    } catch (error) {
+      console.error('admin_order_email_retry_failed', error)
+    }
+  }
 
   if (action === 'update_stocks') {
     const rawUpdates = Array.isArray(body.updates) ? body.updates : []
