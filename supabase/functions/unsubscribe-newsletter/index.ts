@@ -15,9 +15,9 @@ Deno.serve(async (req) => {
   }
 
   const apiKey = Deno.env.get('BREVO_API_KEY') ?? ''
-  const secret = Deno.env.get('BREVO_UNSUBSCRIBE_SECRET') || apiKey
+  const secret = (Deno.env.get('BREVO_UNSUBSCRIBE_SECRET') ?? '').trim()
   const listId = Number(Deno.env.get('BREVO_LIST_ID') ?? '')
-  if (!apiKey || !Number.isInteger(listId) || listId < 1) return json(503, { error: 'newsletter_unavailable' }, origin)
+  if (!apiKey || !secret || !Number.isInteger(listId) || listId < 1) return json(503, { error: 'newsletter_unavailable' }, origin)
 
   const body = await req.json().catch(() => ({})) as { token?: unknown }
   const email = await verifyNewsletterAddress(typeof body.token === 'string' ? body.token : '', secret)
