@@ -41,7 +41,10 @@ function AdminNewsletter() {
   const [statsBusy, setStatsBusy] = useState(true)
   const [draft] = useState(readDraft)
   const [subject, setSubject] = useState(draft.subject)
-  const [signature, setSignature] = useState(() => readStored(STORAGE_SIGNATURE, DEFAULT_NEWSLETTER_SIGNATURE))
+  const [signature, setSignature] = useState(() => {
+    const val = readStored(STORAGE_SIGNATURE, DEFAULT_NEWSLETTER_SIGNATURE)
+    return val === '— DOYA' ? '' : val
+  })
   const [bodyText, setBodyText] = useState(draft.bodyText)
   const [scheduleDate, setScheduleDate] = useState('')
   const [scheduleTime, setScheduleTime] = useState('18:00')
@@ -315,7 +318,7 @@ function AdminNewsletter() {
               rows={3}
               value={signature}
               onChange={(e) => { sendKey.current = crypto.randomUUID(); setSignature(e.target.value) }}
-              placeholder={DEFAULT_NEWSLETTER_SIGNATURE}
+              placeholder="Votre signature (ex: À bientôt !)"
             />
             <span className="admin-field-help">{t('admin.fieldSignatureHelp')}</span>
           </label>

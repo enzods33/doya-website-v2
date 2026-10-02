@@ -97,8 +97,8 @@ function brandHeaderHtml(logoSrc: string) {
   return `<img src="${escapeHtml(logoSrc)}" width="168" height="150" alt="DOYA" style="display:block;margin:0 auto;border:0;outline:none;text-decoration:none;width:168px;height:auto;max-width:55%;" />`
 }
 
-function buildNewsletterHtml(bodyText: string, signatureRaw = '— DOYA', logoSrc: string, locale = 'fr') {
-  const signature = signatureRaw.trim() || '— DOYA'
+function buildNewsletterHtml(bodyText: string, signatureRaw = '', logoSrc: string, locale = 'fr') {
+  const signature = signatureRaw.trim()
   const rtl = locale === 'ar'
   const dir = rtl ? 'rtl' : 'ltr'
   const align = rtl ? 'right' : 'left'
@@ -118,7 +118,7 @@ function buildNewsletterHtml(bodyText: string, signatureRaw = '— DOYA', logoSr
 <tr><td align="center" style="padding:28px 28px 8px;">${brandHeaderHtml(logoSrc)}</td></tr>
 <tr><td style="padding:12px 28px 28px;font-family:Arial,Tahoma,sans-serif;">
 ${blocks.join('\n')}
-<p style="margin:24px 0 0;font-size:14px;line-height:1.5;${rtl ? 'letter-spacing:0;' : 'letter-spacing:.04em;'}color:#2c2926;">${formatMultiline(signature)}</p>
+${signature ? `<p style="margin:24px 0 0;font-size:14px;line-height:1.5;${rtl ? 'letter-spacing:0;' : 'letter-spacing:.04em;'}color:#2c2926;">${formatMultiline(signature)}</p>` : ''}
 </td></tr></table></td></tr></table></body></html>`
 }
 
@@ -360,7 +360,7 @@ Deno.serve(async (req) => {
     if (!senderEmail) return json(503, { error: 'brevo_sender_missing' }, origin)
     const subject = typeof body.subject === 'string' ? body.subject.trim() : ''
     const bodyText = typeof body.bodyText === 'string' ? body.bodyText.trim() : ''
-    const signature = typeof body.signature === 'string' ? body.signature : '— DOYA'
+    const signature = typeof body.signature === 'string' ? body.signature : ''
     const htmlFromClient = typeof body.htmlContent === 'string' ? body.htmlContent.trim() : ''
     const sendLang = normalizeSendLang(body.lang)
     const idempotencyKey = typeof body.idempotencyKey === 'string' ? body.idempotencyKey : ''

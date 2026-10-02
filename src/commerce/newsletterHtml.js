@@ -7,11 +7,11 @@ export function escapeHtml(value) {
     .replace(/"/g, '&quot;')
 }
 
-export const DEFAULT_NEWSLETTER_SIGNATURE = '— DOYA'
+export const DEFAULT_NEWSLETTER_SIGNATURE = ''
 
 /** Logo album : CDN Brevo (fiable sur Gmail mobile / Apple Mail). */
 export const EMAIL_LOGO_PUBLIC_URL =
-  'https://img.mailinblue.com/12068620/images/rnb/original/6a9eb681d6d15096d2e4c6de.png'
+  'https://ipphjddgeotsohplzkbo.supabase.co/storage/v1/object/public/email/doya-logo-email.png'
 
 function formatMultiline(value) {
   return escapeHtml(String(value || '').trim()).replace(/\n/g, '<br>')
@@ -39,7 +39,7 @@ function brandHeaderHtml(options = {}) {
  * @param {{ signature?: string, logoBase?: string, logoUrl?: string, locale?: string }} [options]
  */
 export function buildNewsletterHtml(bodyText, options = {}) {
-  const signature = String(options.signature ?? DEFAULT_NEWSLETTER_SIGNATURE).trim() || DEFAULT_NEWSLETTER_SIGNATURE
+  const signature = String(options.signature ?? '').trim()
   const locale = String(options.locale || 'fr').trim().toLowerCase()
   const rtl = locale === 'ar'
   const dir = rtl ? 'rtl' : 'ltr'
@@ -68,7 +68,7 @@ export function buildNewsletterHtml(bodyText, options = {}) {
           <tr>
             <td style="padding:12px 28px 28px;font-family:Arial,Tahoma,sans-serif;">
               ${blocks.join('\n')}
-              <p style="margin:24px 0 0;font-size:14px;line-height:1.5;${rtl ? 'letter-spacing:0;' : 'letter-spacing:.04em;'}color:#2c2926;">${formatMultiline(signature)}</p>
+              ${signature ? `<p style="margin:24px 0 0;font-size:14px;line-height:1.5;${rtl ? 'letter-spacing:0;' : 'letter-spacing:.04em;'}color:#2c2926;">${formatMultiline(signature)}</p>` : ''}
             </td>
           </tr>
         </table>
