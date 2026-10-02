@@ -591,17 +591,12 @@
     transform 400ms var(--motion-ease);
 }
 .about-gallery-nav.is-prev {
-  left: calc(50% - (var(--about-landscape-slide) / 2) + 56px);
+  left: calc(50% - (var(--about-landscape-slide) / 2) + 90px);
   transform: translateY(-50%);
 }
 .about-gallery-nav.is-next {
-  right: calc(50% - (var(--about-landscape-slide) / 2) + 56px);
+  right: calc(50% - (var(--about-landscape-slide) / 2) + 90px);
   transform: translateY(-50%);
-}
-@media (min-width: 768px) {
-  .about-gallery.has-landscape-active .about-gallery-nav {
-    top: clamp(28px, calc(5.5vw - 14px), 65px);
-  }
 }
 .about-gallery-nav:focus-visible {
   color: #fff;
