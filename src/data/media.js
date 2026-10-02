@@ -9,12 +9,12 @@ function bioWeb(file, width, height) {
   }
 }
 
-/** Hero versionné ; album / éditorial sur Cloudflare R2. */
+/** Hero / album - versions web sur Cloudflare R2 (`VITE_ASSETS_URL`). */
 export const media = {
   hero: {
-    src: '/site/hero-20261003.jpg',
-    width: 1536,
-    height: 1536,
+    src: assetUrl('site/hero.jpg'),
+    width: 1024,
+    height: 1024,
     alt: 'DOYA assises de face sur des chaises dans le désert, l’une en noir, l’autre en blanc.',
     sourcePage: 9,
   },
