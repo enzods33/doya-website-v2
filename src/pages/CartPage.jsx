@@ -230,7 +230,7 @@ function CartPage() {
     try {
       if (newsletter) {
         try {
-          await subscribeNewsletter(email.trim(), locale)
+          await subscribeNewsletter(email.trim(), locale, '', 'cart')
         } catch {
           // Ne bloque pas le paiement si Brevo échoue.
         }
