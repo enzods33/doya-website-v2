@@ -181,7 +181,7 @@ export default {
     placeholder: 'you@email.com',
     submit: 'اشترك',
     sending: 'جارٍ الإرسال…',
-    success: 'تم اشتراكك في أخبار DOYA!',
+    success: 'تحقّق من بريدك الإلكتروني لتأكيد اشتراكك.',
     already: 'أنت مشترك بالفعل.',
     error: 'الاشتراك غير متاح حاليًا.',
     unavailable: 'الاشتراك غير متاح حاليًا.',
