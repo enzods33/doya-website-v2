@@ -181,7 +181,7 @@ export default {
     placeholder: 'you@example.com',
     submit: '구독하기',
     sending: '전송 중…',
-    success: 'DOYA 뉴스 구독이 완료되었습니다!',
+    success: '이메일을 확인해 구독을 완료해 주세요.',
     already: '이미 구독 중입니다.',
     error: '현재 구독 신청을 할 수 없습니다.',
     unavailable: '현재 구독 신청을 할 수 없습니다.',
