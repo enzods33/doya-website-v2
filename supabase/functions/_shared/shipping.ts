@@ -43,13 +43,16 @@ export async function loadShippingZones(db: {
       order: (col: string, opts?: { ascending?: boolean }) => PromiseLike<{ data: ZoneRow[] | null; error: unknown }>
     }
   }
-}): Promise<ShippingZone[]> {
+}, fallbackToDefaults = true): Promise<ShippingZone[]> {
   try {
     const { data, error } = await db
       .from('shipping_zones')
       .select('id, display_name, amount_cents, countries')
       .order('sort_order', { ascending: true })
-    if (error || !data?.length) return DEFAULT_SHIPPING_ZONES
+    if (error || !data?.length) {
+      if (fallbackToDefaults) return DEFAULT_SHIPPING_ZONES
+      throw new Error('shipping_zones_unavailable')
+    }
 
     const zones: ShippingZone[] = []
     for (const row of data) {
@@ -68,9 +71,12 @@ export async function loadShippingZones(db: {
         countries,
       })
     }
-    return zones.length ? zones : DEFAULT_SHIPPING_ZONES
-  } catch {
-    return DEFAULT_SHIPPING_ZONES
+    if (zones.length) return zones
+    if (fallbackToDefaults) return DEFAULT_SHIPPING_ZONES
+    throw new Error('shipping_zones_unavailable')
+  } catch (error) {
+    if (fallbackToDefaults) return DEFAULT_SHIPPING_ZONES
+    throw error
   }
 }
 
