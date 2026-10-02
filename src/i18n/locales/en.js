@@ -197,7 +197,7 @@ export default {
     placeholder: 'you@email.com',
     submit: 'Sign up',
     sending: 'Sending…',
-    success: 'You’re signed up for DOYA news!',
+    success: 'Check your inbox to confirm your subscription.',
     already: 'You’re already signed up.',
     error: 'Sign-up unavailable right now.',
     unavailable: 'Sign-up unavailable right now.',
