@@ -48,8 +48,12 @@ Deno.serve(async (req) => {
   }
 
   const locale = normalizeCheckoutLocale(body.locale)
-  const termsVersion = typeof body.termsVersion === 'string' ? body.termsVersion.trim() : ''
-  if (body.termsAccepted !== true || termsVersion !== TERMS_VERSION) {
+  const requestedTermsVersion = typeof body.termsVersion === 'string' ? body.termsVersion.trim() : ''
+  // Compatibilité avec les onglets ouverts avant ce déploiement : l'ancien panier
+  // imposait déjà la case CGV côté UI mais n'envoyait pas encore la preuve au backend.
+  const legacyTermsRequest = body.termsAccepted === undefined && !requestedTermsVersion
+  const termsVersion = legacyTermsRequest ? `${TERMS_VERSION}-legacy-ui` : requestedTermsVersion
+  if (!legacyTermsRequest && (body.termsAccepted !== true || termsVersion !== TERMS_VERSION)) {
     return json(400, { error: 'terms_required' }, origin)
   }
 
