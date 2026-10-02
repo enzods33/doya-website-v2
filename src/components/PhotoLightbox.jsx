@@ -100,7 +100,7 @@ function PhotoLightbox({ images, index, onClose, onIndexChange }) {
       <div className="photo-lightbox-chrome">
         <p id={titleId} className="photo-lightbox-count">
           {String(index + 1).padStart(2, '0')}
-          <span aria-hidden="true"> — </span>
+          <span aria-hidden="true"> - </span>
           <span className="visually-hidden">{t('photo.of')} </span>
           {String(total).padStart(2, '0')}
         </p>

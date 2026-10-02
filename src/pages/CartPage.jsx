@@ -69,7 +69,7 @@ function CartPage() {
         if (!cancelled) setError(commerceMessage('canceled', t))
       })
       .catch(() => {
-        /* webhook / cron libéreront sous 30–35 min */
+        /* webhook / cron libéreront sous 30-35 min */
       })
       .finally(() => {
         if (cancelled) return
@@ -156,8 +156,8 @@ function CartPage() {
         const label = line.product ? translateProduct(t, line.product) : null
         return `- ${line.quantity} × ${label ? `${label.type} ${label.name}` : line.productId} (${line.variantLabel})`
       }).join('\n'),
-      email: email.trim() || '—',
-      message: quoteMessage.trim() || '—',
+      email: email.trim() || '-',
+      message: quoteMessage.trim() || '-',
       country: shippingCountry,
     })
     return `mailto:${shippingQuoteEmails.join(',')}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
@@ -315,7 +315,7 @@ function CartPage() {
                         className="product-image-trigger cart-line-zoom"
                         disabled={!line.product || !src}
                         onClick={() => line.product && setZoom({ product: line.product, view: thumbView })}
-                        aria-label={line.product ? `${t('shop.zoom')} — ${alt}` : undefined}
+                        aria-label={line.product ? `${t('shop.zoom')} - ${alt}` : undefined}
                       >
                         {src ? (
                           <img
@@ -332,7 +332,7 @@ function CartPage() {
                       <p className="eyebrow">{labels.type}</p>
                       <h2>{labels.name || line.productId}</h2>
                       <p className="cart-meta">
-                        {[labels.color || labels.type || '—', line.variantLabel].filter(Boolean).join(' · ')}
+                        {[labels.color || labels.type || '-', line.variantLabel].filter(Boolean).join(' · ')}
                         {line.priceCents ? ` · ${formatEuros(line.priceCents, intlLocale)}` : ''}
                       </p>
                       <div className="cart-actions">
@@ -502,7 +502,7 @@ function CartPage() {
               <div className="cart-aside-totals">
                 <p className="cart-total">
                   <span>{t('cart.subtotal')}</span>
-                  <strong>{formatEuros(subtotal - autoDiscountCents, intlLocale) ?? '—'}</strong>
+                  <strong>{formatEuros(subtotal - autoDiscountCents, intlLocale) ?? '-'}</strong>
                 </p>
                 <p className="cart-total cart-shipping">
                   <span>{t('cart.shippingLabel')}</span>
@@ -511,7 +511,7 @@ function CartPage() {
                 {!needsShippingQuote ? (
                   <p className="cart-total cart-grand">
                     <span>{t('cart.totalDue')}</span>
-                    <strong>{formatEuros(subtotal - autoDiscountCents + shippingCents, intlLocale) ?? '—'}</strong>
+                    <strong>{formatEuros(subtotal - autoDiscountCents + shippingCents, intlLocale) ?? '-'}</strong>
                   </p>
                 ) : null}
               </div>

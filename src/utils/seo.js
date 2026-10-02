@@ -30,63 +30,63 @@ function setLink(rel, href) {
 export function resolveRouteSeo(path, t) {
   if (path === '/mentions-legales') {
     return {
-      title: `${t('legal.mentions.title')} — ${siteContent.name}`,
+      title: `${t('legal.mentions.title')} - ${siteContent.name}`,
       description: t('meta.mentionsDescription'),
       canonicalPath: '/mentions-legales',
     }
   }
   if (path === '/cgv') {
     return {
-      title: `${t('legal.cgv.title')} — ${siteContent.name}`,
+      title: `${t('legal.cgv.title')} - ${siteContent.name}`,
       description: t('meta.cgvDescription'),
       canonicalPath: '/cgv',
     }
   }
   if (path === '/confidentialite') {
     return {
-      title: `${t('legal.privacy.title')} — ${siteContent.name}`,
+      title: `${t('legal.privacy.title')} - ${siteContent.name}`,
       description: t('meta.privacyDescription'),
       canonicalPath: '/confidentialite',
     }
   }
   if (path === '/panier') {
     return {
-      title: `${t('cart.title')} — ${siteContent.name}`,
+      title: `${t('cart.title')} - ${siteContent.name}`,
       description: t('meta.description'),
       canonicalPath: '/panier',
     }
   }
   if (path === '/commande') {
     return {
-      title: `${t('order.title')} — ${siteContent.name}`,
+      title: `${t('order.title')} - ${siteContent.name}`,
       description: t('meta.description'),
       canonicalPath: '/commande',
     }
   }
   if (path === '/admin') {
     return {
-      title: `${t('admin.kicker')} — ${siteContent.name}`,
+      title: `${t('admin.kicker')} - ${siteContent.name}`,
       description: t('meta.description'),
       canonicalPath: '/admin',
     }
   }
   if (path === '/desabonnement') {
     return {
-      title: `Newsletter — ${siteContent.name}`,
+      title: `Newsletter - ${siteContent.name}`,
       description: t('meta.description'),
       canonicalPath: '/desabonnement',
     }
   }
   if (path === '/newsletter-confirmation') {
     return {
-      title: `Newsletter — ${siteContent.name}`,
+      title: `Newsletter - ${siteContent.name}`,
       description: t('meta.description'),
       canonicalPath: '/newsletter-confirmation',
     }
   }
   if (path !== '/') {
     return {
-      title: `${t('notFound.title')} — ${siteContent.name}`,
+      title: `${t('notFound.title')} - ${siteContent.name}`,
       description: t('meta.description'),
       canonicalPath: '/',
     }
@@ -180,7 +180,7 @@ export function buildJsonLd(origin = siteOrigin()) {
       {
         '@type': 'WebSite',
         '@id': `${origin}/#website`,
-        name: `${siteContent.name} — ${siteContent.albumTitle}`,
+        name: `${siteContent.name} - ${siteContent.albumTitle}`,
         url: `${origin}/`,
         inLanguage: ['fr', 'es', 'en', 'pt', 'de', 'ja', 'ko', 'zh-CN', 'ar'],
         publisher: {
@@ -194,7 +194,7 @@ export function buildJsonLd(origin = siteOrigin()) {
         '@type': 'WebPage',
         '@id': `${origin}/#webpage`,
         url: `${origin}/`,
-        name: `${siteContent.name} — ${siteContent.albumTitle}`,
+        name: `${siteContent.name} - ${siteContent.albumTitle}`,
         isPartOf: { '@id': `${origin}/#website` },
         about: { '@id': `${origin}/#artist` },
         primaryImageOfPage: {

@@ -465,7 +465,7 @@ export async function sendPaidOrderEmails(
   const locale = normalizeCheckoutLocale(order.locale)
   const copy = EMAIL_COPY[locale]
   const merchant = (Deno.env.get('ORDER_NOTIFY_EMAIL') ?? 'almenaprod@gmail.com').trim().toLowerCase()
-  const customerSubject = `DOYA — ${copy.confirmationSubject} ${order.orderNumber}`
+  const customerSubject = `DOYA - ${copy.confirmationSubject} ${order.orderNumber}`
   const customerHtml = customerOrderEmailHtml(order)
 
   const messageVersions: Record<string, unknown>[] = [{
@@ -519,7 +519,7 @@ export async function sendShippedOrderEmail(
   const copy = EMAIL_COPY[locale]
   return sendBrevoEmail({
     to: order.email,
-    subject: `DOYA — ${copy.shippedSubject} ${order.orderNumber}`,
+    subject: `DOYA - ${copy.shippedSubject} ${order.orderNumber}`,
     previewText: fill(copy.shippedPreview, { number: order.orderNumber, tracking }),
     htmlContent: shippedOrderEmailHtml({ ...order, trackingNumber: tracking }),
     idempotencyKey,

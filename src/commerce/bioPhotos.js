@@ -6,7 +6,7 @@ function normalizePhoto(row) {
     src: row.public_url ?? row.src,
     width: row.width,
     height: row.height,
-    alt: row.alt || 'Photographie DOYA — Luna Bohemia.',
+    alt: row.alt || 'Photographie DOYA - Luna Bohemia.',
   }
 }
 

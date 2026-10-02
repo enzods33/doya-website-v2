@@ -1,4 +1,4 @@
-/** Carte KPI admin — réserve la hauteur même pendant le chargement (évite le CLS). */
+/** Carte KPI admin - réserve la hauteur même pendant le chargement (évite le CLS). */
 function AdminStatCard({ label, value, loading = false }) {
   return (
     <article className="admin-stat-card">

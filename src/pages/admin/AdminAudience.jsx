@@ -141,10 +141,10 @@ function AdminAudience() {
       {error ? <p className="admin-error">{error}</p> : null}
 
       <div className="admin-stat-grid" aria-busy={busy || undefined}>
-        <AdminStatCard label={t('admin.audienceToday')} value={data?.todayViews ?? '—'} loading={busy && !data} />
+        <AdminStatCard label={t('admin.audienceToday')} value={data?.todayViews ?? '-'} loading={busy && !data} />
         <AdminStatCard
           label={t('admin.audienceDays', { period: t(periodLabelKey) })}
-          value={data?.totalViews ?? '—'}
+          value={data?.totalViews ?? '-'}
           loading={busy && !data}
         />
       </div>

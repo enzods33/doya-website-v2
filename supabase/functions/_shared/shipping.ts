@@ -1,4 +1,4 @@
-/** Forfaits livraison par zone — tarifs modérés, type boutique merch EU. */
+/** Forfaits livraison par zone - tarifs modérés, type boutique merch EU. */
 export type ShippingZone = {
   id: string
   displayName: string
@@ -27,7 +27,7 @@ export const DEFAULT_SHIPPING_ZONES: ShippingZone[] = [
   },
 ]
 
-/** @deprecated Préférer loadShippingZones(db) — conservé pour imports existants. */
+/** @deprecated Préférer loadShippingZones(db) - conservé pour imports existants. */
 export const SHIPPING_ZONES = DEFAULT_SHIPPING_ZONES
 
 type ZoneRow = {

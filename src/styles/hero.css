@@ -1301,7 +1301,7 @@
     letter-spacing: .06em;
   }
 }
-/* Écrans 390–399 px très hauts (dont Poco X5) : garde l’orbite au-dessus des visages. */
+/* Écrans 390-399 px très hauts (dont Poco X5) : garde l’orbite au-dessus des visages. */
 @media (min-width: 390px) and (max-width: 399px) and (min-height: 840px) and (max-height: 900px) {
   .hero-copy {
     width: min(calc(100% - 2rem), 17rem);

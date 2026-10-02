@@ -97,7 +97,7 @@
 .admin-title { font-size: clamp(28px, 4vw, 44px); margin: 0 0 12px; }
 .admin-lead { max-width: 38ch; color: var(--muted); line-height: 1.55; margin: 0 0 24px; }
 
-/* —— Login Backstage (orbit phases lunaires) —— */
+/* -- Login Backstage (orbit phases lunaires) -- */
 .admin-login-stage {
   position: relative;
   flex: 1 1 auto;
@@ -319,7 +319,7 @@
   }
 }
 
-/* Bouton Sign in with Google — guidelines Google Identity (thème light) */
+/* Bouton Sign in with Google - guidelines Google Identity (thème light) */
 .admin-google-btn {
   display: inline-flex;
   align-items: center;
@@ -901,7 +901,7 @@
   }
 }
 
-/* —— Promos —— */
+/* -- Promos -- */
 .admin-promos {
   max-width: 52rem;
 }

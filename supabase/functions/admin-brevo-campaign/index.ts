@@ -17,7 +17,7 @@ type CampaignBody = {
   email?: string
   campaignId?: number | string
   scheduledAt?: string | null
-  /** fr | es | pt | en | de | ja | ko | zh | ar | all — filtre destinataires via attribut Brevo LANG */
+  /** fr | es | pt | en | de | ja | ko | zh | ar | all - filtre destinataires via attribut Brevo LANG */
   lang?: string
   idempotencyKey?: string
 }
@@ -377,7 +377,7 @@ Deno.serve(async (req) => {
     const testEmail = typeof body.testEmail === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.testEmail) ? body.testEmail : admin.email
     const name = typeof body.name === 'string' && body.name.trim()
       ? body.name.trim()
-      : `DOYA — ${subject || 'Newsletter'}`
+      : `DOYA - ${subject || 'Newsletter'}`
     const scheduledAt = typeof body.scheduledAt === 'string' ? body.scheduledAt.trim() : ''
     const langSuffix = sendLang === 'all' ? '' : ` · ${sendLang.toUpperCase()}`
 

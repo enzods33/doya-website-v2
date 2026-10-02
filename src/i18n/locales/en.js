@@ -1,7 +1,7 @@
 /** English */
 export default {
   meta: {
-    title: 'DOYA — Luna Bohemia',
+    title: 'DOYA - Luna Bohemia',
     description: 'Luna Bohemia, DOYA’s world. Album, live shows and collections.',
     mentionsDescription: 'Publisher, host and legal notice for the official DOYA website.',
     cgvDescription: 'Terms of sale for the DOYA shop (ALMENA PROD).',
@@ -9,7 +9,7 @@ export default {
   },
   a11y: {
     skipToContent: 'Skip to content',
-    brandBio: 'DOYA — bio',
+    brandBio: 'DOYA - bio',
     home: 'Home',
     navMain: 'Main navigation',
     navTools: 'Cart',
@@ -31,7 +31,7 @@ export default {
     home: 'Home',
   },
   offline: {
-    banner: 'You’re offline — you can still browse; shop, newsletter and live dates need a connection.',
+    banner: 'You’re offline - you can still browse; shop, newsletter and live dates need a connection.',
   },
   nav: {
     music: 'Music',
@@ -128,7 +128,7 @@ export default {
       'luna-bohemia-black': 'Stars',
       'doya-white': 'Phases',
       'doya-black': 'Phases',
-      'cd-luna-bohemia': 'Luna Bohemia — Digipak CD',
+      'cd-luna-bohemia': 'Luna Bohemia - Digipak CD',
     },
     zoom: 'Zoom',
     zoomClose: 'Close',
@@ -159,7 +159,7 @@ export default {
       pendingNote: 'Coming soon',
       cta: 'Download',
     },
-    ctaAria: '{cta} — {label}',
+    ctaAria: '{cta} - {label}',
   },
   footer: {
     missingLinks: 'Official links to be added.',
@@ -173,19 +173,19 @@ export default {
     label: 'Production',
     credit: 'ALMENA PROD',
     aria: 'Contact ALMENA PROD',
-    subject: 'DOYA — ALMENA PROD contact',
+    subject: 'DOYA - ALMENA PROD contact',
     body: 'Hello,\n\n',
   },
   studio: {
     label: 'Made by',
     credit: 'Made by · Reelazura',
     aria: 'Contact Reelazura',
-    subject: 'DOYA — site contact',
+    subject: 'DOYA - site contact',
     body: 'Hi Reelazura,\n\n',
     menuLabel: 'Bug, idea, contact',
     menuHint: 'Email · optional screenshot attached',
-    menuAria: 'Email Reelazura — bug, suggestion or contact',
-    menuSubject: 'DOYA — bug / suggestion',
+    menuAria: 'Email Reelazura - bug, suggestion or contact',
+    menuSubject: 'DOYA - bug / suggestion',
     menuBody: 'Hi Reelazura,\n\nPage / screen:\nDescription:\n\n(You can attach a screenshot to this email.)\n\n',
   },
   newsletter: {
@@ -224,10 +224,10 @@ export default {
     shipping_not_configured: 'Shipping is still being configured.',
     invalid_shipping_zone: 'Choose a shipping zone.',
     invalid_shipping_country: 'Choose a shipping country.',
-    shipping_quote_required: 'Too many items for flat-rate shipping — quote required.',
+    shipping_quote_required: 'Too many items for flat-rate shipping - quote required.',
     invalid_message: 'Please write a short message for the quote (min. 5 characters).',
     message_too_long: 'Message is too long.',
-    quote_not_required: 'This cart can use Stripe — no quote needed.',
+    quote_not_required: 'This cart can use Stripe - no quote needed.',
     quote_send_failed: 'Could not send the quote request right now.',
     stripe_unavailable: 'Payment unavailable right now.',
     origin_not_allowed: 'Origin not allowed.',
@@ -277,7 +277,7 @@ export default {
       eu: 'Europe (EU + Switzerland)',
       dom: 'French overseas',
     },
-    zoneWithAmount: '{name} — {amount}',
+    zoneWithAmount: '{name} - {amount}',
     stripeAside: 'No card is entered on this site. Secure payment by Stripe.',
     quoteNote: 'More than 6 clothing items and accessories or more than 5 CDs: shipping is on quote.',
     quoteMessage: 'Message for the quote',
@@ -285,7 +285,7 @@ export default {
     quoteCta: 'Request a quote',
     quoteSending: 'Sending…',
     quoteSuccess: 'Request sent. We’ll reply soon to the email you provided.',
-    quoteAside: 'We’ll email you the shipping rate — no payment yet.',
+    quoteAside: 'We’ll email you the shipping rate - no payment yet.',
     quoteSubject: 'DOYA shop shipping quote',
     quoteBody: 'Hello,\n\nI would like a shipping quote for:\n{items}\n- Country: {country}\n\nEmail: {email}\n\nMessage:\n{message}\n\nThank you.',
     pay: 'Pay',
@@ -360,7 +360,7 @@ export default {
         {
           heading: 'Seller',
           paragraphs: [
-            'ALMENA PROD — DOYA shop',
+            'ALMENA PROD - DOYA shop',
             'Registered office: Louey, France',
             'SIRET: 101 884 062 00015',
             'Order contact: almenaprod@gmail.com',
@@ -438,7 +438,7 @@ export default {
           heading: 'Data collected',
           paragraphs: [
             'Newsletter: email address and interface language via Brevo. During confirmation, the address is temporarily stored in Supabase (maximum 30 days) together with a technical consent record (protected fingerprint, source and dates).',
-            'Orders: email, shipping address, order contents — via Stripe and Supabase.',
+            'Orders: email, shipping address, order contents - via Stripe and Supabase.',
             'Audience (aggregated): page views and a few actions (newsletter, cart, listening, contact…), without identifying visitors.',
           ],
         },

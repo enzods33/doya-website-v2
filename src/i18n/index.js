@@ -16,7 +16,7 @@ const LOCALE_META = {
   ar: { intl: 'ar', label: 'AR', dir: 'rtl' },
 }
 
-/** Métadonnées légères (labels / BCP47) — messages chargés à la demande. */
+/** Métadonnées légères (labels / BCP47) - messages chargés à la demande. */
 export const localeCatalog = Object.fromEntries(
   LOCALES.map((code) => [code, { ...LOCALE_META[code], messages: code === 'fr' ? fr : null }]),
 )

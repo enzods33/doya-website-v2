@@ -1,7 +1,7 @@
-/** 简体中文 — 公共界面完整翻译；少量后台专用键继承英文。 */
+/** 简体中文 - 公共界面完整翻译；少量后台专用键继承英文。 */
 export default {
   meta: {
-    title: 'DOYA — Luna Bohemia',
+    title: 'DOYA - Luna Bohemia',
     description: 'Luna Bohemia，DOYA 的世界。专辑、现场演出与系列商品。',
     mentionsDescription: 'DOYA 官方网站的运营方、托管服务与法律声明。',
     cgvDescription: 'DOYA 在线商店（ALMENA PROD）的销售条款。',
@@ -9,7 +9,7 @@ export default {
   },
   a11y: {
     skipToContent: '跳到主要内容',
-    brandBio: 'DOYA — 简介',
+    brandBio: 'DOYA - 简介',
     home: '首页',
     navMain: '主导航',
     navTools: '购物车',
@@ -31,7 +31,7 @@ export default {
     home: '首页',
   },
   offline: {
-    banner: '当前处于离线状态 — 仍可浏览；商店、新闻邮件和演出日期需要网络连接。',
+    banner: '当前处于离线状态 - 仍可浏览；商店、新闻邮件和演出日期需要网络连接。',
   },
   nav: {
     music: '音乐',
@@ -128,7 +128,7 @@ export default {
       'luna-bohemia-black': '星星',
       'doya-white': '月相',
       'doya-black': '月相',
-      'cd-luna-bohemia': 'Luna Bohemia — CD 纸盒装',
+      'cd-luna-bohemia': 'Luna Bohemia - CD 纸盒装',
     },
     zoom: '放大',
     zoomClose: '关闭',
@@ -143,7 +143,7 @@ export default {
     booking: { label: '演出合作', note: '演唱会、音乐节、巡演', subject: 'DOYA 演出合作', cta: '联系' },
     press: { label: '媒体 & 合作', note: '采访、品牌合作及其他需求', subject: 'DOYA 媒体 / 合作', cta: '联系' },
     pressKit: { label: '媒体资料包', note: '照片、简介与专辑资料', pendingNote: '即将上线', cta: '下载' },
-    ctaAria: '{cta} — {label}',
+    ctaAria: '{cta} - {label}',
   },
   footer: {
     missingLinks: '官方链接将陆续补充。',
@@ -157,19 +157,19 @@ export default {
     label: '制作',
     credit: 'ALMENA PROD',
     aria: '联系 ALMENA PROD',
-    subject: 'DOYA — 联系 ALMENA PROD',
+    subject: 'DOYA - 联系 ALMENA PROD',
     body: '你好，\n\n',
   },
   studio: {
     label: '网站制作',
     credit: 'Made by · Reelazura',
     aria: '联系 Reelazura',
-    subject: 'DOYA — 网站联系',
+    subject: 'DOYA - 网站联系',
     body: '你好，Reelazura。\n\n',
     menuLabel: '问题、建议、联系',
     menuHint: '电子邮件 · 可选附加截图',
-    menuAria: '给 Reelazura 发邮件 — 问题、建议或联系',
-    menuSubject: 'DOYA — 问题 / 建议',
+    menuAria: '给 Reelazura 发邮件 - 问题、建议或联系',
+    menuSubject: 'DOYA - 问题 / 建议',
     menuBody: '你好，Reelazura。\n\n页面 / 屏幕：\n说明：\n\n（如需要，可在邮件中附上截图。）\n\n',
   },
   newsletter: {
@@ -208,7 +208,7 @@ export default {
     shipping_not_configured: '配送设置仍在配置中。',
     invalid_shipping_zone: '请选择配送区域。',
     invalid_shipping_country: '请选择配送国家/地区。',
-    shipping_quote_required: '商品数量超过固定运费范围 — 需要单独报价。',
+    shipping_quote_required: '商品数量超过固定运费范围 - 需要单独报价。',
     invalid_message: '请为报价请求填写一段简短说明（至少 5 个字符）。',
     message_too_long: '消息过长。',
     quote_not_required: '此购物车可直接使用 Stripe 结算，无需报价。',
@@ -257,7 +257,7 @@ export default {
     shippingCountry: '配送国家/地区',
     shippingZone: '配送区域',
     zone: { fr: '法国本土', eu: '欧洲（欧盟 + 瑞士）', dom: '法国海外领地' },
-    zoneWithAmount: '{name} — {amount}',
+    zoneWithAmount: '{name} - {amount}',
     stripeAside: '本网站不会直接收集银行卡信息。支付由 Stripe 安全处理。',
     quoteNote: '服饰及配件超过 6 件，或 CD 超过 5 张：运费需单独报价。',
     quoteMessage: '报价说明',
@@ -265,7 +265,7 @@ export default {
     quoteCta: '申请报价',
     quoteSending: '发送中…',
     quoteSuccess: '请求已发送。我们会尽快通过你提供的电子邮箱回复。',
-    quoteAside: '我们会通过邮件告知运费 — 此时不会产生支付。',
+    quoteAside: '我们会通过邮件告知运费 - 此时不会产生支付。',
     quoteSubject: 'DOYA 商店配送报价',
     quoteBody: '你好，\n\n我想咨询以下商品的配送费用：\n{items}\n- 国家/地区：{country}\n\n电子邮箱：{email}\n\n说明：\n{message}\n\n谢谢。',
     pay: '支付',
@@ -319,7 +319,7 @@ export default {
       title: '销售条款',
       intro: '本条款适用于 DOYA 在线商店中的购买行为。',
       sections: [
-        { heading: '销售方', paragraphs: ['ALMENA PROD — DOYA 商店', '注册地址：Louey, France', 'SIRET：101 884 062 00015', '订单联系：almenaprod@gmail.com'] },
+        { heading: '销售方', paragraphs: ['ALMENA PROD - DOYA 商店', '注册地址：Louey, France', 'SIRET：101 884 062 00015', '订单联系：almenaprod@gmail.com'] },
         { heading: '商品', paragraphs: [
           '商店在库存范围内销售与 DOYA 相关的商品及实体载体（T 恤、CD 等）。',
           '商品图片仅供参考。若付款后商品无法供货，将为顾客退款。',

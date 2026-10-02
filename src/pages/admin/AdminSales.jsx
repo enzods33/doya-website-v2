@@ -142,12 +142,12 @@ function AdminSales() {
       {shipMessage ? <p className="admin-ok" role="status">{shipMessage}</p> : null}
 
       <div className="admin-stat-grid" aria-busy={busy || undefined}>
-        <AdminStatCard label={t('admin.salesOrders')} value={data?.paidOrders ?? '—'} loading={busy && !data} />
-        <AdminStatCard label={t('admin.salesToShip')} value={data?.toShipCount ?? '—'} loading={busy && !data} />
-        <AdminStatCard label={t('admin.salesUnits')} value={data?.unitsSold ?? '—'} loading={busy && !data} />
+        <AdminStatCard label={t('admin.salesOrders')} value={data?.paidOrders ?? '-'} loading={busy && !data} />
+        <AdminStatCard label={t('admin.salesToShip')} value={data?.toShipCount ?? '-'} loading={busy && !data} />
+        <AdminStatCard label={t('admin.salesUnits')} value={data?.unitsSold ?? '-'} loading={busy && !data} />
         <AdminStatCard
           label={t('admin.salesRevenue')}
-          value={data ? formatEuro(data.revenueCents, intlLocale) : '—'}
+          value={data ? formatEuro(data.revenueCents, intlLocale) : '-'}
           loading={busy && !data}
         />
       </div>
@@ -214,7 +214,7 @@ function AdminSales() {
                     <div className="admin-order-grid">
                       <div>
                         <p className="admin-order-label">{t('admin.salesShipTo')}</p>
-                        <p className="admin-order-value">{order.shippingName || '—'}</p>
+                        <p className="admin-order-value">{order.shippingName || '-'}</p>
                         <p className="admin-order-value">{order.email}</p>
                         {order.shippingPhone ? <p className="admin-order-value">{order.shippingPhone}</p> : null}
                         {addressLines.length ? (

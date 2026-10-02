@@ -1,7 +1,7 @@
-/** العربية — العربية الفصحى الحديثة */
+/** العربية - العربية الفصحى الحديثة */
 export default {
   meta: {
-    title: 'DOYA — Luna Bohemia',
+    title: 'DOYA - Luna Bohemia',
     description: 'عالم Luna Bohemia من DOYA. الألبوم والحفلات والمجموعات.',
     mentionsDescription: 'الناشر والاستضافة والإشعارات القانونية للموقع الرسمي لـ DOYA.',
     cgvDescription: 'الشروط العامة للبيع في متجر DOYA ‏(ALMENA PROD).',
@@ -9,7 +9,7 @@ export default {
   },
   a11y: {
     skipToContent: 'الانتقال إلى المحتوى',
-    brandBio: 'DOYA — السيرة',
+    brandBio: 'DOYA - السيرة',
     home: 'الرئيسية',
     navMain: 'التنقل الرئيسي',
     navTools: 'السلة',
@@ -31,7 +31,7 @@ export default {
     home: 'الرئيسية',
   },
   offline: {
-    banner: 'أنت غير متصل — يمكنك تصفح الموقع، لكن المتجر والنشرة والمواعيد المحدثة تحتاج إلى اتصال.',
+    banner: 'أنت غير متصل - يمكنك تصفح الموقع، لكن المتجر والنشرة والمواعيد المحدثة تحتاج إلى اتصال.',
   },
   nav: {
     music: 'الموسيقى',
@@ -128,7 +128,7 @@ export default {
       'luna-bohemia-black': 'نجوم',
       'doya-white': 'الأطوار',
       'doya-black': 'الأطوار',
-      'cd-luna-bohemia': 'Luna Bohemia — CD ديجيباك',
+      'cd-luna-bohemia': 'Luna Bohemia - CD ديجيباك',
     },
     zoom: 'تكبير',
     zoomClose: 'إغلاق',
@@ -143,7 +143,7 @@ export default {
     booking: { label: 'الحجوزات', note: 'حفلات، مهرجانات، جولات', subject: 'حجز DOYA', cta: 'اتصال' },
     press: { label: 'الصحافة والتعاون', note: 'مقابلات، شراكات، طلبات أخرى', subject: 'صحافة / تعاون DOYA', cta: 'اتصال' },
     pressKit: { label: 'الملف الصحفي', note: 'صور وسيرة ومعلومات الألبوم', pendingNote: 'قريبًا', cta: 'تنزيل' },
-    ctaAria: '{cta} — {label}',
+    ctaAria: '{cta} - {label}',
   },
   footer: {
     missingLinks: 'ستتم إضافة الروابط الرسمية.',
@@ -157,19 +157,19 @@ export default {
     label: 'الإنتاج',
     credit: 'ALMENA PROD',
     aria: 'التواصل مع ALMENA PROD',
-    subject: 'DOYA — التواصل مع ALMENA PROD',
+    subject: 'DOYA - التواصل مع ALMENA PROD',
     body: 'مرحبًا،\n\n',
   },
   studio: {
     label: 'تصميم وتطوير',
     credit: 'تصميم وتطوير · Reelazura',
     aria: 'التواصل مع Reelazura',
-    subject: 'DOYA — التواصل بخصوص الموقع',
+    subject: 'DOYA - التواصل بخصوص الموقع',
     body: 'مرحبًا Reelazura،\n\n',
     menuLabel: 'خطأ، فكرة، تواصل',
     menuHint: 'بريد إلكتروني · يمكن إرفاق لقطة شاشة',
-    menuAria: 'مراسلة Reelazura — خطأ أو اقتراح أو تواصل',
-    menuSubject: 'DOYA — خطأ / اقتراح',
+    menuAria: 'مراسلة Reelazura - خطأ أو اقتراح أو تواصل',
+    menuSubject: 'DOYA - خطأ / اقتراح',
     menuBody: 'مرحبًا Reelazura،\n\nالصفحة / الشاشة:\nالوصف:\n\n(يمكنك إرفاق لقطة شاشة بهذه الرسالة.)\n\n',
   },
   newsletter: {
@@ -208,10 +208,10 @@ export default {
     shipping_not_configured: 'إعداد الشحن لم يكتمل بعد.',
     invalid_shipping_zone: 'اختر منطقة الشحن.',
     invalid_shipping_country: 'اختر بلد الشحن.',
-    shipping_quote_required: 'الكمية كبيرة على السعر الثابت — يلزم طلب عرض سعر.',
+    shipping_quote_required: 'الكمية كبيرة على السعر الثابت - يلزم طلب عرض سعر.',
     invalid_message: 'اكتب رسالة قصيرة لطلب عرض السعر (5 أحرف على الأقل).',
     message_too_long: 'الرسالة طويلة جدًا.',
-    quote_not_required: 'يمكن دفع هذه السلة عبر Stripe — لا حاجة إلى عرض سعر.',
+    quote_not_required: 'يمكن دفع هذه السلة عبر Stripe - لا حاجة إلى عرض سعر.',
     quote_send_failed: 'تعذر إرسال طلب عرض السعر حاليًا.',
     stripe_unavailable: 'الدفع غير متاح حاليًا.',
     origin_not_allowed: 'المصدر غير مسموح.',
@@ -257,7 +257,7 @@ export default {
     shippingCountry: 'بلد الشحن',
     shippingZone: 'منطقة الشحن',
     zone: { fr: 'فرنسا القارية', eu: 'أوروبا (الاتحاد الأوروبي + سويسرا)', dom: 'الأقاليم الفرنسية ما وراء البحار' },
-    zoneWithAmount: '{name} — {amount}',
+    zoneWithAmount: '{name} - {amount}',
     stripeAside: 'لا تُدخل بيانات البطاقة على هذا الموقع. الدفع مؤمّن عبر Stripe.',
     quoteNote: 'أكثر من 6 قطع ملابس وإكسسوارات أو أكثر من 5 أقراص CD: الشحن حسب عرض سعر.',
     quoteMessage: 'رسالة طلب عرض السعر',
@@ -265,7 +265,7 @@ export default {
     quoteCta: 'طلب عرض سعر',
     quoteSending: 'جارٍ الإرسال…',
     quoteSuccess: 'تم إرسال الطلب. سنرد قريبًا على البريد الذي أدخلته.',
-    quoteAside: 'سنرسل لك تكلفة الشحن عبر البريد — لا يوجد دفع الآن.',
+    quoteAside: 'سنرسل لك تكلفة الشحن عبر البريد - لا يوجد دفع الآن.',
     quoteSubject: 'عرض سعر شحن متجر DOYA',
     quoteBody: 'مرحبًا،\n\nأرغب في عرض سعر للشحن للمنتجات التالية:\n{items}\n- البلد: {country}\n\nالبريد: {email}\n\nالرسالة:\n{message}\n\nشكرًا.',
     pay: 'الدفع',
@@ -306,7 +306,7 @@ export default {
       title: 'الشروط العامة للبيع',
       intro: 'تنطبق هذه الشروط على المشتريات التي تتم عبر متجر DOYA الإلكتروني.',
       sections: [
-        { heading: 'البائع', paragraphs: ['ALMENA PROD — متجر DOYA', 'المقر: Louey، فرنسا', 'SIRET: 101 884 062 00015', 'اتصال الطلبات: almenaprod@gmail.com'] },
+        { heading: 'البائع', paragraphs: ['ALMENA PROD - متجر DOYA', 'المقر: Louey، فرنسا', 'SIRET: 101 884 062 00015', 'اتصال الطلبات: almenaprod@gmail.com'] },
         { heading: 'المنتجات', paragraphs: ['يبيع المتجر منتجات ووسائط مادية مرتبطة بـ DOYA (تي شيرت، أقراص CD، إلخ) في حدود المخزون المتاح.', 'الصور توضيحية. إذا أصبح المنتج غير متاح بعد الدفع، يتم رد المبلغ للعميل.'] },
         { heading: 'الأسعار والدفع', paragraphs: ['الأسعار باليورو شاملة الضرائب، باستثناء الشحن. يتم تأكيد المبلغ النهائي (المنتجات والخصم المحتمل والشحن) عند الدفع.', 'الدفع آمن عبر Stripe. لا تخزن ALMENA PROD بيانات البطاقة.'] },
         { heading: 'الطلب', paragraphs: ['يتم تأكيد الطلب بعد اعتماد الدفع من Stripe. يُرسل إيصال إلى البريد الإلكتروني المقدم.'] },
@@ -323,7 +323,7 @@ export default {
       intro: 'توضح هذه السياسة كيفية معالجة ALMENA PROD للبيانات الشخصية في إطار موقع ومتجر DOYA.',
       sections: [
         { heading: 'المسؤول عن المعالجة', paragraphs: ['المسؤول: ALMENA PROD', 'اتصال: almenaprod@gmail.com', 'اتصال تقني: reelazura@gmail.com'] },
-        { heading: 'البيانات التي نجمعها', paragraphs: ['النشرة: البريد الإلكتروني ولغة الواجهة عبر Brevo. أثناء التأكيد، يُحفظ البريد الإلكتروني مؤقتًا في Supabase لمدة لا تتجاوز 30 يومًا، مع سجل تقني للموافقة (بصمة محمية ومصدر وتواريخ).', 'الطلبات: البريد الإلكتروني وعنوان الشحن ومحتوى الطلب — عبر Stripe وSupabase.', 'الجمهور (بيانات مجمعة): مشاهدات الصفحات وبعض الإجراءات (النشرة، السلة، الاستماع، الاتصال…) من دون تحديد هوية الزوار.'] },
+        { heading: 'البيانات التي نجمعها', paragraphs: ['النشرة: البريد الإلكتروني ولغة الواجهة عبر Brevo. أثناء التأكيد، يُحفظ البريد الإلكتروني مؤقتًا في Supabase لمدة لا تتجاوز 30 يومًا، مع سجل تقني للموافقة (بصمة محمية ومصدر وتواريخ).', 'الطلبات: البريد الإلكتروني وعنوان الشحن ومحتوى الطلب - عبر Stripe وSupabase.', 'الجمهور (بيانات مجمعة): مشاهدات الصفحات وبعض الإجراءات (النشرة، السلة، الاستماع، الاتصال…) من دون تحديد هوية الزوار.'] },
         { heading: 'الأغراض والأسس القانونية', paragraphs: ['تنفيذ عقد البيع والتسليم.', 'إدارة النشرة بناءً على الموافقة.', 'أمن الموقع ومنع إساءة الاستخدام.'] },
         { heading: 'المستلمون', paragraphs: ['مقدمو الخدمات: Supabase وStripe وBrevo وHetzner وCloudflare، في حدود مهامهم.'] },
         { heading: 'مدة الاحتفاظ', paragraphs: ['تُحفظ البيانات فقط للمدة اللازمة للأغراض المحددة. يُحذف بريد النشرة غير المؤكد خلال 30 يومًا كحد أقصى، وقد يُحتفظ بسجل تقني للموافقة أو سحبها لإثبات ذلك. تُحذف عدادات منع إساءة الاستخدام ذات الأسماء المستعارة بعد 48 ساعة. أما البيانات الأخرى فتُؤرشف أو تُحذف وفق الالتزامات القانونية مثل المحاسبة والضمانات.'] },

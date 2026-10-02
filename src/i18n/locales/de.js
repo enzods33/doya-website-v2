@@ -1,7 +1,7 @@
-/** Deutsch — öffentliche Oberfläche vollständig; Backoffice erbt seltene Schlüssel aus EN. */
+/** Deutsch - öffentliche Oberfläche vollständig; Backoffice erbt seltene Schlüssel aus EN. */
 export default {
   meta: {
-    title: 'DOYA — Luna Bohemia',
+    title: 'DOYA - Luna Bohemia',
     description: 'Luna Bohemia, die Welt von DOYA. Album, Live-Termine und Kollektionen.',
     mentionsDescription: 'Anbieter, Hosting und rechtliche Hinweise zur offiziellen Website von DOYA.',
     cgvDescription: 'Verkaufsbedingungen für den DOYA-Shop (ALMENA PROD).',
@@ -9,7 +9,7 @@ export default {
   },
   a11y: {
     skipToContent: 'Zum Inhalt springen',
-    brandBio: 'DOYA — Biografie',
+    brandBio: 'DOYA - Biografie',
     home: 'Startseite',
     navMain: 'Hauptnavigation',
     navTools: 'Warenkorb',
@@ -31,7 +31,7 @@ export default {
     home: 'Startseite',
   },
   offline: {
-    banner: 'Du bist offline — du kannst weiter stöbern; Shop, Newsletter und Live-Termine benötigen eine Verbindung.',
+    banner: 'Du bist offline - du kannst weiter stöbern; Shop, Newsletter und Live-Termine benötigen eine Verbindung.',
   },
   nav: {
     music: 'Musik',
@@ -128,7 +128,7 @@ export default {
       'luna-bohemia-black': 'Sterne',
       'doya-white': 'Phasen',
       'doya-black': 'Phasen',
-      'cd-luna-bohemia': 'Luna Bohemia — Digipak-CD',
+      'cd-luna-bohemia': 'Luna Bohemia - Digipak-CD',
     },
     zoom: 'Vergrößern',
     zoomClose: 'Schließen',
@@ -143,7 +143,7 @@ export default {
     booking: { label: 'Booking', note: 'Konzerte, Festivals, Tourneen', subject: 'Booking DOYA', cta: 'Kontakt' },
     press: { label: 'Presse & Kooperationen', note: 'Interviews, Partnerschaften, weitere Anfragen', subject: 'Presse / Kooperation DOYA', cta: 'Kontakt' },
     pressKit: { label: 'Pressemappe', note: 'Fotos, Bio und Albuminfos', pendingNote: 'Demnächst', cta: 'Herunterladen' },
-    ctaAria: '{cta} — {label}',
+    ctaAria: '{cta} - {label}',
   },
   footer: {
     missingLinks: 'Offizielle Links folgen.',
@@ -157,19 +157,19 @@ export default {
     label: 'Produktion',
     credit: 'ALMENA PROD',
     aria: 'ALMENA PROD kontaktieren',
-    subject: 'DOYA — Kontakt ALMENA PROD',
+    subject: 'DOYA - Kontakt ALMENA PROD',
     body: 'Hallo,\n\n',
   },
   studio: {
     label: 'Umsetzung',
     credit: 'Made by · Reelazura',
     aria: 'Reelazura kontaktieren',
-    subject: 'DOYA — Website-Kontakt',
+    subject: 'DOYA - Website-Kontakt',
     body: 'Hallo Reelazura,\n\n',
     menuLabel: 'Fehler, Idee, Kontakt',
     menuHint: 'E-Mail · Screenshot optional anhängen',
-    menuAria: 'E-Mail an Reelazura — Fehler, Vorschlag oder Kontakt',
-    menuSubject: 'DOYA — Fehler / Vorschlag',
+    menuAria: 'E-Mail an Reelazura - Fehler, Vorschlag oder Kontakt',
+    menuSubject: 'DOYA - Fehler / Vorschlag',
     menuBody: 'Hallo Reelazura,\n\nSeite / Bildschirm:\nBeschreibung:\n\n(Du kannst dieser E-Mail einen Screenshot anhängen.)\n\n',
   },
   newsletter: {
@@ -208,10 +208,10 @@ export default {
     shipping_not_configured: 'Der Versand wird noch eingerichtet.',
     invalid_shipping_zone: 'Wähle eine Versandzone.',
     invalid_shipping_country: 'Wähle ein Versandland.',
-    shipping_quote_required: 'Zu viele Artikel für den Pauschalversand — ein Angebot ist erforderlich.',
+    shipping_quote_required: 'Zu viele Artikel für den Pauschalversand - ein Angebot ist erforderlich.',
     invalid_message: 'Schreibe eine kurze Nachricht für die Anfrage (mind. 5 Zeichen).',
     message_too_long: 'Die Nachricht ist zu lang.',
-    quote_not_required: 'Dieser Warenkorb kann über Stripe bezahlt werden — kein Angebot nötig.',
+    quote_not_required: 'Dieser Warenkorb kann über Stripe bezahlt werden - kein Angebot nötig.',
     quote_send_failed: 'Die Angebotsanfrage konnte gerade nicht gesendet werden.',
     stripe_unavailable: 'Zahlung derzeit nicht verfügbar.',
     origin_not_allowed: 'Ursprung nicht erlaubt.',
@@ -257,7 +257,7 @@ export default {
     shippingCountry: 'Versandland',
     shippingZone: 'Versandzone',
     zone: { fr: 'Französisches Festland', eu: 'Europa (EU + Schweiz)', dom: 'Französische Überseegebiete' },
-    zoneWithAmount: '{name} — {amount}',
+    zoneWithAmount: '{name} - {amount}',
     stripeAside: 'Auf dieser Website werden keine Kartendaten eingegeben. Sichere Zahlung über Stripe.',
     quoteNote: 'Mehr als 6 Kleidungsstücke/Zubehör oder mehr als 5 CDs: Versand nach Angebot.',
     quoteMessage: 'Nachricht für die Anfrage',
@@ -265,7 +265,7 @@ export default {
     quoteCta: 'Angebot anfragen',
     quoteSending: 'Wird gesendet…',
     quoteSuccess: 'Anfrage gesendet. Wir antworten bald an die angegebene E-Mail-Adresse.',
-    quoteAside: 'Wir senden dir die Versandkosten per E-Mail — noch keine Zahlung.',
+    quoteAside: 'Wir senden dir die Versandkosten per E-Mail - noch keine Zahlung.',
     quoteSubject: 'Versandanfrage DOYA-Shop',
     quoteBody: 'Hallo,\n\nich möchte ein Versandangebot für:\n{items}\n- Land: {country}\n\nE-Mail: {email}\n\nNachricht:\n{message}\n\nVielen Dank.',
     pay: 'Bezahlen',
@@ -321,7 +321,7 @@ export default {
       title: 'Verkaufsbedingungen',
       intro: 'Diese Bedingungen gelten für Käufe im Online-Shop von DOYA.',
       sections: [
-        { heading: 'Verkäufer', paragraphs: ['ALMENA PROD — DOYA-Shop', 'Sitz: Louey, Frankreich', 'SIRET: 101 884 062 00015', 'Kontakt für Bestellungen: almenaprod@gmail.com'] },
+        { heading: 'Verkäufer', paragraphs: ['ALMENA PROD - DOYA-Shop', 'Sitz: Louey, Frankreich', 'SIRET: 101 884 062 00015', 'Kontakt für Bestellungen: almenaprod@gmail.com'] },
         { heading: 'Produkte', paragraphs: [
           'Der Shop verkauft Produkte und physische Formate rund um DOYA (T-Shirts, CDs usw.), solange der Vorrat reicht.',
           'Die Fotos dienen der Illustration. Ist ein Artikel nach der Zahlung nicht verfügbar, wird der Kaufpreis erstattet.',
@@ -355,7 +355,7 @@ export default {
         { heading: 'Verantwortlicher', paragraphs: ['Verantwortlicher: ALMENA PROD', 'Kontakt: almenaprod@gmail.com', 'Technischer Kontakt: reelazura@gmail.com'] },
         { heading: 'Erhobene Daten', paragraphs: [
           'Newsletter: E-Mail-Adresse und Sprache der Oberfläche über Brevo. Während der Bestätigung wird die Adresse vorübergehend in Supabase gespeichert (höchstens 30 Tage), zusammen mit einem technischen Nachweis der Einwilligung (geschützter Fingerabdruck, Quelle und Zeitangaben).',
-          'Bestellungen: E-Mail, Lieferadresse und Bestellinhalt — über Stripe und Supabase.',
+          'Bestellungen: E-Mail, Lieferadresse und Bestellinhalt - über Stripe und Supabase.',
           'Reichweite (aggregiert): Seitenaufrufe und einige Aktionen (Newsletter, Warenkorb, Anhören, Kontakt …), ohne Besucher zu identifizieren.',
         ] },
         { heading: 'Zwecke und Rechtsgrundlagen', paragraphs: [

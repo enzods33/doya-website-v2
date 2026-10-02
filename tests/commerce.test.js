@@ -126,15 +126,15 @@ test('les noms produits connus sont localisés et les nouveaux gardent le nom ca
   assert.match(migration, /set name = 'Phases Kids'/)
 
   const expected = {
-    fr: ['Phases Kids', 'Étoiles', 'Phases', 'Luna Bohemia — CD Digipack'],
-    es: ['Fases Kids', 'Estrellas', 'Fases', 'Luna Bohemia — CD Digipack'],
-    en: ['Phases Kids', 'Stars', 'Phases', 'Luna Bohemia — Digipak CD'],
-    pt: ['Fases Kids', 'Estrelas', 'Fases', 'Luna Bohemia — CD Digipack'],
-    de: ['Phasen Kids', 'Sterne', 'Phasen', 'Luna Bohemia — Digipak-CD'],
-    ja: ['月の満ち欠け キッズ', '星', '月の満ち欠け', 'Luna Bohemia — CDデジパック'],
-    ko: ['달의 위상 키즈', '별', '달의 위상', 'Luna Bohemia — CD 디지팩'],
-    zh: ['月相儿童款', '星星', '月相', 'Luna Bohemia — CD 纸盒装'],
-    ar: ['الأطوار للأطفال', 'نجوم', 'الأطوار', 'Luna Bohemia — CD ديجيباك'],
+    fr: ['Phases Kids', 'Étoiles', 'Phases', 'Luna Bohemia - CD Digipack'],
+    es: ['Fases Kids', 'Estrellas', 'Fases', 'Luna Bohemia - CD Digipack'],
+    en: ['Phases Kids', 'Stars', 'Phases', 'Luna Bohemia - Digipak CD'],
+    pt: ['Fases Kids', 'Estrelas', 'Fases', 'Luna Bohemia - CD Digipack'],
+    de: ['Phasen Kids', 'Sterne', 'Phasen', 'Luna Bohemia - Digipak-CD'],
+    ja: ['月の満ち欠け キッズ', '星', '月の満ち欠け', 'Luna Bohemia - CDデジパック'],
+    ko: ['달의 위상 키즈', '별', '달의 위상', 'Luna Bohemia - CD 디지팩'],
+    zh: ['月相儿童款', '星星', '月相', 'Luna Bohemia - CD 纸盒装'],
+    ar: ['الأطوار للأطفال', 'نجوم', 'الأطوار', 'Luna Bohemia - CD ديجيباك'],
   }
   for (const [locale, names] of Object.entries(expected)) {
     const source = readFileSync(new URL(`../src/i18n/locales/${locale}.js`, import.meta.url), 'utf8')

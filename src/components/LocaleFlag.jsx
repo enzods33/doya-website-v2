@@ -1,4 +1,4 @@
-/** Drapeaux SVG simplifiés — fiables sur Windows (contrairement aux emoji). */
+/** Drapeaux SVG simplifiés - fiables sur Windows (contrairement aux emoji). */
 
 const FLAGS = {
   fr: (

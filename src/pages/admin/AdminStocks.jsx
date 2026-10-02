@@ -7,7 +7,7 @@ import TransitionImage from '../../components/TransitionImage.jsx'
 
 const VARIANT_PRESETS = {
   tshirt: ['XS', 'S', 'M', 'L', 'XL'],
-  kids_tshirt: ['3–4 ans', '5–6 ans', '7–8 ans', '9–11 ans', '12–13 ans'],
+  kids_tshirt: ['3-4 ans', '5-6 ans', '7-8 ans', '9-11 ans', '12-13 ans'],
   cd: ['CD'],
   other: ['Taille unique'],
 }
@@ -285,7 +285,7 @@ function AdminStocks() {
       } catch (caught) {
         const code = caught?.message
         if (code === 'invalid_stock' || code === 'invalid_stock_updates') setStockMessage(t('admin.salesStockInvalid'))
-        else if (code === 'stock_below_reserved') setStockMessage(t('admin.salesStockBelowReserved', { reserved: '—' }))
+        else if (code === 'stock_below_reserved') setStockMessage(t('admin.salesStockBelowReserved', { reserved: '-' }))
         else setError(t('admin.error'))
         const latest = findVariant(variantId)
         if (latest) setStockDrafts((current) => ({ ...current, [variantId]: String(latest.stock) }))
@@ -714,7 +714,7 @@ function AdminStocks() {
                         type="button"
                         className="admin-stock-preview"
                         onClick={() => setZoom({ product, productMedia, labels, view })}
-                        aria-label={`${t('shop.zoom')} — ${alt}`}
+                        aria-label={`${t('shop.zoom')} - ${alt}`}
                       >
                         <TransitionImage
                           image={{
@@ -753,7 +753,7 @@ function AdminStocks() {
                         <div className="admin-stock-copy">
                           <p className="admin-list-title">{product.name}</p>
                           <p className="admin-list-meta">
-                            {[adminProductType(product), product.color].filter(Boolean).join(' · ') || '—'}
+                            {[adminProductType(product), product.color].filter(Boolean).join(' · ') || '-'}
                           </p>
                         </div>
                       </div>

@@ -1,7 +1,7 @@
-/** 한국어 — 공개 화면 전체 번역. 드문 관리자 키는 EN을 상속. */
+/** 한국어 - 공개 화면 전체 번역. 드문 관리자 키는 EN을 상속. */
 export default {
   meta: {
-    title: 'DOYA — Luna Bohemia',
+    title: 'DOYA - Luna Bohemia',
     description: 'Luna Bohemia, DOYA의 세계. 앨범, 라이브, 컬렉션.',
     mentionsDescription: 'DOYA 공식 웹사이트의 운영자, 호스팅 및 법적 고지.',
     cgvDescription: 'DOYA 온라인 스토어(ALMENA PROD)의 판매 약관.',
@@ -9,7 +9,7 @@ export default {
   },
   a11y: {
     skipToContent: '본문으로 건너뛰기',
-    brandBio: 'DOYA — 소개',
+    brandBio: 'DOYA - 소개',
     home: '홈',
     navMain: '메인 내비게이션',
     navTools: '장바구니',
@@ -31,7 +31,7 @@ export default {
     home: '홈',
   },
   offline: {
-    banner: '오프라인 상태입니다 — 둘러보기는 가능하지만 스토어, 뉴스레터, 라이브 일정에는 연결이 필요합니다.',
+    banner: '오프라인 상태입니다 - 둘러보기는 가능하지만 스토어, 뉴스레터, 라이브 일정에는 연결이 필요합니다.',
   },
   nav: {
     music: '음악',
@@ -128,7 +128,7 @@ export default {
       'luna-bohemia-black': '별',
       'doya-white': '달의 위상',
       'doya-black': '달의 위상',
-      'cd-luna-bohemia': 'Luna Bohemia — CD 디지팩',
+      'cd-luna-bohemia': 'Luna Bohemia - CD 디지팩',
     },
     zoom: '확대',
     zoomClose: '닫기',
@@ -143,7 +143,7 @@ export default {
     booking: { label: '부킹', note: '콘서트, 페스티벌, 투어', subject: 'DOYA 부킹', cta: '문의' },
     press: { label: '프레스 & 협업', note: '인터뷰, 파트너십, 기타 요청', subject: 'DOYA 프레스 / 협업', cta: '문의' },
     pressKit: { label: '프레스킷', note: '사진, 소개, 앨범 정보', pendingNote: '곧 공개', cta: '다운로드' },
-    ctaAria: '{cta} — {label}',
+    ctaAria: '{cta} - {label}',
   },
   footer: {
     missingLinks: '공식 링크가 곧 추가됩니다.',
@@ -157,19 +157,19 @@ export default {
     label: '프로덕션',
     credit: 'ALMENA PROD',
     aria: 'ALMENA PROD에 문의',
-    subject: 'DOYA — ALMENA PROD 문의',
+    subject: 'DOYA - ALMENA PROD 문의',
     body: '안녕하세요.\n\n',
   },
   studio: {
     label: '사이트 제작',
     credit: 'Made by · Reelazura',
     aria: 'Reelazura에 문의',
-    subject: 'DOYA — 사이트 문의',
+    subject: 'DOYA - 사이트 문의',
     body: '안녕하세요, Reelazura.\n\n',
     menuLabel: '버그, 아이디어, 문의',
     menuHint: '이메일 · 필요 시 스크린샷 첨부',
-    menuAria: 'Reelazura에 이메일 — 버그, 제안 또는 문의',
-    menuSubject: 'DOYA — 버그 / 제안',
+    menuAria: 'Reelazura에 이메일 - 버그, 제안 또는 문의',
+    menuSubject: 'DOYA - 버그 / 제안',
     menuBody: '안녕하세요, Reelazura.\n\n페이지 / 화면:\n설명:\n\n(필요하면 이 이메일에 스크린샷을 첨부할 수 있습니다.)\n\n',
   },
   newsletter: {
@@ -208,7 +208,7 @@ export default {
     shipping_not_configured: '배송비를 설정 중입니다.',
     invalid_shipping_zone: '배송 지역을 선택하세요.',
     invalid_shipping_country: '배송 국가를 선택하세요.',
-    shipping_quote_required: '정액 배송 한도를 초과했습니다 — 별도 견적이 필요합니다.',
+    shipping_quote_required: '정액 배송 한도를 초과했습니다 - 별도 견적이 필요합니다.',
     invalid_message: '견적 요청 메시지를 5자 이상 입력하세요.',
     message_too_long: '메시지가 너무 깁니다.',
     quote_not_required: '이 장바구니는 Stripe로 바로 결제할 수 있어 견적이 필요하지 않습니다.',
@@ -257,7 +257,7 @@ export default {
     shippingCountry: '배송 국가',
     shippingZone: '배송 지역',
     zone: { fr: '프랑스 본토', eu: '유럽 (EU + 스위스)', dom: '프랑스 해외 영토' },
-    zoneWithAmount: '{name} — {amount}',
+    zoneWithAmount: '{name} - {amount}',
     stripeAside: '이 사이트에서는 카드 정보를 입력하지 않습니다. Stripe에서 안전하게 결제합니다.',
     quoteNote: '의류·액세서리 6개 초과 또는 CD 5장 초과 시 배송비는 별도 견적입니다.',
     quoteMessage: '견적 요청 메시지',
@@ -265,7 +265,7 @@ export default {
     quoteCta: '견적 요청',
     quoteSending: '전송 중…',
     quoteSuccess: '요청을 보냈습니다. 입력한 이메일로 곧 답변드리겠습니다.',
-    quoteAside: '배송비를 이메일로 안내합니다 — 아직 결제되지 않습니다.',
+    quoteAside: '배송비를 이메일로 안내합니다 - 아직 결제되지 않습니다.',
     quoteSubject: 'DOYA 스토어 배송 견적 요청',
     quoteBody: '안녕하세요.\n\n다음 상품의 배송비 견적을 요청합니다:\n{items}\n- 국가: {country}\n\n이메일: {email}\n\n메시지:\n{message}\n\n감사합니다.',
     pay: '결제하기',
@@ -319,7 +319,7 @@ export default {
       title: '판매 약관',
       intro: '본 약관은 DOYA 온라인 스토어에서 이루어지는 구매에 적용됩니다.',
       sections: [
-        { heading: '판매자', paragraphs: ['ALMENA PROD — DOYA 스토어', '소재지: Louey, France', 'SIRET: 101 884 062 00015', '주문 문의: almenaprod@gmail.com'] },
+        { heading: '판매자', paragraphs: ['ALMENA PROD - DOYA 스토어', '소재지: Louey, France', 'SIRET: 101 884 062 00015', '주문 문의: almenaprod@gmail.com'] },
         { heading: '상품', paragraphs: [
           '스토어는 재고가 있는 범위에서 DOYA 관련 상품과 실물 매체(T셔츠, CD 등)를 판매합니다.',
           '상품 사진은 참고용입니다. 결제 후 상품을 제공할 수 없는 경우 해당 금액을 환불합니다.',

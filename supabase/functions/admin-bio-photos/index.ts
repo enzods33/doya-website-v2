@@ -60,7 +60,7 @@ Deno.serve(async (req) => {
       height: Number.isFinite(height) && height > 0 ? Math.round(height) : 1600,
       sort_order: sortOrder,
       published: true,
-      alt: 'Photographie DOYA — Luna Bohemia.',
+      alt: 'Photographie DOYA - Luna Bohemia.',
     }).select('*').single()
 
     if (error) return json(500, { error: 'bio_create_failed', detail: error.message }, origin)
@@ -141,7 +141,7 @@ Deno.serve(async (req) => {
         published: true,
         alt: typeof item?.alt === 'string' && item.alt.trim()
           ? item.alt.trim()
-          : 'Photographie DOYA — Luna Bohemia.',
+          : 'Photographie DOYA - Luna Bohemia.',
       })
       if (error) {
         console.error(error)
@@ -166,7 +166,7 @@ Deno.serve(async (req) => {
     const patch: Record<string, unknown> = { updated_at: new Date().toISOString() }
     if (typeof body.published === 'boolean') patch.published = body.published
     if (typeof body.sort_order === 'number') patch.sort_order = body.sort_order
-    if (typeof body.alt === 'string') patch.alt = body.alt.trim() || 'Photographie DOYA — Luna Bohemia.'
+    if (typeof body.alt === 'string') patch.alt = body.alt.trim() || 'Photographie DOYA - Luna Bohemia.'
     const { data, error } = await db.from('bio_photos').update(patch).eq('id', id).select('*').single()
     if (error) return json(500, { error: 'bio_update_failed' }, origin)
     return json(200, { photo: data }, origin)

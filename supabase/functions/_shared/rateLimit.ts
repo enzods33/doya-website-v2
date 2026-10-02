@@ -50,7 +50,7 @@ export function allowRateMemory(key: string, max: number, windowMs: number): boo
   return true
 }
 
-/** @deprecated alias — préférer allowRatePersistent */
+/** @deprecated alias - préférer allowRatePersistent */
 export function allowRate(key: string, max: number, windowMs: number): boolean {
   return allowRateMemory(key, max, windowMs)
 }

@@ -12,7 +12,7 @@ export function siteOrigins(): string[] {
         return false
       }
     })
-  // Dev local toujours autorisé (CORS navigateur uniquement — sans JWT admin ça ne donne rien).
+  // Dev local toujours autorisé (CORS navigateur uniquement - sans JWT admin ça ne donne rien).
   return [...new Set([...LOCAL_ORIGINS, ...configured])]
 }
 

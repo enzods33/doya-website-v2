@@ -1,7 +1,7 @@
-/** 日本語 — 公開画面は完全翻訳。まれな管理画面キーは英語を継承。 */
+/** 日本語 - 公開画面は完全翻訳。まれな管理画面キーは英語を継承。 */
 export default {
   meta: {
-    title: 'DOYA — Luna Bohemia',
+    title: 'DOYA - Luna Bohemia',
     description: 'Luna Bohemia、DOYAの世界。アルバム、ライブ、コレクション。',
     mentionsDescription: 'DOYA公式サイトの運営者、ホスティング、法的表示。',
     cgvDescription: 'DOYAオンラインショップ（ALMENA PROD）の販売条件。',
@@ -9,7 +9,7 @@ export default {
   },
   a11y: {
     skipToContent: '本文へ移動',
-    brandBio: 'DOYA — プロフィール',
+    brandBio: 'DOYA - プロフィール',
     home: 'ホーム',
     navMain: 'メインナビゲーション',
     navTools: 'カート',
@@ -31,7 +31,7 @@ export default {
     home: 'ホーム',
   },
   offline: {
-    banner: 'オフラインです — 閲覧は続けられますが、ショップ、ニュースレター、ライブ日程には接続が必要です。',
+    banner: 'オフラインです - 閲覧は続けられますが、ショップ、ニュースレター、ライブ日程には接続が必要です。',
   },
   nav: {
     music: '音楽',
@@ -128,7 +128,7 @@ export default {
       'luna-bohemia-black': '星',
       'doya-white': '月の満ち欠け',
       'doya-black': '月の満ち欠け',
-      'cd-luna-bohemia': 'Luna Bohemia — CDデジパック',
+      'cd-luna-bohemia': 'Luna Bohemia - CDデジパック',
     },
     zoom: '拡大',
     zoomClose: '閉じる',
@@ -143,7 +143,7 @@ export default {
     booking: { label: 'ブッキング', note: 'コンサート、フェスティバル、ツアー', subject: 'DOYA ブッキング', cta: 'お問い合わせ' },
     press: { label: 'プレス & コラボ', note: 'インタビュー、パートナーシップ、その他のご依頼', subject: 'DOYA プレス / コラボ', cta: 'お問い合わせ' },
     pressKit: { label: 'プレスキット', note: '写真、プロフィール、アルバム情報', pendingNote: '近日公開', cta: 'ダウンロード' },
-    ctaAria: '{cta} — {label}',
+    ctaAria: '{cta} - {label}',
   },
   footer: {
     missingLinks: '公式リンクは順次追加予定です。',
@@ -157,19 +157,19 @@ export default {
     label: '制作',
     credit: 'ALMENA PROD',
     aria: 'ALMENA PRODへ連絡',
-    subject: 'DOYA — ALMENA PRODへのお問い合わせ',
+    subject: 'DOYA - ALMENA PRODへのお問い合わせ',
     body: 'こんにちは。\n\n',
   },
   studio: {
     label: 'サイト制作',
     credit: 'Made by · Reelazura',
     aria: 'Reelazuraへ連絡',
-    subject: 'DOYA — サイトについて',
+    subject: 'DOYA - サイトについて',
     body: 'こんにちは、Reelazura。\n\n',
     menuLabel: '不具合・アイデア・お問い合わせ',
     menuHint: 'メール · 必要に応じてスクリーンショットを添付',
-    menuAria: 'Reelazuraへメール — 不具合、提案、お問い合わせ',
-    menuSubject: 'DOYA — 不具合 / 提案',
+    menuAria: 'Reelazuraへメール - 不具合、提案、お問い合わせ',
+    menuSubject: 'DOYA - 不具合 / 提案',
     menuBody: 'こんにちは、Reelazura。\n\nページ / 画面：\n内容：\n\n（必要に応じて、このメールにスクリーンショットを添付できます。）\n\n',
   },
   newsletter: {
@@ -208,10 +208,10 @@ export default {
     shipping_not_configured: '送料は現在設定中です。',
     invalid_shipping_zone: '配送地域を選択してください。',
     invalid_shipping_country: '配送先の国を選択してください。',
-    shipping_quote_required: '定額送料の上限を超えています — 個別見積もりが必要です。',
+    shipping_quote_required: '定額送料の上限を超えています - 個別見積もりが必要です。',
     invalid_message: '見積もり用に短いメッセージを入力してください（5文字以上）。',
     message_too_long: 'メッセージが長すぎます。',
-    quote_not_required: 'このカートはStripeで決済できます — 見積もりは不要です。',
+    quote_not_required: 'このカートはStripeで決済できます - 見積もりは不要です。',
     quote_send_failed: '現在、見積もり依頼を送信できません。',
     stripe_unavailable: '現在、決済を利用できません。',
     origin_not_allowed: '許可されていないアクセス元です。',
@@ -257,7 +257,7 @@ export default {
     shippingCountry: '配送先の国',
     shippingZone: '配送地域',
     zone: { fr: 'フランス本土', eu: 'ヨーロッパ（EU + スイス）', dom: 'フランス海外領土' },
-    zoneWithAmount: '{name} — {amount}',
+    zoneWithAmount: '{name} - {amount}',
     stripeAside: 'このサイトではカード情報を入力しません。Stripeで安全に決済します。',
     quoteNote: '衣類・アクセサリーが6点を超える場合、またはCDが5点を超える場合、送料は個別見積もりです。',
     quoteMessage: '見積もりに関するメッセージ',
@@ -265,7 +265,7 @@ export default {
     quoteCta: '見積もりを依頼',
     quoteSending: '送信中…',
     quoteSuccess: '依頼を送信しました。ご入力のメールアドレスへ折り返しご連絡します。',
-    quoteAside: '送料をメールでご案内します — この時点では決済されません。',
+    quoteAside: '送料をメールでご案内します - この時点では決済されません。',
     quoteSubject: 'DOYAショップ 配送料見積もり',
     quoteBody: 'こんにちは。\n\n以下の商品について配送料の見積もりをお願いします：\n{items}\n- 国：{country}\n\nメール：{email}\n\nメッセージ：\n{message}\n\nよろしくお願いいたします。',
     pay: '支払う',
@@ -319,7 +319,7 @@ export default {
       title: '販売条件',
       intro: '本条件はDOYAオンラインショップでの購入に適用されます。',
       sections: [
-        { heading: '販売者', paragraphs: ['ALMENA PROD — DOYAショップ', '所在地：Louey, France', 'SIRET：101 884 062 00015', '注文窓口：almenaprod@gmail.com'] },
+        { heading: '販売者', paragraphs: ['ALMENA PROD - DOYAショップ', '所在地：Louey, France', 'SIRET：101 884 062 00015', '注文窓口：almenaprod@gmail.com'] },
         { heading: '商品', paragraphs: [
           'ショップでは、在庫の範囲内でDOYAに関連する商品や物理メディア（Tシャツ、CDなど）を販売します。',
           '商品写真はイメージです。決済後に商品を用意できない場合は返金します。',

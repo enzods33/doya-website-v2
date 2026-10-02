@@ -1,4 +1,4 @@
-/** Libellés Stripe Checkout — alignés sur `shop.product.*` / `shop.color.*` i18n. */
+/** Libellés Stripe Checkout - alignés sur `shop.product.*` / `shop.color.*` i18n. */
 
 export type CheckoutLocale = 'fr' | 'es' | 'en' | 'pt' | 'de' | 'ja' | 'ko' | 'zh' | 'ar'
 
@@ -170,7 +170,7 @@ export function localizedProductName(productId: string, locale: CheckoutLocale, 
 export function stripeProductName(productId: string, locale: CheckoutLocale, fallback = ''): string {
   const base = localizedProductName(productId, locale, fallback)
   const color = COLOR[locale][colorKey(productId)]
-  return `${base} — ${color}`
+  return `${base} - ${color}`
 }
 
 export function stripeLineDescription(size: string, locale: CheckoutLocale, variantLabel = ''): string {

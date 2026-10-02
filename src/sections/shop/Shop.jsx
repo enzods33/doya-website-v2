@@ -337,7 +337,7 @@ function Shop() {
             type="button"
             className="product-image-trigger"
             onClick={() => setZoom({ product, view: displayedView })}
-            aria-label={`${t('shop.zoom')} — ${alt}`}
+            aria-label={`${t('shop.zoom')} - ${alt}`}
             disabled={!imageSrc}
           >
             {imageSrc ? (

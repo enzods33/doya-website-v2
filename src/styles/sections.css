@@ -466,7 +466,7 @@
 .gallery-controls button { background: none; border: 0; min-width: 44px; height: 44px; font-family: var(--font-editorial); font-size: 28px; line-height: 1; transition: color var(--motion-duration); color: inherit; }
 .gallery-controls button:hover { color: var(--color-doya-red); }
 
-/* —— Galerie Bio —— */
+/* -- Galerie Bio -- */
 .about-gallery {
   --about-portrait-slide: min(31vw, 430px);
   --about-landscape-slide: min(52vw, 720px);
@@ -2777,7 +2777,7 @@ a.concert-tickets:focus-visible {
   }
 }
 
-/* —— Scène éditoriale de l’album —— */
+/* -- Scène éditoriale de l’album -- */
 .music-section {
   background:
     radial-gradient(circle at 71% 56%, rgb(255 255 255 / 62%) 0, rgb(255 255 255 / 17%) 28%, transparent 54%),
@@ -3198,7 +3198,7 @@ a.concert-tickets:focus-visible {
   .shop-error-toast { animation: none; }
 }
 
-/* —— Footer, scène finale —— */
+/* -- Footer, scène finale -- */
 .site-footer {
   --footer-ink: #f4f0ea;
   --footer-muted: rgb(244 240 234 / 58%);
@@ -3526,7 +3526,7 @@ a.concert-tickets:focus-visible {
 }
 
 
-/* —— Luna Bohemia : livret éditorial / liner notes —— */
+/* -- Luna Bohemia : livret éditorial / liner notes -- */
 .music-section {
   overflow-x: clip;
 }
@@ -3855,7 +3855,7 @@ a.concert-tickets:focus-visible {
 }
 
 
-/* —— DOYA editorial polish : lookbook, fashion motion, section bridges —— */
+/* -- DOYA editorial polish : lookbook, fashion motion, section bridges -- */
 .section-bridge {
   position: relative;
   z-index: 2;

@@ -186,13 +186,13 @@ ${escapeHtml(formatEuros(item.unitPriceCents * item.quantity))}
 <p style="margin:0 0 6px;font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:#7a736c;">Panier</p>
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0">${linesHtml}</table>
 <p style="margin:12px 0 0;"><strong>Sous-total articles :</strong> ${escapeHtml(formatEuros(subtotalCents))}</p>
-<p style="margin:8px 0 0;color:#7a736c;font-size:13px;">Port hors forfait (sur devis) — pas de paiement Stripe.</p>
+<p style="margin:8px 0 0;color:#7a736c;font-size:13px;">Port hors forfait (sur devis) - pas de paiement Stripe.</p>
 </body></html>`
 
   const sent = await sendBrevoEmail({
     to: notify,
     replyTo: email,
-    subject: `DOYA — Devis livraison (${teeQty} tees / ${cdQty} CD)`,
+    subject: `DOYA - Devis livraison (${teeQty} tees / ${cdQty} CD)`,
     previewText: `${email} · ${shippingCountry} · ${teeQty} tees / ${cdQty} CD`,
     htmlContent: html,
   })

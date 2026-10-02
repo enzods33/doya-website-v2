@@ -43,7 +43,7 @@ function AdminNewsletter() {
   const [subject, setSubject] = useState(draft.subject)
   const [signature, setSignature] = useState(() => {
     const val = readStored(STORAGE_SIGNATURE, DEFAULT_NEWSLETTER_SIGNATURE)
-    return val === '— DOYA' ? '' : val
+    return val === '- DOYA' ? '' : val
   })
   const [bodyText, setBodyText] = useState(draft.bodyText)
   const [scheduleDate, setScheduleDate] = useState('')
@@ -254,18 +254,18 @@ function AdminNewsletter() {
       <div className="admin-stat-grid admin-stat-grid-langs" aria-busy={statsBusy || undefined}>
         <AdminStatCard
           label={t('admin.newsletterSubscribers')}
-          value={subscribers ?? '—'}
+          value={subscribers ?? '-'}
           loading={statsBusy}
         />
-        <AdminStatCard label={t('admin.sendLangFr')} value={langStats?.fr ?? '—'} loading={statsBusy} />
-        <AdminStatCard label={t('admin.sendLangEs')} value={langStats?.es ?? '—'} loading={statsBusy} />
-        <AdminStatCard label={t('admin.sendLangPt')} value={langStats?.pt ?? '—'} loading={statsBusy} />
-        <AdminStatCard label={t('admin.sendLangEn')} value={langStats?.en ?? '—'} loading={statsBusy} />
-        <AdminStatCard label={t('admin.sendLangDe')} value={langStats?.de ?? '—'} loading={statsBusy} />
-        <AdminStatCard label={t('admin.sendLangJa')} value={langStats?.ja ?? '—'} loading={statsBusy} />
-        <AdminStatCard label={t('admin.sendLangKo')} value={langStats?.ko ?? '—'} loading={statsBusy} />
-        <AdminStatCard label={t('admin.sendLangZh')} value={langStats?.zh ?? '—'} loading={statsBusy} />
-        <AdminStatCard label={t('admin.sendLangAr')} value={langStats?.ar ?? '—'} loading={statsBusy} />
+        <AdminStatCard label={t('admin.sendLangFr')} value={langStats?.fr ?? '-'} loading={statsBusy} />
+        <AdminStatCard label={t('admin.sendLangEs')} value={langStats?.es ?? '-'} loading={statsBusy} />
+        <AdminStatCard label={t('admin.sendLangPt')} value={langStats?.pt ?? '-'} loading={statsBusy} />
+        <AdminStatCard label={t('admin.sendLangEn')} value={langStats?.en ?? '-'} loading={statsBusy} />
+        <AdminStatCard label={t('admin.sendLangDe')} value={langStats?.de ?? '-'} loading={statsBusy} />
+        <AdminStatCard label={t('admin.sendLangJa')} value={langStats?.ja ?? '-'} loading={statsBusy} />
+        <AdminStatCard label={t('admin.sendLangKo')} value={langStats?.ko ?? '-'} loading={statsBusy} />
+        <AdminStatCard label={t('admin.sendLangZh')} value={langStats?.zh ?? '-'} loading={statsBusy} />
+        <AdminStatCard label={t('admin.sendLangAr')} value={langStats?.ar ?? '-'} loading={statsBusy} />
       </div>
 
       <div className="admin-newsletter-layout">
@@ -453,7 +453,7 @@ function AdminNewsletter() {
             <h2 id="admin-confirm-title" className="admin-modal-title">Confirmer l'envoi</h2>
             <p className="admin-modal-text">
               {t('admin.newsletterConfirmSend', {
-                count: sendLang === 'all' ? subscribers ?? '—' : langStats?.[sendLang] ?? '—',
+                count: sendLang === 'all' ? subscribers ?? '-' : langStats?.[sendLang] ?? '-',
                 lang: t(`admin.sendLang${sendLang === 'all' ? 'All' : sendLang[0].toUpperCase() + sendLang.slice(1)}`),
               })}
             </p>

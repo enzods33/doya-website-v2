@@ -5,11 +5,11 @@ function bioWeb(file, width, height) {
     src: assetUrl(`bio/web/${file}`),
     width,
     height,
-    alt: 'Photographie DOYA — Luna Bohemia.',
+    alt: 'Photographie DOYA - Luna Bohemia.',
   }
 }
 
-/** Hero / album — versions web sur Cloudflare R2 (`VITE_ASSETS_URL`). */
+/** Hero / album - versions web sur Cloudflare R2 (`VITE_ASSETS_URL`). */
 export const media = {
   hero: {
     src: assetUrl('site/hero.jpg'),
@@ -34,7 +34,7 @@ export const media = {
   },
 }
 
-/** Galerie Bio — versions web optimisées sur Cloudflare R2 */
+/** Galerie Bio - versions web optimisées sur Cloudflare R2 */
 export const galleryImages = [
   bioWeb('_1460826_C.jpg', 1201, 1600),
   bioWeb('_ENF7092_C.jpg', 1066, 1600),
