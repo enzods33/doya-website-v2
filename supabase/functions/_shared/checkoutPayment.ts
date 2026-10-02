@@ -20,6 +20,11 @@ export async function finalizePaidCheckout(
 
   if (orderError || !order) throw new Error('order_missing')
 
+  if (order.status === 'paid') {
+    await queuePaidOrderEmail(admin, orderId)
+    return orderId
+  }
+
   const shippingCents = session.shipping_cost?.amount_total ?? 0
   if (shippingCents !== order.shipping_cents) {
     console.error('shipping_amount_mismatch', shippingCents, order.shipping_cents, orderId)
