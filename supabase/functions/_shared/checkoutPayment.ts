@@ -14,11 +14,16 @@ export async function finalizePaidCheckout(
 
   const { data: order, error: orderError } = await admin
     .from('orders')
-    .select('id, status, shipping_cents, total_cents, shipping_zone_id')
+    .select('id, status, shipping_cents, total_cents, shipping_zone_id, stripe_checkout_session_id')
     .eq('id', orderId)
     .maybeSingle()
 
   if (orderError || !order) throw new Error('order_missing')
+
+  if (order.stripe_checkout_session_id !== session.id) {
+    console.error('checkout_session_mismatch', session.id, order.stripe_checkout_session_id, orderId)
+    throw new Error('checkout_session_mismatch')
+  }
 
   if (order.status === 'paid') {
     const queued = await queuePaidOrderEmail(admin, orderId)
@@ -39,21 +44,6 @@ export async function finalizePaidCheckout(
   }
 
   const address = session.shipping_details?.address ?? session.customer_details?.address
-  const country = typeof address?.country === 'string' ? address.country.toUpperCase() : ''
-
-  if (order.shipping_zone_id) {
-    const { data: zone, error: zoneError } = await admin
-      .from('shipping_zones')
-      .select('id, countries')
-      .eq('id', order.shipping_zone_id)
-      .maybeSingle()
-
-    if (zoneError || !zone) throw new Error('shipping_zone_missing')
-    if (country && !zone.countries.includes(country)) {
-      console.error('shipping_country_mismatch', country, zone.id, orderId)
-      throw new Error('shipping_country_mismatch')
-    }
-  }
 
   const { error } = await admin.rpc('mark_order_paid_from_stripe', {
     p_order_id: orderId,
