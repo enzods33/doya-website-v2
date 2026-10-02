@@ -365,7 +365,7 @@ test('le checkout verrouille montants, CGV, emails et maintenance Stripe', () =>
   assert.match(orderEmail, /messageVersions/)
   assert.match(orderEmail, /brevo_paid_order_batch_failed/)
   assert.match(orderEmail, /responsePayload\.code === 'duplicate_parameter'/)
-  assert.match(notifications, /sendPaidOrderEmails\(loaded\.payload, row\.id\)/)
+  assert.match(notifications, /sendPaidOrderEmails\(loaded\.payload, row\.delivery_key\)/)
   assert.match(maintenance, /checkout\.sessions\.retrieve/)
   assert.match(maintenance, /processDueOrderEmails/)
   assert.match(getOrder, /finalizePaidCheckout/)
@@ -378,6 +378,9 @@ test('le checkout verrouille montants, CGV, emails et maintenance Stripe', () =>
   assert.match(shippingCountryMigration, /shipping_country text/)
   assert.match(shippingOutboxMigration, /order_email_outbox_kind_check/)
   assert.match(shippingOutboxMigration, /shipped_notification/)
+  assert.match(shippingOutboxMigration, /delivery_key uuid/)
+  assert.match(notifications, /delivery_key: crypto\.randomUUID\(\)/)
+  assert.match(maintenance, /newsletterWelcomes/)
 })
 
 test('le devis livraison revalide le panier côté serveur', () => {
