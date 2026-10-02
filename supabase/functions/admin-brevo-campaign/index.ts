@@ -374,6 +374,7 @@ Deno.serve(async (req) => {
     )
     let previewText = typeof body.previewText === 'string' ? body.previewText.trim() : ''
     if (!previewText && bodyText) previewText = bodyText.replace(/\s+/g, ' ').slice(0, 120)
+    const testEmail = typeof body.testEmail === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.testEmail) ? body.testEmail : admin.email
     const name = typeof body.name === 'string' && body.name.trim()
       ? body.name.trim()
       : `DOYA — ${subject || 'Newsletter'}`
@@ -395,10 +396,10 @@ Deno.serve(async (req) => {
       const response = await fetch('https://api.brevo.com/v3/smtp/email', {
         method: 'POST',
         headers: brevoHeaders(apiKey),
-        body: JSON.stringify({ sender: { name: senderName, email: senderEmail }, to: [{ email: admin.email }], subject: `[TEST] ${subject}`, htmlContent }),
+        body: JSON.stringify({ sender: { name: senderName, email: senderEmail }, to: [{ email: testEmail }], subject: `[TEST] ${subject}`, htmlContent }),
       })
       if (!response.ok) return json(502, { error: 'brevo_test_failed' }, origin)
-      return json(200, { ok: true, email: admin.email }, origin)
+      return json(200, { ok: true, email: testEmail }, origin)
     }
 
     const db = serviceClient()

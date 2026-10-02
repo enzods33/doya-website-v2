@@ -58,6 +58,7 @@ function AdminNewsletter() {
   const [previewBusy, setPreviewBusy] = useState(false)
   const [campaignPreview, setCampaignPreview] = useState(null)
   const [sendLang, setSendLang] = useState('fr')
+  const [testEmail, setTestEmail] = useState('')
   const sendKey = useRef(crypto.randomUUID())
 
   useEffect(() => {
@@ -177,6 +178,7 @@ function AdminNewsletter() {
         logoUrl: EMAIL_LOGO_PUBLIC_URL,
         lang: sendLang,
         idempotencyKey: sendKey.current,
+        testEmail: mode === 'test' ? testEmail : undefined,
       }
       if (mode === 'schedule') {
         if (!scheduleDate || !scheduleTime) throw new Error('invalid_schedule')
@@ -362,9 +364,19 @@ function AdminNewsletter() {
           ) : (
             <div className="admin-form-actions">
               <button type="submit" className="admin-primary" disabled={busy}>{t('admin.sendNow')}</button>
-              <button type="button" className="admin-secondary" disabled={busy || !subject.trim() || !bodyText.trim()} onClick={() => submit('test')}>
-                {t('admin.newsletterSendTest')}
-              </button>
+              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                <input
+                  type="email"
+                  value={testEmail}
+                  onChange={(e) => setTestEmail(e.target.value)}
+                  placeholder="Email de test"
+                  className="admin-input"
+                  style={{ marginBottom: 0, width: '200px' }}
+                />
+                <button type="button" className="admin-secondary" disabled={busy || !subject.trim() || !bodyText.trim()} onClick={() => submit('test')}>
+                  {t('admin.newsletterSendTest')}
+                </button>
+              </div>
               <button
                 type="button"
                 className="admin-secondary"
