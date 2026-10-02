@@ -181,7 +181,7 @@ export default {
     placeholder: 'you@example.com',
     submit: '登録する',
     sending: '送信中…',
-    success: 'DOYAニュースへの登録が完了しました！',
+    success: '受信トレイを確認して、登録を確定してください。',
     already: 'すでに登録されています。',
     error: '現在、登録を受け付けられません。',
     unavailable: '現在、登録を受け付けられません。',
