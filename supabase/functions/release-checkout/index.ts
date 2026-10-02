@@ -1,6 +1,6 @@
 import { json, preflight, rejectOrigin } from '../_shared/http.ts'
 import { serviceClient, stripeClient } from '../_shared/clients.ts'
-import { allowRatePersistent, clientIp } from '../_shared/rateLimit.ts'
+import { allowRatePersistent, clientIp, privateRateKey } from '../_shared/rateLimit.ts'
 import { checkoutReleaseAction } from '../_shared/checkoutRelease.ts'
 
 /** Libère le stock si le client annule Stripe Checkout (retour /panier?canceled=1&session_id=…). */
@@ -17,7 +17,7 @@ Deno.serve(async (req) => {
   if (req.method !== 'POST') return json(405, { error: 'method_not_allowed' }, origin)
 
   const admin = serviceClient()
-  if (!(await allowRatePersistent(admin, `release-checkout:ip:${clientIp(req)}`, MAX_PER_IP, WINDOW_MS))) {
+  if (!(await allowRatePersistent(admin, await privateRateKey('release-checkout:ip', clientIp(req)), MAX_PER_IP, WINDOW_MS))) {
     return json(429, { error: 'rate_limited' }, origin)
   }
 
