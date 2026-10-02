@@ -1,6 +1,7 @@
 -- Réconciliation périodique Stripe + retry des e-mails transactionnels.
 -- Le jeton est généré dans Supabase Vault à l'application de la migration.
 
+create schema if not exists extensions;
 create extension if not exists pg_net with schema extensions;
 
 do $$
