@@ -50,22 +50,21 @@ export default function UnsubscribePage() {
         <h1 className="editorial-title page-title">{c.title}</h1>
         <p>{c.text}</p>
         {status === 'success' ? (
-          <p role="status" style={{ marginBottom: '2rem' }}>{c.success}</p>
+          <p role="status" style={{ margin: '2rem 0' }}>{c.success}</p>
+        ) : status === 'error' || !token ? (
+          <p role="alert" style={{ margin: '2rem 0', color: 'var(--color-error, #d32f2f)' }}>
+            {c.error}
+          </p>
         ) : (
           <form onSubmit={unsubscribe} style={{ margin: '2rem 0' }}>
             <button type="submit" className="commerce-button" disabled={busy || !token}>
               {busy ? c.busy : c.action}
             </button>
-            {status === 'error' || !token ? (
-              <p role="alert" style={{ marginTop: '1rem', color: 'var(--color-error, #d32f2f)' }}>
-                {c.error}
-              </p>
-            ) : null}
           </form>
         )}
         
-        <div>
-          <a href="/" className="commerce-button" style={{ display: 'inline-flex', justifyContent: 'center', textDecoration: 'none' }}>
+        <div style={{ marginTop: '2rem' }}>
+          <a href="/" style={{ color: 'inherit', textDecoration: 'underline', textUnderlineOffset: '4px', fontSize: '0.9rem' }}>
             {c.home}
           </a>
         </div>
