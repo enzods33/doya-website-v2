@@ -1,6 +1,6 @@
 import { json, preflight, rejectOrigin } from '../_shared/http.ts'
 import { serviceClient, stripeClient } from '../_shared/clients.ts'
-import { allowRatePersistent, clientIp, maskEmail } from '../_shared/rateLimit.ts'
+import { allowRatePersistent, clientIp, maskEmail, privateRateKey } from '../_shared/rateLimit.ts'
 import { finalizePaidCheckout } from '../_shared/checkoutPayment.ts'
 
 const LOOKUP_WINDOW_MS = 10 * 60 * 1000
@@ -15,7 +15,7 @@ Deno.serve(async (req) => {
   if (req.method !== 'POST') return json(405, { error: 'method_not_allowed' }, origin)
 
   const admin = serviceClient()
-  if (!(await allowRatePersistent(admin, `get-order:ip:${clientIp(req)}`, LOOKUP_MAX_PER_IP, LOOKUP_WINDOW_MS))) {
+  if (!(await allowRatePersistent(admin, await privateRateKey('get-order:ip', clientIp(req)), LOOKUP_MAX_PER_IP, LOOKUP_WINDOW_MS))) {
     return json(429, { error: 'rate_limited' }, origin)
   }
 
