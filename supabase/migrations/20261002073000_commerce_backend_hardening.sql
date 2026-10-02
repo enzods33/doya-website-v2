@@ -72,15 +72,15 @@ begin
 
   return query
   with due as (
-    select id
-    from public.order_email_outbox
+    select q.id
+    from public.order_email_outbox q
     where (
-      status in ('pending', 'failed')
-      or (status = 'sending' and next_attempt_at <= now())
+      q.status in ('pending', 'failed')
+      or (q.status = 'sending' and q.next_attempt_at <= now())
     )
-      and next_attempt_at <= now()
-    order by next_attempt_at asc, created_at asc
-    for update skip locked
+      and q.next_attempt_at <= now()
+    order by q.next_attempt_at asc, q.created_at asc
+    for update of q skip locked
     limit greatest(1, least(coalesce(p_limit, 20), 50))
   )
   update public.order_email_outbox o
