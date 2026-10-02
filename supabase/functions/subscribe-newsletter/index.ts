@@ -27,21 +27,6 @@ function randomToken() {
   return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '')
 }
 
-async function setBrevoLang(apiKey: string, email: string, locale: string) {
-  const response = await fetch(`https://api.brevo.com/v3/contacts/${encodeURIComponent(email)}`, {
-    method: 'PUT',
-    headers: {
-      accept: 'application/json',
-      'content-type': 'application/json',
-      'api-key': apiKey,
-    },
-    body: JSON.stringify({ attributes: { LANG: locale } }),
-  })
-  if (!response.ok && response.status !== 204) {
-    console.error('brevo_lang_update_failed', response.status)
-  }
-}
-
 Deno.serve(async (req) => {
   const origin = req.headers.get('origin')
   const options = preflight(req)
@@ -93,7 +78,6 @@ Deno.serve(async (req) => {
     const existing = await existingRes.json().catch(() => ({})) as { listIds?: number[] }
     const lists = Array.isArray(existing.listIds) ? existing.listIds : []
     if (lists.includes(listId)) {
-      await setBrevoLang(apiKey, email, locale)
       return json(200, { ok: true }, origin)
     }
   }
