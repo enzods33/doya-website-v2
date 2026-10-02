@@ -447,24 +447,36 @@ export async function sendBrevoEmail(opts: {
   return true
 }
 
-export async function sendPaidOrderEmails(order: OrderEmailPayload) {
+export function merchantNotificationEmail() {
+  return (Deno.env.get('ORDER_NOTIFY_EMAIL') ?? 'almenaprod@gmail.com').trim().toLowerCase()
+}
+
+export async function sendCustomerOrderEmail(order: OrderEmailPayload) {
   const locale = normalizeCheckoutLocale(order.locale)
   const copy = EMAIL_COPY[locale]
-  const merchant = (Deno.env.get('ORDER_NOTIFY_EMAIL') ?? 'almenaprod@gmail.com').trim().toLowerCase()
-  await sendBrevoEmail({
+  return sendBrevoEmail({
     to: order.email,
     subject: `DOYA — ${copy.confirmationSubject} ${order.orderNumber}`,
     previewText: fill(copy.confirmationPreview, { number: order.orderNumber }),
     htmlContent: customerOrderEmailHtml(order),
   })
-  if (merchant && merchant !== order.email) {
-    await sendBrevoEmail({
-      to: merchant,
-      subject: `Nouvelle commande ${order.orderNumber}`,
-      previewText: `${order.email} · ${formatEuros(order.totalCents, 'fr')}`,
-      htmlContent: merchantOrderEmailHtml(order),
-    })
-  }
+}
+
+export async function sendMerchantOrderEmail(order: OrderEmailPayload) {
+  const merchant = merchantNotificationEmail()
+  if (!merchant || merchant === order.email.trim().toLowerCase()) return true
+  return sendBrevoEmail({
+    to: merchant,
+    subject: `Nouvelle commande ${order.orderNumber}`,
+    previewText: `${order.email} · ${formatEuros(order.totalCents, 'fr')}`,
+    htmlContent: merchantOrderEmailHtml(order),
+  })
+}
+
+export async function sendPaidOrderEmails(order: OrderEmailPayload) {
+  const customer = await sendCustomerOrderEmail(order)
+  const merchant = await sendMerchantOrderEmail(order)
+  return { customer, merchant }
 }
 
 export async function sendShippedOrderEmail(order: OrderEmailPayload & { trackingNumber: string }) {
