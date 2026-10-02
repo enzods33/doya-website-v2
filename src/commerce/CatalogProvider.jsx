@@ -55,7 +55,10 @@ export function CatalogProvider({ children }) {
 
     setCatalog((current) => {
       // Une panne transitoire ne doit jamais effacer un catalogue déjà chargé.
-      if (next.source === 'local' && (current.source === 'remote' || current.source === 'demo')) {
+      if (next.source !== 'remote' && current.source === 'remote') {
+        return { ...current, ready: true }
+      }
+      if (next.source === 'local' && current.source === 'demo') {
         return { ...current, ready: true }
       }
       return {
