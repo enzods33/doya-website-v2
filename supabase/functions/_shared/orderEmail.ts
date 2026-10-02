@@ -451,20 +451,21 @@ export async function sendPaidOrderEmails(order: OrderEmailPayload) {
   const locale = normalizeCheckoutLocale(order.locale)
   const copy = EMAIL_COPY[locale]
   const merchant = (Deno.env.get('ORDER_NOTIFY_EMAIL') ?? 'almenaprod@gmail.com').trim().toLowerCase()
-  await sendBrevoEmail({
+  const customerSent = await sendBrevoEmail({
     to: order.email,
     subject: `DOYA — ${copy.confirmationSubject} ${order.orderNumber}`,
     previewText: fill(copy.confirmationPreview, { number: order.orderNumber }),
     htmlContent: customerOrderEmailHtml(order),
   })
-  if (merchant && merchant !== order.email) {
-    await sendBrevoEmail({
+  const merchantSent = !merchant || merchant === order.email
+    ? true
+    : await sendBrevoEmail({
       to: merchant,
       subject: `Nouvelle commande ${order.orderNumber}`,
       previewText: `${order.email} · ${formatEuros(order.totalCents, 'fr')}`,
       htmlContent: merchantOrderEmailHtml(order),
     })
-  }
+  return customerSent && merchantSent
 }
 
 export async function sendShippedOrderEmail(order: OrderEmailPayload & { trackingNumber: string }) {
