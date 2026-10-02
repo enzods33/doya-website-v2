@@ -197,7 +197,7 @@ export default {
     placeholder: 'tu@email.com',
     submit: 'Apuntarme',
     sending: 'Enviando…',
-    success: 'Inscripción registrada. ¡Bienvenido/a a las noticias de DOYA!',
+    success: 'Revisa tu correo para confirmar tu inscripción.',
     already: 'Ya estás apuntado/a.',
     error: 'No se puede apuntar por el momento.',
     unavailable: 'No disponible por el momento.',
