@@ -10,6 +10,30 @@ export function clientIp(req: Request): string {
   return 'unknown'
 }
 
+
+function bytesToHex(bytes: ArrayBuffer) {
+  return [...new Uint8Array(bytes)].map((byte) => byte.toString(16).padStart(2, '0')).join('')
+}
+
+/** Clé durable de rate-limit sans conserver IP/e-mail en clair dans Postgres. */
+export async function privateRateKey(scope: string, rawValue: string): Promise<string> {
+  const value = String(rawValue ?? '').trim().toLowerCase() || 'unknown'
+  const secret = (Deno.env.get('RATE_LIMIT_HASH_SECRET')
+    ?? Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
+    ?? '').trim()
+  if (!secret) throw new Error('rate_limit_hash_secret_missing')
+
+  const key = await crypto.subtle.importKey(
+    'raw',
+    new TextEncoder().encode(secret),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign'],
+  )
+  const digest = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(value))
+  return `${scope}:${bytesToHex(digest)}`
+}
+
 type Bucket = { count: number; resetAt: number }
 const buckets = new Map<string, Bucket>()
 
