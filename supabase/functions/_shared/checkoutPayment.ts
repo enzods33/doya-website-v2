@@ -21,7 +21,8 @@ export async function finalizePaidCheckout(
   if (orderError || !order) throw new Error('order_missing')
 
   if (order.status === 'paid') {
-    await queuePaidOrderEmail(admin, orderId)
+    const queued = await queuePaidOrderEmail(admin, orderId)
+    if (!queued) throw new Error('order_email_queue_failed')
     return orderId
   }
 
@@ -67,6 +68,7 @@ export async function finalizePaidCheckout(
   })
   if (error) throw error
 
-  await queuePaidOrderEmail(admin, orderId)
+  const queued = await queuePaidOrderEmail(admin, orderId)
+  if (!queued) throw new Error('order_email_queue_failed')
   return orderId
 }
