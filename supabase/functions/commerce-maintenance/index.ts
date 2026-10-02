@@ -69,6 +69,24 @@ Deno.serve(async (req) => {
 
   const emails = await processDueOrderEmails(admin, 20)
 
+  // Donnée personnelle temporaire du double opt-in : ne jamais garder
+  // l'adresse au-delà de la fenêtre de confirmation si le welcome n'a pas pu partir.
+  const nowIso = new Date().toISOString()
+  const { error: expiredOptinError } = await admin
+    .from('newsletter_optins')
+    .delete()
+    .is('confirmed_at', null)
+    .lt('expires_at', nowIso)
+  if (expiredOptinError) console.error('newsletter_optin_cleanup_failed', expiredOptinError)
+
+  const { error: confirmedOptinError } = await admin
+    .from('newsletter_optins')
+    .update({ pending_email: null, updated_at: nowIso })
+    .not('confirmed_at', 'is', null)
+    .is('welcome_sent_at', null)
+    .lt('expires_at', nowIso)
+  if (confirmedOptinError) console.error('newsletter_optin_pii_cleanup_failed', confirmedOptinError)
+
   return new Response(JSON.stringify({
     ok: true,
     reconciled: { paid, released, untouched, failed },
