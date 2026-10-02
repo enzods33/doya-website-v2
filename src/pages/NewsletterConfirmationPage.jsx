@@ -94,7 +94,10 @@ export default function NewsletterConfirmationPage() {
         if (cancelled) return
         try {
           await confirmNewsletter(token)
-          if (!cancelled) setStatus('success')
+          if (!cancelled) {
+            window.history.replaceState(window.history.state, '', window.location.pathname)
+            setStatus('success')
+          }
           return
         } catch (error) {
           if (error?.status !== 409) {
