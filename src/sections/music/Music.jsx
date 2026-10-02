@@ -1,4 +1,4 @@
-import { useEffect, useId, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import { album } from '../../data/album.js'
 import { media } from '../../data/media.js'
 import { isExternalUrl } from '../../utils/links.js'
@@ -166,12 +166,32 @@ function TrackListen({ track, open, onToggle }) {
 function Music() {
   const { t } = useI18n()
   const [openTrack, setOpenTrack] = useState(null)
+  const [tracklistEntered, setTracklistEntered] = useState(false)
+  const tracklistProbeRef = useRef(null)
   const albumTitle = t('music.albumTitle')
   const [albumTitleLead, ...albumTitleTailParts] = albumTitle.trim().split(/\s+/)
   const albumTitleTail = albumTitleTailParts.join(' ')
   const albumPlatforms = album.platforms.filter(
     (platform) => platform.id !== 'youtube' && isExternalUrl(platform.url),
   )
+
+  useEffect(() => {
+    if (tracklistEntered) return undefined
+    const node = tracklistProbeRef.current
+    if (!node || !('IntersectionObserver' in window)) {
+      setTracklistEntered(true)
+      return undefined
+    }
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry?.isIntersecting) return
+      setTracklistEntered(true)
+      observer.disconnect()
+    }, { threshold: 0.28 })
+
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [tracklistEntered])
 
   useEffect(() => {
     if (!openTrack) return undefined
@@ -245,9 +265,9 @@ function Music() {
               </div>
             </div>
           </Reveal>
-          <Reveal className="tracklist-column" delay={0.12} distance={28} duration={1}>
+          <Reveal className={`tracklist-column${tracklistEntered ? ' is-entered' : ''}`} delay={0.12} distance={28} duration={1}>
             <VinylDisc className="music-tracklist-vinyl" />
-            <div className="music-liner-sheet">
+            <div ref={tracklistProbeRef} className="music-liner-sheet">
               <div className="music-liner-head" aria-hidden="true">
                 <span>{album.artist}</span>
                 <span>{t('music.tracksMeta', { n: album.tracks.length })}</span>
