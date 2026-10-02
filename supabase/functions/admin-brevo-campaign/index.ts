@@ -393,10 +393,16 @@ Deno.serve(async (req) => {
     }
 
     if (action === 'test') {
+      const secret = (Deno.env.get('BREVO_UNSUBSCRIBE_SECRET') ?? '').trim()
+      let finalHtml = htmlContent
+      if (secret) {
+        const versions = await newsletterMessageVersions([testEmail], htmlContent, publicSiteUrl(), secret, sendLang)
+        finalHtml = versions[0].htmlContent
+      }
       const response = await fetch('https://api.brevo.com/v3/smtp/email', {
         method: 'POST',
         headers: brevoHeaders(apiKey),
-        body: JSON.stringify({ sender: { name: senderName, email: senderEmail }, to: [{ email: testEmail }], subject: `[TEST] ${subject}`, htmlContent }),
+        body: JSON.stringify({ sender: { name: senderName, email: senderEmail }, to: [{ email: testEmail }], subject: `[TEST] ${subject}`, htmlContent: finalHtml }),
       })
       if (!response.ok) return json(502, { error: 'brevo_test_failed' }, origin)
       return json(200, { ok: true, email: testEmail }, origin)
