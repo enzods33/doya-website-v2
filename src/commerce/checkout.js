@@ -1,5 +1,7 @@
 import { commerceConfigured, supabaseAnonKey, supabaseUrl } from './config.js'
 
+export const CHECKOUT_TERMS_VERSION = '2026-10-02'
+
 async function invoke(path, body) {
   if (!commerceConfigured) throw new Error('commerce_disabled')
   const response = await fetch(`${supabaseUrl}/functions/v1/${path}`, {
@@ -20,8 +22,16 @@ async function invoke(path, body) {
   return payload
 }
 
-export function startCheckout({ items, email, promoCode, shippingCountry, locale }) {
-  return invoke('create-checkout-session', { items, email, promoCode, shippingCountry, locale })
+export function startCheckout({ items, email, promoCode, shippingCountry, locale, termsAccepted, termsVersion = CHECKOUT_TERMS_VERSION }) {
+  return invoke('create-checkout-session', {
+    items,
+    email,
+    promoCode,
+    shippingCountry,
+    locale,
+    termsAccepted: termsAccepted === true,
+    termsVersion,
+  })
 }
 
 export function fetchOrder(sessionId) {
