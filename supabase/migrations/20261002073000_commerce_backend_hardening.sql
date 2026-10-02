@@ -64,7 +64,7 @@ returns setof public.order_email_outbox
 language plpgsql
 security definer
 set search_path = public
-as $
+as $claim$
 begin
   if auth.role() is distinct from 'service_role' then
     raise exception 'forbidden';
@@ -92,7 +92,7 @@ begin
   where o.id = due.id
   returning o.*;
 end;
-$;
+$claim$;
 
 revoke all on function public.claim_due_order_emails(integer) from public, anon, authenticated;
 grant execute on function public.claim_due_order_emails(integer) to service_role;
