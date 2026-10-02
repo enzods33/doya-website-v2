@@ -7,6 +7,18 @@ import { useI18n } from '../i18n/I18nProvider.jsx'
 import { Stars } from './Brand.jsx'
 import Link from './Link.jsx'
 
+const NEWSLETTER_PENDING_COPY = {
+  fr: 'Merci. Si une confirmation est nécessaire, tu vas recevoir un e-mail.',
+  en: 'Thanks. If confirmation is needed, you’ll receive an email.',
+  es: 'Gracias. Si es necesario confirmar, recibirás un e-mail.',
+  pt: 'Obrigado. Se for necessária confirmação, receberás um e-mail.',
+  de: 'Danke. Falls eine Bestätigung nötig ist, erhältst du eine E-Mail.',
+  ja: 'ありがとうございます。確認が必要な場合は、メールをお送りします。',
+  ko: '감사합니다. 확인이 필요한 경우 이메일을 보내드립니다.',
+  zh: '谢谢。如需确认，你会收到一封邮件。',
+  ar: 'شكرًا. إذا كان التأكيد مطلوبًا، فستصلك رسالة بريد إلكتروني.',
+}
+
 function HoneypotField({ value, onChange, disabled }) {
   return (
     <div className="newsletter-hp" aria-hidden="true">
@@ -59,7 +71,7 @@ function NewsletterSignup({ className = '', variant = 'default' }) {
       trackEvent('newsletter_submit', isMenu ? 'menu' : 'footer')
       setStatus({
         kind: 'ok',
-        message: t('newsletter.success'),
+        message: NEWSLETTER_PENDING_COPY[locale] ?? NEWSLETTER_PENDING_COPY.fr,
       })
       setEmail('')
       setWebsite('')
