@@ -37,7 +37,7 @@ test.describe('Doya écoute, réseaux et Brevo — sans appel externe mutatif', 
 
   test('le formulaire newsletter affiche succès et erreur Brevo', async ({ page }) => {
     const safety = await protectProduction(page, {
-      'subscribe-newsletter': { status: 200, body: { ok: true, already: false } },
+      'subscribe-newsletter': { status: 200, body: { ok: true } },
     })
     await page.goto('/', { waitUntil: 'domcontentloaded' })
     const form = page.locator('footer .newsletter-signup-form')
@@ -49,7 +49,7 @@ test.describe('Doya écoute, réseaux et Brevo — sans appel externe mutatif', 
 
   test('le formulaire newsletter affiche déjà inscrit', async ({ page }) => {
     const safety = await protectProduction(page, {
-      'subscribe-newsletter': { status: 200, body: { ok: true, already: true } },
+      'subscribe-newsletter': { status: 200, body: { ok: true } },
     })
     await page.goto('/', { waitUntil: 'domcontentloaded' })
     const form = page.locator('footer .newsletter-signup-form')
