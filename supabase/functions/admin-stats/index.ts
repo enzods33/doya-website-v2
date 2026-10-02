@@ -1,7 +1,7 @@
 import { json, preflight, rejectOrigin } from '../_shared/http.ts'
 import { requireAdmin } from '../_shared/admin.ts'
 import { serviceClient } from '../_shared/clients.ts'
-import { sendShippedOrderEmail, type OrderEmailLine } from '../_shared/orderEmail.ts'
+import { processDueOrderEmails, queueShippedOrderEmail, requeuePaidOrderEmail } from '../_shared/orderNotifications.ts'
 import { loadShippingZones } from '../_shared/shipping.ts'
 import { r2PublicBase, r2PutObject } from '../_shared/r2.ts'
 
@@ -986,6 +986,28 @@ Deno.serve(async (req) => {
     return json(200, { ok: true, inventory, productId }, origin)
   }
 
+  if (action === 'resend_confirmation') {
+    const orderId = typeof body.orderId === 'string' ? body.orderId.trim() : ''
+    if (!/^[0-9a-f-]{36}$/i.test(orderId)) return json(400, { error: 'invalid_order' }, origin)
+
+    const outboxId = await requeuePaidOrderEmail(db, orderId)
+    if (!outboxId) return json(400, { error: 'confirmation_requeue_failed' }, origin)
+
+    await processDueOrderEmails(db, 20)
+    const { data: mailRow } = await db
+      .from('order_email_outbox')
+      .select('status')
+      .eq('id', outboxId)
+      .maybeSingle()
+
+    return json(200, {
+      ok: true,
+      orderId,
+      emailSent: mailRow?.status === 'sent',
+      emailQueued: mailRow?.status !== 'sent',
+    }, origin)
+  }
+
   if (action === 'mark_shipped') {
     const orderId = typeof body.orderId === 'string' ? body.orderId.trim() : ''
     const trackingNumber = typeof body.trackingNumber === 'string' ? body.trackingNumber.trim() : ''
@@ -1031,45 +1053,22 @@ Deno.serve(async (req) => {
       return json(400, { error: 'already_shipped' }, origin)
     }
 
-    const productIds = [...new Set((order.order_items ?? []).map((item: { product_id: string }) => item.product_id))]
-    const { data: products } = productIds.length
-      ? await db.from('products').select('id, name').in('id', productIds)
-      : { data: [] as { id: string; name: string }[] }
-    const names = new Map((products ?? []).map((row) => [row.id, row.name]))
-    const lines: OrderEmailLine[] = (order.order_items ?? []).map((item: {
-      product_id: string
-      size: string
-      variant_label: string
-      quantity: number
-      unit_price_cents: number
-    }) => ({
-      productId: item.product_id,
-      name: names.get(item.product_id) ?? item.product_id,
-      size: item.size,
-      variantLabel: item.variant_label || item.size,
-      quantity: item.quantity,
-      unitPriceCents: item.unit_price_cents,
-    }))
+    const outboxId = await queueShippedOrderEmail(db, orderId)
+    if (outboxId) await processDueOrderEmails(db, 20)
 
     let emailSent = false
-    try {
-      emailSent = await sendShippedOrderEmail({
-        orderNumber: order.order_number,
-        email: order.email,
-        locale: order.locale ?? 'fr',
-        shippingName: order.shipping_name,
-        shippingPhone: order.shipping_phone,
-        shippingAddress: (order.shipping_address as Record<string, unknown> | null) ?? null,
-        subtotalCents: order.subtotal_cents,
-        discountCents: order.discount_cents,
-        shippingCents: order.shipping_cents,
-        totalCents: order.total_cents,
-        promoCode: order.promo_code,
-        lines,
-        trackingNumber,
-      }, orderId)
-    } catch (mailError) {
-      console.error('shipped_email_failed', mailError)
+    let emailQueued = Boolean(outboxId)
+    if (outboxId) {
+      const { data: mailRow } = await db
+        .from('order_email_outbox')
+        .select('status')
+        .eq('id', outboxId)
+        .maybeSingle()
+      emailSent = mailRow?.status === 'sent'
+      emailQueued = mailRow?.status === 'pending'
+        || mailRow?.status === 'sending'
+        || mailRow?.status === 'failed'
+        || emailSent
     }
 
     return json(200, {
@@ -1079,6 +1078,7 @@ Deno.serve(async (req) => {
       trackingNumber,
       shippedAt,
       emailSent,
+      emailQueued,
     }, origin)
   }
 
