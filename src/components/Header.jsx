@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { m, useReducedMotion } from 'motion/react'
 import { navigation, mobileNavigation, siteContent } from '../data/siteContent.js'
-import { commerceConfigured } from '../commerce/config.js'
+import { commerceConfigured, demoStoreConfigured } from '../commerce/config.js'
 import { useCart } from '../commerce/CartProvider.jsx'
 import { useI18n } from '../i18n/I18nProvider.jsx'
 import { Stars, Wordmark, MenuIcon, CartIcon, HomeIcon } from './Brand.jsx'
@@ -285,7 +285,7 @@ function Header() {
         <LanguageSwitcher className="header-language-switcher header-nav-language" />
       </nav>
       <div className="header-end">
-        {commerceConfigured && count > 0 && (
+        {(commerceConfigured || demoStoreConfigured) && count > 0 && (
           <Link
             href="/panier"
             className={`header-cart${cartPulse ? ' is-pulse' : ''}`}
