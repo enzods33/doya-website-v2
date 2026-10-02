@@ -1,5 +1,5 @@
 import { json, preflight, publicSiteUrl, rejectOrigin } from '../_shared/http.ts'
-import { allowRatePersistent, clientIp } from '../_shared/rateLimit.ts'
+import { allowRatePersistent, clientIp, privateRateKey } from '../_shared/rateLimit.ts'
 import { serviceClient } from '../_shared/clients.ts'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -61,7 +61,7 @@ Deno.serve(async (req) => {
   if (req.method !== 'POST') return json(405, { error: 'method_not_allowed' }, origin)
 
   const admin = serviceClient()
-  if (!(await allowRatePersistent(admin, `newsletter:ip:${clientIp(req)}`, RATE_MAX, RATE_WINDOW_MS))) {
+  if (!(await allowRatePersistent(admin, await privateRateKey('newsletter:ip', clientIp(req)), RATE_MAX, RATE_WINDOW_MS))) {
     return json(429, { error: 'rate_limited' }, origin)
   }
 
@@ -78,7 +78,7 @@ Deno.serve(async (req) => {
   const email = typeof body.email === 'string' ? body.email.trim().toLowerCase() : ''
   if (!EMAIL_RE.test(email)) return json(400, { error: 'invalid_email' }, origin)
 
-  if (!(await allowRatePersistent(admin, `newsletter:email:${email}`, RATE_MAX, RATE_WINDOW_MS))) {
+  if (!(await allowRatePersistent(admin, await privateRateKey('newsletter:email', email), RATE_MAX, RATE_WINDOW_MS))) {
     return json(429, { error: 'rate_limited' }, origin)
   }
 
