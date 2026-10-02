@@ -1010,7 +1010,7 @@ Deno.serve(async (req) => {
     }
 
     const shippedAt = new Date().toISOString()
-    const { error: updateError } = await db
+    const { data: shippedRow, error: updateError } = await db
       .from('orders')
       .update({
         fulfillment_status: 'shipped',
@@ -1020,10 +1020,15 @@ Deno.serve(async (req) => {
       .eq('id', orderId)
       .eq('status', 'paid')
       .neq('fulfillment_status', 'shipped')
+      .select('id')
+      .maybeSingle()
 
     if (updateError) {
       console.error('admin_mark_shipped_update_failed', updateError)
       return json(500, { error: 'ship_update_failed' }, origin)
+    }
+    if (!shippedRow) {
+      return json(400, { error: 'already_shipped' }, origin)
     }
 
     const productIds = [...new Set((order.order_items ?? []).map((item: { product_id: string }) => item.product_id))]
@@ -1062,7 +1067,7 @@ Deno.serve(async (req) => {
         promoCode: order.promo_code,
         lines,
         trackingNumber,
-      })
+      }, orderId)
     } catch (mailError) {
       console.error('shipped_email_failed', mailError)
     }
