@@ -315,6 +315,7 @@ test('aucune clé secrète n’est embarquée dans le client', () => {
 test('le checkout verrouille montants, CGV, emails et maintenance Stripe', () => {
   const migration = readFileSync(new URL('../supabase/migrations/20261002073000_commerce_backend_hardening.sql', import.meta.url), 'utf8')
   const cron = readFileSync(new URL('../supabase/migrations/20261002073500_commerce_maintenance_cron.sql', import.meta.url), 'utf8')
+  const shippingIndex = readFileSync(new URL('../supabase/migrations/20261002090500_orders_shipping_zone_index.sql', import.meta.url), 'utf8')
   const checkout = readFileSync(new URL('../supabase/functions/create-checkout-session/index.ts', import.meta.url), 'utf8')
   const payment = readFileSync(new URL('../supabase/functions/_shared/checkoutPayment.ts', import.meta.url), 'utf8')
   const notifications = readFileSync(new URL('../supabase/functions/_shared/orderNotifications.ts', import.meta.url), 'utf8')
@@ -347,6 +348,7 @@ test('le checkout verrouille montants, CGV, emails et maintenance Stripe', () =>
   assert.match(maintenance, /processDueOrderEmails/)
   assert.match(cron, /doya-commerce-maintenance/)
   assert.match(cron, /x-doya-maintenance-token/)
+  assert.match(shippingIndex, /orders_shipping_zone_id_idx/)
 })
 
 test('la newsletter protège la confidentialité et prépare le double opt-in', () => {
@@ -361,12 +363,15 @@ test('la newsletter protège la confidentialité et prépare le double opt-in', 
   assert.match(subscribe, /contacts\\/doubleOptinConfirmation/)
   assert.match(subscribe, /BREVO_DOI_TEMPLATE_ID/)
   assert.match(subscribe, /CONSENT_VERSION = '2026-10-02-v1'/)
+  assert.match(subscribe, /CONFIRM_TTL_MS = 30 \* 24 \* 60 \* 60 \* 1000/)
+  assert.match(subscribe, /hmacSha256Hex/)
   assert.doesNotMatch(subscribe, /already:/)
   assert.match(client, /source: String\\(source/)
   assert.match(signup, /isMenu \\? 'menu' : 'footer'/)
   assert.doesNotMatch(signup, /result\\.already/)
   assert.match(confirm, /welcome_sent_at/)
   assert.match(confirm, /pending_email: null/)
+  assert.match(confirm, /headers: \{ idempotencyKey: row\.id \}/)
   assert.doesNotMatch(confirm, /\/desabonnement|unsubscribe-newsletter/i)
   assert.match(migration, /create table if not exists public\\.newsletter_optins/)
   assert.match(migration, /consent_version text not null/)
