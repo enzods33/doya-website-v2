@@ -41,7 +41,7 @@ create table if not exists public.order_email_outbox (
   order_id uuid not null references public.orders(id) on delete cascade,
   kind text not null check (kind in ('customer', 'merchant')),
   recipient text not null,
-  status text not null default 'pending' check (status in ('pending', 'failed', 'sent')),
+  status text not null default 'pending' check (status in ('pending', 'sending', 'failed', 'sent')),
   attempts integer not null default 0 check (attempts >= 0),
   next_attempt_at timestamptz not null default now(),
   last_error text,
@@ -57,7 +57,45 @@ grant all on table public.order_email_outbox to service_role;
 
 create index if not exists order_email_outbox_due_idx
   on public.order_email_outbox (next_attempt_at)
-  where status in ('pending', 'failed');
+  where status in ('pending', 'sending', 'failed');
+
+create or replace function public.claim_due_order_emails(p_limit integer default 20)
+returns setof public.order_email_outbox
+language plpgsql
+security definer
+set search_path = public
+as $
+begin
+  if auth.role() is distinct from 'service_role' then
+    raise exception 'forbidden';
+  end if;
+
+  return query
+  with due as (
+    select id
+    from public.order_email_outbox
+    where (
+      status in ('pending', 'failed')
+      or (status = 'sending' and next_attempt_at <= now())
+    )
+      and next_attempt_at <= now()
+    order by next_attempt_at asc, created_at asc
+    for update skip locked
+    limit greatest(1, least(coalesce(p_limit, 20), 50))
+  )
+  update public.order_email_outbox o
+  set status = 'sending',
+      attempts = attempts + 1,
+      next_attempt_at = now() + interval '10 minutes',
+      updated_at = now()
+  from due
+  where o.id = due.id
+  returning o.*;
+end;
+$;
+
+revoke all on function public.claim_due_order_emails(integer) from public, anon, authenticated;
+grant execute on function public.claim_due_order_emails(integer) to service_role;
 
 create index if not exists order_items_order_id_idx
   on public.order_items (order_id);
