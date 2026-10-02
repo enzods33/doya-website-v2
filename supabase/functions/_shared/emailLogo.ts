@@ -9,7 +9,7 @@ export const EMAIL_LOGO_STORAGE_URL =
   'https://ipphjddgeotsohplzkbo.supabase.co/storage/v1/object/public/email/doya-logo-email.png'
 
 export function emailLogoPublicUrl() {
-  return EMAIL_LOGO_BREVO_CDN
+  return EMAIL_LOGO_STORAGE_URL
 }
 
 /** Remplace toute src logo (site, R2, edge, cid, data) par l’URL publique. */

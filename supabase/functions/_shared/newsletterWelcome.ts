@@ -8,9 +8,8 @@ export const NEWSLETTER_WELCOME = {
     body: [
       'Merci pour ton inscription.',
       'Tu fais maintenant partie du cercle DOYA, et tu seras parmi les premiers à recevoir les dernières nouvelles : sorties, dates de concert, et petites surprises au fil de la route.',
-      'À très vite,',
     ],
-    sign: 'DOYA',
+    sign: 'À bientôt !',
   },
   en: {
     subject: 'Welcome to the DOYA circle',
@@ -19,9 +18,8 @@ export const NEWSLETTER_WELCOME = {
     body: [
       'Thanks for signing up.',
       'You’re now part of the DOYA circle, and you’ll be among the first to hear about releases, live dates, and the little surprises along the way.',
-      'See you soon,',
     ],
-    sign: 'DOYA',
+    sign: 'See you soon!',
   },
   es: {
     subject: 'Bienvenido/a al círculo DOYA',
@@ -30,9 +28,8 @@ export const NEWSLETTER_WELCOME = {
     body: [
       'Gracias por tu inscripción.',
       'Ya formas parte del círculo DOYA, y serás de los primeros en recibir novedades: lanzamientos, fechas en vivo y pequeñas sorpresas en el camino.',
-      'Hasta pronto,',
     ],
-    sign: 'DOYA',
+    sign: '¡Hasta pronto!',
   },
   pt: {
     subject: 'Bem-vindo/a ao círculo DOYA',
@@ -41,9 +38,8 @@ export const NEWSLETTER_WELCOME = {
     body: [
       'Obrigado pela tua inscrição.',
       'Já fazes parte do círculo DOYA, e estarás entre os primeiros a receber novidades: lançamentos, datas ao vivo e pequenas surpresas pelo caminho.',
-      'Até já,',
     ],
-    sign: 'DOYA',
+    sign: 'Até logo!',
   },
   de: {
     subject: 'Willkommen im DOYA-Kreis',
@@ -52,9 +48,8 @@ export const NEWSLETTER_WELCOME = {
     body: [
       'Danke für deine Anmeldung.',
       'Du bist jetzt Teil des DOYA-Kreises, und erfährst als eine/r der Ersten von neuen Veröffentlichungen, Live-Terminen und kleinen Überraschungen unterwegs.',
-      'Bis bald,',
     ],
-    sign: 'DOYA',
+    sign: 'Bis bald!',
   },
   ja: {
     subject: 'DOYAのサークルへようこそ',
@@ -63,9 +58,8 @@ export const NEWSLETTER_WELCOME = {
     body: [
       'ご登録ありがとうございます。',
       'DOYAのサークルへようこそ。リリース、ライブ日程、そして旅の途中の小さなサプライズなど、最新情報をいち早くお届けします。',
-      'またすぐに、',
     ],
-    sign: 'DOYA',
+    sign: 'またすぐに！',
   },
   ko: {
     subject: 'DOYA 서클에 오신 것을 환영합니다',
@@ -74,9 +68,8 @@ export const NEWSLETTER_WELCOME = {
     body: [
       '구독해 주셔서 감사합니다.',
       '이제 DOYA 서클의 일원입니다. 새 음원, 라이브 일정, 그리고 여정 속 작은 소식들을 가장 먼저 받아보실 수 있습니다.',
-      '곧 다시 만나요,',
     ],
-    sign: 'DOYA',
+    sign: '곧 다시 만나요!',
   },
   zh: {
     subject: '欢迎加入 DOYA',
@@ -85,9 +78,8 @@ export const NEWSLETTER_WELCOME = {
     body: [
       '感谢你的订阅。',
       '你现在已经加入 DOYA。新作品、现场演出日期，以及旅途中那些小小的惊喜，我们都会尽早与你分享。',
-      '很快再见，',
     ],
-    sign: 'DOYA',
+    sign: '很快再见！',
   },
   ar: {
     subject: 'مرحبًا بك في دائرة DOYA',
@@ -96,9 +88,8 @@ export const NEWSLETTER_WELCOME = {
     body: [
       'شكرًا لاشتراكك.',
       'أصبحت الآن جزءًا من دائرة DOYA، وستكون من أوائل من يتلقون أخبار الإصدارات ومواعيد الحفلات والمفاجآت الصغيرة على طول الطريق.',
-      'نلتقي قريبًا،',
     ],
-    sign: 'DOYA',
+    sign: 'نلتقي قريبًا!',
   },
 } as const
 
