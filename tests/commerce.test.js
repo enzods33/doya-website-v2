@@ -205,6 +205,7 @@ test('Stripe, Brevo et la bio couvrent les 9 langues', () => {
   const labels = readFileSync(new URL('../supabase/functions/_shared/checkoutLabels.ts', import.meta.url), 'utf8')
   const checkout = readFileSync(new URL('../supabase/functions/create-checkout-session/index.ts', import.meta.url), 'utf8')
   const subscribe = readFileSync(new URL('../supabase/functions/subscribe-newsletter/index.ts', import.meta.url), 'utf8')
+  const confirmNewsletter = readFileSync(new URL('../supabase/functions/confirm-newsletter/index.ts', import.meta.url), 'utf8')
   const brevo = readFileSync(new URL('../supabase/functions/admin-brevo-campaign/index.ts', import.meta.url), 'utf8')
   const bioFn = readFileSync(new URL('../supabase/functions/admin-bio-photos/index.ts', import.meta.url), 'utf8')
   const bioMigration = readFileSync(new URL('../supabase/migrations/20260929143000_site_bio_ar_locale.sql', import.meta.url), 'utf8')
@@ -220,7 +221,7 @@ test('Stripe, Brevo et la bio couvrent les 9 langues', () => {
   assert.match(labels, /'fr' \| 'es' \| 'en' \| 'pt' \| 'de' \| 'ja' \| 'ko' \| 'zh' \| 'ar'/)
   for (const locale of ['de', 'ja', 'ko', 'zh', 'ar']) {
     assert.match(labels, new RegExp(`\\b${locale}: \\{`))
-    assert.match(subscribe, new RegExp(`\\n  ${locale}: \\{`))
+    assert.match(confirmNewsletter, new RegExp(`\\n  ${locale}: \\{`))
     assert.match(unsubscribe, new RegExp(`\\n  ${locale}: \\{`))
   }
   assert.match(labels, /locale === 'ar' \? 'auto' : locale/)
@@ -346,6 +347,33 @@ test('le checkout verrouille montants, CGV, emails et maintenance Stripe', () =>
   assert.match(maintenance, /processDueOrderEmails/)
   assert.match(cron, /doya-commerce-maintenance/)
   assert.match(cron, /x-doya-maintenance-token/)
+})
+
+test('la newsletter protège la confidentialité et prépare le double opt-in', () => {
+  const subscribe = readFileSync(new URL('../supabase/functions/subscribe-newsletter/index.ts', import.meta.url), 'utf8')
+  const confirm = readFileSync(new URL('../supabase/functions/confirm-newsletter/index.ts', import.meta.url), 'utf8')
+  const client = readFileSync(new URL('../src/commerce/newsletter.js', import.meta.url), 'utf8')
+  const signup = readFileSync(new URL('../src/components/NewsletterSignup.jsx', import.meta.url), 'utf8')
+  const campaign = readFileSync(new URL('../supabase/functions/admin-brevo-campaign/index.ts', import.meta.url), 'utf8')
+  const unsubscribe = readFileSync(new URL('../supabase/functions/unsubscribe-newsletter/index.ts', import.meta.url), 'utf8')
+  const migration = readFileSync(new URL('../supabase/migrations/20261002090000_newsletter_double_opt_in.sql', import.meta.url), 'utf8')
+
+  assert.match(subscribe, /contacts\\/doubleOptinConfirmation/)
+  assert.match(subscribe, /BREVO_DOI_TEMPLATE_ID/)
+  assert.match(subscribe, /CONSENT_VERSION = '2026-10-02-v1'/)
+  assert.doesNotMatch(subscribe, /already:/)
+  assert.match(client, /source: String\\(source/)
+  assert.match(signup, /isMenu \\? 'menu' : 'footer'/)
+  assert.doesNotMatch(signup, /result\\.already/)
+  assert.match(confirm, /welcome_sent_at/)
+  assert.match(confirm, /pending_email: null/)
+  assert.doesNotMatch(confirm, /désabonnement|unsubscribe/i)
+  assert.match(migration, /create table if not exists public\\.newsletter_optins/)
+  assert.match(migration, /consent_version text not null/)
+  assert.match(migration, /source text not null/)
+  assert.match(migration, /email_hash text not null unique/)
+  assert.doesNotMatch(campaign, /BREVO_UNSUBSCRIBE_SECRET'\\) \\|\\| apiKey/)
+  assert.doesNotMatch(unsubscribe, /BREVO_UNSUBSCRIBE_SECRET'\\) \\|\\| apiKey/)
 })
 
 test('le catalogue résiste aux erreurs réseau transitoires', () => {
