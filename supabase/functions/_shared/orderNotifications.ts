@@ -107,10 +107,7 @@ export async function processDueOrderEmails(admin: AdminClient, limit = 10) {
       const payload = await loadOrderEmailPayload(admin, row.order_id)
       if (!payload) throw new Error('order_email_payload_missing')
 
-      const ok = await sendPaidOrderEmails(payload, {
-        customer: row.order_id,
-        merchant: row.id,
-      })
+      const ok = await sendPaidOrderEmails(payload, row.id)
       if (!ok) throw new Error('order_email_delivery_failed')
 
       const { error: updateError } = await admin
