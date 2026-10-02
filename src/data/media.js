@@ -12,7 +12,7 @@ function bioWeb(file, width, height) {
 /** Hero versionné ; album / éditorial sur Cloudflare R2. */
 export const media = {
   hero: {
-    src: 'https://raw.githubusercontent.com/enzods33/doya-website-v2/0b32adb0b059e39467602ea412e0cf924991c828/public/site/hero-20261003.jpg',
+    src: '/site/hero-20261003.jpg',
     width: 1536,
     height: 1536,
     alt: 'DOYA assises de face sur des chaises dans le désert, l’une en noir, l’autre en blanc.',
