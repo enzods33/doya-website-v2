@@ -7,11 +7,11 @@ alwaysApply: true
 
 Quand l’utilisateur annonce le **vrai nom de domaine** (ou nouvelle IP / mise en prod), appliquer la checklist de `reference/commerce.md` § « Checklist — passage au vrai domaine » :
 
-1. Secret Supabase `SITE_URL` → `https://domaine`
+1. Secret Supabase `SITE_URL` → `https://doyaofficial.com`
 2. Auth Supabase : Site URL + redirect `/admin` `/panier` `/commande`
-3. Google Cloud OAuth : origin `https://domaine` (callback Supabase inchangé)
-4. Front / CI : `VITE_SITE_URL=https://domaine` + **`VITE_INDEXABLE=true`** dans `deploy.yml` (aujourd’hui forcé `false` pour le staging) + secrets GitHub à jour → rebuild/deploy
-5. **VPS Hetzner** : DNS domaine → `46.224.50.133` · Caddy (bloc domaine, `try_files` SPA) · **retirer** `X-Robots-Tag noindex` du bloc Caddy staging si on sert le vrai domaine · `sudo systemctl reload caddy` · vérifier `/var/www/doya` servi
+3. Google Cloud OAuth : origin `https://doyaofficial.com` (callback Supabase inchangé)
+4. Front / CI : `VITE_SITE_URL=https://doyaofficial.com` + **`VITE_INDEXABLE=true`** dans `deploy.yml` (aujourd’hui forcé `false` pour le staging) + secrets GitHub à jour → rebuild/deploy
+5. **VPS Hetzner** : DNS `doyaofficial.com` → `46.224.50.133` · Caddy (bloc domaine, `try_files` SPA) · **retirer** `X-Robots-Tag noindex` du bloc Caddy staging si on sert le vrai domaine · `sudo systemctl reload caddy` · vérifier `/var/www/doya` servi
 6. SPA fallback `/panier` `/commande` `/admin` (Caddy `try_files`)
 7. HTTPS OK (certificat Caddy / Let’s Encrypt)
 8. **Stripe TEST → LIVE** : `sk_live_…` · webhook Live · 1 paiement réel (plus de `4242`)
@@ -19,9 +19,11 @@ Quand l’utilisateur annonce le **vrai nom de domaine** (ou nouvelle IP / mise 
 10. **Reset jour J** : stocks réels · ventes / commandes test à 0 · stats à 0 — détail `reference/commerce.md`
 11. Ne pas resetter les **secrets R2** sans demande. Zones port : admin Catalogue / `shipping_zones`
 12. **CM2C** médiateur conso → CGV
-13. SEO : Search Console → `https://domaine/sitemap.xml` · vérifier `robots.txt` Allow (plus Disallow /)
+13. SEO : Search Console → `https://doyaofficial.com/sitemap.xml` · vérifier `robots.txt` Allow (plus Disallow /)
 
-État actuel (staging) :
+Domaine officiel annoncé : `doyaofficial.com`.
+
+État actuel avant bascule :
 - Front prod cible : VPS Hetzner `/var/www/doya` · workflow `Deploy to VPS` · URL temp `doya.guzzler-bot.cloud` (**noindex** : `VITE_INDEXABLE=false` + header Caddy)
 - Preview Netlify encore dispo : `https://harmonious-hamster-bac94a.netlify.app`
 - Dev local : Auth `127.0.0.1:5174` / `localhost:5174`

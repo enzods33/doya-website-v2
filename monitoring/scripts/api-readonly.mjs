@@ -2,7 +2,7 @@ import { kumaPush } from './kuma-push.mjs'
 
 const base = (process.env.VITE_SUPABASE_URL || '').replace(/\/$/, '')
 const key = process.env.VITE_SUPABASE_ANON_KEY || ''
-const site = (process.env.DOYA_BASE_URL || 'https://doya.guzzler-bot.cloud').replace(/\/$/, '')
+const site = (process.env.DOYA_BASE_URL || 'https://doyaofficial.com').replace(/\/$/, '')
 const started = Date.now()
 let ok = false
 let message = ''

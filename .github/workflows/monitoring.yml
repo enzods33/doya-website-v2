@@ -28,7 +28,7 @@ jobs:
       - name: Run all read-only suites and push each result to Kuma
         working-directory: monitoring
         env:
-          DOYA_BASE_URL: https://doya.guzzler-bot.cloud
+          DOYA_BASE_URL: https://doyaofficial.com
           KUMA_PUSH_DOYA_PUBLIC: ${{ secrets.KUMA_PUSH_DOYA_PUBLIC }}
           KUMA_PUSH_DOYA_COMMERCE: ${{ secrets.KUMA_PUSH_DOYA_COMMERCE }}
           KUMA_PUSH_DOYA_INTEGRATIONS: ${{ secrets.KUMA_PUSH_DOYA_INTEGRATIONS }}
@@ -50,7 +50,7 @@ jobs:
       - name: Check catalog reads and Edge preflights
         working-directory: monitoring
         env:
-          DOYA_BASE_URL: https://doya.guzzler-bot.cloud
+          DOYA_BASE_URL: https://doyaofficial.com
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
           KUMA_PUSH_DOYA_API: ${{ secrets.KUMA_PUSH_DOYA_API }}

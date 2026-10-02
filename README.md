@@ -48,8 +48,8 @@ Secrets GitHub (Settings → Secrets and variables → Actions) :
 | `VITE_SUPABASE_URL` | URL projet Supabase |
 | `VITE_SUPABASE_ANON_KEY` | clé anon |
 | `VITE_ASSETS_URL` | CDN R2 |
-| `VITE_SITE_URL` | `https://doya.guzzler-bot.cloud` puis le domaine final |
-| `VITE_INDEXABLE` | **`false`** tant que l’URL est temporaire (`doya.guzzler-bot.cloud`) — **ne jamais mettre `true` avant le vrai domaine** |
+| `VITE_SITE_URL` | `https://doyaofficial.com` |
+| `VITE_INDEXABLE` | **`true`** sur le domaine officiel `doyaofficial.com` ; previews/staging restent `false` |
 
 Sur le VPS (une fois) :
 
@@ -62,7 +62,7 @@ Bloc Caddy (`/etc/caddy/Caddyfile`) — adapter le domaine :
 
 ```caddy
 # --- DOYA ---
-doya.guzzler-bot.cloud {
+doyaofficial.com, www.doyaofficial.com {
     root * /var/www/doya
     file_server
 
