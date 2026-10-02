@@ -9,6 +9,7 @@ const UNSUBSCRIBE_LABELS: Record<string, string> = {
   ja: '配信停止',
   ko: '구독 해지',
   zh: '退订',
+  ar: 'إلغاء الاشتراك',
 }
 
 /** Chaque version a exactement un destinataire, avec un lien personnel. */
