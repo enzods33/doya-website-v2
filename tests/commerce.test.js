@@ -228,7 +228,7 @@ test('Stripe, Brevo et la bio couvrent les 9 langues', () => {
   assert.match(labels, /الأطوار للأطفال/)
   assert.match(checkout, /shipping_zone_id: zone\.id/)
   assert.match(checkout, /terms_accepted_at/)
-  assert.match(checkout, /TERMS_VERSION = '2026-09'/)
+  assert.match(checkout, /TERMS_VERSION = '2026-10-02'/)
   assert.match(brevo, /'de', 'ja', 'ko', 'zh', 'ar'/)
   assert.match(brevo, /de: 0, ja: 0, ko: 0, zh: 0, ar: 0/)
   assert.match(bioFn, /'de', 'ja', 'ko', 'zh', 'ar'/)
