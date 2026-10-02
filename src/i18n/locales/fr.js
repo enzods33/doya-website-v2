@@ -486,6 +486,8 @@ export default {
     sendLangAll: 'Tout le monde (même texte)',
     newsletterSendTest: 'Envoyer un test à mon adresse',
     newsletterTestSent: 'Test envoyé à {email}.',
+    newsletterScheduleLimit: 'Brevo permet de programmer cet envoi jusqu’à 72 heures à l’avance.',
+    newsletterScheduleInvalid: 'Choisis une date et une heure futures valides.',
     newsletterConfirmSend: 'Envoyer ce message à {count} destinataire(s) — {lang} ? Vérifie le sujet et le contenu avant de confirmer.',
     salesConfirmShipment: 'Marquer la commande {order} comme expédiée avec le suivi {tracking} et envoyer la notification ?',
     fieldScheduleDate: 'Date d’envoi',
