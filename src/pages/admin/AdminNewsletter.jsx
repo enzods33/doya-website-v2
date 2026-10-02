@@ -180,7 +180,8 @@ function AdminNewsletter() {
       if (mode === 'schedule') {
         if (!scheduleDate || !scheduleTime) throw new Error('invalid_schedule')
         const local = new Date(`${scheduleDate}T${scheduleTime}`)
-        if (Number.isNaN(local.getTime())) throw new Error('invalid_schedule')
+        if (Number.isNaN(local.getTime()) || local.getTime() <= Date.now()) throw new Error('invalid_schedule')
+        if (local.getTime() > Date.now() + 72 * 60 * 60 * 1000) throw new Error('schedule_too_far')
         payload.scheduledAt = local.toISOString()
       }
       const result = await adminBrevo(mode, payload)
@@ -205,6 +206,10 @@ function AdminNewsletter() {
         setError(t('admin.listEmpty'))
       } else if (caught.message === 'list_empty_lang') {
         setError(t('admin.listEmptyLang'))
+      } else if (caught.message === 'schedule_too_far') {
+        setError(t('admin.newsletterScheduleLimit'))
+      } else if (caught.message === 'invalid_schedule') {
+        setError(t('admin.newsletterScheduleInvalid'))
       } else {
         const detail = caught.detail ? ` (${caught.detail})` : ''
         setError((caught.message || t('admin.error')) + detail)
