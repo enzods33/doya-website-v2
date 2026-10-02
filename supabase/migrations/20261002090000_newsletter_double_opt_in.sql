@@ -33,3 +33,7 @@ grant all on table public.newsletter_optins to service_role;
 create index if not exists newsletter_optins_expires_idx
   on public.newsletter_optins (expires_at)
   where confirmed_at is null;
+
+-- Le FK ajouté par le hardening commerce doit avoir son index couvrant.
+create index if not exists orders_shipping_zone_id_idx
+  on public.orders (shipping_zone_id);
