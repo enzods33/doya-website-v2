@@ -1,6 +1,7 @@
 import { serviceClient, stripeClient } from '../_shared/clients.ts'
 import { finalizePaidCheckout } from '../_shared/checkoutPayment.ts'
 import { processDueOrderEmails } from '../_shared/orderNotifications.ts'
+import { sendNewsletterWelcome } from '../_shared/newsletterWelcome.ts'
 
 const STALE_AFTER_MS = 40 * 60 * 1000
 const MAX_RECONCILE = 20
@@ -76,9 +77,52 @@ Deno.serve(async (req) => {
     .lt('window_start', rateLimitCutoff)
   if (rateLimitCleanupError) console.error('rate_limit_cleanup_failed', rateLimitCleanupError)
 
+  // Welcome DOI : un échec Brevo ne doit pas perdre le mail après confirmation.
+  const nowIso = new Date().toISOString()
+  let welcomeSent = 0
+  let welcomeFailed = 0
+  const { data: pendingWelcomes, error: pendingWelcomesError } = await admin
+    .from('newsletter_optins')
+    .select('id, pending_email, locale, confirmed_at')
+    .not('confirmed_at', 'is', null)
+    .is('welcome_sent_at', null)
+    .not('pending_email', 'is', null)
+    .gt('expires_at', nowIso)
+    .order('confirmed_at', { ascending: true })
+    .limit(10)
+
+  if (pendingWelcomesError) {
+    console.error('newsletter_welcome_retry_lookup_failed', pendingWelcomesError)
+  } else {
+    for (const row of pendingWelcomes ?? []) {
+      const email = typeof row.pending_email === 'string' ? row.pending_email.trim().toLowerCase() : ''
+      if (!email) continue
+      const sent = await sendNewsletterWelcome(email, row.locale, row.id)
+      if (sent) {
+        welcomeSent += 1
+        const { error } = await admin
+          .from('newsletter_optins')
+          .update({
+            pending_email: null,
+            welcome_sent_at: new Date().toISOString(),
+            last_error: null,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', row.id)
+        if (error) console.error('newsletter_welcome_retry_state_failed', row.id, error)
+      } else {
+        welcomeFailed += 1
+        const { error } = await admin
+          .from('newsletter_optins')
+          .update({ last_error: 'brevo_welcome_failed', updated_at: new Date().toISOString() })
+          .eq('id', row.id)
+        if (error) console.error('newsletter_welcome_retry_error_state_failed', row.id, error)
+      }
+    }
+  }
+
   // Donnée personnelle temporaire du double opt-in : ne jamais garder
   // l'adresse au-delà de la fenêtre de confirmation si le welcome n'a pas pu partir.
-  const nowIso = new Date().toISOString()
   const { error: expiredOptinError } = await admin
     .from('newsletter_optins')
     .delete()
@@ -98,6 +142,7 @@ Deno.serve(async (req) => {
     ok: true,
     reconciled: { paid, released, untouched, failed },
     emails,
+    newsletterWelcomes: { sent: welcomeSent, failed: welcomeFailed },
   }), {
     status: 200,
     headers: { 'Content-Type': 'application/json' },
