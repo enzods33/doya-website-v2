@@ -22,7 +22,17 @@ Deno.serve(async (req) => {
   if (!apiKey || !Number.isInteger(listId) || listId < 1) return json(503, { error: 'newsletter_unavailable' }, origin)
 
   const body = await req.json().catch(() => ({})) as { token?: unknown }
-  const email = await verifyNewsletterAddress(typeof body.token === 'string' ? body.token : '', secret)
+  const token = typeof body.token === 'string' ? body.token : ''
+  let email = await verifyNewsletterAddress(token, secret)
+
+  // Compatibilité des liens déjà envoyés avant la clé dédiée. Aucun nouveau
+  // lien n'est signé avec la clé Brevo ; ce fallback ne sert qu'à l'historique.
+  if (!email) {
+    const legacySecret = Deno.env.get('BREVO_UNSUBSCRIBE_SECRET') || apiKey
+    if (legacySecret && legacySecret !== secret) {
+      email = await verifyNewsletterAddress(token, legacySecret)
+    }
+  }
   if (!email) return json(400, { error: 'invalid_link' }, origin)
 
   const response = await fetch(`https://api.brevo.com/v3/contacts/lists/${listId}/contacts/remove`, {
