@@ -1,6 +1,6 @@
 import { json, preflight, rejectOrigin } from '../_shared/http.ts'
 import { sendBrevoEmail } from '../_shared/orderEmail.ts'
-import { allowRatePersistent, clientIp } from '../_shared/rateLimit.ts'
+import { allowRatePersistent, clientIp, privateRateKey } from '../_shared/rateLimit.ts'
 import { CART_LIMITS, FLAT_SHIPPING_LIMITS } from '../_shared/limits.ts'
 import { serviceClient } from '../_shared/clients.ts'
 
@@ -40,7 +40,7 @@ Deno.serve(async (req) => {
   const ip = clientIp(req)
   const allowed = await allowRatePersistent(
     serviceClient(),
-    `shipping-quote:ip:${ip}`,
+    await privateRateKey('shipping-quote:ip', ip),
     RATE_MAX,
     RATE_WINDOW_MS,
   )
