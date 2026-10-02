@@ -48,6 +48,11 @@ test('les zones de port front restent alignées avec Deno', () => {
   assert.equal(zoneForCountry('FR')?.id, 'fr')
   assert.equal(zoneForCountry('re')?.id, 'dom')
   assert.equal(zoneForCountry('XX'), null)
+  const front = readFileSync(new URL('../src/commerce/shippingZones.js', import.meta.url), 'utf8')
+  const cart = readFileSync(new URL('../src/pages/CartPage.jsx', import.meta.url), 'utf8')
+  assert.match(front, /throw new Error\('shipping_not_configured'\)/)
+  assert.match(cart, /shippingZonesReady/)
+  assert.match(cart, /&& shippingZonesReady/)
 })
 
 test('auto-promos désactivées par défaut et règles conservées', () => {
@@ -442,6 +447,13 @@ test('le rate-limit ne conserve pas les IP ou e-mails en clair', () => {
   assert.doesNotMatch(subscribe, /`newsletter:email:\$\{email\}`/)
   assert.match(maintenance, /rate_limit_cleanup_failed/)
   assert.match(maintenance, /48 \* 60 \* 60 \* 1000/)
+})
+
+test('la confidentialité décrit le double opt-in et la rétention', () => {
+  const fr = readFileSync(new URL('../src/i18n/locales/fr.js', import.meta.url), 'utf8')
+  assert.match(fr, /Dernière mise à jour : octobre 2026/)
+  assert.match(fr, /30 jours maximum/)
+  assert.match(fr, /compteurs anti-abus pseudonymisés sont purgés après 48 heures/)
 })
 
 test('les routes à jeton restent hors index et nettoient le token confirmé', () => {
