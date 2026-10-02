@@ -55,12 +55,9 @@ function NewsletterSignup({ className = '', variant = 'default' }) {
     }
     setBusy(true)
     try {
-      const result = await subscribeNewsletter(email, locale, website)
+      await subscribeNewsletter(email, locale, website, isMenu ? 'menu' : 'footer')
       trackEvent('newsletter_submit', isMenu ? 'menu' : 'footer')
-      setStatus({
-        kind: 'ok',
-        message: result.already ? t('newsletter.already') : t('newsletter.success'),
-      })
+      setStatus({ kind: 'ok', message: t('newsletter.success') })
       setEmail('')
       setWebsite('')
     } catch {
