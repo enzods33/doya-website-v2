@@ -6,13 +6,27 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const RATE_WINDOW_MS = 10 * 60 * 1000
 const RATE_MAX = 8
 const CONSENT_VERSION = '2026-10-02-v1'
-const CONFIRM_TTL_MS = 48 * 60 * 60 * 1000
+const CONFIRM_TTL_MS = 30 * 24 * 60 * 60 * 1000
 const SOURCES = new Set(['footer', 'menu', 'cart'])
 const LOCALES = new Set(['fr', 'es', 'en', 'pt', 'de', 'ja', 'ko', 'zh', 'ar'])
 
+function bytesToHex(bytes: ArrayBuffer) {
+  return [...new Uint8Array(bytes)].map((byte) => byte.toString(16).padStart(2, '0')).join('')
+}
+
 async function sha256Hex(value: string) {
-  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(value))
-  return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, '0')).join('')
+  return bytesToHex(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(value)))
+}
+
+async function hmacSha256Hex(value: string, secret: string) {
+  const key = await crypto.subtle.importKey(
+    'raw',
+    new TextEncoder().encode(secret),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign'],
+  )
+  return bytesToHex(await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(value)))
 }
 
 function randomToken() {
@@ -76,7 +90,8 @@ Deno.serve(async (req) => {
   const apiKey = Deno.env.get('BREVO_API_KEY') ?? ''
   const listId = Number(Deno.env.get('BREVO_LIST_ID') ?? '')
   const doiTemplateId = Number(Deno.env.get('BREVO_DOI_TEMPLATE_ID') ?? '')
-  if (!apiKey || !Number.isInteger(listId) || listId < 1 || !Number.isInteger(doiTemplateId) || doiTemplateId < 1) {
+  const consentSecret = (Deno.env.get('BREVO_UNSUBSCRIBE_SECRET') ?? '').trim()
+  if (!apiKey || !consentSecret || !Number.isInteger(listId) || listId < 1 || !Number.isInteger(doiTemplateId) || doiTemplateId < 1) {
     return json(503, { error: 'newsletter_unavailable' }, origin)
   }
 
@@ -94,7 +109,10 @@ Deno.serve(async (req) => {
   }
 
   const token = randomToken()
-  const [emailHash, tokenHash] = await Promise.all([sha256Hex(email), sha256Hex(token)])
+  const [emailHash, tokenHash] = await Promise.all([
+    hmacSha256Hex(email, consentSecret),
+    sha256Hex(token),
+  ])
   const now = new Date()
   const expiresAt = new Date(now.getTime() + CONFIRM_TTL_MS)
 
