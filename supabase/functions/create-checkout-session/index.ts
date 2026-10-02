@@ -15,7 +15,7 @@ import {
 const CHECKOUT_WINDOW_MS = 15 * 60 * 1000
 const CHECKOUT_MAX_PER_IP = 8
 const CHECKOUT_MAX_PER_EMAIL = 5
-const TERMS_VERSION = '2026-09'
+const TERMS_VERSION = '2026-10-02'
 
 Deno.serve(async (req) => {
   const origin = req.headers.get('origin')
