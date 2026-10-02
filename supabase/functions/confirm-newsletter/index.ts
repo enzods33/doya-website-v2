@@ -228,7 +228,7 @@ Deno.serve(async (req) => {
       subject: copy.subject,
       htmlContent: welcomeHtml(locale, emailLogoPublicUrl()),
       previewText: copy.preview,
-      headers: { 'Idempotency-Key': `doya-welcome-${row.id}` },
+      headers: { idempotencyKey: row.id },
     }),
   })
 
