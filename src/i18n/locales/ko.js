@@ -284,7 +284,7 @@ export default {
   },
   notFound: { kicker: 'DOYA', title: '페이지를 찾을 수 없습니다', home: '홈으로' },
   legal: {
-    updated: '최종 업데이트: 2026년 9월',
+    updated: '최종 업데이트: 2026년 10월',
     backHome: '홈으로',
     mentions: {
       kicker: '정보',
@@ -352,13 +352,13 @@ export default {
       sections: [
         { heading: '개인정보 처리자', paragraphs: ['처리자: ALMENA PROD', '문의: almenaprod@gmail.com', '기술 문의: reelazura@gmail.com'] },
         { heading: '수집하는 정보', paragraphs: [
-          '뉴스레터: 이메일 주소와 사이트 인터페이스 언어(Brevo 이용).',
+          '뉴스레터: 이메일 주소와 사이트 인터페이스 언어(Brevo 이용). 확인 절차 중에는 이메일 주소를 Supabase에 임시 저장하며(최대 30일), 동의에 대한 기술적 기록(보호된 지문, 유입 경로, 날짜)도 함께 보관합니다.',
           '주문: 이메일, 배송 주소, 주문 내용(Stripe 및 Supabase 이용).',
           '이용 통계(집계): 방문자를 식별하지 않고 페이지 조회와 일부 행동(뉴스레터, 장바구니, 음악 감상, 문의 등)을 집계합니다.',
         ] },
         { heading: '처리 목적 및 법적 근거', paragraphs: ['판매 및 배송 계약의 이행.', '동의에 기반한 뉴스레터 운영.', '사이트 보안 및 악용 방지.'] },
         { heading: '정보 수신자', paragraphs: ['각 서비스 제공 범위 내에서 Supabase, Stripe, Brevo, Hetzner, Cloudflare를 이용합니다.'] },
-        { heading: '보관 기간', paragraphs: ['정보는 명시된 목적에 필요한 기간 동안 보관한 뒤 법적 의무에 따라 보관 또는 삭제합니다.'] },
+        { heading: '보관 기간', paragraphs: ['정보는 명시된 목적에 필요한 기간 동안만 보관합니다. 확인되지 않은 뉴스레터 이메일 주소는 최대 30일 후 삭제되며, 동의 또는 구독 철회에 대한 기술적 기록은 이를 입증하기 위해 보관할 수 있습니다. 악용 방지용 가명화 카운터는 48시간 후 삭제합니다. 그 밖의 정보는 법적 의무에 따라 보관 또는 삭제합니다.'] },
         { heading: '이용자의 권리', paragraphs: [
           'GDPR에 따라 법이 정한 범위에서 열람, 정정, 삭제, 반대, 처리 제한 및 데이터 이동권 등을 행사할 수 있습니다.',
           '뉴스레터: 이메일의 구독 해지 링크 또는 almenaprod@gmail.com을 통해 해지할 수 있습니다.',
