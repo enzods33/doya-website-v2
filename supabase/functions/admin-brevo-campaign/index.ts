@@ -411,7 +411,8 @@ Deno.serve(async (req) => {
     // messageVersions à 1000 ; au-delà, ne pas envoyer une liste tronquée.
     if (emails.length > 1000) return json(400, { error: 'list_too_large' }, origin)
 
-    const secret = Deno.env.get('BREVO_UNSUBSCRIBE_SECRET') || apiKey
+    const secret = (Deno.env.get('BREVO_UNSUBSCRIBE_SECRET') ?? '').trim()
+    if (!secret) return json(503, { error: 'unsubscribe_secret_missing' }, origin)
     const messageVersions = await newsletterMessageVersions(emails, htmlContent, publicSiteUrl(), secret, sendLang)
     const sendPayload: Record<string, unknown> = {
       sender: { name: senderName, email: senderEmail },
