@@ -2,7 +2,8 @@
 -- Le jeton est généré dans Supabase Vault à l'application de la migration.
 
 create schema if not exists extensions;
-create extension if not exists pg_net with schema extensions;
+create extension if not exists pgcrypto with schema extensions;
+create extension if not exists pg_net;
 
 do $$
 begin
@@ -11,7 +12,7 @@ begin
     where name = 'doya_commerce_maintenance_token'
   ) then
     perform vault.create_secret(
-      encode(gen_random_bytes(32), 'hex'),
+      encode(extensions.gen_random_bytes(32), 'hex'),
       'doya_commerce_maintenance_token',
       'Jeton interne du cron commerce DOYA'
     );
