@@ -117,11 +117,11 @@ Deno.serve(async (req) => {
 
   if (proofError) {
     console.error('newsletter_consent_store_failed', proofError)
-    return json(502, { error: 'newsletter_failed' }, origin)
+    return json(502, { error: 'newsletter_failed', db_error: proofError }, origin)
   }
 
   const redirect = `${publicSiteUrl()}/newsletter-confirmation?token=${encodeURIComponent(token)}`
-  const doiRes = await fetch('https://api.brevo.com/v3/contacts/doubleOptinConfirmation', {
+  const doiRes = await fetch('https://api.brevo.com/v3/smtp/email', {
     method: 'POST',
     headers: {
       accept: 'application/json',
@@ -129,11 +129,11 @@ Deno.serve(async (req) => {
       'api-key': apiKey,
     },
     body: JSON.stringify({
-      email,
-      includeListIds: [listId],
-      redirectionUrl: redirect,
+      to: [{ email }],
       templateId: doiTemplateId,
-      attributes: { LANG: locale },
+      params: { 
+        confirmation_url: redirect 
+      }
     }),
   })
 
@@ -144,7 +144,7 @@ Deno.serve(async (req) => {
       .from('newsletter_optins')
       .update({ last_error: `brevo_doi_${doiRes.status}`, updated_at: new Date().toISOString() })
       .eq('email_hash', emailHash)
-    return json(502, { error: 'newsletter_failed' }, origin)
+    return json(502, { error: 'newsletter_failed', brevo_status: doiRes.status, brevo_payload: payload }, origin)
   }
 
   return json(200, { ok: true }, origin)

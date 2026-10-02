@@ -50,15 +50,20 @@ Deno.serve(async (req) => {
     return json(503, { error: 'newsletter_unavailable' }, origin)
   }
 
-  // Le clic Brevo doit avoir réellement ajouté le contact à la liste avant
-  // que nous enregistrions la confirmation et envoyions le welcome.
-  const contactRes = await fetch(`https://api.brevo.com/v3/contacts/${encodeURIComponent(email)}`, {
-    headers: { accept: 'application/json', 'api-key': apiKey },
+  // Nous ajoutons manuellement le contact à la liste Brevo
+  const contactRes = await fetch(`https://api.brevo.com/v3/contacts`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', 'api-key': apiKey },
+    body: JSON.stringify({
+      email,
+      listIds: [listId],
+      updateEnabled: true
+    })
   })
-  const contact = contactRes.ok
-    ? await contactRes.json().catch(() => ({})) as { listIds?: number[] }
-    : {}
-  if (!contactRes.ok || !Array.isArray(contact.listIds) || !contact.listIds.includes(listId)) {
+
+  if (!contactRes.ok) {
+    const errorBody = await contactRes.json().catch(() => ({}))
+    console.error('brevo_add_failed', errorBody)
     return json(409, { error: 'confirmation_pending' }, origin)
   }
 

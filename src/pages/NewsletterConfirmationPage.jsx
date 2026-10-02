@@ -114,17 +114,19 @@ export default function NewsletterConfirmationPage() {
   }, [])
 
   return (
-    <main id="main" className="page-main" tabIndex={-1}>
-      <section className="legal-page" aria-labelledby="newsletter-confirm-title">
-        <div className="legal-page-inner">
-          <p className="eyebrow">DOYA</p>
-          <h1 id="newsletter-confirm-title">{c.title}</h1>
-          <p role="status">
+    <main id="main" className="page-main legal-page" tabIndex={-1}>
+      <div className="page-shell legal-shell">
+        <header className="legal-header">
+          <p className="eyebrow section-kicker">DOYA</p>
+          <h1 className="editorial-title page-title">{c.title}</h1>
+          <p className="legal-intro" role="status" style={{ marginTop: '2rem' }}>
             {status === 'checking' ? c.checking : status === 'success' ? c.success : c.error}
           </p>
-          <p><Link href="/">{c.home}</Link></p>
-        </div>
-      </section>
+        </header>
+        <p className="page-back" style={{ marginTop: '4rem' }}>
+          <Link href="/" className="text-link">{c.home} <span aria-hidden="true">↗</span></Link>
+        </p>
+      </div>
     </main>
   )
 }
