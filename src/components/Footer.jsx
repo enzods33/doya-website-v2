@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react'
 import { socials, listenSocials, networkSocials } from '../data/socials.js'
 import { contacts, pressKit } from '../data/contacts.js'
 import { siteContent } from '../data/siteContent.js'
@@ -43,6 +44,27 @@ function SocialRow({ items, eventName, startIndex = 0 }) {
 
 function Footer() {
   const { t } = useI18n()
+  const socialsRef = useRef(null)
+  const [socialsVisible, setSocialsVisible] = useState(false)
+
+  useEffect(() => {
+    if (socialsVisible) return undefined
+    const node = socialsRef.current
+    if (!node) return undefined
+    if (!('IntersectionObserver' in window)) {
+      setSocialsVisible(true)
+      return undefined
+    }
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry?.isIntersecting) return
+      setSocialsVisible(true)
+      observer.disconnect()
+    }, { threshold: 0.25 })
+
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [socialsVisible])
   const missingLinks = socials.every((social) => !isExternalUrl(social.url))
   const pressReady = typeof pressKit.href === 'string' && pressKit.href.trim().length > 0
   const kit = {
@@ -106,7 +128,11 @@ function Footer() {
           </article>
         </div>
 
-        <nav className="footer-socials" aria-label={t('a11y.footerSocials')}>
+        <nav
+          ref={socialsRef}
+          className={`footer-socials${socialsVisible ? ' is-visible' : ''}`}
+          aria-label={t('a11y.footerSocials')}
+        >
           <SocialRow items={listenSocials} eventName="stream_open" startIndex={0} />
           <SocialRow items={networkSocials} eventName="social_open" startIndex={listenSocials.length} />
           {missingLinks && <p className="footer-note">{t('footer.missingLinks')}</p>}
