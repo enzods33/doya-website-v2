@@ -15,6 +15,7 @@ create table if not exists public.newsletter_optins (
   expires_at timestamptz not null,
   confirmed_at timestamptz,
   welcome_sent_at timestamptz,
+  unsubscribed_at timestamptz,
   last_error text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
