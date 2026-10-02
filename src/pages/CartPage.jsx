@@ -184,7 +184,7 @@ function CartPage() {
       try {
         if (newsletter) {
           try {
-            await subscribeNewsletter(email.trim(), locale)
+            await subscribeNewsletter(email.trim(), locale, '', 'quote')
           } catch {
             // Ne bloque pas le devis si Brevo newsletter échoue.
           }
@@ -241,6 +241,7 @@ function CartPage() {
         promoCode: normalizePromoCode(promoCode) || undefined,
         shippingCountry,
         locale,
+        termsAccepted: true,
       })
       if (typeof url !== 'string' || !url.startsWith('https://')) throw new Error('stripe_unavailable')
       window.location.assign(url)
