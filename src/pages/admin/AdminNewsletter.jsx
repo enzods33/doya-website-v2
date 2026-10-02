@@ -52,6 +52,7 @@ function AdminNewsletter() {
   const [error, setError] = useState('')
   const [ok, setOk] = useState('')
   const [sentModal, setSentModal] = useState(null)
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false)
   const [historyOpen, setHistoryOpen] = useState(false)
   const [scheduleOpen, setScheduleOpen] = useState(false)
   const [previewBusy, setPreviewBusy] = useState(false)
@@ -161,10 +162,7 @@ function AdminNewsletter() {
     }
   }
   async function submit(mode) {
-    if (mode === 'send' && !window.confirm(t('admin.newsletterConfirmSend', {
-      count: sendLang === 'all' ? subscribers ?? '—' : langStats?.[sendLang] ?? '—',
-      lang: t(`admin.sendLang${sendLang === 'all' ? 'All' : sendLang[0].toUpperCase() + sendLang.slice(1)}`),
-    }))) return
+    if (mode === 'send') setConfirmModalOpen(false)
     setBusy(true)
     setError('')
     setOk('')
@@ -273,7 +271,7 @@ function AdminNewsletter() {
           className="admin-card admin-form admin-form-stack"
           onSubmit={(event) => {
             event.preventDefault()
-            submit('send')
+            setConfirmModalOpen(true)
           }}
         >
           <label>
@@ -432,6 +430,29 @@ function AdminNewsletter() {
             <button type="button" className="admin-primary" onClick={() => setSentModal(null)}>
               {t('admin.sentModalClose')}
             </button>
+          </div>
+        </div>
+      ) : null}
+
+      {confirmModalOpen ? (
+        <div className="admin-modal" role="dialog" aria-modal="true" aria-labelledby="admin-confirm-title">
+          <div className="admin-modal-card">
+            <p className="admin-modal-kicker">{t('admin.newsletterTitle')}</p>
+            <h2 id="admin-confirm-title" className="admin-modal-title">Confirmer l'envoi</h2>
+            <p className="admin-modal-text">
+              {t('admin.newsletterConfirmSend', {
+                count: sendLang === 'all' ? subscribers ?? '—' : langStats?.[sendLang] ?? '—',
+                lang: t(`admin.sendLang${sendLang === 'all' ? 'All' : sendLang[0].toUpperCase() + sendLang.slice(1)}`),
+              })}
+            </p>
+            <div className="admin-form-actions" style={{ marginTop: '24px' }}>
+              <button type="button" className="admin-primary" onClick={() => submit('send')}>
+                Confirmer l'envoi
+              </button>
+              <button type="button" className="admin-secondary" onClick={() => setConfirmModalOpen(false)}>
+                {t('admin.cancel')}
+              </button>
+            </div>
           </div>
         </div>
       ) : null}
