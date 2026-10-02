@@ -428,12 +428,14 @@ Deno.serve(async (req) => {
       body: JSON.stringify(sendPayload),
     })
     if (!sendRes.ok) {
-      const errPayload = await sendRes.json().catch(() => ({}))
-      console.error('brevo_tx_send_failed', errPayload)
-      return json(502, {
-        error: action === 'schedule' ? 'brevo_schedule_failed' : 'brevo_send_failed',
-        detail: (errPayload as { message?: string })?.message ?? null,
-      }, origin)
+      const errPayload = await sendRes.json().catch(() => ({})) as { code?: string; message?: string }
+      if (errPayload.code !== 'duplicate_parameter') {
+        console.error('brevo_tx_send_failed', errPayload)
+        return json(502, {
+          error: action === 'schedule' ? 'brevo_schedule_failed' : 'brevo_send_failed',
+          detail: errPayload.message ?? null,
+        }, origin)
+      }
     }
 
     const db = serviceClient()
