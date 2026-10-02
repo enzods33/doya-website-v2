@@ -4057,89 +4057,66 @@ a.concert-tickets:focus-visible {
     grid-template-rows: none;
     grid-auto-rows: auto;
     gap: clamp(24px, 2.6vw, 42px);
-    align-items: start;
+    align-items: stretch;
   }
-  .products > .product {
-    grid-row: auto;
-    min-height: 0;
-  }
-  .products > .product.is-featured {
-    grid-column: span 7;
-    grid-row: auto;
-    align-self: start;
-  }
-  .products > .product:nth-child(2) {
-    grid-column: span 5;
-  }
-  .products > .product:nth-child(3) {
-    grid-column: span 5;
-  }
-  .products > .product:nth-child(4) {
-    grid-column: span 7;
-  }
+  .products > .product,
+  .products > .product.is-featured,
+  .products > .product:nth-child(2),
+  .products > .product:nth-child(3),
+  .products > .product:nth-child(4),
   .products > .product:nth-child(5),
   .products > .product:nth-child(6),
   .products > .product:nth-child(7),
   .products > .product:nth-child(8) {
     grid-column: span 6;
+    grid-row: auto;
+    min-height: 0;
+    height: 100%;
   }
-  .products > .product:nth-child(2) .product-image-trigger,
-  .products > .product:nth-child(3) .product-image-trigger {
-    aspect-ratio: 5 / 4;
-  }
-  .products > .product:nth-child(4) .product-image-trigger {
-    aspect-ratio: 16 / 10;
-  }
-  .products > .product:nth-child(5) .product-image-trigger,
-  .products > .product:nth-child(6) .product-image-trigger,
-  .products > .product:nth-child(7) .product-image-trigger,
-  .products > .product:nth-child(8) .product-image-trigger {
-    aspect-ratio: 16 / 10;
-  }
-  .product.is-featured .product-image-trigger {
+  .products > .product .product-image-trigger,
+  .products > .product.is-featured .product-image-trigger {
     flex: 0 0 auto;
     min-height: 0;
     aspect-ratio: 16 / 10;
   }
+  .product.is-featured {
+    border-color: rgb(194 5 15 / 34%);
+    box-shadow:
+      0 1px 0 rgb(255 255 255 / 92%) inset,
+      0 16px 34px rgb(44 41 38 / 14%),
+      0 42px 92px rgb(44 41 38 / 18%);
+  }
+  .product.is-featured::after {
+    transform: scaleX(1);
+  }
   .product.is-featured .product-image {
-    max-width: min(78%, 34rem);
-    max-height: min(78%, 34rem);
+    max-width: min(95%, 35rem);
+    max-height: min(95%, 35rem);
+  }
+  .product:not(.is-featured) .product-image {
+    max-width: 92%;
+    max-height: 92%;
   }
   .product.is-featured .product-caption {
-    flex: 0 0 auto;
+    flex: 1;
   }
   .shop-section .product.is-featured .product-buy {
     margin-top: 16px;
   }
   .product.is-featured .product-caption h3 {
-    font-size: clamp(28px, 2.4vw, 38px);
+    font-size: clamp(25px, 2vw, 32px);
   }
 }
 
-/* Très grands desktops / 4K : cadence alignée, sans mosaïque en zigzag. */
+/* Très grands desktops / 4K : même grille, sans rupture de cadence. */
 @media (min-width: 1800px) {
+  .products > .product,
   .products > .product.is-featured {
     grid-column: span 6;
   }
-  .products > .product:nth-child(2),
-  .products > .product:nth-child(3) {
-    grid-column: span 3;
-  }
-  .products > .product:nth-child(4),
-  .products > .product:nth-child(5),
-  .products > .product:nth-child(6) {
-    grid-column: span 4;
-  }
-  .products > .product:nth-child(7),
-  .products > .product:nth-child(8) {
-    grid-column: span 6;
-  }
-  .product.is-featured .product-image-trigger {
-    aspect-ratio: 2 / 1;
-  }
   .product.is-featured .product-image {
-    max-width: min(72%, 30rem);
-    max-height: min(72%, 30rem);
+    max-width: min(92%, 34rem);
+    max-height: min(92%, 34rem);
   }
 }
 
