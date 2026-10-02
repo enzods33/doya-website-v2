@@ -334,6 +334,8 @@ test('le checkout verrouille montants, CGV, emails et maintenance Stripe', () =>
   assert.match(checkout, /shipping_zone_id: zone\.id/)
   assert.match(client, /termsAccepted: termsAccepted === true/)
   assert.match(cart, /termsAccepted: acceptCgv/)
+  assert.match(payment, /order\.stripe_checkout_session_id !== session\.id/)
+  assert.match(payment, /checkout_session_mismatch/)
   assert.match(payment, /shippingCents !== order\.shipping_cents/)
   assert.match(payment, /totalCents === null \|\| totalCents !== order\.total_cents/)
   assert.match(payment, /if \(!queued\) throw new Error\('order_email_queue_failed'\)/)
