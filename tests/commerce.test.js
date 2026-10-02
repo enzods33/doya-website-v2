@@ -346,8 +346,9 @@ test('le checkout verrouille montants, CGV, emails et maintenance Stripe', () =>
   assert.match(payment, /totalCents === null \|\| totalCents !== order\.total_cents/)
   assert.match(payment, /if \(!queued\) throw new Error\('order_email_queue_failed'\)/)
   assert.match(notifications, /claim_due_order_emails/)
-  assert.match(notifications, /customer: row\.order_id/)
-  assert.match(notifications, /merchant: row\.id/)
+  assert.match(orderEmail, /messageVersions/)
+  assert.match(orderEmail, /brevo_paid_order_batch_failed/)
+  assert.match(notifications, /sendPaidOrderEmails\(payload, row\.id\)/)
   assert.match(maintenance, /checkout\.sessions\.retrieve/)
   assert.match(maintenance, /processDueOrderEmails/)
   assert.match(getOrder, /finalizePaidCheckout/)
@@ -363,6 +364,16 @@ test('le devis livraison revalide le panier côté serveur', () => {
   assert.match(quote, /totalQuantity > CART_LIMITS\.maxTotalQuantity/)
   assert.match(quote, /product\.on_sale !== true/)
   assert.match(quote, /product_unavailable/)
+})
+
+test('le passage expédié ne peut envoyer qu’un seul e-mail', () => {
+  const adminStats = readFileSync(new URL('../supabase/functions/admin-stats/index.ts', import.meta.url), 'utf8')
+  const orderEmail = readFileSync(new URL('../supabase/functions/_shared/orderEmail.ts', import.meta.url), 'utf8')
+  assert.match(adminStats, /select\('id'\)/)
+  assert.match(adminStats, /if \(!shippedRow\)/)
+  assert.match(adminStats, /already_shipped/)
+  assert.match(adminStats, /trackingNumber,[\s\S]*?\}, orderId\)/)
+  assert.match(orderEmail, /idempotencyKey/)
 })
 
 test('la newsletter protège la confidentialité et prépare le double opt-in', () => {
