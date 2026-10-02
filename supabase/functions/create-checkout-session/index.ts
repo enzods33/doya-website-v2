@@ -103,7 +103,13 @@ Deno.serve(async (req) => {
   }
 
   const country = typeof body.shippingCountry === 'string' ? body.shippingCountry.trim().toUpperCase() : ''
-  const shippingZones = await loadShippingZones(admin)
+  let shippingZones
+  try {
+    shippingZones = await loadShippingZones(admin, false)
+  } catch (error) {
+    console.error('shipping_zones_unavailable', error)
+    return json(503, { error: 'shipping_not_configured' }, origin)
+  }
   const zone = shippingZoneByCountry(shippingZones, country)
   if (!zone) return json(400, { error: 'invalid_shipping_country' }, origin)
 
@@ -129,6 +135,7 @@ Deno.serve(async (req) => {
     .update({
       locale,
       shipping_zone_id: zone.id,
+      shipping_country: country,
       terms_accepted_at: new Date().toISOString(),
       terms_version: TERMS_VERSION,
     })
