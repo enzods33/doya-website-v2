@@ -181,7 +181,7 @@ Deno.serve(async (req) => {
     return json(429, { error: 'rate_limited' }, origin)
   }
 
-  let body: { email?: string; locale?: string; website?: string }
+  let body: { email?: string; locale?: string; website?: string; source?: string }
   try {
     body = await req.json()
   } catch {
@@ -191,7 +191,7 @@ Deno.serve(async (req) => {
   // Honeypot rempli → faux succès (ne pas tipper les bots).
   const website = typeof body.website === 'string' ? body.website.trim() : ''
   if (website) {
-    return json(200, { ok: true, already: false }, origin)
+    return json(200, { ok: true }, origin)
   }
 
   const email = typeof body.email === 'string' ? body.email.trim().toLowerCase() : ''
@@ -227,7 +227,7 @@ Deno.serve(async (req) => {
     const lists = Array.isArray(existing.listIds) ? existing.listIds : []
     if (lists.includes(listId)) {
       await setBrevoLang(apiKey, email, locale)
-      return json(200, { ok: true, already: true }, origin)
+      return json(200, { ok: true }, origin)
     }
   }
 
@@ -253,7 +253,7 @@ Deno.serve(async (req) => {
       || /already exists|duplicate/i.test(payload.message ?? '')
     if (duplicate) {
       await setBrevoLang(apiKey, email, locale, [listId])
-      return json(200, { ok: true, already: true }, origin)
+      return json(200, { ok: true }, origin)
     }
 
     console.error('brevo_subscribe_failed', response.status, payload)
@@ -283,5 +283,5 @@ Deno.serve(async (req) => {
     }
   }
 
-  return json(200, { ok: true, already: false }, origin)
+  return json(200, { ok: true }, origin)
 })
