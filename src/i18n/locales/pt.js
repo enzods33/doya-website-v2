@@ -197,7 +197,7 @@ export default {
     placeholder: 'teu@email.com',
     submit: 'Quero receber',
     sending: 'A enviar…',
-    success: 'Inscrição registada. Bem-vindo/a às novidades DOYA!',
+    success: 'Verifica o teu e-mail para confirmar a subscrição.',
     already: 'Já estás na lista.',
     error: 'Inscrição indisponível de momento.',
     unavailable: 'Inscrição indisponível de momento.',
