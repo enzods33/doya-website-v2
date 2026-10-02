@@ -1,6 +1,29 @@
 import { products } from '../data/products.js'
+import { demoStoreConfigured } from './config.js'
 
 const CATALOG_RETRY_DELAYS = [0, 450, 1200]
+
+const DEMO_PRICES = {
+  'cd-luna-bohemia': 1300,
+  'luna-bohemia-white': 2800,
+  'luna-bohemia-black': 2800,
+  'doya-white': 2800,
+  'doya-black': 2800,
+  'tee-luna-mini-red': 1600,
+  'cap-luna-black': 2000,
+  'tote-eclipse-black': 1200,
+}
+
+const DEMO_SIZES = {
+  'cd-luna-bohemia': ['CD'],
+  'luna-bohemia-white': ['XS', 'S', 'M', 'L', 'XL'],
+  'luna-bohemia-black': ['XS', 'S', 'M', 'L', 'XL'],
+  'doya-white': ['XS', 'S', 'M', 'L', 'XL'],
+  'doya-black': ['XS', 'S', 'M', 'L', 'XL'],
+  'tee-luna-mini-red': ['3/4', '5/6', '7/8', '9/11', '12/13'],
+  'cap-luna-black': ['U'],
+  'tote-eclipse-black': ['U'],
+}
 
 function wait(ms) {
   if (!ms) return Promise.resolve()
@@ -31,6 +54,34 @@ function localCatalog() {
     })),
     purchasable: false,
     source: 'local',
+  }
+}
+
+function demoCatalog() {
+  const items = products.map((product, index) => {
+    const priceCents = DEMO_PRICES[product.id]
+    const sizes = DEMO_SIZES[product.id] ?? []
+    return {
+      ...product,
+      displayName: product.name || null,
+      defaultView: normalizeDefaultView(product.defaultView),
+      sortOrder: (index + 1) * 10,
+      sale: Number.isInteger(priceCents) ? { priceCents, currency: 'eur' } : null,
+      variants: sizes.map((size, variantIndex) => ({
+        size,
+        label: size,
+        sortOrder: (variantIndex + 1) * 10,
+        // Stock fictif uniquement pour permettre la démonstration du panier.
+        // Aucun stock réel n'est lu ni modifié.
+        available: 99,
+      })),
+    }
+  })
+
+  return {
+    items,
+    purchasable: items.some((item) => item.sale && item.variants.length > 0),
+    source: 'demo',
   }
 }
 
@@ -120,6 +171,8 @@ async function fetchRemoteCatalog(supabase, local) {
 }
 
 export async function loadCatalog() {
+  if (demoStoreConfigured) return demoCatalog()
+
   const local = new Map(
     products.map((product, index) => [
       product.id,

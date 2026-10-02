@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { products } from '../data/products.js'
 import { loadCatalog } from './catalog.js'
-import { commerceConfigured } from './config.js'
+import { commerceConfigured, demoStoreConfigured } from './config.js'
 import { supabase } from './supabase.js'
 
 const empty = products.map((product) => ({ ...product, sale: null, variants: [] }))
@@ -19,7 +19,7 @@ export function CatalogProvider({ children }) {
   const [catalog, setCatalog] = useState({
     items: empty,
     purchasable: false,
-    ready: !commerceConfigured,
+    ready: !commerceConfigured && !demoStoreConfigured,
     revision: 0,
     source: 'local',
   })
@@ -45,7 +45,8 @@ export function CatalogProvider({ children }) {
   }
 
   function applyCatalog(next) {
-    if (next.source === 'remote') {
+    const stableSource = next.source === 'remote' || next.source === 'demo'
+    if (stableSource) {
       clearRecovery()
       recoveryAttemptRef.current = 0
     } else {
@@ -54,7 +55,7 @@ export function CatalogProvider({ children }) {
 
     setCatalog((current) => {
       // Une panne transitoire ne doit jamais effacer un catalogue déjà chargé.
-      if (next.source !== 'remote' && current.source === 'remote') {
+      if (next.source === 'local' && (current.source === 'remote' || current.source === 'demo')) {
         return { ...current, ready: true }
       }
       return {
@@ -82,6 +83,12 @@ export function CatalogProvider({ children }) {
 
   useEffect(() => {
     activeRef.current = true
+
+    if (demoStoreConfigured) {
+      reload().catch(() => {})
+      return () => { activeRef.current = false }
+    }
+
     if (!commerceConfigured || !supabase) {
       return () => { activeRef.current = false }
     }
