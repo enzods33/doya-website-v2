@@ -333,7 +333,7 @@ function Shop() {
             <span aria-hidden="true">/</span>
             <button type="button" aria-pressed={displayedView === 'back'} disabled={!product.back} onClick={() => setProductView(product, 'back')}>{t('shop.viewBack')}</button>
           </div>
-          <div className="product-caption"><p className="eyebrow">{labels.type}</p><h3>{labels.name}</h3>
+          <div className="product-caption">{product.typeKey !== 'cd' ? <p className="eyebrow">{labels.type}</p> : null}<h3>{labels.name}</h3>
             <div className="product-details">
               {labels.color ? <span className="product-detail-copy">{labels.color}</span> : null}
               {sale ? <span className="product-detail-price">{formatEuros(sale.priceCents, intlLocale)}</span> : product.price !== null && <span className="product-detail-price">{new Intl.NumberFormat(intlLocale, { style: 'currency', currency: 'EUR' }).format(product.price)}</span>}
