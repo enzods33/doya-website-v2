@@ -47,3 +47,6 @@ verify_jwt = false
 
 [functions.commerce-maintenance]
 verify_jwt = false
+
+[functions.confirm-newsletter]
+verify_jwt = false
