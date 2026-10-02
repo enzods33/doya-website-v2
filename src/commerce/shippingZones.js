@@ -84,12 +84,12 @@ export function rememberShippingCountry(country) {
 export async function fetchShippingZones() {
   try {
     const { supabase } = await import('./supabase.js')
-    if (!supabase) return DEFAULT_SHIPPING_ZONES
+    if (!supabase) throw new Error('shipping_not_configured')
     const { data, error } = await supabase
       .from('shipping_zones')
       .select('id, amount_cents, countries')
       .order('sort_order', { ascending: true })
-    if (error || !data?.length) return DEFAULT_SHIPPING_ZONES
+    if (error || !data?.length) throw new Error('shipping_not_configured')
     const zones = data
       .map((row) => ({
         id: row.id,
@@ -99,8 +99,9 @@ export async function fetchShippingZones() {
           : [],
       }))
       .filter((zone) => zone.id && Number.isInteger(zone.amountCents) && zone.countries.length)
-    return zones.length ? zones : DEFAULT_SHIPPING_ZONES
+    if (!zones.length) throw new Error('shipping_not_configured')
+    return zones
   } catch {
-    return DEFAULT_SHIPPING_ZONES
+    throw new Error('shipping_not_configured')
   }
 }
