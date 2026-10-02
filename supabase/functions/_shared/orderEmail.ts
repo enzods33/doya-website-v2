@@ -442,8 +442,9 @@ export async function sendBrevoEmail(opts: {
   })
 
   if (!response.ok) {
-    const payload = await response.json().catch(() => ({}))
-    console.error('brevo_order_email_failed', response.status, payload)
+    const responsePayload = await response.json().catch(() => ({})) as { code?: string }
+    if (responsePayload.code === 'duplicate_parameter') return true
+    console.error('brevo_order_email_failed', response.status, responsePayload)
     return false
   }
   return true
@@ -500,7 +501,8 @@ export async function sendPaidOrderEmails(
   })
 
   if (!response.ok) {
-    const responsePayload = await response.json().catch(() => ({}))
+    const responsePayload = await response.json().catch(() => ({})) as { code?: string }
+    if (responsePayload.code === 'duplicate_parameter') return true
     console.error('brevo_paid_order_batch_failed', response.status, responsePayload)
     return false
   }
