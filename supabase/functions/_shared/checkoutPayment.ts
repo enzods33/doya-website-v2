@@ -1,6 +1,7 @@
 import type Stripe from 'https://esm.sh/stripe@17.4.0?target=deno'
 import { serviceClient } from './clients.ts'
 import { queuePaidOrderEmail } from './orderNotifications.ts'
+import { loadShippingZones, shippingZoneById } from './shipping.ts'
 
 type AdminClient = ReturnType<typeof serviceClient>
 
@@ -31,6 +32,25 @@ export async function finalizePaidCheckout(
     return orderId
   }
 
+  if (session.currency?.toLowerCase() !== 'eur') {
+    console.error('currency_mismatch', session.currency, orderId)
+    throw new Error('currency_mismatch')
+  }
+
+  const shippingZones = await loadShippingZones(admin)
+  const savedZone = shippingZoneById(shippingZones, order.shipping_zone_id)
+  if (!savedZone) {
+    console.error('shipping_zone_missing', order.shipping_zone_id, orderId)
+    throw new Error('shipping_zone_missing')
+  }
+
+  const address = session.shipping_details?.address ?? session.customer_details?.address
+  const shippingCountry = address?.country?.trim().toUpperCase() ?? ''
+  if (!shippingCountry || !savedZone.countries.includes(shippingCountry)) {
+    console.error('shipping_country_mismatch', shippingCountry, savedZone.id, orderId)
+    throw new Error('shipping_country_mismatch')
+  }
+
   const shippingCents = session.shipping_cost?.amount_total ?? 0
   if (shippingCents !== order.shipping_cents) {
     console.error('shipping_amount_mismatch', shippingCents, order.shipping_cents, orderId)
@@ -42,8 +62,6 @@ export async function finalizePaidCheckout(
     console.error('total_amount_mismatch', totalCents, order.total_cents, orderId)
     throw new Error('total_amount_mismatch')
   }
-
-  const address = session.shipping_details?.address ?? session.customer_details?.address
 
   const { error } = await admin.rpc('mark_order_paid_from_stripe', {
     p_order_id: orderId,
