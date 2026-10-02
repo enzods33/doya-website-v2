@@ -181,7 +181,7 @@ export default {
     placeholder: 'you@example.com',
     submit: '订阅',
     sending: '发送中…',
-    success: '你已成功订阅 DOYA 动态！',
+    success: '请查看邮箱并确认订阅。',
     already: '你已经订阅。',
     error: '目前暂时无法订阅。',
     unavailable: '目前暂时无法订阅。',
