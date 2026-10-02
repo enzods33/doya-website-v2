@@ -507,7 +507,10 @@ export async function sendPaidOrderEmails(
   return true
 }
 
-export async function sendShippedOrderEmail(order: OrderEmailPayload & { trackingNumber: string }) {
+export async function sendShippedOrderEmail(
+  order: OrderEmailPayload & { trackingNumber: string },
+  idempotencyKey?: string,
+) {
   const tracking = order.trackingNumber.trim()
   if (!tracking) return false
   const locale = normalizeCheckoutLocale(order.locale)
@@ -517,5 +520,6 @@ export async function sendShippedOrderEmail(order: OrderEmailPayload & { trackin
     subject: `DOYA — ${copy.shippedSubject} ${order.orderNumber}`,
     previewText: fill(copy.shippedPreview, { number: order.orderNumber, tracking }),
     htmlContent: shippedOrderEmailHtml({ ...order, trackingNumber: tracking }),
+    idempotencyKey,
   })
 }
