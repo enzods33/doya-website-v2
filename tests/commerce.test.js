@@ -326,6 +326,10 @@ test('les icônes sociales du footer ont un rendu mobile stable', () => {
   assert.match(platform, /fetchPriority="high"/)
   assert.match(styles, /\.site-footer \.socials \.platform-icon\s*\{[\s\S]*?display:\s*block;[\s\S]*?visibility:\s*visible;/)
   assert.match(styles, /@media \(max-width: 767px\)[\s\S]*?\.site-footer \.socials \.platform-icon\s*\{[\s\S]*?animation:\s*none;[\s\S]*?will-change:\s*auto;/)
+  assert.doesNotMatch(styles, /footer-social-pulse/)
+  assert.match(styles, /@keyframes footer-social-reveal/)
+  assert.match(styles, /transform:\s*scale\(1\.05\)/)
+  assert.match(styles, /animation-delay:\s*calc\(var\(--social-i, 0\) \* 55ms\)/)
 })
 
 test('la ligne produit mobile réserve une colonne dédiée au prix', () => {
