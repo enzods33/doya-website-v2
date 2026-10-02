@@ -153,12 +153,12 @@ function AdminSales() {
       </div>
 
       <div className="admin-sales-toolbar">
-        <h3 className="admin-subtitle admin-subtitle-compact">{t('admin.salesHistory')}</h3>
         <div className="admin-sales-filters" role="group" aria-label={t('admin.salesFilterAria')}>
           {[
             ['to_ship', t('admin.salesFilterToShip')],
             ['shipped', t('admin.salesFilterShipped')],
             ['all', t('admin.salesFilterAll')],
+            ['products', t('admin.salesFilterProducts')],
           ].map(([id, label]) => (
             <button
               key={id}
@@ -179,6 +179,40 @@ function AdminSales() {
           <div className="admin-skeleton-line" />
           <div className="admin-skeleton-line is-short" />
         </div>
+      ) : filter === 'products' ? (
+        (data?.products ?? []).length === 0 ? (
+          <p className="admin-empty">{t('admin.salesEmpty')}</p>
+        ) : (
+          <ul className="admin-sales-list">
+            {data.products.map((row) => (
+              <li key={row.productId}>
+                <div className="admin-sales-row">
+                  <div>
+                    <p className="admin-list-title">{row.name}</p>
+                    <p className="admin-list-meta">
+                      {[row.type, row.color].filter(Boolean).join(' · ')}
+                    </p>
+                  </div>
+                  <div className="admin-sales-figures">
+                    <span>{t('admin.salesSoldCount', { count: row.quantity })}</span>
+                    <strong>{formatEuro(row.revenueCents, intlLocale)}</strong>
+                  </div>
+                </div>
+                <div className="admin-sales-bar" aria-hidden="true">
+                  <span style={{ width: `${Math.round((row.quantity / maxQty) * 100)}%` }} />
+                </div>
+                {Object.keys(row.sizes || {}).length ? (
+                  <p className="admin-sales-sizes">
+                    {Object.entries(row.sizes)
+                      .sort((a, b) => b[1] - a[1])
+                      .map(([variant, qty]) => `${variant} × ${qty}`)
+                      .join(' · ')}
+                  </p>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        )
       ) : filteredOrders.length === 0 ? (
         <p className="admin-empty">{t('admin.salesEmptyFilter')}</p>
       ) : (
@@ -303,46 +337,6 @@ function AdminSales() {
               </li>
             )
           })}
-        </ul>
-      )}
-
-      <h3 className="admin-subtitle admin-subtitle-compact">{t('admin.salesByProduct')}</h3>
-      {busy && !data ? (
-        <div className="admin-list-skeleton" aria-hidden="true">
-          <div className="admin-skeleton-line" />
-          <div className="admin-skeleton-line" />
-        </div>
-      ) : (data?.products ?? []).length === 0 ? (
-        <p className="admin-empty">{t('admin.salesEmpty')}</p>
-      ) : (
-        <ul className="admin-sales-list">
-          {data.products.map((row) => (
-            <li key={row.productId}>
-              <div className="admin-sales-row">
-                <div>
-                  <p className="admin-list-title">{row.name}</p>
-                  <p className="admin-list-meta">
-                    {[row.type, row.color].filter(Boolean).join(' · ')}
-                  </p>
-                </div>
-                <div className="admin-sales-figures">
-                  <span>{t('admin.salesSoldCount', { count: row.quantity })}</span>
-                  <strong>{formatEuro(row.revenueCents, intlLocale)}</strong>
-                </div>
-              </div>
-              <div className="admin-sales-bar" aria-hidden="true">
-                <span style={{ width: `${Math.round((row.quantity / maxQty) * 100)}%` }} />
-              </div>
-              {Object.keys(row.sizes || {}).length ? (
-                <p className="admin-sales-sizes">
-                  {Object.entries(row.sizes)
-                    .sort((a, b) => b[1] - a[1])
-                    .map(([variant, qty]) => `${variant} × ${qty}`)
-                    .join(' · ')}
-                </p>
-              ) : null}
-            </li>
-          ))}
         </ul>
       )}
     </section>

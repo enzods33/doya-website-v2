@@ -279,6 +279,7 @@ export default {
     salesFilterToShip: 'À expédier',
     salesFilterShipped: 'Expédiées',
     salesFilterAll: 'Toutes',
+    salesFilterProducts: 'Articles vendus',
     salesStatusToShip: 'À expédier',
     salesStatusShipped: 'Expédiée',
     salesShipTo: 'Livraison',
