@@ -27,6 +27,7 @@ function CartPage() {
   const [promoCode, setPromoCode] = useState('')
   const [shippingCountry, setShippingCountry] = useState(() => detectShippingCountry())
   const [shippingZones, setShippingZones] = useState(DEFAULT_SHIPPING_ZONES)
+  const [shippingZonesReady, setShippingZonesReady] = useState(false)
   const [autoPromos, setAutoPromos] = useState(DEFAULT_AUTO_PROMOS)
   const [quoteMessage, setQuoteMessage] = useState('')
   const [quoteSent, setQuoteSent] = useState(false)
@@ -38,13 +39,19 @@ function CartPage() {
 
   useEffect(() => {
     let active = true
-    fetchShippingZones().then((zones) => {
-      if (!active) return
-      setShippingZones(zones)
-      setShippingCountry((current) => (
-        zoneForCountry(current, zones) ? current : detectShippingCountry(zones)
-      ))
-    })
+    setShippingZonesReady(false)
+    fetchShippingZones()
+      .then((zones) => {
+        if (!active) return
+        setShippingZones(zones)
+        setShippingZonesReady(true)
+        setShippingCountry((current) => (
+          zoneForCountry(current, zones) ? current : detectShippingCountry(zones)
+        ))
+      })
+      .catch(() => {
+        if (active) setShippingZonesReady(false)
+      })
     fetchAutoPromos().then((promos) => {
       if (active) setAutoPromos(promos)
     })
@@ -136,6 +143,7 @@ function CartPage() {
       : (!emailValid ? commerceMessage('invalid_email', t) : ''))
     : ''
   const canPay = commerceConfigured
+    && shippingZonesReady
     && !needsShippingQuote
     && lines.length > 0
     && lines.every((line) => line.product?.sale && line.available >= line.quantity)
@@ -166,6 +174,10 @@ function CartPage() {
       setEmailTouched(true)
       setError(commerceMessage(email.trim() ? 'invalid_email' : 'email_required', t))
       document.getElementById('cart-email')?.focus()
+      return
+    }
+    if (!shippingZonesReady) {
+      setError(commerceMessage('shipping_not_configured', t))
       return
     }
     if (!shippingZone) {
