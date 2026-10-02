@@ -1,6 +1,7 @@
 import { json, preflight, rejectOrigin } from '../_shared/http.ts'
 import { serviceClient, stripeClient } from '../_shared/clients.ts'
 import { allowRatePersistent, clientIp, maskEmail } from '../_shared/rateLimit.ts'
+import { finalizePaidCheckout } from '../_shared/checkoutPayment.ts'
 
 const LOOKUP_WINDOW_MS = 10 * 60 * 1000
 const LOOKUP_MAX_PER_IP = 30
@@ -33,14 +34,28 @@ Deno.serve(async (req) => {
     const session = await stripeClient().checkout.sessions.retrieve(sessionId)
     if (!session?.id) return json(404, { error: 'not_found' }, origin)
 
-    const { data: order, error } = await admin
+    let { data: order, error } = await admin
       .from('orders')
       .select('id, order_number, status, email, subtotal_cents, discount_cents, shipping_cents, total_cents, promo_code, paid_at, shipping_name, order_items (product_id, size, variant_label, quantity, unit_price_cents)')
       .eq('stripe_checkout_session_id', session.id)
       .maybeSingle()
 
     if (error || !order) return json(404, { error: 'not_found' }, origin)
-    if (session.payment_status !== 'paid' && order.status !== 'paid') {
+
+    const stripePaid = session.payment_status === 'paid' || session.payment_status === 'no_payment_required'
+    if (stripePaid && order.status === 'pending') {
+      await finalizePaidCheckout(admin, session, order.id)
+      const refreshed = await admin
+        .from('orders')
+        .select('id, order_number, status, email, subtotal_cents, discount_cents, shipping_cents, total_cents, promo_code, paid_at, shipping_name, order_items (product_id, size, variant_label, quantity, unit_price_cents)')
+        .eq('id', order.id)
+        .maybeSingle()
+      if (refreshed.error || !refreshed.data) throw refreshed.error ?? new Error('order_missing_after_finalize')
+      order = refreshed.data
+      error = null
+    }
+
+    if (!stripePaid && order.status !== 'paid') {
       return json(200, { status: order.status, paid: false, orderNumber: order.order_number }, origin)
     }
 
