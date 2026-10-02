@@ -233,13 +233,15 @@ Deno.serve(async (req) => {
   })
 
   if (!welcomeRes.ok) {
-    const payload = await welcomeRes.json().catch(() => ({}))
-    console.error('brevo_welcome_failed', payload)
-    await admin
-      .from('newsletter_optins')
-      .update({ last_error: `brevo_welcome_${welcomeRes.status}`, updated_at: new Date().toISOString() })
-      .eq('id', row.id)
-    return json(200, { ok: true }, origin)
+    const payload = await welcomeRes.json().catch(() => ({})) as { code?: string }
+    if (payload.code !== 'duplicate_parameter') {
+      console.error('brevo_welcome_failed', payload)
+      await admin
+        .from('newsletter_optins')
+        .update({ last_error: `brevo_welcome_${welcomeRes.status}`, updated_at: new Date().toISOString() })
+        .eq('id', row.id)
+      return json(200, { ok: true }, origin)
+    }
   }
 
   await admin
