@@ -1,5 +1,7 @@
 import { json, preflight, rejectOrigin } from '../_shared/http.ts'
 import { serviceClient, stripeClient } from '../_shared/clients.ts'
+import { finalizePaidCheckout } from '../_shared/checkoutPayment.ts'
+import { deliverPaidOrderEmails } from '../_shared/orderEmailDelivery.ts'
 import { allowRatePersistent, clientIp, maskEmail } from '../_shared/rateLimit.ts'
 
 const LOOKUP_WINDOW_MS = 10 * 60 * 1000
@@ -30,16 +32,56 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const session = await stripeClient().checkout.sessions.retrieve(sessionId)
+    const stripe = stripeClient()
+    const session = await stripe.checkout.sessions.retrieve(sessionId)
     if (!session?.id) return json(404, { error: 'not_found' }, origin)
 
-    const { data: order, error } = await admin
+    let { data: order, error } = await admin
       .from('orders')
       .select('id, order_number, status, email, subtotal_cents, discount_cents, shipping_cents, total_cents, promo_code, paid_at, shipping_name, order_items (product_id, size, variant_label, quantity, unit_price_cents)')
       .eq('stripe_checkout_session_id', session.id)
       .maybeSingle()
 
     if (error || !order) return json(404, { error: 'not_found' }, origin)
+
+    let finalizedHere = false
+    if (
+      order.status === 'pending'
+      && (session.payment_status === 'paid' || session.payment_status === 'no_payment_required')
+    ) {
+      await finalizePaidCheckout(admin, session)
+      finalizedHere = true
+      const refreshed = await admin
+        .from('orders')
+        .select('id, order_number, status, email, subtotal_cents, discount_cents, shipping_cents, total_cents, promo_code, paid_at, shipping_name, order_items (product_id, size, variant_label, quantity, unit_price_cents)')
+        .eq('id', order.id)
+        .maybeSingle()
+      if (refreshed.error || !refreshed.data) throw refreshed.error ?? new Error('order_missing')
+      order = refreshed.data
+    } else if (order.status === 'pending' && session.status === 'expired') {
+      const { error: releaseError } = await admin.rpc('release_reservation', { p_order_id: order.id })
+      if (releaseError) throw releaseError
+      order.status = 'expired'
+    }
+
+    if (order.status === 'paid') {
+      const { data: delivery } = await admin
+        .from('order_email_deliveries')
+        .select('order_id, customer_sent_at, merchant_sent_at')
+        .eq('order_id', order.id)
+        .maybeSingle()
+      if (
+        finalizedHere
+        || (delivery && (!delivery.customer_sent_at || !delivery.merchant_sent_at))
+      ) {
+        try {
+          await deliverPaidOrderEmails(admin, order.id)
+        } catch (mailError) {
+          console.error('order_email_retry_failed', order.id, mailError)
+        }
+      }
+    }
+
     if (session.payment_status !== 'paid' && order.status !== 'paid') {
       return json(200, { status: order.status, paid: false, orderNumber: order.order_number }, origin)
     }
