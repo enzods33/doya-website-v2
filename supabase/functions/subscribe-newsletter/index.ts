@@ -1,24 +1,22 @@
-import { json, preflight, rejectOrigin } from '../_shared/http.ts'
+import { json, preflight, publicSiteUrl, rejectOrigin } from '../_shared/http.ts'
 import { emailLogoPublicUrl } from '../_shared/emailLogo.ts'
 import { allowRatePersistent, clientIp } from '../_shared/rateLimit.ts'
 import { serviceClient } from '../_shared/clients.ts'
+import { CONFIRMATION_COPY, confirmationEmailHtml } from '../_shared/newsletterConfirm.ts'
+import { normalizeNewsletterLocale } from '../_shared/newsletterWelcome.ts'
+import { newNewsletterToken, newsletterTokenHash } from '../_shared/newsletterTokens.ts'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
-/** Rate-limit : 8 req / 10 min / IP (Postgres + fallback mémoire). */
 const RATE_WINDOW_MS = 10 * 60 * 1000
 const RATE_MAX = 8
+const CONSENT_VERSION = '2026-10-02'
+const SOURCES = new Set(['footer', 'menu', 'cart', 'quote'])
 
 async function setBrevoLang(
   apiKey: string,
   email: string,
   locale: string,
-  listIds?: number[],
 ) {
-  const body: Record<string, unknown> = {
-    attributes: { LANG: locale },
-  }
-  if (listIds?.length) body.listIds = listIds
   const response = await fetch(`https://api.brevo.com/v3/contacts/${encodeURIComponent(email)}`, {
     method: 'PUT',
     headers: {
@@ -26,7 +24,7 @@ async function setBrevoLang(
       'content-type': 'application/json',
       'api-key': apiKey,
     },
-    body: JSON.stringify(body),
+    body: JSON.stringify({ attributes: { LANG: locale } }),
   })
   if (!response.ok && response.status !== 204) {
     const payload = await response.json().catch(() => ({}))
@@ -34,139 +32,6 @@ async function setBrevoLang(
     return false
   }
   return true
-}
-
-const WELCOME = {
-  fr: {
-    subject: 'Bienvenue dans le cercle DOYA',
-    preview: 'Tu feras partie des premiers à recevoir les news.',
-    title: 'Bienvenue',
-    body: [
-      'Merci pour ton inscription.',
-      'Tu fais maintenant partie du cercle DOYA — et tu seras parmi les premiers à recevoir les dernières nouvelles : sorties, dates de concert, et petites surprises au fil de la route.',
-      'À très vite,',
-    ],
-    sign: '— DOYA',
-  },
-  en: {
-    subject: 'Welcome to the DOYA circle',
-    preview: 'You’ll be among the first to get the news.',
-    title: 'Welcome',
-    body: [
-      'Thanks for signing up.',
-      'You’re now part of the DOYA circle — and you’ll be among the first to hear about releases, live dates, and the little surprises along the way.',
-      'See you soon,',
-    ],
-    sign: '— DOYA',
-  },
-  es: {
-    subject: 'Bienvenido/a al círculo DOYA',
-    preview: 'Serás de los primeros en recibir las noticias.',
-    title: 'Bienvenido/a',
-    body: [
-      'Gracias por tu inscripción.',
-      'Ya formas parte del círculo DOYA — y serás de los primeros en recibir novedades: lanzamientos, fechas en vivo y pequeñas sorpresas en el camino.',
-      'Hasta pronto,',
-    ],
-    sign: '— DOYA',
-  },
-  pt: {
-    subject: 'Bem-vindo/a ao círculo DOYA',
-    preview: 'Farás parte dos primeiros a receber as novidades.',
-    title: 'Bem-vindo/a',
-    body: [
-      'Obrigado pela tua inscrição.',
-      'Já fazes parte do círculo DOYA — e estarás entre os primeiros a receber novidades: lançamentos, datas ao vivo e pequenas surpresas pelo caminho.',
-      'Até já,',
-    ],
-    sign: '— DOYA',
-  },
-  de: {
-    subject: 'Willkommen im DOYA-Kreis',
-    preview: 'Du erfährst Neuigkeiten mit als Erste/r.',
-    title: 'Willkommen',
-    body: [
-      'Danke für deine Anmeldung.',
-      'Du bist jetzt Teil des DOYA-Kreises — und erfährst als eine/r der Ersten von neuen Veröffentlichungen, Live-Terminen und kleinen Überraschungen unterwegs.',
-      'Bis bald,',
-    ],
-    sign: '— DOYA',
-  },
-  ja: {
-    subject: 'DOYAのサークルへようこそ',
-    preview: '最新情報をいち早くお届けします。',
-    title: 'ようこそ',
-    body: [
-      'ご登録ありがとうございます。',
-      'DOYAのサークルへようこそ。リリース、ライブ日程、そして旅の途中の小さなサプライズなど、最新情報をいち早くお届けします。',
-      'またすぐに、',
-    ],
-    sign: '— DOYA',
-  },
-  ko: {
-    subject: 'DOYA 서클에 오신 것을 환영합니다',
-    preview: '새로운 소식을 가장 먼저 받아보세요.',
-    title: '환영합니다',
-    body: [
-      '구독해 주셔서 감사합니다.',
-      '이제 DOYA 서클의 일원입니다. 새 음원, 라이브 일정, 그리고 여정 속 작은 소식들을 가장 먼저 받아보실 수 있습니다.',
-      '곧 다시 만나요,',
-    ],
-    sign: '— DOYA',
-  },
-  zh: {
-    subject: '欢迎加入 DOYA',
-    preview: '第一时间收到 DOYA 的最新消息。',
-    title: '欢迎',
-    body: [
-      '感谢你的订阅。',
-      '你现在已经加入 DOYA。新作品、现场演出日期，以及旅途中那些小小的惊喜，我们都会尽早与你分享。',
-      '很快再见，',
-    ],
-    sign: '— DOYA',
-  },
-  ar: {
-    subject: 'مرحبًا بك في دائرة DOYA',
-    preview: 'ستكون من أوائل من يتلقون أخبار DOYA.',
-    title: 'مرحبًا',
-    body: [
-      'شكرًا لاشتراكك.',
-      'أصبحت الآن جزءًا من دائرة DOYA، وستكون من أوائل من يتلقون أخبار الإصدارات ومواعيد الحفلات والمفاجآت الصغيرة على طول الطريق.',
-      'نلتقي قريبًا،',
-    ],
-    sign: '— DOYA',
-  },
-} as const
-
-function escapeHtml(value: string) {
-  return value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-}
-
-function welcomeHtml(locale: keyof typeof WELCOME, logoUrl: string) {
-  const copy = WELCOME[locale] ?? WELCOME.fr
-  const rtl = locale === 'ar'
-  const dir = rtl ? 'rtl' : 'ltr'
-  const align = rtl ? 'right' : 'left'
-  const paragraphs = copy.body
-    .map((line) => `<p style="margin:0 0 16px;font-size:16px;line-height:1.55;color:#2c2926;">${escapeHtml(line)}</p>`)
-    .join('')
-  return `<!DOCTYPE html>
-<html lang="${locale === 'zh' ? 'zh-CN' : locale}" dir="${dir}"><head><meta charset="utf-8"></head>
-<body dir="${dir}" style="margin:0;padding:0;background:#f4f1ec;">
-<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f4f1ec;"><tr><td align="center" style="padding:32px 16px;">
-<table role="presentation" width="100%" dir="${dir}" style="max-width:560px;background:#ffffff;border:1px solid #e4ddd3;text-align:${align};">
-<tr><td align="center" style="padding:28px 28px 8px;">
-<img src="${escapeHtml(logoUrl)}" width="168" height="150" alt="DOYA" style="display:block;margin:0 auto;border:0;width:168px;height:auto;max-width:55%;" />
-</td></tr>
-<tr><td style="padding:8px 28px 28px;font-family:Arial,Tahoma,sans-serif;">
-<p style="margin:0 0 18px;font-size:22px;${rtl ? 'letter-spacing:0;text-transform:none;' : 'letter-spacing:.06em;text-transform:uppercase;'}color:#2c2926;">${escapeHtml(copy.title)}</p>
-${paragraphs}
-<p style="margin:24px 0 0;font-size:14px;letter-spacing:.04em;color:#2c2926;">${escapeHtml(copy.sign)}</p>
-</td></tr></table></td></tr></table></body></html>`
 }
 
 Deno.serve(async (req) => {
@@ -177,48 +42,41 @@ Deno.serve(async (req) => {
   if (blocked) return blocked
   if (req.method !== 'POST') return json(405, { error: 'method_not_allowed' }, origin)
 
-  if (!(await allowRatePersistent(serviceClient(), `newsletter:ip:${clientIp(req)}`, RATE_MAX, RATE_WINDOW_MS))) {
+  const admin = serviceClient()
+  if (!(await allowRatePersistent(admin, `newsletter:ip:${clientIp(req)}`, RATE_MAX, RATE_WINDOW_MS))) {
     return json(429, { error: 'rate_limited' }, origin)
   }
 
-  let body: { email?: string; locale?: string; website?: string }
+  let body: { email?: string; locale?: string; website?: string; source?: string }
   try {
     body = await req.json()
   } catch {
     return json(400, { error: 'invalid_json' }, origin)
   }
 
-  // Honeypot rempli → faux succès (ne pas tipper les bots).
   const website = typeof body.website === 'string' ? body.website.trim() : ''
-  if (website) {
-    return json(200, { ok: true, already: false }, origin)
-  }
+  if (website) return json(200, { ok: true }, origin)
 
   const email = typeof body.email === 'string' ? body.email.trim().toLowerCase() : ''
   if (!EMAIL_RE.test(email)) return json(400, { error: 'invalid_email' }, origin)
 
-  if (!(await allowRatePersistent(serviceClient(), `newsletter:email:${email}`, RATE_MAX, RATE_WINDOW_MS))) {
+  if (!(await allowRatePersistent(admin, `newsletter:email:${email}`, RATE_MAX, RATE_WINDOW_MS))) {
     return json(429, { error: 'rate_limited' }, origin)
   }
 
-  const localeRaw = typeof body.locale === 'string' ? body.locale.trim().toLowerCase() : 'fr'
-  const locale = (localeRaw in WELCOME ? localeRaw : 'fr') as keyof typeof WELCOME
+  const locale = normalizeNewsletterLocale(body.locale)
+  const rawSource = typeof body.source === 'string' ? body.source.trim().toLowerCase() : 'footer'
+  const source = SOURCES.has(rawSource) ? rawSource : 'footer'
 
   const apiKey = Deno.env.get('BREVO_API_KEY') ?? ''
   const listId = Number(Deno.env.get('BREVO_LIST_ID') ?? '')
   const senderEmail = (Deno.env.get('BREVO_SENDER_EMAIL') ?? '').trim()
   const senderName = (Deno.env.get('BREVO_SENDER_NAME') ?? 'DOYA').trim() || 'DOYA'
-  if (!apiKey || !Number.isInteger(listId) || listId < 1) {
+  if (!apiKey || !Number.isInteger(listId) || listId < 1 || !senderEmail) {
     return json(503, { error: 'newsletter_unavailable' }, origin)
   }
 
-  const headers = {
-    accept: 'application/json',
-    'content-type': 'application/json',
-    'api-key': apiKey,
-  }
-
-  // Déjà sur la liste → met à jour LANG (langue du site à cette visite) puis stop.
+  // Réponse publique volontairement identique pour une adresse déjà inscrite.
   const existingRes = await fetch(`https://api.brevo.com/v3/contacts/${encodeURIComponent(email)}`, {
     headers: { accept: 'application/json', 'api-key': apiKey },
   })
@@ -227,61 +85,63 @@ Deno.serve(async (req) => {
     const lists = Array.isArray(existing.listIds) ? existing.listIds : []
     if (lists.includes(listId)) {
       await setBrevoLang(apiKey, email, locale)
-      return json(200, { ok: true, already: true }, origin)
+      await admin.from('newsletter_consents').insert({
+        email,
+        locale,
+        source,
+        consent_version: CONSENT_VERSION,
+        status: 'confirmed',
+        confirmed_at: new Date().toISOString(),
+      })
+      return json(200, { ok: true }, origin)
     }
   }
 
-  const response = await fetch('https://api.brevo.com/v3/contacts', {
-    method: 'POST',
-    headers,
-    body: JSON.stringify({
+  const token = newNewsletterToken()
+  const tokenHash = await newsletterTokenHash(token)
+  const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+  const { data: consent, error: consentError } = await admin
+    .from('newsletter_consents')
+    .insert({
       email,
-      listIds: [listId],
-      updateEnabled: true,
-      attributes: { LANG: locale },
-    }),
-  })
+      locale,
+      source,
+      consent_version: CONSENT_VERSION,
+      status: 'pending',
+      token_hash: tokenHash,
+      expires_at: expiresAt,
+    })
+    .select('id')
+    .maybeSingle()
 
-  if (!(response.ok || response.status === 204)) {
-    let payload: { code?: string; message?: string } = {}
-    try {
-      payload = await response.json()
-    } catch {
-      payload = {}
-    }
-    const duplicate = payload.code === 'duplicate_parameter'
-      || /already exists|duplicate/i.test(payload.message ?? '')
-    if (duplicate) {
-      await setBrevoLang(apiKey, email, locale, [listId])
-      return json(200, { ok: true, already: true }, origin)
-    }
-
-    console.error('brevo_subscribe_failed', response.status, payload)
+  if (consentError || !consent?.id) {
+    console.error('newsletter_consent_insert_failed', consentError)
     return json(502, { error: 'newsletter_failed' }, origin)
   }
 
-  // Sécurise LANG même si le POST a réussi sans attribut (rare).
-  await setBrevoLang(apiKey, email, locale)
+  const confirmUrl = `${publicSiteUrl()}/confirmation-newsletter?token=${encodeURIComponent(token)}`
+  const copy = CONFIRMATION_COPY[locale]
+  const confirmRes = await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: {
+      accept: 'application/json',
+      'content-type': 'application/json',
+      'api-key': apiKey,
+    },
+    body: JSON.stringify({
+      sender: { name: senderName, email: senderEmail },
+      to: [{ email }],
+      subject: copy.subject,
+      htmlContent: confirmationEmailHtml(locale, confirmUrl, emailLogoPublicUrl()),
+      previewText: copy.preview,
+    }),
+  })
 
-  // Mail de bienvenue automatique (nouveaux inscrits seulement).
-  if (senderEmail) {
-    const copy = WELCOME[locale]
-    const welcomeRes = await fetch('https://api.brevo.com/v3/smtp/email', {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({
-        sender: { name: senderName, email: senderEmail },
-        to: [{ email }],
-        subject: copy.subject,
-        htmlContent: welcomeHtml(locale, emailLogoPublicUrl()),
-        previewText: copy.preview,
-      }),
-    })
-    if (!welcomeRes.ok) {
-      const welcomePayload = await welcomeRes.json().catch(() => ({}))
-      console.error('brevo_welcome_failed', welcomePayload)
-    }
+  if (!confirmRes.ok) {
+    const payload = await confirmRes.json().catch(() => ({}))
+    console.error('brevo_optin_email_failed', confirmRes.status, payload)
+    return json(502, { error: 'newsletter_failed' }, origin)
   }
 
-  return json(200, { ok: true, already: false }, origin)
+  return json(200, { ok: true }, origin)
 })
