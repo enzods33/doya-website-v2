@@ -2,6 +2,7 @@ import { json, preflight, rejectOrigin } from '../_shared/http.ts'
 import { serviceClient } from '../_shared/clients.ts'
 import { allowRatePersistent, clientIp } from '../_shared/rateLimit.ts'
 import { verifyNewsletterAddress } from '../_shared/newsletterUnsubscribe.ts'
+import { newsletterSigningSecret } from '../_shared/newsletterSigning.ts'
 
 Deno.serve(async (req) => {
   const origin = req.headers.get('origin')
@@ -10,12 +11,13 @@ Deno.serve(async (req) => {
   const blocked = rejectOrigin(req)
   if (blocked) return blocked
   if (req.method !== 'POST') return json(405, { error: 'method_not_allowed' }, origin)
-  if (!(await allowRatePersistent(serviceClient(), `unsubscribe:ip:${clientIp(req)}`, 12, 10 * 60 * 1000))) {
+  const admin = serviceClient()
+  if (!(await allowRatePersistent(admin, `unsubscribe:ip:${clientIp(req)}`, 12, 10 * 60 * 1000))) {
     return json(429, { error: 'rate_limited' }, origin)
   }
 
   const apiKey = Deno.env.get('BREVO_API_KEY') ?? ''
-  const secret = Deno.env.get('BREVO_UNSUBSCRIBE_SECRET') || apiKey
+  const secret = await newsletterSigningSecret(admin)
   const listId = Number(Deno.env.get('BREVO_LIST_ID') ?? '')
   if (!apiKey || !Number.isInteger(listId) || listId < 1) return json(503, { error: 'newsletter_unavailable' }, origin)
 
@@ -36,5 +38,14 @@ Deno.serve(async (req) => {
   if (Array.isArray(result.contacts?.failed) && result.contacts.failed.length) {
     return json(502, { error: 'newsletter_failed' }, origin)
   }
+
+  const now = new Date().toISOString()
+  const { error: consentError } = await admin
+    .from('newsletter_consents')
+    .update({ status: 'unsubscribed', unsubscribed_at: now })
+    .eq('email', email)
+    .eq('status', 'confirmed')
+  if (consentError) console.error('newsletter_consent_unsubscribe_failed', consentError)
+
   return json(200, { ok: true }, origin)
 })
