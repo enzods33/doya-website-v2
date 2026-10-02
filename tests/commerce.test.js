@@ -426,6 +426,21 @@ test('la newsletter protège la confidentialité et prépare le double opt-in', 
   assert.doesNotMatch(unsubscribe, /BREVO_UNSUBSCRIBE_SECRET'\\) \\|\\| apiKey/)
 })
 
+test('le rate-limit ne conserve pas les IP ou e-mails en clair', () => {
+  const rate = readFileSync(new URL('../supabase/functions/_shared/rateLimit.ts', import.meta.url), 'utf8')
+  const checkout = readFileSync(new URL('../supabase/functions/create-checkout-session/index.ts', import.meta.url), 'utf8')
+  const subscribe = readFileSync(new URL('../supabase/functions/subscribe-newsletter/index.ts', import.meta.url), 'utf8')
+  const maintenance = readFileSync(new URL('../supabase/functions/commerce-maintenance/index.ts', import.meta.url), 'utf8')
+  assert.match(rate, /privateRateKey/)
+  assert.match(rate, /HMAC/)
+  assert.match(checkout, /privateRateKey\('checkout:email', email\)/)
+  assert.match(subscribe, /privateRateKey\('newsletter:email', email\)/)
+  assert.doesNotMatch(checkout, /`checkout:email:\$\{email\}`/)
+  assert.doesNotMatch(subscribe, /`newsletter:email:\$\{email\}`/)
+  assert.match(maintenance, /rate_limit_cleanup_failed/)
+  assert.match(maintenance, /48 \* 60 \* 60 \* 1000/)
+})
+
 test('les routes à jeton restent hors index et nettoient le token confirmé', () => {
   const seo = readFileSync(new URL('../src/utils/seo.js', import.meta.url), 'utf8')
   const vite = readFileSync(new URL('../vite.config.js', import.meta.url), 'utf8')
