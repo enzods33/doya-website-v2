@@ -2,7 +2,7 @@ import { CART_LIMITS } from '../_shared/limits.ts'
 import { checkoutReturnOrigin, json, preflight, rejectOrigin } from '../_shared/http.ts'
 import { serviceClient, stripeClient, userClient } from '../_shared/clients.ts'
 import { loadShippingZones, shippingZoneByCountry, stripeShippingOption } from '../_shared/shipping.ts'
-import { allowRatePersistent, clientIp } from '../_shared/rateLimit.ts'
+import { allowRatePersistent, clientIp, privateRateKey } from '../_shared/rateLimit.ts'
 import {
   normalizeCheckoutLocale,
   stripeCheckoutLocale,
@@ -27,7 +27,7 @@ Deno.serve(async (req) => {
 
   const ip = clientIp(req)
   const admin = serviceClient()
-  if (!(await allowRatePersistent(admin, `checkout:ip:${ip}`, CHECKOUT_MAX_PER_IP, CHECKOUT_WINDOW_MS))) {
+  if (!(await allowRatePersistent(admin, await privateRateKey('checkout:ip', ip), CHECKOUT_MAX_PER_IP, CHECKOUT_WINDOW_MS))) {
     return json(429, { error: 'rate_limited' }, origin)
   }
 
@@ -98,7 +98,7 @@ Deno.serve(async (req) => {
   }
   if (!email) return json(400, { error: 'email_required' }, origin)
 
-  if (!(await allowRatePersistent(admin, `checkout:email:${email}`, CHECKOUT_MAX_PER_EMAIL, CHECKOUT_WINDOW_MS))) {
+  if (!(await allowRatePersistent(admin, await privateRateKey('checkout:email', email), CHECKOUT_MAX_PER_EMAIL, CHECKOUT_WINDOW_MS))) {
     return json(429, { error: 'rate_limited' }, origin)
   }
 
