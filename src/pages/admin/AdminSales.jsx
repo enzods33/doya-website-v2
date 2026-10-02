@@ -27,6 +27,7 @@ function AdminSales() {
   const [openId, setOpenId] = useState(null)
   const [trackingDrafts, setTrackingDrafts] = useState({})
   const [shipBusyId, setShipBusyId] = useState(null)
+  const [resendBusyId, setResendBusyId] = useState(null)
   const [shipMessage, setShipMessage] = useState('')
 
   async function loadSales() {
@@ -57,6 +58,20 @@ function AdminSales() {
     if (filter === 'to_ship') return orders.filter((row) => row.fulfillmentStatus !== 'shipped')
     return orders
   }, [filter, orders])
+
+  async function resendConfirmation(order) {
+    setResendBusyId(order.id)
+    setShipMessage('')
+    setError('')
+    try {
+      const result = await adminStats('resend_confirmation', { orderId: order.id })
+      setShipMessage(result.emailSent ? t('admin.salesConfirmationResent') : t('admin.salesConfirmationQueued'))
+    } catch {
+      setError(t('admin.error'))
+    } finally {
+      setResendBusyId(null)
+    }
+  }
 
   async function markShipped(order) {
     const trackingNumber = String(trackingDrafts[order.id] ?? '').trim()
@@ -229,6 +244,17 @@ function AdminSales() {
                           {order.promoCode ? ` · ${order.promoCode}` : ''}
                         </p>
                       </div>
+                    </div>
+
+                    <div className="admin-order-actions">
+                      <button
+                        type="button"
+                        className="admin-secondary"
+                        disabled={resendBusyId === order.id}
+                        onClick={() => resendConfirmation(order)}
+                      >
+                        {resendBusyId === order.id ? t('admin.saving') : t('admin.salesResendConfirmation')}
+                      </button>
                     </div>
 
                     {shipped ? (
