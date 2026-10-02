@@ -3,6 +3,7 @@ import { checkoutReturnOrigin, json, preflight, rejectOrigin } from '../_shared/
 import { serviceClient, stripeClient, userClient } from '../_shared/clients.ts'
 import { loadShippingZones, shippingZoneByCountry, stripeShippingOption } from '../_shared/shipping.ts'
 import { allowRatePersistent, clientIp } from '../_shared/rateLimit.ts'
+import { reconcileStaleCheckoutSessions } from '../_shared/checkoutPayment.ts'
 import {
   normalizeCheckoutLocale,
   stripeCheckoutLocale,
@@ -15,6 +16,7 @@ import {
 const CHECKOUT_WINDOW_MS = 15 * 60 * 1000
 const CHECKOUT_MAX_PER_IP = 8
 const CHECKOUT_MAX_PER_EMAIL = 5
+const TERMS_VERSION = '2026-10-02'
 
 Deno.serve(async (req) => {
   const origin = req.headers.get('origin')
@@ -36,6 +38,8 @@ Deno.serve(async (req) => {
     promoCode?: string
     shippingCountry?: string
     locale?: string
+    termsAccepted?: boolean
+    termsVersion?: string
   }
   try {
     body = await req.json()
@@ -44,6 +48,10 @@ Deno.serve(async (req) => {
   }
 
   const locale = normalizeCheckoutLocale(body.locale)
+  const termsVersion = typeof body.termsVersion === 'string' ? body.termsVersion.trim() : ''
+  if (body.termsAccepted !== true || termsVersion !== TERMS_VERSION) {
+    return json(400, { error: 'terms_required' }, origin)
+  }
 
   const items = Array.isArray(body.items) ? body.items : []
   if (!items.length || items.length > CART_LIMITS.maxLines) {
@@ -68,6 +76,8 @@ Deno.serve(async (req) => {
   if (totalQuantity > CART_LIMITS.maxTotalQuantity) return json(400, { error: 'invalid_cart' }, origin)
 
   await admin.rpc('release_stale_reservations')
+  const stripe = stripeClient()
+  await reconcileStaleCheckoutSessions(admin, stripe, 2)
 
   let userId: string | null = null
   let email = typeof body.email === 'string' ? body.email.trim().toLowerCase() : ''
@@ -119,18 +129,23 @@ Deno.serve(async (req) => {
     return json(code ? 409 : 400, { error: code ?? 'order_failed' }, origin)
   }
 
-  const { error: localeError } = await admin
+  const { error: contextError } = await admin
     .from('orders')
-    .update({ locale })
+    .update({
+      locale,
+      shipping_zone_id: zone.id,
+      shipping_zone_countries: zone.countries,
+      terms_accepted_at: new Date().toISOString(),
+      terms_version: termsVersion,
+    })
     .eq('id', order.orderId)
-  if (localeError) {
-    console.error('order_locale_update_failed', localeError)
+  if (contextError) {
+    console.error('order_context_update_failed', contextError)
     await admin.rpc('release_reservation', { p_order_id: order.orderId })
     return json(500, { error: 'order_failed' }, origin)
   }
 
   const site = checkoutReturnOrigin(origin)
-  const stripe = stripeClient()
   const lineItems = (order.lines as { name: string; productId: string; size: string; variantLabel?: string; quantity: number; unitPriceCents: number }[]).map((line) => ({
     quantity: line.quantity,
     price_data: {
