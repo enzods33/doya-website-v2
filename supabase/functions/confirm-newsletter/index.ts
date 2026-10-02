@@ -1,6 +1,6 @@
 import { json, preflight, rejectOrigin } from '../_shared/http.ts'
 import { emailLogoPublicUrl } from '../_shared/emailLogo.ts'
-import { allowRatePersistent, clientIp } from '../_shared/rateLimit.ts'
+import { allowRatePersistent, clientIp, privateRateKey } from '../_shared/rateLimit.ts'
 import { serviceClient } from '../_shared/clients.ts'
 
 const TOKEN_RE = /^[A-Za-z0-9_-]{40,80}$/
@@ -152,7 +152,7 @@ Deno.serve(async (req) => {
   if (req.method !== 'POST') return json(405, { error: 'method_not_allowed' }, origin)
 
   const admin = serviceClient()
-  if (!(await allowRatePersistent(admin, `newsletter-confirm:ip:${clientIp(req)}`, 12, 10 * 60 * 1000))) {
+  if (!(await allowRatePersistent(admin, await privateRateKey('newsletter-confirm:ip', clientIp(req)), 12, 10 * 60 * 1000))) {
     return json(429, { error: 'rate_limited' }, origin)
   }
 
