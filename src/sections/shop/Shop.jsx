@@ -32,6 +32,7 @@ function Shop() {
   const [feedback, setFeedback] = useState(null)
   const [zoom, setZoom] = useState(null)
   const [autoPromos, setAutoPromos] = useState(DEFAULT_AUTO_PROMOS)
+  const [featuredEntered, setFeaturedEntered] = useState(false)
   const autoTimers = useRef({})
   const manualTimers = useRef({})
   const hoverTimers = useRef({})
@@ -250,6 +251,24 @@ function Shop() {
   }, [])
 
   useEffect(() => {
+    if (featuredEntered || !items.some((product) => product.typeKey === 'cd')) return undefined
+    const node = document.querySelector('.product.is-featured')
+    if (!node || !('IntersectionObserver' in window)) {
+      setFeaturedEntered(true)
+      return undefined
+    }
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry?.isIntersecting) return
+      setFeaturedEntered(true)
+      observer.disconnect()
+    }, { threshold: 0.2 })
+
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [items, featuredEntered])
+
+  useEffect(() => {
     if (!zoom) return undefined
     const previous = document.body.style.overflow
     document.body.style.overflow = 'hidden'
@@ -302,7 +321,7 @@ function Shop() {
           const hasAnyStock = sizes.some((size) => availableFor(product, size) > 0)
           const productClassName = [
             'product',
-            product.typeKey === 'cd' ? 'is-featured' : '',
+            product.typeKey === 'cd' ? `is-featured${featuredEntered ? ' is-entered' : ''}` : '',
             product.colorKey === 'white' ? 'is-light-product' : '',
             product.colorKey === 'black' ? 'is-dark-product' : '',
           ].filter(Boolean).join(' ')

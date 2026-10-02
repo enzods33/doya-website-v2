@@ -257,7 +257,7 @@
 .music-tracklist-vinyl-rotor {
   position: absolute;
   inset: 0;
-  animation: music-vinyl-spin 42s linear infinite;
+  animation: music-vinyl-spin 58s linear infinite;
 }
 .music-tracklist-vinyl-disc {
   display: block;
@@ -934,7 +934,7 @@
   border: 1px solid rgb(44 41 38 / 15%);
   border-left: 2px solid var(--color-doya-red);
   background:
-    radial-gradient(circle at 88% 0%, rgb(180 207 217 / 44%), transparent 30%),
+    radial-gradient(circle at 88% 0%, rgb(236 219 196 / 34%), transparent 30%),
     radial-gradient(circle at 14% 118%, rgb(123 111 98 / 18%), transparent 42%),
     linear-gradient(118deg, rgb(249 247 243 / 88%), rgb(232 228 222 / 78%));
   box-shadow:
@@ -1954,45 +1954,78 @@ a.concert-tickets:focus-visible {
 .footer-contact-item.is-pending .footer-contact-note { color: var(--muted); }
 .footer-socials { margin-top: clamp(48px, 6vw, 80px); display: grid; justify-items: center; gap: 14px; }
 .socials { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 16px; margin: 0; padding: 0; list-style: none; }
-.socials a { display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; transition: opacity var(--motion-duration), transform var(--motion-duration); }
-.socials a:hover { opacity: .85; transform: translateY(-2px); }
+.socials li {
+  opacity: 0;
+  transform: translateY(5px);
+}
+.footer-socials.is-visible .socials li {
+  animation: footer-social-reveal 520ms cubic-bezier(.22, .61, .36, 1) both;
+  animation-delay: calc(var(--social-i, 0) * 55ms);
+}
+.socials a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  transition:
+    opacity 260ms var(--motion-ease),
+    transform 280ms var(--motion-ease),
+    box-shadow 280ms var(--motion-ease);
+}
 .socials .platform-icon {
   width: 30px;
   height: 30px;
   border-radius: 0;
   color: var(--ink);
   transform-origin: center;
-  animation: footer-social-pulse 11s ease-in-out infinite;
-  animation-delay: calc(var(--social-i, 0) * 1.55s);
-  will-change: transform;
+  transition:
+    opacity 260ms var(--motion-ease),
+    transform 280ms var(--motion-ease);
 }
 .socials .platform-icon-deezer { width: 32px; height: 32px; }
 .socials .platform-icon-instagram { width: 42px; height: 42px; }
-/* Une seule onde fluide : in → out, puis repos jusqu’à l’icône suivante */
-@keyframes footer-social-pulse {
-  0% { transform: scale(1); }
-  3.5% { transform: scale(1.2); }
-  7% { transform: scale(1); }
-  100% { transform: scale(1); }
+
+@keyframes footer-social-reveal {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
 }
-.footer-socials:hover .platform-icon,
-.footer-socials:focus-within .platform-icon {
-  animation-play-state: paused;
-}
+
 @media (hover: hover) and (pointer: fine) {
-  .socials a:hover {
-    opacity: 1;
-    transform: translateY(-4px);
+  .footer-socials:has(.socials a:hover) .socials a:not(:hover) .platform-icon,
+  .footer-socials:has(.socials a:focus-visible) .socials a:not(:focus-visible) .platform-icon {
+    opacity: .64;
   }
-  .socials a:hover .platform-icon {
-    animation: none;
-    transform: scale(1.28);
-    transition: transform 280ms var(--motion-ease);
+  .socials a:hover,
+  .socials a:focus-visible {
+    opacity: 1;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 22px rgb(44 41 38 / 7%);
+  }
+  .socials a:hover .platform-icon,
+  .socials a:focus-visible .platform-icon {
+    opacity: 1;
+    transform: scale(1.05);
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .socials .platform-icon { animation: none; }
-  .socials a:hover .platform-icon { transform: none; transition: none; }
+  .socials li,
+  .footer-socials.is-visible .socials li {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+  .socials a,
+  .socials .platform-icon {
+    transition: none;
+  }
+  .socials a:hover,
+  .socials a:focus-visible,
+  .socials a:hover .platform-icon,
+  .socials a:focus-visible .platform-icon {
+    transform: none;
+  }
 }
 .socials span { color: var(--muted); }
 .footer-note { color: var(--muted); font-size: 13px; margin-top: 12px; text-align: center; }
@@ -2953,12 +2986,15 @@ a.concert-tickets:focus-visible {
   pointer-events: none;
   background: linear-gradient(112deg, transparent 43%, rgb(255 255 255 / 28%) 49%, transparent 55%);
   transform: translateX(-58%);
-  animation: music-panel-light 11s ease-in-out infinite;
+  opacity: 0;
+}
+.tracklist-column.is-entered::before {
+  animation: music-panel-light 2.8s .35s var(--motion-ease) both;
 }
 @keyframes music-panel-light {
-  0%, 24% { transform: translateX(-58%); opacity: 0; }
-  38% { opacity: .75; }
-  58%, 100% { transform: translateX(58%); opacity: 0; }
+  0% { transform: translateX(-58%); opacity: 0; }
+  26% { opacity: .68; }
+  100% { transform: translateX(58%); opacity: 0; }
 }
 .music-tracklist-vinyl {
   width: min(96%, 24rem);
@@ -4008,8 +4044,11 @@ a.concert-tickets:focus-visible {
     rgb(255 255 255 / 5%) 55%,
     transparent 66%
   );
-  transform: translate3d(-17%, 0, 0) rotate(5deg);
-  animation: doya-lookbook-light 15s ease-in-out infinite alternate;
+  transform: translate3d(-19%, 0, 0) rotate(5deg);
+  opacity: 0;
+}
+.product.is-featured.is-entered .product-image-trigger::after {
+  animation: doya-lookbook-light 2.9s .35s var(--motion-ease) both;
 }
 .product.is-featured .product-image,
 .product.is-featured .product-caption,
@@ -4024,125 +4063,82 @@ a.concert-tickets:focus-visible {
     grid-template-rows: none;
     grid-auto-rows: auto;
     gap: clamp(24px, 2.6vw, 42px);
-    align-items: start;
+    align-items: stretch;
   }
-  .products > .product {
-    grid-row: auto;
-    min-height: 0;
-  }
-  .products > .product.is-featured {
-    grid-column: span 7;
-    grid-row: auto;
-    align-self: start;
-  }
-  .products > .product:nth-child(2) {
-    grid-column: span 5;
-  }
-  .products > .product:nth-child(3) {
-    grid-column: span 5;
-  }
-  .products > .product:nth-child(4) {
-    grid-column: span 7;
-  }
+  .products > .product,
+  .products > .product.is-featured,
+  .products > .product:nth-child(2),
+  .products > .product:nth-child(3),
+  .products > .product:nth-child(4),
   .products > .product:nth-child(5),
   .products > .product:nth-child(6),
   .products > .product:nth-child(7),
   .products > .product:nth-child(8) {
     grid-column: span 6;
+    grid-row: auto;
+    min-height: 0;
+    height: 100%;
   }
-  .products > .product:nth-child(2) .product-image-trigger,
-  .products > .product:nth-child(3) .product-image-trigger {
-    aspect-ratio: 5 / 4;
-  }
-  .products > .product:nth-child(4) .product-image-trigger {
-    aspect-ratio: 16 / 10;
-  }
-  .products > .product:nth-child(5) .product-image-trigger,
-  .products > .product:nth-child(6) .product-image-trigger,
-  .products > .product:nth-child(7) .product-image-trigger,
-  .products > .product:nth-child(8) .product-image-trigger {
-    aspect-ratio: 16 / 10;
-  }
-  .product.is-featured .product-image-trigger {
+  .products > .product .product-image-trigger,
+  .products > .product.is-featured .product-image-trigger {
     flex: 0 0 auto;
     min-height: 0;
     aspect-ratio: 16 / 10;
   }
+  .product.is-featured {
+    border-color: rgb(194 5 15 / 34%);
+    box-shadow:
+      0 1px 0 rgb(255 255 255 / 92%) inset,
+      0 16px 34px rgb(44 41 38 / 14%),
+      0 42px 92px rgb(44 41 38 / 18%);
+  }
+  .product.is-featured::after {
+    transform: scaleX(1);
+  }
   .product.is-featured .product-image {
-    max-width: min(78%, 34rem);
-    max-height: min(78%, 34rem);
+    max-width: min(95%, 35rem);
+    max-height: min(95%, 35rem);
+  }
+  .product:not(.is-featured) .product-image {
+    max-width: 92%;
+    max-height: 92%;
   }
   .product.is-featured .product-caption {
-    flex: 0 0 auto;
+    flex: 1;
   }
   .shop-section .product.is-featured .product-buy {
     margin-top: 16px;
   }
   .product.is-featured .product-caption h3 {
-    font-size: clamp(28px, 2.4vw, 38px);
+    font-size: clamp(25px, 2vw, 32px);
   }
 }
 
-/* Très grands desktops / 4K : cadence alignée, sans mosaïque en zigzag. */
+/* Très grands desktops / 4K : même grille, sans rupture de cadence. */
 @media (min-width: 1800px) {
+  .products > .product,
   .products > .product.is-featured {
     grid-column: span 6;
   }
-  .products > .product:nth-child(2),
-  .products > .product:nth-child(3) {
-    grid-column: span 3;
-  }
-  .products > .product:nth-child(4),
-  .products > .product:nth-child(5),
-  .products > .product:nth-child(6) {
-    grid-column: span 4;
-  }
-  .products > .product:nth-child(7),
-  .products > .product:nth-child(8) {
-    grid-column: span 6;
-  }
-  .product.is-featured .product-image-trigger {
-    aspect-ratio: 2 / 1;
-  }
   .product.is-featured .product-image {
-    max-width: min(72%, 30rem);
-    max-height: min(72%, 30rem);
+    max-width: min(92%, 34rem);
+    max-height: min(92%, 34rem);
   }
 }
 
-/* Mouvements très lents : matière, lumière, photographie. */
-.shop-section::after {
-  animation: doya-fashion-atmosphere 28s ease-in-out infinite alternate;
-}
-.about-gallery-backdrop {
-  animation: doya-fashion-gallery 24s ease-in-out infinite alternate;
-}
+/* Mouvement-signature conservé uniquement sur les étoiles de la bio. */
 .about-intro-stars {
   animation: doya-fashion-stars 18s ease-in-out infinite alternate;
 }
-.live-featured::after {
-  animation: doya-fashion-live 20s ease-in-out infinite alternate;
-}
 
-@keyframes doya-fashion-atmosphere {
-  from { transform: scale(1.085) translate3d(-.45%, .15%, 0); }
-  to { transform: scale(1.12) translate3d(.65%, -.45%, 0); }
-}
-@keyframes doya-fashion-gallery {
-  from { transform: translate3d(-.35%, .15%, 0) scale(1.005); }
-  to { transform: translate3d(.45%, -.25%, 0) scale(1.02); }
-}
 @keyframes doya-fashion-stars {
   from { transform: translate(-50%, -50%) rotate(-.7deg) scale(.985); opacity: .38; }
   to { transform: translate(-50%, -50%) rotate(.7deg) scale(1.015); opacity: .46; }
 }
-@keyframes doya-fashion-live {
-  from { transform: translate3d(-1.1%, .3%, 0); opacity: .64; }
-  to { transform: translate3d(1.1%, -.3%, 0); opacity: .78; }
-}
 @keyframes doya-lookbook-light {
-  from { transform: translate3d(-19%, 0, 0) rotate(5deg); opacity: .48; }
-  to { transform: translate3d(17%, 0, 0) rotate(5deg); opacity: .82; }
+  0% { transform: translate3d(-19%, 0, 0) rotate(5deg); opacity: 0; }
+  28% { opacity: .46; }
+  100% { transform: translate3d(17%, 0, 0) rotate(5deg); opacity: 0; }
 }
 
 @media (max-width: 1199px) {
@@ -4162,13 +4158,27 @@ a.concert-tickets:focus-visible {
       0 1px 0 rgb(255 255 255 / 68%) inset,
       0 16px 42px rgb(44 41 38 / 10%);
   }
+  .product.is-featured {
+    border-color: rgb(194 5 15 / 32%);
+    box-shadow:
+      0 1px 0 rgb(255 255 255 / 78%) inset,
+      0 18px 46px rgb(44 41 38 / 14%);
+  }
+  .product.is-featured::after {
+    transform: scaleX(1);
+  }
+  .product.is-featured .product-image {
+    max-width: 96%;
+    max-height: 96%;
+  }
+  .product.is-featured .product-caption h3 {
+    font-size: clamp(25px, 8vw, 30px);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .shop-section::after,
-  .about-gallery-backdrop,
   .about-intro-stars,
-  .live-featured::after,
+  .tracklist-column::before,
   .product.is-featured .product-image-trigger::after,
   .section-bridge-stars {
     animation: none;
