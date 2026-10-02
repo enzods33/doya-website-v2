@@ -434,9 +434,9 @@ Deno.serve(async (req) => {
         lang: sendLang,
       }, origin)
     }
-    // Une requête unique évite les succès partiels entre lots. Brevo limite les
-    // messageVersions à 1000 ; au-delà, ne pas envoyer une liste tronquée.
-    if (emails.length > 1000) return json(400, { error: 'list_too_large' }, origin)
+    // Une requête unique évite les succès partiels entre lots. Brevo accepte
+    // jusqu'à 2000 destinataires au total sur un envoi transactionnel batch.
+    if (emails.length > 2000) return json(400, { error: 'list_too_large' }, origin)
 
     const secret = (Deno.env.get('BREVO_UNSUBSCRIBE_SECRET') ?? '').trim()
     if (!secret) return json(503, { error: 'unsubscribe_secret_missing' }, origin)
