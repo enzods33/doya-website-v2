@@ -308,7 +308,7 @@ export default {
     home: 'Volver al inicio',
   },
   legal: {
-    updated: 'Última actualización: septiembre 2026',
+    updated: 'Última actualización: octubre 2026',
     backHome: 'Volver al inicio',
     mentions: {
       kicker: 'Información',
@@ -437,7 +437,7 @@ export default {
         {
           heading: 'Datos recogidos',
           paragraphs: [
-            'Newsletter: email e idioma de interfaz, vía Brevo.',
+            'Newsletter: email e idioma de interfaz mediante Brevo. Durante la confirmación, la dirección se conserva temporalmente en Supabase (máximo 30 días) junto con una prueba técnica del consentimiento (huella protegida, origen y fechas).',
             'Pedidos: email, dirección de envío, contenido del pedido — vía Stripe y Supabase.',
             'Audiencia (agregada): páginas vistas y algunas acciones (newsletter, carrito, escucha, contacto…), sin identificar a los visitantes.',
           ],
@@ -459,7 +459,7 @@ export default {
         {
           heading: 'Conservación',
           paragraphs: [
-            'Los datos se conservan el tiempo necesario para las finalidades, luego se archivan o eliminan según obligaciones legales.',
+            'Los datos se conservan únicamente durante el tiempo necesario. Un email de newsletter no confirmado se elimina como máximo a los 30 días; puede conservarse una prueba técnica del consentimiento o de su retirada para documentarlo. Los contadores antiabuso seudonimizados se purgan tras 48 horas. El resto se archiva o elimina según las obligaciones legales.',
           ],
         },
         {
