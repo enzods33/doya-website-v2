@@ -26,6 +26,13 @@ async function legacySignedToken(email: string, secret: string): Promise<string>
   return `${payload}.${base64Url(new Uint8Array(signature))}`
 }
 
+export async function newsletterAddressHash(email: string, secret: string): Promise<string> {
+  const normalized = email.trim().toLowerCase()
+  if (!secret || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalized)) throw new Error('invalid_newsletter_address')
+  const signature = await crypto.subtle.sign('HMAC', await signingKey(secret), new TextEncoder().encode(normalized))
+  return [...new Uint8Array(signature)].map((byte) => byte.toString(16).padStart(2, '0')).join('')
+}
+
 export async function signNewsletterAddress(email: string, secret: string): Promise<string> {
   const normalized = email.trim().toLowerCase()
   if (!secret || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalized)) throw new Error('invalid_unsubscribe_payload')
