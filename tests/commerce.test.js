@@ -421,7 +421,7 @@ test('la newsletter protège la confidentialité et prépare le double opt-in', 
   const welcome = readFileSync(new URL('../supabase/functions/_shared/newsletterWelcome.ts', import.meta.url), 'utf8')
   const maintenance = readFileSync(new URL('../supabase/functions/commerce-maintenance/index.ts', import.meta.url), 'utf8')
 
-  assert.match(subscribe, /contacts\/doubleOptinConfirmation/)
+  assert.match(subscribe, /smtp\/email/)
   assert.match(subscribe, /BREVO_DOI_TEMPLATE_ID/)
   assert.match(subscribe, /CONSENT_VERSION = '2026-10-02-v1'/)
   assert.match(subscribe, /CONFIRM_TTL_MS = 30 \* 24 \* 60 \* 60 \* 1000/)
