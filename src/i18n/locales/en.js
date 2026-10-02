@@ -308,7 +308,7 @@ export default {
     home: 'Back to home',
   },
   legal: {
-    updated: 'Last updated: September 2026',
+    updated: 'Last updated: October 2026',
     backHome: 'Back to home',
     mentions: {
       kicker: 'Information',
@@ -437,7 +437,7 @@ export default {
         {
           heading: 'Data collected',
           paragraphs: [
-            'Newsletter: email address and interface language, via Brevo.',
+            'Newsletter: email address and interface language via Brevo. During confirmation, the address is temporarily stored in Supabase (maximum 30 days) together with a technical consent record (protected fingerprint, source and dates).',
             'Orders: email, shipping address, order contents — via Stripe and Supabase.',
             'Audience (aggregated): page views and a few actions (newsletter, cart, listening, contact…), without identifying visitors.',
           ],
@@ -459,7 +459,7 @@ export default {
         {
           heading: 'Retention',
           paragraphs: [
-            'Data is kept for as long as needed for the stated purposes, then archived or deleted according to legal obligations (accounting, warranties, etc.).',
+            'Data is kept only as long as needed for the stated purposes. An unconfirmed newsletter address is deleted after no more than 30 days; a technical record of consent or withdrawal may be retained to document it. Pseudonymised anti-abuse counters are purged after 48 hours. Other data is archived or deleted according to legal obligations (accounting, warranties, etc.).',
           ],
         },
         {
