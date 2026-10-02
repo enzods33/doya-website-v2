@@ -16,6 +16,11 @@ function isAllowedSupabaseUrl(value) {
 
 export const supabaseUrl = import.meta.env.VITE_SUPABASE_URL ?? ''
 export const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY ?? ''
-export const demoStoreConfigured = import.meta.env.VITE_DEMO_STORE === 'true'
+const isNetlifyDemoHost = typeof window !== 'undefined' && (
+  window.location.hostname === 'doya-luna-bohemia.netlify.app'
+  || window.location.hostname.endsWith('--doya-luna-bohemia.netlify.app')
+)
+
+export const demoStoreConfigured = import.meta.env.VITE_DEMO_STORE === 'true' || isNetlifyDemoHost
 
 export const commerceConfigured = isAllowedSupabaseUrl(supabaseUrl) && supabaseAnonKey.length > 40
