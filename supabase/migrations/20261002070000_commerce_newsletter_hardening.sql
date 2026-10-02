@@ -3,16 +3,21 @@
 
 alter table public.orders
   add column if not exists shipping_zone_id text references public.shipping_zones(id) on update cascade on delete set null,
+  add column if not exists shipping_zone_countries text[],
   add column if not exists terms_accepted_at timestamptz,
   add column if not exists terms_version text;
 
 alter table public.orders
-  drop constraint if exists orders_terms_pair_check;
+  drop constraint if exists orders_terms_pair_check,
+  drop constraint if exists orders_shipping_snapshot_check;
 
 alter table public.orders
   add constraint orders_terms_pair_check check (
     (terms_accepted_at is null and terms_version is null)
     or (terms_accepted_at is not null and char_length(btrim(terms_version)) between 1 and 40)
+  ),
+  add constraint orders_shipping_snapshot_check check (
+    shipping_zone_countries is null or cardinality(shipping_zone_countries) > 0
   );
 
 create table if not exists public.order_email_deliveries (
