@@ -400,6 +400,9 @@ test('la newsletter protège la confidentialité et prépare le double opt-in', 
   const campaign = readFileSync(new URL('../supabase/functions/admin-brevo-campaign/index.ts', import.meta.url), 'utf8')
   const unsubscribe = readFileSync(new URL('../supabase/functions/unsubscribe-newsletter/index.ts', import.meta.url), 'utf8')
   const migration = readFileSync(new URL('../supabase/migrations/20261002090000_newsletter_double_opt_in.sql', import.meta.url), 'utf8')
+  const campaignMigration = readFileSync(new URL('../supabase/migrations/20261002092000_newsletter_messages_idempotency.sql', import.meta.url), 'utf8')
+  const unsubscribeShared = readFileSync(new URL('../supabase/functions/_shared/newsletterUnsubscribe.ts', import.meta.url), 'utf8')
+  const delivery = readFileSync(new URL('../supabase/functions/_shared/newsletterDelivery.ts', import.meta.url), 'utf8')
 
   assert.match(subscribe, /contacts\\/doubleOptinConfirmation/)
   assert.match(subscribe, /BREVO_DOI_TEMPLATE_ID/)
