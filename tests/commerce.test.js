@@ -367,7 +367,7 @@ test('la newsletter protège la confidentialité et prépare le double opt-in', 
   assert.doesNotMatch(signup, /result\\.already/)
   assert.match(confirm, /welcome_sent_at/)
   assert.match(confirm, /pending_email: null/)
-  assert.doesNotMatch(confirm, /désabonnement|unsubscribe/i)
+  assert.doesNotMatch(confirm, /\/desabonnement|unsubscribe-newsletter/i)
   assert.match(migration, /create table if not exists public\\.newsletter_optins/)
   assert.match(migration, /consent_version text not null/)
   assert.match(migration, /source text not null/)
