@@ -381,7 +381,13 @@ Deno.serve(async (req) => {
     const langSuffix = sendLang === 'all' ? '' : ` · ${sendLang.toUpperCase()}`
 
     if (!subject || !htmlContent) return json(400, { error: 'invalid_campaign' }, origin)
-    if (action === 'schedule' && (!scheduledAt || !Number.isFinite(Date.parse(scheduledAt)) || Date.parse(scheduledAt) <= Date.now())) {
+    const scheduledMs = scheduledAt ? Date.parse(scheduledAt) : Number.NaN
+    if (action === 'schedule' && (
+      !scheduledAt
+      || !Number.isFinite(scheduledMs)
+      || scheduledMs <= Date.now()
+      || scheduledMs > Date.now() + 72 * 60 * 60 * 1000
+    )) {
       return json(400, { error: 'invalid_schedule' }, origin)
     }
 
