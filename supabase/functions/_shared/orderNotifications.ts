@@ -14,6 +14,7 @@ type OutboxRow = {
   order_id: string
   kind: OrderEmailKind
   attempts: number
+  delivery_key: string
 }
 
 type LoadedOrderEmail = {
@@ -141,6 +142,8 @@ export async function requeuePaidOrderEmail(admin: AdminClient, orderId: string)
     .from('order_email_outbox')
     .update({
       status: 'pending',
+      attempts: 0,
+      delivery_key: crypto.randomUUID(),
       next_attempt_at: new Date().toISOString(),
       last_error: null,
       sent_at: null,
@@ -177,7 +180,7 @@ export async function processDueOrderEmails(admin: AdminClient, limit = 10) {
 
       let ok = false
       if (row.kind === 'paid_confirmation') {
-        ok = await sendPaidOrderEmails(loaded.payload, row.id)
+        ok = await sendPaidOrderEmails(loaded.payload, row.delivery_key)
       } else if (row.kind === 'shipped_notification') {
         if (loaded.fulfillmentStatus !== 'shipped' || !loaded.trackingNumber) {
           throw new Error('order_shipping_email_not_ready')
@@ -185,7 +188,7 @@ export async function processDueOrderEmails(admin: AdminClient, limit = 10) {
         ok = await sendShippedOrderEmail({
           ...loaded.payload,
           trackingNumber: loaded.trackingNumber,
-        }, row.id)
+        }, row.delivery_key)
       } else {
         throw new Error('unknown_order_email_kind')
       }
