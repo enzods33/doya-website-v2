@@ -51,8 +51,8 @@ function Shop() {
     return () => { active = false }
   }, [revision])
 
-  function isTshirt(product) {
-    return product.typeKey === 'tshirt'
+  function hasTwoViews(product) {
+    return !!(product.front && product.back)
   }
 
   function clearAutoTimer(id) {
@@ -104,14 +104,14 @@ function Shop() {
 
   function restartAutoInterval(product) {
     clearAutoTimer(product.id)
-    if (!isTshirt(product) || reducedMotion || !product.front || !product.back) return
+    if (!hasTwoViews(product) || reducedMotion) return
     autoTimers.current[product.id] = window.setInterval(() => {
       toggleAutoView(product)
     }, TSHIRT_FLIP_MS)
   }
 
   function pauseAutoOnHover(product) {
-    if (!isTshirt(product) || reducedMotion || !finePointerHover()) return
+    if (!hasTwoViews(product) || reducedMotion || !finePointerHover()) return
     if (manualTimers.current[product.id] || manualHoverBypass.current[product.id]) return
     clearAutoTimer(product.id)
     clearHoverTimer(product.id)
@@ -119,7 +119,7 @@ function Shop() {
   }
 
   function scheduleAutoResume(product) {
-    if (!isTshirt(product) || reducedMotion || !finePointerHover()) return
+    if (!hasTwoViews(product) || reducedMotion || !finePointerHover()) return
     manualHoverBypass.current[product.id] = false
     if (manualTimers.current[product.id]) return
     clearHoverTimer(product.id)
@@ -142,7 +142,7 @@ function Shop() {
     clearHoverPause(product.id)
     manualHoverBypass.current[product.id] = true
 
-    if (isTshirt(product) && !reducedMotion && product.front && product.back) {
+    if (hasTwoViews(product) && !reducedMotion) {
       manualTimers.current[product.id] = window.setTimeout(() => {
         const resumedView = next === 'front' ? 'back' : 'front'
         setAutoViews((current) => ({ ...current, [product.id]: resumedView }))
@@ -158,11 +158,8 @@ function Shop() {
       return resolveProductView(product, views[product.id])
     }
     if (hoverPaused[product.id]) return resolveProductView(product, 'front')
-    if (!isTshirt(product) || reducedMotion) {
+    if (!hasTwoViews(product) || reducedMotion) {
       return resolveProductView(product, views[product.id] ?? product.defaultView)
-    }
-    if (!product.front || !product.back) {
-      return resolveProductView(product, product.defaultView)
     }
     return resolveProductView(product, autoViews[product.id] ?? ((index % 2 === 0) ? 'front' : 'back'))
   }
@@ -218,7 +215,7 @@ function Shop() {
     if (reducedMotion) return undefined
 
     items.forEach((product, index) => {
-      if (!isTshirt(product) || !product.front || !product.back) return
+      if (!hasTwoViews(product)) return
       if (manualTimers.current[product.id] || hoverTimers.current[product.id]) return
       autoTimers.current[product.id] = window.setInterval(() => {
         setAutoViews((current) => {
