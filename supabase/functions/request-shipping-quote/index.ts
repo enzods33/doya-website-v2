@@ -82,6 +82,7 @@ Deno.serve(async (req) => {
   }
 
   const normalized: { productId: string; size: string; quantity: number; name: string; unitPriceCents: number }[] = []
+  let totalQuantity = 0
   let teeQty = 0
   let cdQty = 0
   let accessoryQty = 0
@@ -96,6 +97,10 @@ Deno.serve(async (req) => {
     }
     if (!Number.isInteger(quantity) || quantity < 1 || quantity > CART_LIMITS.maxLineQuantity) {
       return json(400, { error: 'invalid_quantity' }, origin)
+    }
+    totalQuantity += quantity
+    if (totalQuantity > CART_LIMITS.maxTotalQuantity) {
+      return json(400, { error: 'invalid_cart' }, origin)
     }
     normalized.push({ productId, size, quantity, name: productId, unitPriceCents: 0 })
   }
@@ -116,6 +121,9 @@ Deno.serve(async (req) => {
   const productMap = new Map(products.map((row) => [row.id, row]))
   const variantMap = new Map((variants ?? []).map((row) => [`${row.product_id}:${row.size}`, row]))
   if (productIds.some((id) => !productMap.has(id))) return json(400, { error: 'invalid_cart' }, origin)
+  if (products.some((product) => product.on_sale !== true || !Number.isInteger(product.price_cents) || product.price_cents <= 0)) {
+    return json(400, { error: 'product_unavailable' }, origin)
+  }
   if (normalized.some((item) => !variantMap.has(`${item.productId}:${item.size}`))) {
     return json(400, { error: 'invalid_cart' }, origin)
   }
