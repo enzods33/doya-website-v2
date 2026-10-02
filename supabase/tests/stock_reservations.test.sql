@@ -84,25 +84,27 @@ set reserved = reserved + 1
 where id = '00000000-0000-4000-8000-000000000002';
 
 select throws_ok(
-  $ select public.mark_order_paid_from_stripe(
+  $q$ select public.mark_order_paid_from_stripe(
     '00000000-0000-4000-8000-000000000013', 'pi_wrong_shipping', null, null, 700, 2100, null
-  ) $,
+  ) $q$,
+  'P0001',
   'shipping_amount_mismatch',
   'Un montant de livraison différent est refusé'
 );
 
 select throws_ok(
-  $ select public.mark_order_paid_from_stripe(
+  $q$ select public.mark_order_paid_from_stripe(
     '00000000-0000-4000-8000-000000000013', 'pi_wrong_total', null, null, 600, 2200, null
-  ) $,
+  ) $q$,
+  'P0001',
   'total_amount_mismatch',
   'Un total Stripe différent est refusé'
 );
 
 select lives_ok(
-  $ select public.mark_order_paid_from_stripe(
+  $q$ select public.mark_order_paid_from_stripe(
     '00000000-0000-4000-8000-000000000013', 'pi_exact', 'Client', '{}'::jsonb, 600, 2100, null
-  ) $,
+  ) $q$,
   'Les montants exacts finalisent la commande'
 );
 
