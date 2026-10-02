@@ -1,7 +1,6 @@
 import type Stripe from 'https://esm.sh/stripe@17.4.0?target=deno'
 import { serviceClient } from './clients.ts'
 import { queuePaidOrderEmail } from './orderNotifications.ts'
-import { loadShippingZones, shippingZoneById } from './shipping.ts'
 
 type AdminClient = ReturnType<typeof serviceClient>
 
@@ -15,7 +14,7 @@ export async function finalizePaidCheckout(
 
   const { data: order, error: orderError } = await admin
     .from('orders')
-    .select('id, status, shipping_cents, total_cents, shipping_zone_id, stripe_checkout_session_id')
+    .select('id, status, shipping_cents, total_cents, shipping_zone_id, shipping_country, stripe_checkout_session_id')
     .eq('id', orderId)
     .maybeSingle()
 
@@ -37,17 +36,13 @@ export async function finalizePaidCheckout(
     throw new Error('currency_mismatch')
   }
 
-  const shippingZones = await loadShippingZones(admin)
-  const savedZone = shippingZoneById(shippingZones, order.shipping_zone_id)
-  if (!savedZone) {
-    console.error('shipping_zone_missing', order.shipping_zone_id, orderId)
-    throw new Error('shipping_zone_missing')
-  }
-
   const address = session.shipping_details?.address ?? session.customer_details?.address
   const shippingCountry = address?.country?.trim().toUpperCase() ?? ''
-  if (!shippingCountry || !savedZone.countries.includes(shippingCountry)) {
-    console.error('shipping_country_mismatch', shippingCountry, savedZone.id, orderId)
+  const expectedCountry = typeof order.shipping_country === 'string'
+    ? order.shipping_country.trim().toUpperCase()
+    : ''
+  if (!expectedCountry || shippingCountry !== expectedCountry) {
+    console.error('shipping_country_mismatch', shippingCountry, expectedCountry, orderId)
     throw new Error('shipping_country_mismatch')
   }
 
