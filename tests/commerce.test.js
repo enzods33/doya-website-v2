@@ -228,6 +228,8 @@ test('Stripe, Brevo et la bio couvrent les 9 langues', () => {
   assert.match(labels, /'cd-luna-bohemia': 'Luna Bohemia'/)
   assert.match(labels, /الأطوار للأطفال/)
   assert.match(checkout, /shipping_zone_id: zone\.id/)
+  assert.match(checkout, /shipping_country: country/)
+  assert.match(checkout, /loadShippingZones\(admin, false\)/)
   assert.match(checkout, /terms_accepted_at/)
   assert.match(checkout, /TERMS_VERSION = '2026-10-02'/)
   assert.match(brevo, /'de', 'ja', 'ko', 'zh', 'ar'/)
@@ -265,6 +267,7 @@ test('le back-office bio propose DeepL sans automatiser les traductions', () => 
 
 test('aucune clé secrète n’est embarquée dans le client', () => {
   const client = readFileSync(new URL('../src/commerce/checkout.js', import.meta.url), 'utf8')
+  const getOrder = readFileSync(new URL('../supabase/functions/get-order/index.ts', import.meta.url), 'utf8')
     + readFileSync(new URL('../src/commerce/config.js', import.meta.url), 'utf8')
     + readFileSync(new URL('../src/commerce/supabase.js', import.meta.url), 'utf8')
   assert.doesNotMatch(client, /sk_live|sk_test|service_role|whsec_/)
@@ -316,6 +319,7 @@ test('le checkout verrouille montants, CGV, emails et maintenance Stripe', () =>
   const migration = readFileSync(new URL('../supabase/migrations/20261002073000_commerce_backend_hardening.sql', import.meta.url), 'utf8')
   const cron = readFileSync(new URL('../supabase/migrations/20261002073500_commerce_maintenance_cron.sql', import.meta.url), 'utf8')
   const shippingIndex = readFileSync(new URL('../supabase/migrations/20261002090500_orders_shipping_zone_index.sql', import.meta.url), 'utf8')
+  const shippingCountryMigration = readFileSync(new URL('../supabase/migrations/20261002091000_orders_shipping_country.sql', import.meta.url), 'utf8')
   const checkout = readFileSync(new URL('../supabase/functions/create-checkout-session/index.ts', import.meta.url), 'utf8')
   const payment = readFileSync(new URL('../supabase/functions/_shared/checkoutPayment.ts', import.meta.url), 'utf8')
   const notifications = readFileSync(new URL('../supabase/functions/_shared/orderNotifications.ts', import.meta.url), 'utf8')
@@ -346,9 +350,19 @@ test('le checkout verrouille montants, CGV, emails et maintenance Stripe', () =>
   assert.match(notifications, /merchant: row\.id/)
   assert.match(maintenance, /checkout\.sessions\.retrieve/)
   assert.match(maintenance, /processDueOrderEmails/)
+  assert.match(getOrder, /finalizePaidCheckout/)
+  assert.match(getOrder, /stripePaid && order\.status === 'pending'/)
   assert.match(cron, /doya-commerce-maintenance/)
   assert.match(cron, /x-doya-maintenance-token/)
   assert.match(shippingIndex, /orders_shipping_zone_id_idx/)
+  assert.match(shippingCountryMigration, /shipping_country text/)
+})
+
+test('le devis livraison revalide le panier côté serveur', () => {
+  const quote = readFileSync(new URL('../supabase/functions/request-shipping-quote/index.ts', import.meta.url), 'utf8')
+  assert.match(quote, /totalQuantity > CART_LIMITS\.maxTotalQuantity/)
+  assert.match(quote, /product\.on_sale !== true/)
+  assert.match(quote, /product_unavailable/)
 })
 
 test('la newsletter protège la confidentialité et prépare le double opt-in', () => {
