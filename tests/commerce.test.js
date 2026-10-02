@@ -337,6 +337,8 @@ test('le checkout verrouille montants, CGV, emails et maintenance Stripe', () =>
   assert.match(payment, /shippingCents !== order\.shipping_cents/)
   assert.match(payment, /totalCents === null \|\| totalCents !== order\.total_cents/)
   assert.match(notifications, /claim_due_order_emails/)
+  assert.match(notifications, /customer: row\.order_id/)
+  assert.match(notifications, /merchant: row\.id/)
   assert.match(maintenance, /checkout\.sessions\.retrieve/)
   assert.match(maintenance, /processDueOrderEmails/)
   assert.match(cron, /doya-commerce-maintenance/)
