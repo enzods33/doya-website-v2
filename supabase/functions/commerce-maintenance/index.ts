@@ -69,6 +69,13 @@ Deno.serve(async (req) => {
 
   const emails = await processDueOrderEmails(admin, 20)
 
+  const rateLimitCutoff = new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString()
+  const { error: rateLimitCleanupError } = await admin
+    .from('api_rate_limits')
+    .delete()
+    .lt('window_start', rateLimitCutoff)
+  if (rateLimitCleanupError) console.error('rate_limit_cleanup_failed', rateLimitCleanupError)
+
   // Donnée personnelle temporaire du double opt-in : ne jamais garder
   // l'adresse au-delà de la fenêtre de confirmation si le welcome n'a pas pu partir.
   const nowIso = new Date().toISOString()
