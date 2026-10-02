@@ -395,6 +395,27 @@ Deno.serve(async (req) => {
       return json(200, { ok: true, email: admin.email }, origin)
     }
 
+    const db = serviceClient()
+    const { data: existingMessage, error: existingMessageError } = await db
+      .from('newsletter_messages')
+      .select('id, mode, sent_count')
+      .eq('idempotency_key', idempotencyKey)
+      .maybeSingle()
+    if (existingMessageError) {
+      console.error('newsletter_idempotency_lookup_failed', existingMessageError)
+      return json(502, { error: 'newsletter_state_failed' }, origin)
+    }
+    if (existingMessage) {
+      return json(200, {
+        ok: true,
+        mode: existingMessage.mode,
+        sent: existingMessage.sent_count,
+        lang: sendLang,
+        campaignId: existingMessage.id,
+        duplicate: true,
+      }, origin)
+    }
+
     let emails: string[] = []
     try {
       emails = await fetchListEmails(apiKey, listId, sendLang)
@@ -438,7 +459,6 @@ Deno.serve(async (req) => {
       }
     }
 
-    const db = serviceClient()
     const savedName = action === 'send'
       ? `${name}${langSuffix} · immédiat`
       : `${name}${langSuffix}`
@@ -456,17 +476,29 @@ Deno.serve(async (req) => {
         scheduled_at: action === 'schedule' ? scheduledAt : null,
         sent_at: action === 'schedule' ? scheduledAt : new Date().toISOString(),
         created_by: admin.email,
+        idempotency_key: idempotencyKey,
       })
       .select('id')
       .maybeSingle()
-    if (saveError) console.error('newsletter_save_failed', saveError)
+    let savedId = saved?.id ?? null
+    if (saveError) {
+      console.error('newsletter_save_failed', saveError)
+      if (saveError.code === '23505') {
+        const { data: existingSaved } = await db
+          .from('newsletter_messages')
+          .select('id')
+          .eq('idempotency_key', idempotencyKey)
+          .maybeSingle()
+        savedId = existingSaved?.id ?? null
+      }
+    }
 
     return json(200, {
       ok: true,
       mode: action,
       sent: emails.length,
       lang: sendLang,
-      campaignId: saved?.id ?? null,
+      campaignId: savedId,
     }, origin)
   }
 
