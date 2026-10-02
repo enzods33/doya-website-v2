@@ -96,6 +96,7 @@ export default defineConfig(({ mode }) => {
               'Disallow: /panier',
               'Disallow: /commande',
               'Disallow: /desabonnement',
+              'Disallow: /newsletter-confirmation',
               `Sitemap: ${site}/sitemap.xml`,
               '',
             ].join('\n')
