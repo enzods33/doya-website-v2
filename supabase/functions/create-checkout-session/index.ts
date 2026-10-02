@@ -15,6 +15,7 @@ import {
 const CHECKOUT_WINDOW_MS = 15 * 60 * 1000
 const CHECKOUT_MAX_PER_IP = 8
 const CHECKOUT_MAX_PER_EMAIL = 5
+const TERMS_VERSION = '2026-10-02'
 
 Deno.serve(async (req) => {
   const origin = req.headers.get('origin')
@@ -36,6 +37,7 @@ Deno.serve(async (req) => {
     promoCode?: string
     shippingCountry?: string
     locale?: string
+    termsAccepted?: boolean
   }
   try {
     body = await req.json()
@@ -44,6 +46,9 @@ Deno.serve(async (req) => {
   }
 
   const locale = normalizeCheckoutLocale(body.locale)
+  if (body.termsAccepted !== true) {
+    return json(400, { error: 'terms_required' }, origin)
+  }
 
   const items = Array.isArray(body.items) ? body.items : []
   if (!items.length || items.length > CART_LIMITS.maxLines) {
@@ -119,12 +124,17 @@ Deno.serve(async (req) => {
     return json(code ? 409 : 400, { error: code ?? 'order_failed' }, origin)
   }
 
-  const { error: localeError } = await admin
+  const { error: metadataError } = await admin
     .from('orders')
-    .update({ locale })
+    .update({
+      locale,
+      shipping_zone_id: zone.id,
+      terms_accepted_at: new Date().toISOString(),
+      terms_version: TERMS_VERSION,
+    })
     .eq('id', order.orderId)
-  if (localeError) {
-    console.error('order_locale_update_failed', localeError)
+  if (metadataError) {
+    console.error('order_metadata_update_failed', metadataError)
     await admin.rpc('release_reservation', { p_order_id: order.orderId })
     return json(500, { error: 'order_failed' }, origin)
   }

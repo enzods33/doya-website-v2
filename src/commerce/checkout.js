@@ -20,8 +20,15 @@ async function invoke(path, body) {
   return payload
 }
 
-export function startCheckout({ items, email, promoCode, shippingCountry, locale }) {
-  return invoke('create-checkout-session', { items, email, promoCode, shippingCountry, locale })
+export function startCheckout({ items, email, promoCode, shippingCountry, locale, termsAccepted }) {
+  return invoke('create-checkout-session', {
+    items,
+    email,
+    promoCode,
+    shippingCountry,
+    locale,
+    termsAccepted: termsAccepted === true,
+  })
 }
 
 export function fetchOrder(sessionId) {

@@ -44,3 +44,6 @@ verify_jwt = false
 
 [functions.email-logo]
 verify_jwt = false
+
+[functions.commerce-maintenance]
+verify_jwt = false
