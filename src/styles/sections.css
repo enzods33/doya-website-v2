@@ -4172,6 +4172,22 @@ a.concert-tickets:focus-visible {
       0 1px 0 rgb(255 255 255 / 68%) inset,
       0 16px 42px rgb(44 41 38 / 10%);
   }
+  .product.is-featured {
+    border-color: rgb(194 5 15 / 32%);
+    box-shadow:
+      0 1px 0 rgb(255 255 255 / 78%) inset,
+      0 18px 46px rgb(44 41 38 / 14%);
+  }
+  .product.is-featured::after {
+    transform: scaleX(1);
+  }
+  .product.is-featured .product-image {
+    max-width: 96%;
+    max-height: 96%;
+  }
+  .product.is-featured .product-caption h3 {
+    font-size: clamp(25px, 8vw, 30px);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
