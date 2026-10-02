@@ -423,6 +423,16 @@ test('la newsletter protège la confidentialité et prépare le double opt-in', 
   assert.doesNotMatch(unsubscribe, /BREVO_UNSUBSCRIBE_SECRET'\\) \\|\\| apiKey/)
 })
 
+test('les routes à jeton restent hors index et nettoient le token confirmé', () => {
+  const seo = readFileSync(new URL('../src/utils/seo.js', import.meta.url), 'utf8')
+  const vite = readFileSync(new URL('../vite.config.js', import.meta.url), 'utf8')
+  const confirmation = readFileSync(new URL('../src/pages/NewsletterConfirmationPage.jsx', import.meta.url), 'utf8')
+  assert.match(seo, /path === '\/newsletter-confirmation'/)
+  assert.doesNotMatch(seo, /INDEXABLE_PATHS[\s\S]*newsletter-confirmation/)
+  assert.match(vite, /Disallow: \/newsletter-confirmation/)
+  assert.match(confirmation, /window\.history\.replaceState/)
+})
+
 test('le catalogue résiste aux erreurs réseau transitoires', () => {
   const catalog = readFileSync(new URL('../src/commerce/catalog.js', import.meta.url), 'utf8')
   const provider = readFileSync(new URL('../src/commerce/CatalogProvider.jsx', import.meta.url), 'utf8')
