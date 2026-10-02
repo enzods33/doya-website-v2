@@ -451,28 +451,60 @@ export async function sendBrevoEmail(opts: {
 
 export async function sendPaidOrderEmails(
   order: OrderEmailPayload,
-  idempotency: { customer?: string; merchant?: string } = {},
+  idempotencyKey?: string,
 ) {
+  const apiKey = (Deno.env.get('BREVO_API_KEY') ?? '').trim()
+  const senderEmail = (Deno.env.get('BREVO_SENDER_EMAIL') ?? '').trim()
+  const senderName = (Deno.env.get('BREVO_SENDER_NAME') ?? 'DOYA').trim() || 'DOYA'
+  if (!apiKey || !senderEmail) {
+    console.warn('order_email_skipped_brevo_unconfigured')
+    return false
+  }
+
   const locale = normalizeCheckoutLocale(order.locale)
   const copy = EMAIL_COPY[locale]
   const merchant = (Deno.env.get('ORDER_NOTIFY_EMAIL') ?? 'almenaprod@gmail.com').trim().toLowerCase()
-  const customerSent = await sendBrevoEmail({
-    to: order.email,
-    subject: `DOYA — ${copy.confirmationSubject} ${order.orderNumber}`,
-    previewText: fill(copy.confirmationPreview, { number: order.orderNumber }),
-    htmlContent: customerOrderEmailHtml(order),
-    idempotencyKey: idempotency.customer,
-  })
-  const merchantSent = !merchant || merchant === order.email
-    ? true
-    : await sendBrevoEmail({
-      to: merchant,
+  const customerSubject = `DOYA — ${copy.confirmationSubject} ${order.orderNumber}`
+  const customerHtml = customerOrderEmailHtml(order)
+
+  const messageVersions: Record<string, unknown>[] = [{
+    to: [{ email: order.email.trim().toLowerCase() }],
+    subject: customerSubject,
+    htmlContent: customerHtml,
+  }]
+
+  if (merchant && merchant !== order.email.trim().toLowerCase()) {
+    messageVersions.push({
+      to: [{ email: merchant }],
       subject: `Nouvelle commande ${order.orderNumber}`,
-      previewText: `${order.email} · ${formatEuros(order.totalCents, 'fr')}`,
       htmlContent: merchantOrderEmailHtml(order),
-      idempotencyKey: idempotency.merchant,
     })
-  return customerSent && merchantSent
+  }
+
+  const payload: Record<string, unknown> = {
+    sender: { name: senderName, email: senderEmail },
+    subject: customerSubject,
+    htmlContent: customerHtml,
+    messageVersions,
+  }
+  if (idempotencyKey) payload.headers = { idempotencyKey }
+
+  const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: {
+      'api-key': apiKey,
+      'content-type': 'application/json',
+      accept: 'application/json',
+    },
+    body: JSON.stringify(payload),
+  })
+
+  if (!response.ok) {
+    const responsePayload = await response.json().catch(() => ({}))
+    console.error('brevo_paid_order_batch_failed', response.status, responsePayload)
+    return false
+  }
+  return true
 }
 
 export async function sendShippedOrderEmail(order: OrderEmailPayload & { trackingNumber: string }) {
