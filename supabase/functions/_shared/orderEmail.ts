@@ -404,6 +404,7 @@ export async function sendBrevoEmail(opts: {
   htmlContent: string
   previewText?: string
   replyTo?: string
+  idempotencyKey?: string
 }) {
   const apiKey = (Deno.env.get('BREVO_API_KEY') ?? '').trim()
   const senderEmail = (Deno.env.get('BREVO_SENDER_EMAIL') ?? '').trim()
@@ -428,6 +429,7 @@ export async function sendBrevoEmail(opts: {
     previewText: opts.previewText,
   }
   if (replyTo) payload.replyTo = { email: replyTo }
+  if (opts.idempotencyKey) payload.headers = { idempotencyKey: opts.idempotencyKey }
 
   const response = await fetch('https://api.brevo.com/v3/smtp/email', {
     method: 'POST',
@@ -447,7 +449,10 @@ export async function sendBrevoEmail(opts: {
   return true
 }
 
-export async function sendPaidOrderEmails(order: OrderEmailPayload) {
+export async function sendPaidOrderEmails(
+  order: OrderEmailPayload,
+  idempotency: { customer?: string; merchant?: string } = {},
+) {
   const locale = normalizeCheckoutLocale(order.locale)
   const copy = EMAIL_COPY[locale]
   const merchant = (Deno.env.get('ORDER_NOTIFY_EMAIL') ?? 'almenaprod@gmail.com').trim().toLowerCase()
@@ -456,6 +461,7 @@ export async function sendPaidOrderEmails(order: OrderEmailPayload) {
     subject: `DOYA — ${copy.confirmationSubject} ${order.orderNumber}`,
     previewText: fill(copy.confirmationPreview, { number: order.orderNumber }),
     htmlContent: customerOrderEmailHtml(order),
+    idempotencyKey: idempotency.customer,
   })
   const merchantSent = !merchant || merchant === order.email
     ? true
@@ -464,6 +470,7 @@ export async function sendPaidOrderEmails(order: OrderEmailPayload) {
       subject: `Nouvelle commande ${order.orderNumber}`,
       previewText: `${order.email} · ${formatEuros(order.totalCents, 'fr')}`,
       htmlContent: merchantOrderEmailHtml(order),
+      idempotencyKey: idempotency.merchant,
     })
   return customerSent && merchantSent
 }
