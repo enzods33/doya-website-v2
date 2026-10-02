@@ -197,7 +197,7 @@ export default {
     placeholder: 'ton@email.com',
     submit: 'Recevoir',
     sending: 'Envoi…',
-    success: 'Inscription enregistrée. Bienvenue dans la boucle DOYA !',
+    success: 'Vérifie ta boîte mail pour confirmer ton inscription.',
     already: 'Tu es déjà inscrit.',
     error: 'Inscription impossible pour le moment.',
     unavailable: 'Inscription indisponible pour le moment.',
