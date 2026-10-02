@@ -284,7 +284,7 @@ export default {
   },
   notFound: { kicker: 'DOYA', title: '找不到页面', home: '返回首页' },
   legal: {
-    updated: '最后更新：2026 年 9 月',
+    updated: '最后更新：2026 年 10 月',
     backHome: '返回首页',
     mentions: {
       kicker: '信息',
@@ -352,13 +352,13 @@ export default {
       sections: [
         { heading: '数据控制方', paragraphs: ['控制方：ALMENA PROD', '联系邮箱：almenaprod@gmail.com', '技术联系：reelazura@gmail.com'] },
         { heading: '收集的数据', paragraphs: [
-          '新闻邮件：电子邮箱地址和网站界面语言，通过 Brevo 处理。',
+          '新闻邮件：电子邮箱地址和网站界面语言通过 Brevo 处理。在确认期间，邮箱地址会临时保存在 Supabase 中（最长 30 天），并保存同意的技术记录（受保护的指纹、来源和日期）。',
           '订单：电子邮箱、配送地址、订单内容，通过 Stripe 和 Supabase 处理。',
           '访问统计（汇总）：在不识别访客身份的情况下，统计页面浏览和少量操作（新闻邮件、购物车、音乐播放、联系等）。',
         ] },
         { heading: '用途与法律依据', paragraphs: ['履行销售与配送合同。', '基于同意管理新闻邮件。', '保障网站安全并防止滥用。'] },
         { heading: '数据接收方', paragraphs: ['在各自服务范围内使用 Supabase、Stripe、Brevo、Hetzner 和 Cloudflare。'] },
-        { heading: '保存期限', paragraphs: ['数据仅在实现上述用途所需期间保存，之后按照法律义务进行归档或删除。'] },
+        { heading: '保存期限', paragraphs: ['数据仅在实现上述用途所需期间保存。未确认的新闻邮件邮箱地址最迟在 30 天后删除；为证明同意或退订，可保留相应的技术记录。用于防滥用的匿名化计数器在 48 小时后清除。其他数据按照法律义务进行归档或删除。'] },
         { heading: '你的权利', paragraphs: [
           '根据 GDPR，在法律规定范围内，你享有访问、更正、删除、反对、限制处理和数据可携带等权利。',
           '新闻邮件：可通过邮件中的退订链接，或联系 almenaprod@gmail.com 退订。',
