@@ -60,6 +60,7 @@ function unlockPageScroll(lockRef) {
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(() => typeof window !== 'undefined' && window.scrollY > 18)
+  const [activeSection, setActiveSection] = useState(null)
   const headerRef = useRef(null)
   const dialogRef = useRef(null)
   const triggerRef = useRef(null)
@@ -79,6 +80,45 @@ function Header() {
     return () => {
       window.cancelAnimationFrame(frame)
       window.removeEventListener('scroll', sync)
+    }
+  }, [path])
+
+  useEffect(() => {
+    if (path !== '/') {
+      setActiveSection(null)
+      return undefined
+    }
+
+    const sectionIds = mobileNavigation
+      .map((item) => (item.href.startsWith('#') ? item.href.slice(1) : null))
+      .filter(Boolean)
+
+    let frame = 0
+    const sync = () => {
+      window.cancelAnimationFrame(frame)
+      frame = window.requestAnimationFrame(() => {
+        const headerHeight = headerRef.current?.getBoundingClientRect().height ?? 48
+        const probeY = headerHeight + Math.min(window.innerHeight * 0.28, 220)
+        let current = null
+
+        sectionIds.forEach((id) => {
+          const section = document.getElementById(id)
+          if (!section) return
+          const rect = section.getBoundingClientRect()
+          if (rect.top <= probeY && rect.bottom > headerHeight + 24) current = id
+        })
+
+        setActiveSection(current)
+      })
+    }
+
+    sync()
+    window.addEventListener('scroll', sync, { passive: true })
+    window.addEventListener('resize', sync, { passive: true })
+    return () => {
+      window.cancelAnimationFrame(frame)
+      window.removeEventListener('scroll', sync)
+      window.removeEventListener('resize', sync)
     }
   }, [path])
 
@@ -201,6 +241,8 @@ function Header() {
     })
   }
 
+  const activeNavigationItem = mobileNavigation.find((item) => item.href === `#${activeSection}`) ?? null
+
   return (
     <m.header
       ref={headerRef}
@@ -227,6 +269,12 @@ function Header() {
           <Wordmark className="header-brand-wordmark" />
         </Link>
         <Stars color={menuOpen ? 'black' : 'red'} className="header-stars" />
+        <span
+          className={`header-mobile-section${activeNavigationItem ? ' is-visible' : ''}`}
+          aria-hidden="true"
+        >
+          {activeNavigationItem ? t(activeNavigationItem.labelKey) : ''}
+        </span>
       </div>
       <nav className="desktop-navigation" aria-label={t('a11y.navMain')}>
         {navigation.map((item) => (
@@ -286,22 +334,27 @@ function Header() {
           aria-label={t('a11y.navMobile')}
           initial={false}
           animate={menuOpen ? 'open' : 'closed'}
-          variants={{ open: { transition: { delayChildren: reducedMotion ? 0 : 0.08, staggerChildren: reducedMotion ? 0 : 0.055 } }, closed: {} }}
+          variants={{ open: { transition: { delayChildren: reducedMotion ? 0 : 0.07, staggerChildren: reducedMotion ? 0 : 0.045 } }, closed: {} }}
         >
-          {mobileNavigation.map((item) => (
-            <m.div
-              key={item.href}
-              variants={{ open: { opacity: 1, y: 0 }, closed: { opacity: reducedMotion ? 1 : 0, y: reducedMotion ? 0 : 16 } }}
-              transition={{ duration: reducedMotion ? 0 : 0.5, ease: editorialEase }}
-            >
-              <Link
-                href={item.href.startsWith('#') ? sectionHref(item.href) : item.href}
-                onClick={closeMenu}
+          {mobileNavigation.map((item) => {
+            const isCurrent = item.href.startsWith('#') && item.href.slice(1) === activeSection
+            return (
+              <m.div
+                key={item.href}
+                variants={{ open: { opacity: 1, y: 0 }, closed: { opacity: reducedMotion ? 1 : 0, y: reducedMotion ? 0 : 8 } }}
+                transition={{ duration: reducedMotion ? 0 : 0.46, ease: editorialEase }}
               >
-                {t(item.labelKey)}
-              </Link>
-            </m.div>
-          ))}
+                <Link
+                  href={item.href.startsWith('#') ? sectionHref(item.href) : item.href}
+                  className={isCurrent ? 'is-current' : undefined}
+                  aria-current={isCurrent ? 'location' : undefined}
+                  onClick={closeMenu}
+                >
+                  {t(item.labelKey)}
+                </Link>
+              </m.div>
+            )
+          })}
         </m.nav>
         <div className="mobile-menu-foot">
           <div className="mobile-menu-mid">
