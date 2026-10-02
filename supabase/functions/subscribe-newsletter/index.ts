@@ -1,6 +1,7 @@
 import { json, preflight, publicSiteUrl, rejectOrigin } from '../_shared/http.ts'
 import { allowRatePersistent, clientIp, privateRateKey } from '../_shared/rateLimit.ts'
 import { serviceClient } from '../_shared/clients.ts'
+import { newsletterAddressHash } from '../_shared/newsletterUnsubscribe.ts'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const RATE_WINDOW_MS = 10 * 60 * 1000
@@ -16,17 +17,6 @@ function bytesToHex(bytes: ArrayBuffer) {
 
 async function sha256Hex(value: string) {
   return bytesToHex(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(value)))
-}
-
-async function hmacSha256Hex(value: string, secret: string) {
-  const key = await crypto.subtle.importKey(
-    'raw',
-    new TextEncoder().encode(secret),
-    { name: 'HMAC', hash: 'SHA-256' },
-    false,
-    ['sign'],
-  )
-  return bytesToHex(await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(value)))
 }
 
 function randomToken() {
@@ -110,7 +100,7 @@ Deno.serve(async (req) => {
 
   const token = randomToken()
   const [emailHash, tokenHash] = await Promise.all([
-    hmacSha256Hex(email, consentSecret),
+    newsletterAddressHash(email, consentSecret),
     sha256Hex(token),
   ])
   const now = new Date()
@@ -136,6 +126,7 @@ Deno.serve(async (req) => {
       expires_at: expiresAt.toISOString(),
       confirmed_at: null,
       welcome_sent_at: null,
+      unsubscribed_at: null,
       last_error: null,
       updated_at: now.toISOString(),
     }, { onConflict: 'email_hash' })
