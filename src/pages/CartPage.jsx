@@ -241,6 +241,7 @@ function CartPage() {
         promoCode: normalizePromoCode(promoCode) || undefined,
         shippingCountry,
         locale,
+        termsAccepted: acceptCgv,
       })
       if (typeof url !== 'string' || !url.startsWith('https://')) throw new Error('stripe_unavailable')
       window.location.assign(url)
