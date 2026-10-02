@@ -39,7 +39,7 @@ alter table public.orders
 create table if not exists public.order_email_outbox (
   id uuid primary key default gen_random_uuid(),
   order_id uuid not null references public.orders(id) on delete cascade,
-  kind text not null check (kind in ('customer', 'merchant')),
+  kind text not null check (kind = 'paid_confirmation'),
   recipient text not null,
   status text not null default 'pending' check (status in ('pending', 'sending', 'failed', 'sent')),
   attempts integer not null default 0 check (attempts >= 0),
