@@ -1,7 +1,7 @@
 import { json, preflight, rejectOrigin } from '../_shared/http.ts'
 import { serviceClient } from '../_shared/clients.ts'
 import { allowRatePersistent, clientIp, privateRateKey } from '../_shared/rateLimit.ts'
-import { verifyNewsletterAddress } from '../_shared/newsletterUnsubscribe.ts'
+import { newsletterAddressHash, verifyNewsletterAddress } from '../_shared/newsletterUnsubscribe.ts'
 
 Deno.serve(async (req) => {
   const origin = req.headers.get('origin')
@@ -36,5 +36,17 @@ Deno.serve(async (req) => {
   if (Array.isArray(result.contacts?.failed) && result.contacts.failed.length) {
     return json(502, { error: 'newsletter_failed' }, origin)
   }
+
+  const emailHash = await newsletterAddressHash(email, secret)
+  const { error: proofError } = await serviceClient()
+    .from('newsletter_optins')
+    .update({
+      pending_email: null,
+      unsubscribed_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    })
+    .eq('email_hash', emailHash)
+  if (proofError) console.error('newsletter_unsubscribe_proof_failed', proofError)
+
   return json(200, { ok: true }, origin)
 })
