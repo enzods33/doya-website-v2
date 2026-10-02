@@ -3,6 +3,7 @@ import { requireAdmin } from '../_shared/admin.ts'
 import { serviceClient } from '../_shared/clients.ts'
 import { emailLogoPublicUrl, rewriteEmailLogoSrc } from '../_shared/emailLogo.ts'
 import { newsletterMessageVersions } from '../_shared/newsletterDelivery.ts'
+import { newsletterSigningSecret } from '../_shared/newsletterSigning.ts'
 
 type CampaignBody = {
   action?: string
@@ -411,7 +412,8 @@ Deno.serve(async (req) => {
     // messageVersions à 1000 ; au-delà, ne pas envoyer une liste tronquée.
     if (emails.length > 1000) return json(400, { error: 'list_too_large' }, origin)
 
-    const secret = Deno.env.get('BREVO_UNSUBSCRIBE_SECRET') || apiKey
+    const db = serviceClient()
+    const secret = await newsletterSigningSecret(db)
     const messageVersions = await newsletterMessageVersions(emails, htmlContent, publicSiteUrl(), secret, sendLang)
     const sendPayload: Record<string, unknown> = {
       sender: { name: senderName, email: senderEmail },
@@ -435,7 +437,6 @@ Deno.serve(async (req) => {
       }, origin)
     }
 
-    const db = serviceClient()
     const savedName = action === 'send'
       ? `${name}${langSuffix} · immédiat`
       : `${name}${langSuffix}`
