@@ -29,9 +29,9 @@ export function stickyOffset() {
  * Aligne `--header-height` sur la hauteur mesurée du header
  * (scroll-margin, menu, sections full-viewport).
  */
-export function syncHeaderHeightVar(headerEl) {
+export function syncHeaderHeightVar(headerEl, measuredHeight) {
   if (!headerEl || typeof document === 'undefined') return
-  const height = Math.round(headerEl.getBoundingClientRect().height)
+  const height = Math.round(measuredHeight ?? headerEl.getBoundingClientRect().height)
   if (height > 0 && document.documentElement.style.getPropertyValue('--header-height') !== `${height}px`) {
     document.documentElement.style.setProperty('--header-height', `${height}px`)
   }

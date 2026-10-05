@@ -28,6 +28,13 @@ function useUltraWideHero() {
 
 function Hero() {
   const reducedMotion = useReducedMotion()
+  const [compactMotion, setCompactMotion] = useState(() => window.matchMedia('(max-width: 767px)').matches)
+  useEffect(() => {
+    const query = window.matchMedia('(max-width: 767px)')
+    const sync = () => setCompactMotion(query.matches)
+    query.addEventListener('change', sync)
+    return () => query.removeEventListener('change', sync)
+  }, [])
   const showBackdrop = useUltraWideHero()
   const { t } = useI18n()
   const letters = [{ src: letterD, name: 'd' }, { src: letterO, name: 'o' }, { src: letterY, name: 'y' }, { src: letterA, name: 'a' }]
@@ -67,8 +74,8 @@ function Hero() {
             src={letter.src}
             alt=""
             className={`hero-letter letter-${letter.name}`}
-            initial={reducedMotion ? false : { opacity: 0, y: 28, filter: 'blur(6px)' }}
-            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            initial={reducedMotion ? false : { opacity: 0, y: 28, ...(!compactMotion && { filter: 'blur(6px)' }) }}
+            animate={{ opacity: 1, y: 0, ...(!compactMotion && { filter: 'blur(0px)' }) }}
             transition={{
               duration: reducedMotion ? 0 : 1.15,
               delay: reducedMotion ? 0 : 0.18 + index * 0.13,
@@ -80,8 +87,8 @@ function Hero() {
       <div className="hero-copy">
         <m.div
           className="hero-album-stage"
-          initial={reducedMotion ? false : { opacity: 0, y: 18, scale: 0.94, clipPath: 'circle(4% at 50% 50%)' }}
-          animate={{ opacity: 1, y: 0, scale: 1, clipPath: 'circle(72% at 50% 50%)' }}
+          initial={reducedMotion ? false : { opacity: 0, y: 18, scale: 0.94, ...(!compactMotion && { clipPath: 'circle(4% at 50% 50%)' }) }}
+          animate={{ opacity: 1, y: 0, scale: 1, clipPath: compactMotion ? 'none' : 'circle(72% at 50% 50%)' }}
           transition={{ duration: reducedMotion ? 0 : 1.05, delay: reducedMotion ? 0 : 0.28, ease: editorialEase }}
         >
           <div className="hero-cycle-frame" aria-hidden="true">

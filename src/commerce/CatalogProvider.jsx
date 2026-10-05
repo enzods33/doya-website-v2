@@ -2,7 +2,6 @@ import { createContext, useContext, useEffect, useMemo, useRef, useState } from 
 import { products } from '../data/products.js'
 import { loadCatalog } from './catalog.js'
 import { commerceConfigured, demoStoreConfigured, readOnlyPreview } from './config.js'
-import { supabase } from './supabase.js'
 
 const empty = products.map((product) => ({ ...product, sale: null, variants: [] }))
 const RECOVERY_DELAYS = [2000, 5000, 15000, 30000]
@@ -92,7 +91,7 @@ export function CatalogProvider({ children }) {
       return () => { activeRef.current = false }
     }
 
-    if (!commerceConfigured || !supabase) {
+    if (!commerceConfigured) {
       return () => { activeRef.current = false }
     }
 
@@ -108,14 +107,24 @@ export function CatalogProvider({ children }) {
       }
     }
 
-    const channel = supabase
-      .channel('catalog-live')
-      .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'catalog_revision' },
-        () => { scheduleReload() },
-      )
-      .subscribe()
+    let cancelled = false
+    let client = null
+    let channel = null
+    // Keep the SDK out of the initial rendering dependency graph. Catalogue
+    // reads still start immediately, and realtime connects once it is ready.
+    import('./supabase.js').then(({ supabase }) => {
+      if (cancelled || !supabase) return
+      client = supabase
+      channel = client.channel('catalog-live')
+        .on(
+          'postgres_changes',
+          { event: '*', schema: 'public', table: 'catalog_revision' },
+          () => { scheduleReload() },
+        )
+        .subscribe()
+    }).catch(() => {
+      if (!cancelled) scheduleRecovery()
+    })
 
     function onVisible() {
       if (document.visibilityState === 'visible') scheduleReload()
@@ -130,12 +139,13 @@ export function CatalogProvider({ children }) {
     window.addEventListener('online', onOnline)
 
     return () => {
+      cancelled = true
       activeRef.current = false
       if (debounceRef.current) window.clearTimeout(debounceRef.current)
       clearRecovery()
       document.removeEventListener('visibilitychange', onVisible)
       window.removeEventListener('online', onOnline)
-      supabase.removeChannel(channel)
+      if (channel) client.removeChannel(channel)
     }
   }, [])
 

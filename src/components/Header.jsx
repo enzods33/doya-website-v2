@@ -138,24 +138,25 @@ function Header() {
       syncHeaderHeightVar(header)
       return undefined
     }
-    const sync = () => {
-      // Read before writing CSS variables, and skip unchanged values.
-      const clientWidth = `${document.documentElement.clientWidth}px`
-      syncHeaderHeightVar(header)
+    const observer = new ResizeObserver((entries) => {
+      // ResizeObserver already has layout dimensions: page content growing
+      // should not trigger another synchronous header/viewport measurement.
+      const headerEntry = entries.find((entry) => entry.target === header)
+      const rootEntry = entries.find((entry) => entry.target === document.documentElement)
+      if (headerEntry) {
+        const box = headerEntry.borderBoxSize?.[0]
+        syncHeaderHeightVar(header, box?.blockSize)
+      }
+      if (!rootEntry) return
+      const clientWidth = `${Math.round(rootEntry.contentRect.width)}px`
       if (header.style.getPropertyValue('--header-client-width') !== clientWidth) {
         header.style.setProperty('--header-client-width', clientWidth)
       }
-    }
-    const observer = new ResizeObserver(sync)
+    })
     observer.observe(header)
     observer.observe(document.documentElement)
-    window.addEventListener('resize', sync, { passive: true })
-    window.visualViewport?.addEventListener('resize', sync, { passive: true })
-    sync()
     return () => {
       observer.disconnect()
-      window.removeEventListener('resize', sync)
-      window.visualViewport?.removeEventListener('resize', sync)
     }
   }, [])
 

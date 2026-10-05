@@ -1,5 +1,9 @@
 import { assetUrl } from '../utils/assets.js'
 import { heroImage } from '../config/heroImage.js'
+import cover400 from '../assets/music/cover-400.webp'
+import cover640 from '../assets/music/cover-640.webp'
+
+const cover1004 = assetUrl('site/cover.jpg')
 
 function bioWeb(file, width, height) {
   return {
@@ -18,7 +22,9 @@ export const media = {
     sourcePage: 9,
   },
   cover: {
-    src: assetUrl('site/cover.jpg'),
+    src: cover1004,
+    srcSet: `${cover400} 400w, ${cover640} 640w, ${cover1004} 1004w`,
+    sizes: '(max-width: 767px) calc(100vw - 40px), (max-width: 1100px) 45vw, 610px',
     width: 1004,
     height: 1004,
     alt: 'Pochette officielle de Luna Bohemia : DOYA assises dans le désert, entourées des lettres D O Y A.',

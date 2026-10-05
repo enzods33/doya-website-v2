@@ -34,6 +34,9 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         output: {
           manualChunks(id) {
+            // Shared lazy-import helper must not live in the SDK chunk, which
+            // would make every lazy import depend on downloading that SDK.
+            if (id.includes('vite/preload-helper')) return 'preload'
             if (id.includes('node_modules/@supabase')) return 'supabase'
             if (id.includes('node_modules/motion') || id.includes('node_modules/framer-motion')) return 'motion'
           },
