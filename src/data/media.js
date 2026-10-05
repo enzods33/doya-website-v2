@@ -1,8 +1,7 @@
 import { assetUrl } from '../utils/assets.js'
 import { heroImage } from '../config/heroImage.js'
-import cover400 from '../assets/music/cover-400.webp'
-import cover640 from '../assets/music/cover-640.webp'
-
+const cover400 = new URL('../assets/music/cover-400.webp', import.meta.url).href
+const cover640 = new URL('../assets/music/cover-640.webp', import.meta.url).href
 const cover1004 = assetUrl('site/cover.jpg')
 
 function bioWeb(file, width, height) {
