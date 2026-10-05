@@ -1,5 +1,5 @@
 -- Clip mis en avant : lecture publique uniquement, écriture via Edge Function admin.
--- À appliquer avec la migration et le déploiement de `admin-clips` requis ; non appliqué ici.
+-- Version synchronisée avec la migration appliquée au projet DOYA le 5 octobre 2026.
 
 create table if not exists public.site_featured_clip (
   id boolean primary key default true check (id),

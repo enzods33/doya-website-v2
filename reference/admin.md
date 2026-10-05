@@ -64,6 +64,7 @@ L’expéditeur Brevo doit être **vérifié** dans Brevo (Senders).
 ## Edge Functions
 
 - `admin-auth-check`
+- `admin-clips`
 - `admin-concerts`
 - `admin-bio-photos`
 - `admin-brevo-campaign`
@@ -72,12 +73,12 @@ L’expéditeur Brevo doit être **vérifié** dans Brevo (Senders).
 
 Toutes les fonctions admin vérifient JWT + allowlist avant toute écriture.
 
-## Vidéo dans Musique — préparation locale
+## Vidéo dans Musique
 
 Dans **Site → Vidéo**, renseigner le titre affiché (par défaut « Solo tú ») et le lien YouTube. L’aperçu suit le lien, tandis que le titre reste libre. Vérifier l’aperçu puis cliquer sur **Enregistrer la vidéo**. Le bloc public conserve ce titre au-dessus du cadre, aligné à gauche ; sa miniature et son bouton ouvrent la vidéo sur YouTube dans un nouvel onglet.
 
 La fonction `admin-clips` propose `get`, `preview` et `save`. Elle valide le lien YouTube et vérifie la disponibilité via le service oEmbed public de YouTube, avec un délai maximal de 8 secondes. Le titre YouTube ne remplace pas le titre de présentation choisi. En cas d’échec, aucun changement de vidéo n’est enregistré. Les visiteurs lisent le titre enregistré et la miniature YouTube haute résolution (`maxresdefault.jpg`), avec repli sur `hqdefault.jpg` si la version HD est indisponible ; ils ne déclenchent aucune requête de métadonnées.
 
-**Activation ultérieure nécessaire :** appliquer la migration locale `20261004170952_site_featured_clip.sql`, déployer `admin-clips`, puis publier le frontend et les règles CSP préparées. La table est en lecture publique avec RLS et réservée à la fonction admin pour les écritures. Aucun de ces changements n’a été appliqué à la production lors de cette préparation.
+**Backend activé le 5 octobre 2026 sur DOYA :** migration `20261005045208_site_featured_clip.sql` appliquée et fonction `admin-clips` version 1 déployée. La table est en lecture publique avec RLS et réservée à la fonction admin pour les écritures. Lecture publique vérifiée avec « Solo tú » et refus HTTP 401 vérifié sans session administrateur. Le frontend est publié par le workflow GitHub de `master`.
 
 En développement uniquement, `VITE_READ_ONLY_PREVIEW=true` propose **Entrer dans le back-office local**, sans appeler Google ni les fonctions admin de production. Le titre, le lien et l’affichage de la vidéo peuvent être testés et enregistrés dans le `localStorage` de ce navigateur ; le site local utilise cet aperçu. Bio et concerts sont consultables via les lectures publiques déjà autorisées. Leurs modifications, les commandes, la boutique et les envois restent bloqués. Le build de production ne permet pas cet accès local et conserve l’authentification Google et l’allowlist normales.
