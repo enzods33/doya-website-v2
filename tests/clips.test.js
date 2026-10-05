@@ -98,7 +98,7 @@ test('une réponse YouTube incomplète ou une panne ne publie aucun titre de sec
 test('CSP et préparation Supabase limitent le lecteur et les écritures', () => {
   const headers = readFileSync(new URL('../public/_headers', import.meta.url), 'utf8')
   const netlify = readFileSync(new URL('../netlify.toml', import.meta.url), 'utf8')
-  const migration = readFileSync(new URL('../supabase/migrations/20261004170952_site_featured_clip.sql', import.meta.url), 'utf8')
+  const migration = readFileSync(new URL('../supabase/migrations/20261005045208_site_featured_clip.sql', import.meta.url), 'utf8')
   const admin = readFileSync(new URL('../supabase/functions/admin-clips/index.ts', import.meta.url), 'utf8')
   const youtube = readFileSync(new URL('../supabase/functions/_shared/youtube.js', import.meta.url), 'utf8')
   const section = readFileSync(new URL('../src/sections/clips/Clips.jsx', import.meta.url), 'utf8')
