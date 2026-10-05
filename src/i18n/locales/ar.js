@@ -139,6 +139,8 @@ export default {
     zoomClose: 'إغلاق',
   },
   about: {
+    readMore: 'اقرأ المزيد',
+    readLess: 'عرض أقل',
     eyebrow: 'السيرة',
     biographyLead: 'شقيقتان. صوتان. نبض واحد.',
     biographyBody:

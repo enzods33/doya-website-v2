@@ -139,6 +139,8 @@ export default {
     zoomClose: 'Fechar',
   },
   about: {
+    readMore: 'Ler mais',
+    readLess: 'Ler menos',
     eyebrow: 'Bio',
     biographyLead:
       'Duas irmãs. Duas vozes. Uma mesma pulsação.',

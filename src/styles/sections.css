@@ -1823,6 +1823,7 @@ a.concert-tickets:focus-visible {
 .about-biography-body:last-child {
   margin-bottom: 0;
 }
+.about-biography-toggle { display: none; }
 .about-biography-accent {
   color: var(--color-doya-red);
   text-shadow: 0 8px 24px rgb(194 5 15 / 10%);
@@ -2561,6 +2562,24 @@ a.concert-tickets:focus-visible {
     line-height: 1.35;
   }
   .about-biography-body { font-size: .98rem; line-height: 1.62; }
+  .about-biography-body-flow:not(.is-expanded) > .about-biography-body:nth-child(n + 2) { display: none; }
+  .about-biography-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: .5rem;
+    padding: .4rem 0;
+    min-height: 44px;
+    color: var(--ink);
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid rgb(44 41 38 / 32%);
+    font-family: var(--font-editorial);
+    font-size: 1.12rem;
+    letter-spacing: .02em;
+    cursor: pointer;
+  }
+  .about-biography-toggle:focus-visible { outline: 2px solid currentColor; outline-offset: 5px; }
   .about-title {
     padding-bottom: 15px;
     font-size: clamp(36px, 11vw, 48px);

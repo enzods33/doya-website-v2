@@ -139,6 +139,8 @@ export default {
     zoomClose: '閉じる',
   },
   about: {
+    readMore: '続きを読む',
+    readLess: '閉じる',
     eyebrow: 'プロフィール',
     biographyLead: '姉妹。二つの声。一つの鼓動。',
     biographyBody:

@@ -139,6 +139,8 @@ export default {
     zoomClose: '关闭',
   },
   about: {
+    readMore: '阅读更多',
+    readLess: '收起',
     eyebrow: '简介',
     biographyLead: '两姐妹。两种声音。同一个脉搏。',
     biographyBody:

@@ -24,6 +24,7 @@ function About() {
   const { t, locale } = useI18n()
   const [images, setImages] = useState([])
   const [bioCopy, setBioCopy] = useState(null)
+  const [bioExpanded, setBioExpanded] = useState(false)
   const total = images.length
   const [index, setIndex] = useState(0)
   const [lightbox, setLightbox] = useState(null)
@@ -44,6 +45,7 @@ function About() {
   useEffect(() => {
     let cancelled = false
     setBioCopy(null)
+    setBioExpanded(false)
     loadBioCopy(locale).then((next) => {
       if (!cancelled) setBioCopy(next)
     })
@@ -52,6 +54,7 @@ function About() {
 
   const biographyLead = bioCopy?.lead || t('about.biographyLead')
   const biographyBody = bioCopy?.body || t('about.biographyBody')
+  const biographyParagraphs = biographyBody.split(/\n\n+/).filter((paragraph) => paragraph.trim())
   const activeImage = total > 0 ? images[index] ?? images[0] : null
   const activeImageIsPortrait = activeImage ? activeImage.height >= activeImage.width : true
 
@@ -156,11 +159,23 @@ function About() {
           <Lockup decorative className="about-wordmark about-wordmark-lockup" />
           <div className="about-biography">
             <p className="about-biography-lead">{biographyText(biographyLead)}</p>
-            <div className="about-biography-body-flow">
-              {biographyBody.split(/\n\n+/).map((paragraph) => (
+            <div id="about-biography-body" className={`about-biography-body-flow${bioExpanded ? ' is-expanded' : ''}`}>
+              {biographyParagraphs.map((paragraph) => (
                 <p key={paragraph.slice(0, 24)} className="about-biography-body">{biographyText(paragraph)}</p>
               ))}
             </div>
+            {biographyParagraphs.length > 1 ? (
+              <button
+                type="button"
+                className="about-biography-toggle"
+                aria-expanded={bioExpanded}
+                aria-controls="about-biography-body"
+                onClick={() => setBioExpanded((current) => !current)}
+              >
+                {t(bioExpanded ? 'about.readLess' : 'about.readMore')}
+                <span aria-hidden="true">{bioExpanded ? '↑' : '↓'}</span>
+              </button>
+            ) : null}
           </div>
         </Reveal>
       </div>

@@ -139,6 +139,8 @@ export default {
     zoomClose: '닫기',
   },
   about: {
+    readMore: '더 읽기',
+    readLess: '접기',
     eyebrow: '소개',
     biographyLead: '두 자매. 두 목소리. 하나의 박동.',
     biographyBody:
