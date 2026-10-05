@@ -73,3 +73,29 @@ Le sitemap répond en HTTP 200 avec le type XML et ses quatre URL. Il a été
 renvoyé dans Search Console : confirmation « Sitemap envoyé ». Le rapport
 affiche encore « Impossible de récupérer le sitemap » à la fin du contrôle,
 malgré le test direct d'accès Google réussi. Son traitement reste à confirmer.
+
+## Optimisations légères suivantes, 5 octobre 2026
+
+Le commit `926b9cd` charge les styles admin uniquement avec la route admin,
+et le code du zoom photo uniquement à son ouverture. Le lecteur flottant
+observe les sections avec IntersectionObserver et mesure la section Musique
+seulement lorsqu'elle intersecte le viewport. Le header évite les écritures
+CSS inchangées. Aucun changement de la photo d'accueil, du backend ou des données.
+
+Contrôles locaux : chargement différé CSS/zoom, ouverture et fermeture du zoom,
+visibilité du lecteur dans Musique/Bio/Boutique/footer et porte admin réussis.
+Déploiement GitHub Actions 37335123559 réussi ; huit tests Playwright après
+déploiement réussis, avec écritures bloquées et services mutatifs simulés.
+
+Lighthouse desktop : performance 89, accessibilité 100, bonnes pratiques 100,
+SEO 100 ; LCP 2,09 s, poids 1 945 127 octets. Le plus gros recalcul forcé du
+rapport passe de 99,44 à 55,77 ms. Le rapport JSON est valide sans runtimeError
+ni runWarnings ; l'erreur de nettoyage du profil temporaire Windows persiste.
+Ces petites variations de score ne garantissent pas un résultat constant.
+
+Sitemap contrôlé à nouveau : HTTP 200, XML, robots.txt le référence ; www
+redirige en 301 vers la version sans www. Test Search Console du 5 octobre
+à 17:39:51 : exploration autorisée, récupération réussie. Le rapport sitemap
+affiche encore une erreur générique sans cause détaillée. Google documente
+des nouvelles tentatives sur quelques jours après un échec ; cela ne prouve
+pas que le délai est la cause de cette erreur.
