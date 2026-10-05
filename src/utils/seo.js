@@ -1,3 +1,4 @@
+import { DOYA_CONTACT_EMAIL } from '../config/contact.js'
 import { socials } from '../data/socials.js'
 import { album } from '../data/album.js'
 import { siteContent } from '../data/siteContent.js'
@@ -186,7 +187,7 @@ export function buildJsonLd(origin = siteOrigin()) {
         publisher: {
           '@type': 'Organization',
           name: 'ALMENA PROD',
-          email: 'almenaprod@gmail.com',
+          email: DOYA_CONTACT_EMAIL,
           url: `${origin}/`,
         },
       },

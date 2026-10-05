@@ -1,3 +1,5 @@
+import { DOYA_CONTACT_EMAIL } from '../../config/contact.js'
+
 /** English */
 export default {
   meta: {
@@ -326,7 +328,7 @@ export default {
             'Legal name: ALMENA PROD',
             'Registered office: Louey, France',
             'SIRET: 101 884 062 00015',
-            'Contact: almenaprod@gmail.com',
+            `Contact: ${DOYA_CONTACT_EMAIL}`,
             'Technical contact: reelazura@gmail.com',
           ],
         },
@@ -366,7 +368,7 @@ export default {
             'ALMENA PROD - DOYA shop',
             'Registered office: Louey, France',
             'SIRET: 101 884 062 00015',
-            'Order contact: almenaprod@gmail.com',
+            `Order contact: ${DOYA_CONTACT_EMAIL}`,
           ],
         },
         {
@@ -399,14 +401,14 @@ export default {
           heading: 'Withdrawal',
           paragraphs: [
             'You have 14 days from receipt to withdraw without giving a reason (French Consumer Code).',
-            'Email almenaprod@gmail.com with the order number, then return items complete and undamaged. Return shipping is paid by the customer unless we made an error.',
+            `Email ${DOYA_CONTACT_EMAIL} with the order number, then return items complete and undamaged. Return shipping is paid by the customer unless we made an error.`,
           ],
         },
         {
           heading: 'Warranties and claims',
           paragraphs: [
             'Legal guarantee of conformity and hidden defects apply.',
-            'Damaged on delivery: contact almenaprod@gmail.com with photos and order number.',
+            `Damaged on delivery: contact ${DOYA_CONTACT_EMAIL} with photos and order number.`,
           ],
         },
         {
@@ -418,8 +420,8 @@ export default {
         {
           heading: 'Governing law',
           paragraphs: [
-            'French law. In case of dispute, first contact almenaprod@gmail.com for an amicable solution.',
-            'Failing agreement, you may use free consumer mediation (French Consumer Code). Details of the mediator designated by ALMENA PROD are available on request at almenaprod@gmail.com.',
+            `French law. In case of dispute, first contact ${DOYA_CONTACT_EMAIL} for an amicable solution.`,
+            `Failing agreement, you may use free consumer mediation (French Consumer Code). Details of the mediator designated by ALMENA PROD are available on request at ${DOYA_CONTACT_EMAIL}.`,
           ],
         },
       ],
@@ -433,7 +435,7 @@ export default {
           heading: 'Data controller',
           paragraphs: [
             'Controller: ALMENA PROD',
-            'Contact: almenaprod@gmail.com',
+            `Contact: ${DOYA_CONTACT_EMAIL}`,
             'Technical contact: reelazura@gmail.com',
           ],
         },
@@ -469,7 +471,7 @@ export default {
           heading: 'Your rights',
           paragraphs: [
             'Under GDPR: rights of access, rectification, erasure, objection, restriction and portability, as provided by law.',
-            'Newsletter: unsubscribe via the link in emails, or email almenaprod@gmail.com.',
+            `Newsletter: unsubscribe via the link in emails, or email ${DOYA_CONTACT_EMAIL}.`,
             'Complaints may be lodged with the CNIL (www.cnil.fr) or your local authority.',
           ],
         },

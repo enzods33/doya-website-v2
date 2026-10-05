@@ -86,7 +86,7 @@ Les prix affichés dans le panier sont indicatifs ; le montant Stripe est recalc
 Chaque commande reçoit un **n° humain** `DOYA-XXXXX` (colonne `orders.order_number`) dès la création pending. Il apparaît :
 - page `/commande` après paiement
 - métadonnées Stripe (`orderNumber` / `client_reference_id`)
-- e-mail de confirmation client + notification atelier (`ORDER_NOTIFY_EMAIL`, défaut `almenaprod@gmail.com`) via Brevo  
+- e-mail de confirmation client + notification atelier via Brevo : `ORDER_NOTIFY_EMAIL` configuré sur `doyamusicofficial@gmail.com` le 05/10/2026 (ancien défaut de secours : `almenaprod@gmail.com`). Ce réglage reçoit aussi les demandes de devis livraison ; le suivi technique des devis reste inchangé. Aucun envoi de test réel.
   (n°, e-mail, nom, **téléphone**, adresse, lignes, totaux)
 - liste « commandes récentes » dans l’admin Ventes (historique complet + statut d’expédition + n° de suivi ; e-mail client à l’expédition)
 

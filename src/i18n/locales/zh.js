@@ -1,3 +1,5 @@
+import { DOYA_CONTACT_EMAIL } from '../../config/contact.js'
+
 /** 简体中文 - 公共界面完整翻译；少量后台专用键继承英文。 */
 export default {
   meta: {
@@ -300,7 +302,7 @@ export default {
           '公司名称：ALMENA PROD',
           '注册地址：Louey, France',
           'SIRET：101 884 062 00015',
-          '联系邮箱：almenaprod@gmail.com',
+          `联系邮箱：${DOYA_CONTACT_EMAIL}`,
           '技术联系：reelazura@gmail.com',
         ] },
         { heading: '发布负责人', paragraphs: ['发布负责人为 ALMENA PROD 的法定代表人。'] },
@@ -322,7 +324,7 @@ export default {
       title: '销售条款',
       intro: '本条款适用于 DOYA 在线商店中的购买行为。',
       sections: [
-        { heading: '销售方', paragraphs: ['ALMENA PROD - DOYA 商店', '注册地址：Louey, France', 'SIRET：101 884 062 00015', '订单联系：almenaprod@gmail.com'] },
+        { heading: '销售方', paragraphs: ['ALMENA PROD - DOYA 商店', '注册地址：Louey, France', 'SIRET：101 884 062 00015', `订单联系：${DOYA_CONTACT_EMAIL}`] },
         { heading: '商品', paragraphs: [
           '商店在库存范围内销售与 DOYA 相关的商品及实体载体（T 恤、CD 等）。',
           '商品图片仅供参考。若付款后商品无法供货，将为顾客退款。',
@@ -335,16 +337,16 @@ export default {
         { heading: '配送', paragraphs: ['运费会根据目的地在付款前显示。配送时效仅供参考，并取决于承运商。'] },
         { heading: '撤回与退货', paragraphs: [
           '根据法国消费者法，收货后 14 天内可无须说明理由行使撤回权。',
-          '请携订单号联系 almenaprod@gmail.com，并将商品完整、无损地退回。除非错误由我们造成，否则退货运费由顾客承担。',
+          `请携订单号联系 ${DOYA_CONTACT_EMAIL}，并将商品完整、无损地退回。除非错误由我们造成，否则退货运费由顾客承担。`,
         ] },
         { heading: '法定保证与投诉', paragraphs: [
           '适用关于商品符合性及隐藏瑕疵的法定保证。',
-          '若商品到货时损坏，请附照片和订单号联系 almenaprod@gmail.com。',
+          `若商品到货时损坏，请附照片和订单号联系 ${DOYA_CONTACT_EMAIL}。`,
         ] },
         { heading: '个人数据', paragraphs: ['订单数据（以及适用时的新闻邮件数据）按照本站隐私政策处理。'] },
         { heading: '适用法律', paragraphs: [
-          '适用法国法律。如发生争议，请先联系 almenaprod@gmail.com，尝试友好解决。',
-          '如无法达成一致，可依据法国消费者法免费使用消费者调解服务。ALMENA PROD 指定的调解机构信息可通过 almenaprod@gmail.com 索取。',
+          `适用法国法律。如发生争议，请先联系 ${DOYA_CONTACT_EMAIL}，尝试友好解决。`,
+          `如无法达成一致，可依据法国消费者法免费使用消费者调解服务。ALMENA PROD 指定的调解机构信息可通过 ${DOYA_CONTACT_EMAIL} 索取。`,
         ] },
       ],
     },
@@ -353,7 +355,7 @@ export default {
       title: '隐私政策',
       intro: '本政策说明 ALMENA PROD 如何在 DOYA 网站及商店中处理个人数据。',
       sections: [
-        { heading: '数据控制方', paragraphs: ['控制方：ALMENA PROD', '联系邮箱：almenaprod@gmail.com', '技术联系：reelazura@gmail.com'] },
+        { heading: '数据控制方', paragraphs: ['控制方：ALMENA PROD', `联系邮箱：${DOYA_CONTACT_EMAIL}`, '技术联系：reelazura@gmail.com'] },
         { heading: '收集的数据', paragraphs: [
           '新闻邮件：电子邮箱地址和网站界面语言通过 Brevo 处理。在确认期间，邮箱地址会临时保存在 Supabase 中（最长 30 天），并保存同意的技术记录（受保护的指纹、来源和日期）。',
           '订单：电子邮箱、配送地址、订单内容，通过 Stripe 和 Supabase 处理。',
@@ -364,7 +366,7 @@ export default {
         { heading: '保存期限', paragraphs: ['数据仅在实现上述用途所需期间保存。未确认的新闻邮件邮箱地址最迟在 30 天后删除；为证明同意或退订，可保留相应的技术记录。用于防滥用的匿名化计数器在 48 小时后清除。其他数据按照法律义务进行归档或删除。'] },
         { heading: '你的权利', paragraphs: [
           '根据 GDPR，在法律规定范围内，你享有访问、更正、删除、反对、限制处理和数据可携带等权利。',
-          '新闻邮件：可通过邮件中的退订链接，或联系 almenaprod@gmail.com 退订。',
+          `新闻邮件：可通过邮件中的退订链接，或联系 ${DOYA_CONTACT_EMAIL} 退订。`,
           '可向法国 CNIL（www.cnil.fr）或你所在地的主管监管机构投诉。',
         ] },
         { heading: 'Cookie 与追踪技术', paragraphs: [

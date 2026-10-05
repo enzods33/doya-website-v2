@@ -1,10 +1,9 @@
+import { DOYA_CONTACT_EMAIL } from '../config/contact.js'
 import { trackEvent } from '../commerce/pageAnalytics.js'
 import { useI18n } from '../i18n/I18nProvider.jsx'
 
-export const ALMENA_EMAIL = 'almenaprod@gmail.com'
-
 function publisherMailto(t) {
-  return `mailto:${ALMENA_EMAIL}?subject=${encodeURIComponent(t('publisher.subject'))}&body=${encodeURIComponent(t('publisher.body'))}`
+  return `mailto:${DOYA_CONTACT_EMAIL}?subject=${encodeURIComponent(t('publisher.subject'))}&body=${encodeURIComponent(t('publisher.body'))}`
 }
 
 /** @param {{ className?: string, children?: import('react').ReactNode, source?: string }} props */

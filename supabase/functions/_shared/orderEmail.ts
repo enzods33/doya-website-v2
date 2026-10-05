@@ -1,3 +1,4 @@
+import { DOYA_CONTACT_EMAIL, DOYA_ORDER_NOTIFY_EMAIL } from './emailIdentity.ts'
 import { emailLogoPublicUrl } from './emailLogo.ts'
 import {
   localizedProductName,
@@ -358,7 +359,7 @@ export function customerOrderEmailHtml(order: OrderEmailPayload) {
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" dir="${locale === 'ar' ? 'rtl' : 'ltr'}">${linesHtml(order.lines, locale)}</table>
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" dir="${locale === 'ar' ? 'rtl' : 'ltr'}" style="margin-top:12px;">${totalsHtml(order, locale)}</table>
 ${shipBlock}
-<p style="margin:24px 0 0;font-size:14px;line-height:1.5;color:#7a736c;">${escapeHtml(copy.support)} <a dir="ltr" href="mailto:almenaprod@gmail.com" style="color:#2c2926;">almenaprod@gmail.com</a></p>
+<p style="margin:24px 0 0;font-size:14px;line-height:1.5;color:#7a736c;">${escapeHtml(copy.support)} <a dir="ltr" href="mailto:${DOYA_CONTACT_EMAIL}" style="color:#2c2926;">${DOYA_CONTACT_EMAIL}</a></p>
 <p dir="ltr" style="margin:16px 0 0;font-size:14px;color:#2c2926;">DOYA · ALMENA PROD</p>`
 
   return shell(copy.confirmationTitle, body, locale)
@@ -392,7 +393,7 @@ export function shippedOrderEmailHtml(order: OrderEmailPayload & { trackingNumbe
 <p style="margin:0 0 18px;font-size:15px;line-height:1.55;color:#2c2926;">${escapeHtml(copy.trackingHelp)}</p>
 <p style="margin:0 0 6px;font-size:13px;color:#7a736c;">${escapeHtml(copy.items)}</p>
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" dir="${locale === 'ar' ? 'rtl' : 'ltr'}">${linesHtml(order.lines, locale)}</table>
-<p style="margin:24px 0 0;font-size:14px;line-height:1.5;color:#7a736c;">${escapeHtml(copy.question)} <a dir="ltr" href="mailto:almenaprod@gmail.com" style="color:#2c2926;">almenaprod@gmail.com</a></p>
+<p style="margin:24px 0 0;font-size:14px;line-height:1.5;color:#7a736c;">${escapeHtml(copy.question)} <a dir="ltr" href="mailto:${DOYA_CONTACT_EMAIL}" style="color:#2c2926;">${DOYA_CONTACT_EMAIL}</a></p>
 <p dir="ltr" style="margin:16px 0 0;font-size:14px;color:#2c2926;">DOYA · ALMENA PROD</p>`
 
   return shell(copy.shippedTitle, body, locale)
@@ -420,7 +421,7 @@ export async function sendBrevoEmail(opts: {
     .map((email) => ({ email }))
   if (!to.length) return false
 
-  const replyTo = typeof opts.replyTo === 'string' ? opts.replyTo.trim().toLowerCase() : ''
+  const replyTo = typeof opts.replyTo === 'string' ? opts.replyTo.trim().toLowerCase() : DOYA_CONTACT_EMAIL
   const payload: Record<string, unknown> = {
     sender: { name: senderName, email: senderEmail },
     to,
@@ -464,7 +465,7 @@ export async function sendPaidOrderEmails(
 
   const locale = normalizeCheckoutLocale(order.locale)
   const copy = EMAIL_COPY[locale]
-  const merchant = (Deno.env.get('ORDER_NOTIFY_EMAIL') ?? 'almenaprod@gmail.com').trim().toLowerCase()
+  const merchant = (Deno.env.get('ORDER_NOTIFY_EMAIL') ?? DOYA_ORDER_NOTIFY_EMAIL).trim().toLowerCase()
   const customerSubject = `DOYA - ${copy.confirmationSubject} ${order.orderNumber}`
   const customerHtml = customerOrderEmailHtml(order)
 
@@ -487,6 +488,7 @@ export async function sendPaidOrderEmails(
     subject: customerSubject,
     htmlContent: customerHtml,
     messageVersions,
+    replyTo: { email: DOYA_CONTACT_EMAIL },
   }
   if (idempotencyKey) payload.headers = { idempotencyKey }
 

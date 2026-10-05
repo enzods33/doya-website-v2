@@ -1,3 +1,4 @@
+import { DOYA_CONTACT_EMAIL } from './emailIdentity.ts'
 import { emailLogoPublicUrl } from './emailLogo.ts'
 
 export const NEWSLETTER_WELCOME = {
@@ -152,6 +153,7 @@ export async function sendNewsletterWelcome(
     },
     body: JSON.stringify({
       sender: { name: senderName, email: senderEmail },
+      replyTo: { email: DOYA_CONTACT_EMAIL },
       to: [{ email: normalizedEmail }],
       subject: copy.subject,
       htmlContent: welcomeHtml(locale, emailLogoPublicUrl()),

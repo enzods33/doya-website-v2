@@ -1,20 +1,21 @@
 // Emails / ids stables. Labels, notes, sujets, CTAs → i18n (contact.<id>.*)
+import { DOYA_CONTACT_EMAIL, DOYA_ORDER_NOTIFY_EMAIL } from '../config/contact.js'
 import { assetUrl } from '../utils/assets.js'
 
 export const contacts = [
   {
     id: 'booking',
-    email: 'almenaprod@gmail.com',
+    email: DOYA_CONTACT_EMAIL,
   },
   {
     id: 'press',
-    email: 'doyamusicofficial@gmail.com',
+    email: DOYA_CONTACT_EMAIL,
   },
 ]
 
 /** Destinataires des demandes de devis port (gros volumes). */
 export const shippingQuoteEmails = [
-  'almenaprod@gmail.com',
+  DOYA_ORDER_NOTIFY_EMAIL,
   'stephanedasil@gmail.com',
 ]
 

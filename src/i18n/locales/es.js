@@ -1,3 +1,5 @@
+import { DOYA_CONTACT_EMAIL } from '../../config/contact.js'
+
 /** Español */
 export default {
   meta: {
@@ -326,7 +328,7 @@ export default {
             'Razón social: ALMENA PROD',
             'Domicilio social: Louey, France',
             'SIRET: 101 884 062 00015',
-            'Contacto: almenaprod@gmail.com',
+            `Contacto: ${DOYA_CONTACT_EMAIL}`,
             'Contacto técnico: reelazura@gmail.com',
           ],
         },
@@ -366,7 +368,7 @@ export default {
             'ALMENA PROD - tienda DOYA',
             'Domicilio social: Louey, France',
             'SIRET: 101 884 062 00015',
-            'Contacto pedidos: almenaprod@gmail.com',
+            `Contacto pedidos: ${DOYA_CONTACT_EMAIL}`,
           ],
         },
         {
@@ -399,14 +401,14 @@ export default {
           heading: 'Desistimiento',
           paragraphs: [
             'Dispone de 14 días tras la recepción para desistir sin motivo (Código de consumo francés).',
-            'Escriba a almenaprod@gmail.com con el n.º de pedido y devuelva los artículos completos y sin daños. Gastos de devolución a cargo del cliente, salvo error nuestro.',
+            `Escriba a ${DOYA_CONTACT_EMAIL} con el n.º de pedido y devuelva los artículos completos y sin daños. Gastos de devolución a cargo del cliente, salvo error nuestro.`,
           ],
         },
         {
           heading: 'Garantías y reclamaciones',
           paragraphs: [
             'Se aplican la garantía legal de conformidad y los vicios ocultos.',
-            'Producto dañado en la entrega: contacte almenaprod@gmail.com con fotos y n.º de pedido.',
+            `Producto dañado en la entrega: contacte ${DOYA_CONTACT_EMAIL} con fotos y n.º de pedido.`,
           ],
         },
         {
@@ -418,8 +420,8 @@ export default {
         {
           heading: 'Ley aplicable',
           paragraphs: [
-            'Derecho francés. En caso de litigio, contacte primero almenaprod@gmail.com para una solución amistosa.',
-            'A falta de acuerdo, puede acudir gratuitamente a un mediador de consumo (Código de consumo). Los datos del mediador designado por ALMENA PROD están disponibles bajo petición en almenaprod@gmail.com.',
+            `Derecho francés. En caso de litigio, contacte primero ${DOYA_CONTACT_EMAIL} para una solución amistosa.`,
+            `A falta de acuerdo, puede acudir gratuitamente a un mediador de consumo (Código de consumo). Los datos del mediador designado por ALMENA PROD están disponibles bajo petición en ${DOYA_CONTACT_EMAIL}.`,
           ],
         },
       ],
@@ -433,7 +435,7 @@ export default {
           heading: 'Responsable del tratamiento',
           paragraphs: [
             'Responsable: ALMENA PROD',
-            'Contacto: almenaprod@gmail.com',
+            `Contacto: ${DOYA_CONTACT_EMAIL}`,
             'Contacto técnico: reelazura@gmail.com',
           ],
         },
@@ -469,7 +471,7 @@ export default {
           heading: 'Tus derechos',
           paragraphs: [
             'Conforme al RGPD: acceso, rectificación, supresión, oposición, limitación y portabilidad.',
-            'Newsletter: baja mediante el enlace del email, o almenaprod@gmail.com.',
+            `Newsletter: baja mediante el enlace del email, o ${DOYA_CONTACT_EMAIL}.`,
             'Reclamación posible ante la CNIL (www.cnil.fr) o tu autoridad local.',
           ],
         },

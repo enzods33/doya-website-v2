@@ -1,3 +1,4 @@
+import { DOYA_CONTACT_EMAIL } from '../_shared/emailIdentity.ts'
 import { json, preflight, publicSiteUrl, rejectOrigin } from '../_shared/http.ts'
 import { requireAdmin } from '../_shared/admin.ts'
 import { serviceClient } from '../_shared/clients.ts'
@@ -402,7 +403,7 @@ Deno.serve(async (req) => {
       const response = await fetch('https://api.brevo.com/v3/smtp/email', {
         method: 'POST',
         headers: brevoHeaders(apiKey),
-        body: JSON.stringify({ sender: { name: senderName, email: senderEmail }, to: [{ email: testEmail }], subject: `[TEST] ${subject}`, htmlContent: finalHtml }),
+        body: JSON.stringify({ sender: { name: senderName, email: senderEmail }, replyTo: { email: DOYA_CONTACT_EMAIL }, to: [{ email: testEmail }], subject: `[TEST] ${subject}`, htmlContent: finalHtml }),
       })
       if (!response.ok) return json(502, { error: 'brevo_test_failed' }, origin)
       return json(200, { ok: true, email: testEmail }, origin)
@@ -450,6 +451,7 @@ Deno.serve(async (req) => {
     const messageVersions = await newsletterMessageVersions(emails, htmlContent, publicSiteUrl(), secret, sendLang)
     const sendPayload: Record<string, unknown> = {
       sender: { name: senderName, email: senderEmail },
+      replyTo: { email: DOYA_CONTACT_EMAIL },
       subject,
       htmlContent,
       messageVersions,

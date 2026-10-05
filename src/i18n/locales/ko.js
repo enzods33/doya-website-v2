@@ -1,3 +1,5 @@
+import { DOYA_CONTACT_EMAIL } from '../../config/contact.js'
+
 /** 한국어 - 공개 화면 전체 번역. 드문 관리자 키는 EN을 상속. */
 export default {
   meta: {
@@ -300,7 +302,7 @@ export default {
           '법인명: ALMENA PROD',
           '소재지: Louey, France',
           'SIRET: 101 884 062 00015',
-          '문의: almenaprod@gmail.com',
+          `문의: ${DOYA_CONTACT_EMAIL}`,
           '기술 문의: reelazura@gmail.com',
         ] },
         { heading: '발행 책임자', paragraphs: ['발행 책임자는 ALMENA PROD의 법정 대표자입니다.'] },
@@ -322,7 +324,7 @@ export default {
       title: '판매 약관',
       intro: '본 약관은 DOYA 온라인 스토어에서 이루어지는 구매에 적용됩니다.',
       sections: [
-        { heading: '판매자', paragraphs: ['ALMENA PROD - DOYA 스토어', '소재지: Louey, France', 'SIRET: 101 884 062 00015', '주문 문의: almenaprod@gmail.com'] },
+        { heading: '판매자', paragraphs: ['ALMENA PROD - DOYA 스토어', '소재지: Louey, France', 'SIRET: 101 884 062 00015', `주문 문의: ${DOYA_CONTACT_EMAIL}`] },
         { heading: '상품', paragraphs: [
           '스토어는 재고가 있는 범위에서 DOYA 관련 상품과 실물 매체(T셔츠, CD 등)를 판매합니다.',
           '상품 사진은 참고용입니다. 결제 후 상품을 제공할 수 없는 경우 해당 금액을 환불합니다.',
@@ -335,16 +337,16 @@ export default {
         { heading: '배송', paragraphs: ['배송비는 목적지에 따라 결제 전에 표시됩니다. 배송 기간은 예상치이며 운송업체 사정에 따라 달라질 수 있습니다.'] },
         { heading: '철회 및 반품', paragraphs: [
           '프랑스 소비자법에 따라 상품 수령 후 14일 이내에는 사유를 밝히지 않고 철회할 수 있습니다.',
-          '주문번호와 함께 almenaprod@gmail.com으로 연락한 뒤 상품을 완전하고 손상되지 않은 상태로 반송해 주세요. 당사의 오류가 아닌 경우 반품 배송비는 고객 부담입니다.',
+          `주문번호와 함께 ${DOYA_CONTACT_EMAIL}으로 연락한 뒤 상품을 완전하고 손상되지 않은 상태로 반송해 주세요. 당사의 오류가 아닌 경우 반품 배송비는 고객 부담입니다.`,
         ] },
         { heading: '법적 보증 및 클레임', paragraphs: [
           '적합성에 관한 법적 보증과 숨은 하자에 관한 보증이 적용됩니다.',
-          '배송 시 상품이 손상된 경우 사진과 주문번호를 첨부해 almenaprod@gmail.com으로 연락해 주세요.',
+          `배송 시 상품이 손상된 경우 사진과 주문번호를 첨부해 ${DOYA_CONTACT_EMAIL}으로 연락해 주세요.`,
         ] },
         { heading: '개인정보', paragraphs: ['주문 데이터와 해당되는 경우 뉴스레터 데이터는 본 사이트의 개인정보 처리방침에 따라 처리됩니다.'] },
         { heading: '준거법', paragraphs: [
-          '프랑스 법률을 준거법으로 합니다. 분쟁이 발생하면 먼저 almenaprod@gmail.com으로 연락하여 원만한 해결을 시도해 주세요.',
-          '합의에 이르지 못한 경우 프랑스 소비자법에 따른 무료 소비자 조정을 이용할 수 있습니다. ALMENA PROD가 지정한 조정기관 정보는 almenaprod@gmail.com으로 요청할 수 있습니다.',
+          `프랑스 법률을 준거법으로 합니다. 분쟁이 발생하면 먼저 ${DOYA_CONTACT_EMAIL}으로 연락하여 원만한 해결을 시도해 주세요.`,
+          `합의에 이르지 못한 경우 프랑스 소비자법에 따른 무료 소비자 조정을 이용할 수 있습니다. ALMENA PROD가 지정한 조정기관 정보는 ${DOYA_CONTACT_EMAIL}으로 요청할 수 있습니다.`,
         ] },
       ],
     },
@@ -353,7 +355,7 @@ export default {
       title: '개인정보 처리방침',
       intro: '본 정책은 ALMENA PROD가 DOYA 웹사이트와 스토어에서 개인정보를 어떻게 처리하는지 설명합니다.',
       sections: [
-        { heading: '개인정보 처리자', paragraphs: ['처리자: ALMENA PROD', '문의: almenaprod@gmail.com', '기술 문의: reelazura@gmail.com'] },
+        { heading: '개인정보 처리자', paragraphs: ['처리자: ALMENA PROD', `문의: ${DOYA_CONTACT_EMAIL}`, '기술 문의: reelazura@gmail.com'] },
         { heading: '수집하는 정보', paragraphs: [
           '뉴스레터: 이메일 주소와 사이트 인터페이스 언어(Brevo 이용). 확인 절차 중에는 이메일 주소를 Supabase에 임시 저장하며(최대 30일), 동의에 대한 기술적 기록(보호된 지문, 유입 경로, 날짜)도 함께 보관합니다.',
           '주문: 이메일, 배송 주소, 주문 내용(Stripe 및 Supabase 이용).',
@@ -364,7 +366,7 @@ export default {
         { heading: '보관 기간', paragraphs: ['정보는 명시된 목적에 필요한 기간 동안만 보관합니다. 확인되지 않은 뉴스레터 이메일 주소는 최대 30일 후 삭제되며, 동의 또는 구독 철회에 대한 기술적 기록은 이를 입증하기 위해 보관할 수 있습니다. 악용 방지용 가명화 카운터는 48시간 후 삭제합니다. 그 밖의 정보는 법적 의무에 따라 보관 또는 삭제합니다.'] },
         { heading: '이용자의 권리', paragraphs: [
           'GDPR에 따라 법이 정한 범위에서 열람, 정정, 삭제, 반대, 처리 제한 및 데이터 이동권 등을 행사할 수 있습니다.',
-          '뉴스레터: 이메일의 구독 해지 링크 또는 almenaprod@gmail.com을 통해 해지할 수 있습니다.',
+          `뉴스레터: 이메일의 구독 해지 링크 또는 ${DOYA_CONTACT_EMAIL}을 통해 해지할 수 있습니다.`,
           'CNIL(www.cnil.fr) 또는 거주지 관할 감독기관에 민원을 제기할 수 있습니다.',
         ] },
         { heading: '쿠키 및 추적 기술', paragraphs: [

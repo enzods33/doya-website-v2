@@ -1,3 +1,5 @@
+import { DOYA_CONTACT_EMAIL } from '../../config/contact.js'
+
 /** Deutsch - öffentliche Oberfläche vollständig; Backoffice erbt seltene Schlüssel aus EN. */
 export default {
   meta: {
@@ -300,7 +302,7 @@ export default {
           'Firmenname: ALMENA PROD',
           'Sitz: Louey, Frankreich',
           'SIRET: 101 884 062 00015',
-          'Kontakt: almenaprod@gmail.com',
+          `Kontakt: ${DOYA_CONTACT_EMAIL}`,
           'Technischer Kontakt: reelazura@gmail.com',
         ] },
         { heading: 'Verantwortlich für die Veröffentlichung', paragraphs: [
@@ -324,7 +326,7 @@ export default {
       title: 'Verkaufsbedingungen',
       intro: 'Diese Bedingungen gelten für Käufe im Online-Shop von DOYA.',
       sections: [
-        { heading: 'Verkäufer', paragraphs: ['ALMENA PROD - DOYA-Shop', 'Sitz: Louey, Frankreich', 'SIRET: 101 884 062 00015', 'Kontakt für Bestellungen: almenaprod@gmail.com'] },
+        { heading: 'Verkäufer', paragraphs: ['ALMENA PROD - DOYA-Shop', 'Sitz: Louey, Frankreich', 'SIRET: 101 884 062 00015', `Kontakt für Bestellungen: ${DOYA_CONTACT_EMAIL}`] },
         { heading: 'Produkte', paragraphs: [
           'Der Shop verkauft Produkte und physische Formate rund um DOYA (T-Shirts, CDs usw.), solange der Vorrat reicht.',
           'Die Fotos dienen der Illustration. Ist ein Artikel nach der Zahlung nicht verfügbar, wird der Kaufpreis erstattet.',
@@ -337,16 +339,16 @@ export default {
         { heading: 'Lieferung', paragraphs: ['Die Versandkosten werden vor der Zahlung abhängig vom Ziel angezeigt. Lieferzeiten sind Richtwerte und hängen vom Transportunternehmen ab.'] },
         { heading: 'Widerrufsrecht', paragraphs: [
           'Du hast ab Erhalt 14 Tage Zeit, ohne Angabe von Gründen zu widerrufen (französisches Verbraucherschutzgesetz).',
-          'Schreibe mit der Bestellnummer an almenaprod@gmail.com und sende die Artikel vollständig und unbeschädigt zurück. Die Rücksendekosten trägt der Kunde, außer der Fehler liegt bei uns.',
+          `Schreibe mit der Bestellnummer an ${DOYA_CONTACT_EMAIL} und sende die Artikel vollständig und unbeschädigt zurück. Die Rücksendekosten trägt der Kunde, außer der Fehler liegt bei uns.`,
         ] },
         { heading: 'Gewährleistung und Reklamationen', paragraphs: [
           'Es gelten die gesetzlichen Gewährleistungsrechte für Konformität und versteckte Mängel.',
-          'Bei beschädigter Lieferung: kontaktiere almenaprod@gmail.com mit Fotos und Bestellnummer.',
+          `Bei beschädigter Lieferung: kontaktiere ${DOYA_CONTACT_EMAIL} mit Fotos und Bestellnummer.`,
         ] },
         { heading: 'Personenbezogene Daten', paragraphs: ['Bestelldaten (und Newsletterdaten, falls zutreffend) werden gemäß der Datenschutzerklärung der Website verarbeitet.'] },
         { heading: 'Anwendbares Recht', paragraphs: [
-          'Es gilt französisches Recht. Bei Streitigkeiten kontaktiere zunächst almenaprod@gmail.com, um eine gütliche Lösung zu suchen.',
-          'Kommt keine Einigung zustande, kannst du kostenlos eine Verbraucherschlichtung nach französischem Verbraucherschutzrecht nutzen. Die Angaben zur von ALMENA PROD benannten Schlichtungsstelle sind auf Anfrage unter almenaprod@gmail.com erhältlich.',
+          `Es gilt französisches Recht. Bei Streitigkeiten kontaktiere zunächst ${DOYA_CONTACT_EMAIL}, um eine gütliche Lösung zu suchen.`,
+          `Kommt keine Einigung zustande, kannst du kostenlos eine Verbraucherschlichtung nach französischem Verbraucherschutzrecht nutzen. Die Angaben zur von ALMENA PROD benannten Schlichtungsstelle sind auf Anfrage unter ${DOYA_CONTACT_EMAIL} erhältlich.`,
         ] },
       ],
     },
@@ -355,7 +357,7 @@ export default {
       title: 'Datenschutzerklärung',
       intro: 'Diese Erklärung beschreibt, wie ALMENA PROD personenbezogene Daten auf der DOYA-Website und im Shop verarbeitet.',
       sections: [
-        { heading: 'Verantwortlicher', paragraphs: ['Verantwortlicher: ALMENA PROD', 'Kontakt: almenaprod@gmail.com', 'Technischer Kontakt: reelazura@gmail.com'] },
+        { heading: 'Verantwortlicher', paragraphs: ['Verantwortlicher: ALMENA PROD', `Kontakt: ${DOYA_CONTACT_EMAIL}`, 'Technischer Kontakt: reelazura@gmail.com'] },
         { heading: 'Erhobene Daten', paragraphs: [
           'Newsletter: E-Mail-Adresse und Sprache der Oberfläche über Brevo. Während der Bestätigung wird die Adresse vorübergehend in Supabase gespeichert (höchstens 30 Tage), zusammen mit einem technischen Nachweis der Einwilligung (geschützter Fingerabdruck, Quelle und Zeitangaben).',
           'Bestellungen: E-Mail, Lieferadresse und Bestellinhalt - über Stripe und Supabase.',
@@ -370,7 +372,7 @@ export default {
         { heading: 'Speicherdauer', paragraphs: ['Daten werden nur so lange gespeichert, wie es für die genannten Zwecke erforderlich ist. Eine nicht bestätigte Newsletter-Adresse wird spätestens nach 30 Tagen gelöscht; ein technischer Nachweis der Einwilligung oder ihres Widerrufs kann zu Dokumentationszwecken aufbewahrt werden. Pseudonymisierte Missbrauchsschutz-Zähler werden nach 48 Stunden gelöscht. Andere Daten werden gemäß den gesetzlichen Pflichten archiviert oder gelöscht.'] },
         { heading: 'Deine Rechte', paragraphs: [
           'Nach der DSGVO bestehen im gesetzlich vorgesehenen Umfang Rechte auf Auskunft, Berichtigung, Löschung, Widerspruch, Einschränkung und Datenübertragbarkeit.',
-          'Newsletter: Abmeldung über den Link in der E-Mail oder per Nachricht an almenaprod@gmail.com.',
+          `Newsletter: Abmeldung über den Link in der E-Mail oder per Nachricht an ${DOYA_CONTACT_EMAIL}.`,
           'Beschwerden können bei der CNIL (www.cnil.fr) oder der zuständigen lokalen Datenschutzbehörde eingereicht werden.',
         ] },
         { heading: 'Cookies und Tracker', paragraphs: [

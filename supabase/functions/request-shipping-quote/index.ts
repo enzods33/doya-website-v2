@@ -155,7 +155,7 @@ Deno.serve(async (req) => {
 
   // Devis : atelier + suivi technique (toujours ces 2 destinataires).
   const notify = [
-    ...(Deno.env.get('ORDER_NOTIFY_EMAIL') ?? 'almenaprod@gmail.com')
+    ...(Deno.env.get('ORDER_NOTIFY_EMAIL') ?? 'doyamusicofficial@gmail.com')
       .split(/[,;\s]+/)
       .map((value) => value.trim().toLowerCase())
       .filter(Boolean),

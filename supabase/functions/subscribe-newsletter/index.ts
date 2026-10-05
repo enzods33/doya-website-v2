@@ -2,6 +2,7 @@ import { json, preflight, publicSiteUrl, rejectOrigin } from '../_shared/http.ts
 import { allowRatePersistent, clientIp, privateRateKey } from '../_shared/rateLimit.ts'
 import { serviceClient } from '../_shared/clients.ts'
 import { newsletterAddressHash } from '../_shared/newsletterUnsubscribe.ts'
+import { DOYA_CONTACT_EMAIL } from '../_shared/emailIdentity.ts'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const RATE_WINDOW_MS = 10 * 60 * 1000
@@ -63,10 +64,12 @@ Deno.serve(async (req) => {
   const source = SOURCES.has(sourceRaw) ? sourceRaw : 'footer'
 
   const apiKey = Deno.env.get('BREVO_API_KEY') ?? ''
+  const senderEmail = (Deno.env.get('BREVO_SENDER_EMAIL') ?? '').trim()
+  const senderName = (Deno.env.get('BREVO_SENDER_NAME') ?? 'DOYA').trim() || 'DOYA'
   const listId = Number(Deno.env.get('BREVO_LIST_ID') ?? '')
   const doiTemplateId = Number(Deno.env.get('BREVO_DOI_TEMPLATE_ID') ?? '')
   const consentSecret = (Deno.env.get('BREVO_UNSUBSCRIBE_SECRET') ?? '').trim()
-  if (!apiKey || !consentSecret || !Number.isInteger(listId) || listId < 1 || !Number.isInteger(doiTemplateId) || doiTemplateId < 1) {
+  if (!apiKey || !senderEmail || !consentSecret || !Number.isInteger(listId) || listId < 1 || !Number.isInteger(doiTemplateId) || doiTemplateId < 1) {
     return json(503, { error: 'newsletter_unavailable' }, origin)
   }
 
@@ -129,6 +132,8 @@ Deno.serve(async (req) => {
       'api-key': apiKey,
     },
     body: JSON.stringify({
+      sender: { name: senderName, email: senderEmail },
+      replyTo: { email: DOYA_CONTACT_EMAIL },
       to: [{ email }],
       templateId: doiTemplateId,
       params: { 

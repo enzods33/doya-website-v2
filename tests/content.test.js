@@ -120,7 +120,7 @@ test('la navigation et le contact officiels sont en place', () => {
   assert.deepEqual(mobileNavigation.map((item) => item.labelKey), expected)
   assert.equal(mobileNavigation.find((item) => item.labelKey === 'nav.about').href, '#about')
   assert.equal(mobileNavigation.find((item) => item.labelKey === 'nav.gallery').href, '#gallery')
-  assert.deepEqual(contacts.map((contact) => contact.email), ['almenaprod@gmail.com', 'doyamusicofficial@gmail.com'])
+  assert.deepEqual(contacts.map((contact) => contact.email), ['doyamusicofficial@gmail.com', 'doyamusicofficial@gmail.com'])
   assert.deepEqual(contacts.map((contact) => contact.id), ['booking', 'press'])
   assert.ok(pressKit.href === null || pressKit.href.startsWith('/') || pressKit.href.startsWith('https://'))
 })

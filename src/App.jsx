@@ -13,6 +13,7 @@ import HomePage from './pages/HomePage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
 import { scrollToHash, useRoute } from './utils/router.js'
 import { applyDocumentSeo } from './utils/seo.js'
+import { isOfficialSiteIndexable } from './config/publicUrls.js'
 
 const CartPage = lazy(() => import('./pages/CartPage.jsx'))
 const OrderPage = lazy(() => import('./pages/OrderPage.jsx'))
@@ -35,7 +36,10 @@ const pages = {
   '/newsletter-confirmation': NewsletterConfirmationPage,
 }
 
-const indexable = import.meta.env.VITE_INDEXABLE === 'true'
+const indexable = isOfficialSiteIndexable(
+  import.meta.env.VITE_INDEXABLE,
+  typeof window !== 'undefined' ? window.location.origin : '',
+)
 
 function AppFrame({ path }) {
   const { t, locale, intlLocale } = useI18n()

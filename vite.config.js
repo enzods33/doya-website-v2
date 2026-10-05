@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
-import { DEFAULT_ASSETS_BASE_URL, STAGING_SITE_URL } from './src/config/publicUrls.js'
+import { DEFAULT_ASSETS_BASE_URL, STAGING_SITE_URL, isOfficialSiteIndexable } from './src/config/publicUrls.js'
 import { buildJsonLd } from './src/utils/seo.js'
 
 const SITEMAP_PATHS = [
@@ -17,7 +17,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   const origin = env.VITE_SITE_URL ? new URL(env.VITE_SITE_URL).origin : null
   const pages = env.GITHUB_PAGES === 'true'
-  const indexable = env.VITE_INDEXABLE === 'true'
+  const indexable = isOfficialSiteIndexable(env.VITE_INDEXABLE, origin)
   const assetsBase = String(env.VITE_ASSETS_URL || DEFAULT_ASSETS_BASE_URL).replace(/\/$/, '')
   const site = origin || STAGING_SITE_URL
 

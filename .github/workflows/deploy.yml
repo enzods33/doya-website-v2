@@ -38,9 +38,9 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          VITE_SITE_URL: ${{ secrets.VITE_SITE_URL }}
-          # Staging Hetzner temporaire : jamais indexer. Au go-live (vrai domaine), passer à true.
-          VITE_INDEXABLE: 'false'
+          # Inactif par défaut. Activer cette variable uniquement au feu vert de bascule.
+          VITE_SITE_URL: ${{ vars.DOYA_OFFICIAL_DOMAIN_ENABLED == 'true' && 'https://doyaofficial.com' || secrets.VITE_SITE_URL }}
+          VITE_INDEXABLE: ${{ vars.DOYA_OFFICIAL_DOMAIN_ENABLED == 'true' && 'true' || 'false' }}
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
           VITE_ASSETS_URL: ${{ secrets.VITE_ASSETS_URL }}
