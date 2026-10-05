@@ -99,3 +99,37 @@ redirige en 301 vers la version sans www. Test Search Console du 5 octobre
 affiche encore une erreur générique sans cause détaillée. Google documente
 des nouvelles tentatives sur quelques jours après un échec ; cela ne prouve
 pas que le délai est la cause de cette erreur.
+
+## Mobile : contrôle final du 5 octobre 2026
+
+Les commits `880723e` et `11c095b` sont déployés sur master. Les variantes
+AVIF mobiles sont issues de la même photo, sans recadrage. Le picture et
+le preload sélectionnent la même variante ; les WebP desktop restent inchangés.
+Les nouveaux fichiers sous /assets/ répondent en image/avif avec un cache
+immutable d'un an. La comparaison visuelle à 390 x 844, DPR 2, conserve
+la géométrie et les couleurs ; la compression adoucit légèrement le grain.
+
+Les miniatures YouTube, pochette et logo ont des variantes adaptées ; le
+SDK Supabase ne bloque plus le premier affichage. Les observations du header
+réutilisent les dimensions de ResizeObserver. Aucun changement de base,
+stockage, authentification ou service de paiement n'est appliqué.
+
+Contrôles : 81 tests unitaires, lint et build réussis ; 11 tests Playwright
+locaux puis en production réussis. Les commandes et inscriptions sont simulées,
+les écritures externes bloquées. Un test contrôle l'absence de double téléchargement
+de la photo mobile et le retour à la photo originale sur desktop. L'ancien domaine
+répond toujours en HTTP 200.
+
+Lighthouse en production, même profil mobile : avant AVIF 68, LCP 8,50 s,
+1 393 926 octets ; après AVIF deux mesures 74 et 72, LCP 5,60 et 5,73 s,
+environ 868 254 octets. Accessibilité, bonnes pratiques et SEO : 100.
+Le résultat local de 86 ne représente pas le score en production. Desktop
+après déploiement : 90, LCP 2,04 s, autres catégories 100.
+
+L'objectif d'égaler le desktop n'est pas atteint. Le rapport de production
+identifie encore environ 2 s de délai observé entre chargement et rendu de la
+photo ; cette durée observée ne s'additionne pas au LCP simulé. La suppression
+du zoom d'entrée a été essayée localement sans gain convaincant et écartée.
+Les travaux plus larges de pré-rendu restent reportés conformément au choix utilisateur.
+Les rapports JSON sont valides sans runtimeError ni runWarnings ; la CLI Windows
+signale toujours EPERM au nettoyage de son profil temporaire après la mesure.
