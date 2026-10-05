@@ -55,3 +55,21 @@ des écritures de production. Contrôler après déploiement le preload, les tai
 choisies, les headers de cache/XML et les deux domaines. Les rapports Lighthouse
 dépendent du matériel, des conditions réseau et du profil mobile/desktop :
 comparer des mesures réalisées avec les mêmes paramètres.
+
+Résultats du 5 octobre 2026 : 81 tests unitaires, 8 tests Playwright en
+production (services mutatifs simulés) et un contrôle mobile 390 x 844,
+DPR 2, réussis. Sur ce mobile la photo choisie est la version 1920 et il
+n'y a pas de débordement horizontal.
+
+Mesure Lighthouse desktop locale : performance 88/100, accessibilité 100,
+bonnes pratiques 100, SEO 100. Poids chargé 1 953 097 octets et LCP estimé
+2,16 s. La mesure avant changements était 75/100, 3 572 737 octets et
+2,82 s. Les conditions locales ne sont pas celles du rapport utilisateur
+à 85/100 ; ne pas présenter ce comparatif comme une garantie de score.
+Les rapports JSON ont été produits ; le processus CLI a rencontré une
+erreur Windows lors du nettoyage de son profil temporaire, après la mesure.
+
+Le sitemap répond en HTTP 200 avec le type XML et ses quatre URL. Il a été
+renvoyé dans Search Console : confirmation « Sitemap envoyé ». Le rapport
+affiche encore « Impossible de récupérer le sitemap » à la fin du contrôle,
+malgré le test direct d'accès Google réussi. Son traitement reste à confirmer.
