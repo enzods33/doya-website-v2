@@ -3,8 +3,9 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
-import { DEFAULT_ASSETS_BASE_URL, STAGING_SITE_URL, isOfficialSiteIndexable } from './src/config/publicUrls.js'
+import { STAGING_SITE_URL, isOfficialSiteIndexable } from './src/config/publicUrls.js'
 import { buildJsonLd } from './src/utils/seo.js'
+import { heroImage } from './src/config/heroImage.js'
 
 const SITEMAP_PATHS = [
   { path: '/', priority: '1.0', changefreq: 'weekly' },
@@ -18,7 +19,6 @@ export default defineConfig(({ mode }) => {
   const origin = env.VITE_SITE_URL ? new URL(env.VITE_SITE_URL).origin : null
   const pages = env.GITHUB_PAGES === 'true'
   const indexable = isOfficialSiteIndexable(env.VITE_INDEXABLE, origin)
-  const assetsBase = String(env.VITE_ASSETS_URL || DEFAULT_ASSETS_BASE_URL).replace(/\/$/, '')
   const site = origin || STAGING_SITE_URL
 
   return {
@@ -57,7 +57,9 @@ export default defineConfig(({ mode }) => {
             attrs: {
               rel: 'preload',
               as: 'image',
-              href: `${assetsBase}/site/hero.jpg`,
+              href: heroImage.src,
+              imagesrcset: heroImage.srcSet,
+              imagesizes: heroImage.sizes,
               fetchpriority: 'high',
             },
             injectTo: 'head',
@@ -87,7 +89,6 @@ export default defineConfig(({ mode }) => {
       },
       closeBundle() {
         const outDir = resolve(process.cwd(), 'dist')
-        const lastmod = new Date().toISOString().slice(0, 10)
         const robots = indexable
           ? [
               'User-agent: *',
@@ -112,7 +113,6 @@ export default defineConfig(({ mode }) => {
           return [
             '  <url>',
             `    <loc>${loc}</loc>`,
-            `    <lastmod>${lastmod}</lastmod>`,
             `    <changefreq>${changefreq}</changefreq>`,
             `    <priority>${priority}</priority>`,
             '  </url>',

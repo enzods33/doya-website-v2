@@ -284,7 +284,7 @@ function Shop() {
       id="shop"
       className="shop-section section-shell"
       aria-labelledby="shop-title"
-      style={{ '--shop-atmosphere-image': `url("${media.hero.src}")` }}
+      style={{ '--shop-atmosphere-image': `url("${media.hero.backgroundSrc}")` }}
     >
       <Reveal as="header" className="shop-heading">
         <div className="shop-heading-main">

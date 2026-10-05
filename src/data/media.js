@@ -1,4 +1,5 @@
 import { assetUrl } from '../utils/assets.js'
+import { heroImage } from '../config/heroImage.js'
 
 function bioWeb(file, width, height) {
   return {
@@ -9,12 +10,10 @@ function bioWeb(file, width, height) {
   }
 }
 
-/** Hero / album - versions web sur Cloudflare R2 (`VITE_ASSETS_URL`). */
+/** Hero responsive local ; album et éditorial sur Cloudflare R2 (`VITE_ASSETS_URL`). */
 export const media = {
   hero: {
-    src: assetUrl('site/hero.jpg'),
-    width: 1024,
-    height: 1024,
+    ...heroImage,
     alt: 'DOYA assises de face sur des chaises dans le désert, l’une en noir, l’autre en blanc.',
     sourcePage: 9,
   },

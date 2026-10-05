@@ -220,7 +220,7 @@ function Music() {
       id="music"
       className="music-section"
       aria-labelledby="music-title"
-      style={{ '--music-atmosphere-image': `url("${media.hero.src}")` }}
+      style={{ '--music-atmosphere-image': `url("${media.hero.backgroundSrc}")` }}
     >
       <div className="music-shell section-shell">
         <Reveal as="header" className="music-heading music-heading-editorial">

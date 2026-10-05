@@ -70,7 +70,16 @@ test('aucun faux lien ou prix inventé', () => {
 
 test('les médias déclarés existent et ont des dimensions explicites', () => {
   for (const image of Object.values(media)) {
-    assert.ok(String(image.src).startsWith('https://'), image.src)
+    if (image.src.startsWith('/site/')) {
+      assert.ok(existsSync(new URL(`../public${image.src}`, import.meta.url)), image.src)
+      for (const candidate of image.srcSet.split(', ')) {
+        const [path, width] = candidate.split(' ')
+        assert.ok(existsSync(new URL(`../public${path}`, import.meta.url)), path)
+        assert.match(width, /^\d+w$/)
+      }
+    } else {
+      assert.ok(String(image.src).startsWith('https://'), image.src)
+    }
     assert.ok(image.width > 0 && image.height > 0 && image.alt.length > 10)
   }
   for (const product of products) {

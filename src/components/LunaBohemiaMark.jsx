@@ -1,4 +1,4 @@
-import mark from '../assets/logos/luna-bohemia-mark.png'
+import mark from '../assets/logos/luna-bohemia-mark.webp'
 
 /** Logo LUNA BOHEMIA (noir, fond transparent). */
 function LunaBohemiaMark({ className = '' }) {

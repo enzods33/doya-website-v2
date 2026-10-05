@@ -171,7 +171,7 @@ function About() {
         {total > 0 ? (
           <div className={`about-gallery${activeImageIsPortrait ? ' has-portrait-active' : ' has-landscape-active'}`}>
           <div className="about-gallery-backdrop" aria-hidden="true">
-            <img key={activeImage?.src} src={activeImage?.src} alt="" />
+            <img key={activeImage?.src} src={activeImage?.src} alt="" loading="lazy" decoding="async" />
           </div>
           <div className="about-gallery-toolbar section-shell">
             <div className="about-gallery-heading">
@@ -249,7 +249,7 @@ function About() {
                           width={image.width}
                           height={image.height}
                           alt={active ? image.alt : ''}
-                          loading={slideIndex < 2 ? 'eager' : 'lazy'}
+                          loading="lazy"
                           decoding="async"
                           draggable={false}
                         />
