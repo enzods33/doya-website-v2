@@ -32,7 +32,7 @@ export function stickyOffset() {
 export function syncHeaderHeightVar(headerEl) {
   if (!headerEl || typeof document === 'undefined') return
   const height = Math.round(headerEl.getBoundingClientRect().height)
-  if (height > 0) {
+  if (height > 0 && document.documentElement.style.getPropertyValue('--header-height') !== `${height}px`) {
     document.documentElement.style.setProperty('--header-height', `${height}px`)
   }
 }

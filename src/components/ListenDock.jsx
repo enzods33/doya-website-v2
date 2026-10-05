@@ -30,50 +30,72 @@ function ListenDock() {
 
   useEffect(() => {
     let frame = 0
+    const sections = new Map()
+    const visibility = new Map()
+    const intersectionObserver = typeof IntersectionObserver === 'undefined' ? null : new IntersectionObserver((entries) => {
+      for (const entry of entries) visibility.set(entry.target, entry.isIntersecting)
+      syncVisibility()
+    })
+
+    function connectSections() {
+      for (const selector of ['#music', '#shop', '.site-footer']) {
+        const section = document.querySelector(selector)
+        if (section && sections.get(selector) !== section) {
+          const previous = sections.get(selector)
+          if (previous) intersectionObserver?.unobserve(previous)
+          sections.set(selector, section)
+          intersectionObserver?.observe(section)
+        }
+      }
+      // These sections mount lazily. Once connected, gallery/stock updates
+      // no longer need to trigger page-wide geometry reads.
+      if (sections.size === 3) mutationObserver.disconnect()
+      syncVisibility()
+    }
+
+    function intersects(section, viewportHeight) {
+      if (!section) return false
+      if (intersectionObserver) return visibility.get(section) === true
+      const rect = section.getBoundingClientRect()
+      return rect.top < viewportHeight && rect.bottom > 0
+    }
 
     function syncVisibility() {
       cancelAnimationFrame(frame)
       frame = requestAnimationFrame(() => {
         const viewportHeight = window.innerHeight
-        const musicSection = document.querySelector('#music')
-        const shopSection = document.querySelector('#shop')
-        const footer = document.querySelector('.site-footer')
+        const musicSection = sections.get('#music')
+        const shopSection = sections.get('#shop')
+        const footer = sections.get('.site-footer')
 
         let musicSectionSuppressesDock = false
-        if (musicSection) {
+        if (intersects(musicSection, viewportHeight)) {
           const rect = musicSection.getBoundingClientRect()
           const intersectsViewport = rect.top < viewportHeight && rect.bottom > 0
           const passedProgress = rect.height > 0 ? -rect.top / rect.height : 0
           musicSectionSuppressesDock = intersectsViewport && passedProgress < MUSIC_SECTION_REVEAL_PROGRESS
         }
 
-        let footerSuppressesDock = false
-        if (footer) {
-          const rect = footer.getBoundingClientRect()
-          footerSuppressesDock = rect.top < viewportHeight && rect.bottom > 0
-        }
-
-        let shopSuppressesDock = false
-        if (shopSection) {
-          const rect = shopSection.getBoundingClientRect()
-          shopSuppressesDock = rect.top < viewportHeight && rect.bottom > 0
-        }
+        const footerSuppressesDock = intersects(footer, viewportHeight)
+        const shopSuppressesDock = intersects(shopSection, viewportHeight)
 
         setExcludedSectionVisible(musicSectionSuppressesDock || shopSuppressesDock || footerSuppressesDock)
       })
     }
 
-    syncVisibility()
     window.addEventListener('scroll', syncVisibility, { passive: true })
     window.addEventListener('resize', syncVisibility)
 
-    const mutationObserver = new MutationObserver(syncVisibility)
-    mutationObserver.observe(document.body, { childList: true, subtree: true })
+    const mutationObserver = new MutationObserver(connectSections)
+    const main = document.getElementById('main')
+    if (main) mutationObserver.observe(main, { childList: true, subtree: true })
+    connectSections()
     return () => {
       cancelAnimationFrame(frame)
       window.removeEventListener('scroll', syncVisibility)
       window.removeEventListener('resize', syncVisibility)
       mutationObserver.disconnect()
+      intersectionObserver?.disconnect()
     }
   }, [])
 

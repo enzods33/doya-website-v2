@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import '../../styles/admin.css'
 import { supabase } from '../../commerce/supabase.js'
 import { readOnlyPreview } from '../../commerce/config.js'
 import {

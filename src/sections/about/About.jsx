@@ -1,11 +1,12 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react'
 import { useReducedMotion } from 'motion/react'
 import { siteContent } from '../../data/siteContent.js'
 import { loadBioGallery, loadBioCopy } from '../../commerce/bioPhotos.js'
 import { useI18n } from '../../i18n/I18nProvider.jsx'
 import { Lockup, Stars } from '../../components/Brand.jsx'
 import Reveal from '../../components/Reveal.jsx'
-import PhotoLightbox from '../../components/PhotoLightbox.jsx'
+
+const PhotoLightbox = lazy(() => import('../../components/PhotoLightbox.jsx'))
 
 const BIO_ACCENT_PATTERN = /(Une même pulsation|Un mismo pulso|One pulse|Uma mesma pulsação)/gi
 const BIO_ACCENT_EXACT = /^(une même pulsation|un mismo pulso|one pulse|uma mesma pulsação)$/i
@@ -284,12 +285,14 @@ function About() {
       </section>
 
       {lightbox !== null && total > 0 ? (
-        <PhotoLightbox
-          images={images}
-          index={lightbox}
-          onClose={() => setLightbox(null)}
-          onIndexChange={setLightbox}
-        />
+        <Suspense fallback={null}>
+          <PhotoLightbox
+            images={images}
+            index={lightbox}
+            onClose={() => setLightbox(null)}
+            onIndexChange={setLightbox}
+          />
+        </Suspense>
       ) : null}
     </>
   )

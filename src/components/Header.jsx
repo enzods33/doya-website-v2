@@ -139,8 +139,12 @@ function Header() {
       return undefined
     }
     const sync = () => {
+      // Read before writing CSS variables, and skip unchanged values.
+      const clientWidth = `${document.documentElement.clientWidth}px`
       syncHeaderHeightVar(header)
-      header.style.setProperty('--header-client-width', `${document.documentElement.clientWidth}px`)
+      if (header.style.getPropertyValue('--header-client-width') !== clientWidth) {
+        header.style.setProperty('--header-client-width', clientWidth)
+      }
     }
     const observer = new ResizeObserver(sync)
     observer.observe(header)
