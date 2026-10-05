@@ -3,8 +3,8 @@ import { DOYA_CONTACT_EMAIL } from '../../config/contact.js'
 /** Français - langue de référence / fallback */
 export default {
   meta: {
-    title: 'DOYA - Luna Bohemia',
-    description: 'Luna Bohemia, l’univers de DOYA. Album, live et collections.',
+    title: 'DOYA | Le site officiel',
+    description: 'Découvrez l’univers de DOYA : le nouvel album Luna Bohemia, les vidéos, les dates de concerts et la boutique officielle.',
     mentionsDescription: 'Éditeur, hébergeur et mentions légales du site officiel DOYA.',
     cgvDescription: 'Conditions générales de vente de la boutique DOYA (ALMENA PROD).',
     privacyDescription: 'Politique de confidentialité : données, cookies et droits RGPD sur le site DOYA.',
