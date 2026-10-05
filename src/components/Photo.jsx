@@ -8,10 +8,15 @@ function Photo({ image, className = '', eager = false, ...props }) {
     width: image.width, height: image.height, alt: image.alt,
     loading: eager ? 'eager' : 'lazy', decoding: 'async', className, ...props,
   }
-  if (eager || reducedMotion) return <img {...imageProps} />
-  return (
-    <m.img {...imageProps} {...revealMotion(reducedMotion, { distance: 24, duration: 1 })} />
-  )
+  const photo = eager || reducedMotion
+    ? <img {...imageProps} />
+    : <m.img {...imageProps} {...revealMotion(reducedMotion, { distance: 24, duration: 1 })} />
+  return image.mobile ? (
+    <picture>
+      <source media={image.mobile.media} type={image.mobile.type} srcSet={image.mobile.srcSet} sizes={image.mobile.sizes} />
+      {photo}
+    </picture>
+  ) : photo
 }
 
 export default Photo
