@@ -47,7 +47,7 @@ test.describe('Doya écoute, réseaux et Brevo — sans appel externe mutatif', 
     safety.assertSafe()
   })
 
-  test('le formulaire newsletter affiche déjà inscrit', async ({ page }) => {
+  test('la newsletter ne révèle pas si une adresse est déjà inscrite', async ({ page }) => {
     const safety = await protectProduction(page, {
       'subscribe-newsletter': { status: 200, body: { ok: true } },
     })
@@ -57,7 +57,11 @@ test.describe('Doya écoute, réseaux et Brevo — sans appel externe mutatif', 
     await form.locator('button[type="submit"]').click()
     const status = page.locator('footer .newsletter-signup-status.is-ok')
     await expect(status).toBeVisible()
-    await expect(status).toContainText(/déjà|already|apuntad|bereits|登録|구독|订阅|مشترك/i)
+    const existingMessage = await status.textContent()
+    expect(existingMessage.trim().length).toBeGreaterThan(0)
+    await form.locator('input[name="email"]').fill('new@example.invalid')
+    await form.locator('button[type="submit"]').click()
+    await expect(status).toHaveText(existingMessage)
     safety.assertSafe()
   })
 
