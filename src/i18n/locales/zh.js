@@ -1,4 +1,4 @@
-import { DOYA_CONTACT_EMAIL } from '../../config/contact.js'
+import { ALMENA_CONTACT_EMAIL, DOYA_CONTACT_EMAIL } from '../../config/contact.js'
 
 /** 简体中文 - 公共界面完整翻译；少量后台专用键继承英文。 */
 export default {
@@ -304,7 +304,7 @@ export default {
           '公司名称：ALMENA PROD',
           '注册地址：Louey, France',
           'SIRET：101 884 062 00015',
-          `联系邮箱：${DOYA_CONTACT_EMAIL}`,
+          `联系邮箱：${ALMENA_CONTACT_EMAIL}`,
           '技术联系：reelazura@gmail.com',
         ] },
         { heading: '发布负责人', paragraphs: ['发布负责人为 ALMENA PROD 的法定代表人。'] },
@@ -357,7 +357,7 @@ export default {
       title: '隐私政策',
       intro: '本政策说明 ALMENA PROD 如何在 DOYA 网站及商店中处理个人数据。',
       sections: [
-        { heading: '数据控制方', paragraphs: ['控制方：ALMENA PROD', `联系邮箱：${DOYA_CONTACT_EMAIL}`, '技术联系：reelazura@gmail.com'] },
+        { heading: '数据控制方', paragraphs: ['控制方：ALMENA PROD', `联系邮箱：${ALMENA_CONTACT_EMAIL}`, '技术联系：reelazura@gmail.com'] },
         { heading: '收集的数据', paragraphs: [
           '新闻邮件：电子邮箱地址和网站界面语言通过 Brevo 处理。在确认期间，邮箱地址会临时保存在 Supabase 中（最长 30 天），并保存同意的技术记录（受保护的指纹、来源和日期）。',
           '订单：电子邮箱、配送地址、订单内容，通过 Stripe 和 Supabase 处理。',

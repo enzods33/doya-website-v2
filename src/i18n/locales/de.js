@@ -1,4 +1,4 @@
-import { DOYA_CONTACT_EMAIL } from '../../config/contact.js'
+import { ALMENA_CONTACT_EMAIL, DOYA_CONTACT_EMAIL } from '../../config/contact.js'
 
 /** Deutsch - öffentliche Oberfläche vollständig; Backoffice erbt seltene Schlüssel aus EN. */
 export default {
@@ -304,7 +304,7 @@ export default {
           'Firmenname: ALMENA PROD',
           'Sitz: Louey, Frankreich',
           'SIRET: 101 884 062 00015',
-          `Kontakt: ${DOYA_CONTACT_EMAIL}`,
+          `Kontakt: ${ALMENA_CONTACT_EMAIL}`,
           'Technischer Kontakt: reelazura@gmail.com',
         ] },
         { heading: 'Verantwortlich für die Veröffentlichung', paragraphs: [
@@ -359,7 +359,7 @@ export default {
       title: 'Datenschutzerklärung',
       intro: 'Diese Erklärung beschreibt, wie ALMENA PROD personenbezogene Daten auf der DOYA-Website und im Shop verarbeitet.',
       sections: [
-        { heading: 'Verantwortlicher', paragraphs: ['Verantwortlicher: ALMENA PROD', `Kontakt: ${DOYA_CONTACT_EMAIL}`, 'Technischer Kontakt: reelazura@gmail.com'] },
+        { heading: 'Verantwortlicher', paragraphs: ['Verantwortlicher: ALMENA PROD', `Kontakt: ${ALMENA_CONTACT_EMAIL}`, 'Technischer Kontakt: reelazura@gmail.com'] },
         { heading: 'Erhobene Daten', paragraphs: [
           'Newsletter: E-Mail-Adresse und Sprache der Oberfläche über Brevo. Während der Bestätigung wird die Adresse vorübergehend in Supabase gespeichert (höchstens 30 Tage), zusammen mit einem technischen Nachweis der Einwilligung (geschützter Fingerabdruck, Quelle und Zeitangaben).',
           'Bestellungen: E-Mail, Lieferadresse und Bestellinhalt - über Stripe und Supabase.',

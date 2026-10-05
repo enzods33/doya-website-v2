@@ -1,4 +1,4 @@
-import { DOYA_CONTACT_EMAIL } from '../../config/contact.js'
+import { ALMENA_CONTACT_EMAIL, DOYA_CONTACT_EMAIL } from '../../config/contact.js'
 
 /** 日本語 - 公開画面は完全翻訳。まれな管理画面キーは英語を継承。 */
 export default {
@@ -304,7 +304,7 @@ export default {
           '法人名：ALMENA PROD',
           '所在地：Louey, France',
           'SIRET：101 884 062 00015',
-          `お問い合わせ：${DOYA_CONTACT_EMAIL}`,
+          `お問い合わせ：${ALMENA_CONTACT_EMAIL}`,
           '技術窓口：reelazura@gmail.com',
         ] },
         { heading: '発行責任者', paragraphs: ['発行責任者はALMENA PRODの法定代表者です。'] },
@@ -357,7 +357,7 @@ export default {
       title: 'プライバシーポリシー',
       intro: '本ポリシーは、ALMENA PRODがDOYAサイトおよびショップで個人情報をどのように取り扱うかを説明します。',
       sections: [
-        { heading: 'データ管理者', paragraphs: ['管理者：ALMENA PROD', `お問い合わせ：${DOYA_CONTACT_EMAIL}`, '技術窓口：reelazura@gmail.com'] },
+        { heading: 'データ管理者', paragraphs: ['管理者：ALMENA PROD', `お問い合わせ：${ALMENA_CONTACT_EMAIL}`, '技術窓口：reelazura@gmail.com'] },
         { heading: '収集するデータ', paragraphs: [
           'ニュースレター：メールアドレスとサイト表示言語（Brevo経由）。確認手続き中は、メールアドレスをSupabaseに一時保存（最長30日）し、同意の技術的記録（保護されたフィンガープリント、取得元、日時）も保持します。',
           '注文：メールアドレス、配送先住所、注文内容（StripeおよびSupabase経由）。',

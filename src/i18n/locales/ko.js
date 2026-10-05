@@ -1,4 +1,4 @@
-import { DOYA_CONTACT_EMAIL } from '../../config/contact.js'
+import { ALMENA_CONTACT_EMAIL, DOYA_CONTACT_EMAIL } from '../../config/contact.js'
 
 /** 한국어 - 공개 화면 전체 번역. 드문 관리자 키는 EN을 상속. */
 export default {
@@ -304,7 +304,7 @@ export default {
           '법인명: ALMENA PROD',
           '소재지: Louey, France',
           'SIRET: 101 884 062 00015',
-          `문의: ${DOYA_CONTACT_EMAIL}`,
+          `문의: ${ALMENA_CONTACT_EMAIL}`,
           '기술 문의: reelazura@gmail.com',
         ] },
         { heading: '발행 책임자', paragraphs: ['발행 책임자는 ALMENA PROD의 법정 대표자입니다.'] },
@@ -357,7 +357,7 @@ export default {
       title: '개인정보 처리방침',
       intro: '본 정책은 ALMENA PROD가 DOYA 웹사이트와 스토어에서 개인정보를 어떻게 처리하는지 설명합니다.',
       sections: [
-        { heading: '개인정보 처리자', paragraphs: ['처리자: ALMENA PROD', `문의: ${DOYA_CONTACT_EMAIL}`, '기술 문의: reelazura@gmail.com'] },
+        { heading: '개인정보 처리자', paragraphs: ['처리자: ALMENA PROD', `문의: ${ALMENA_CONTACT_EMAIL}`, '기술 문의: reelazura@gmail.com'] },
         { heading: '수집하는 정보', paragraphs: [
           '뉴스레터: 이메일 주소와 사이트 인터페이스 언어(Brevo 이용). 확인 절차 중에는 이메일 주소를 Supabase에 임시 저장하며(최대 30일), 동의에 대한 기술적 기록(보호된 지문, 유입 경로, 날짜)도 함께 보관합니다.',
           '주문: 이메일, 배송 주소, 주문 내용(Stripe 및 Supabase 이용).',

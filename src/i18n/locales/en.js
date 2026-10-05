@@ -1,4 +1,4 @@
-import { DOYA_CONTACT_EMAIL } from '../../config/contact.js'
+import { ALMENA_CONTACT_EMAIL, DOYA_CONTACT_EMAIL } from '../../config/contact.js'
 
 /** English */
 export default {
@@ -330,7 +330,7 @@ export default {
             'Legal name: ALMENA PROD',
             'Registered office: Louey, France',
             'SIRET: 101 884 062 00015',
-            `Contact: ${DOYA_CONTACT_EMAIL}`,
+            `Contact: ${ALMENA_CONTACT_EMAIL}`,
             'Technical contact: reelazura@gmail.com',
           ],
         },
@@ -437,7 +437,7 @@ export default {
           heading: 'Data controller',
           paragraphs: [
             'Controller: ALMENA PROD',
-            `Contact: ${DOYA_CONTACT_EMAIL}`,
+            `Contact: ${ALMENA_CONTACT_EMAIL}`,
             'Technical contact: reelazura@gmail.com',
           ],
         },

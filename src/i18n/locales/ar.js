@@ -1,4 +1,4 @@
-import { DOYA_CONTACT_EMAIL } from '../../config/contact.js'
+import { ALMENA_CONTACT_EMAIL, DOYA_CONTACT_EMAIL } from '../../config/contact.js'
 
 /** العربية - العربية الفصحى الحديثة */
 export default {
@@ -302,7 +302,7 @@ export default {
       title: 'الإشعار القانوني',
       intro: 'وفقًا للقانون الفرنسي، تحدد هذه المعلومات ناشر الموقع ومقدمي خدماته التقنية.',
       sections: [
-        { heading: 'ناشر الموقع', paragraphs: ['الموقع الرسمي لـ DOYA (Luna Bohemia) منشور بواسطة ALMENA PROD.', 'تتحمل ALMENA PROD مسؤولية الموقع الرسمي (المحتوى والعلامة والمتجر).', 'الاسم القانوني: ALMENA PROD', 'المقر: Louey، فرنسا', 'SIRET: 101 884 062 00015', `اتصال: ${DOYA_CONTACT_EMAIL}`, 'اتصال تقني: reelazura@gmail.com'] },
+        { heading: 'ناشر الموقع', paragraphs: ['الموقع الرسمي لـ DOYA (Luna Bohemia) منشور بواسطة ALMENA PROD.', 'تتحمل ALMENA PROD مسؤولية الموقع الرسمي (المحتوى والعلامة والمتجر).', 'الاسم القانوني: ALMENA PROD', 'المقر: Louey، فرنسا', 'SIRET: 101 884 062 00015', `اتصال: ${ALMENA_CONTACT_EMAIL}`, 'اتصال تقني: reelazura@gmail.com'] },
         { heading: 'مدير النشر', paragraphs: ['مدير النشر هو الممثل القانوني لـ ALMENA PROD.'] },
         { heading: 'الاستضافة ومقدمو الخدمات', paragraphs: ['استضافة الموقع: Hetzner Online GmbH', 'البنية التطبيقية وقاعدة البيانات: Supabase.', 'تخزين الوسائط: Cloudflare R2.', 'الدفع الإلكتروني: Stripe Payments Europe, Ltd.', 'رسائل المعاملات والنشرة: Brevo (Sendinblue).'] },
         { heading: 'الملكية الفكرية', paragraphs: ['جميع عناصر الموقع (النصوص والصور والرسومات والشعارات والعلامات والموسيقى وصور المتجر) محمية بقانون الملكية الفكرية.', 'يُحظر أي نسخ أو عرض أو استغلال غير مصرح به.'] },
@@ -329,7 +329,7 @@ export default {
       title: 'سياسة الخصوصية',
       intro: 'توضح هذه السياسة كيفية معالجة ALMENA PROD للبيانات الشخصية في إطار موقع ومتجر DOYA.',
       sections: [
-        { heading: 'المسؤول عن المعالجة', paragraphs: ['المسؤول: ALMENA PROD', `اتصال: ${DOYA_CONTACT_EMAIL}`, 'اتصال تقني: reelazura@gmail.com'] },
+        { heading: 'المسؤول عن المعالجة', paragraphs: ['المسؤول: ALMENA PROD', `اتصال: ${ALMENA_CONTACT_EMAIL}`, 'اتصال تقني: reelazura@gmail.com'] },
         { heading: 'البيانات التي نجمعها', paragraphs: ['النشرة: البريد الإلكتروني ولغة الواجهة عبر Brevo. أثناء التأكيد، يُحفظ البريد الإلكتروني مؤقتًا في Supabase لمدة لا تتجاوز 30 يومًا، مع سجل تقني للموافقة (بصمة محمية ومصدر وتواريخ).', 'الطلبات: البريد الإلكتروني وعنوان الشحن ومحتوى الطلب - عبر Stripe وSupabase.', 'الجمهور (بيانات مجمعة): مشاهدات الصفحات وبعض الإجراءات (النشرة، السلة، الاستماع، الاتصال…) من دون تحديد هوية الزوار.'] },
         { heading: 'الأغراض والأسس القانونية', paragraphs: ['تنفيذ عقد البيع والتسليم.', 'إدارة النشرة بناءً على الموافقة.', 'أمن الموقع ومنع إساءة الاستخدام.'] },
         { heading: 'المستلمون', paragraphs: ['مقدمو الخدمات: Supabase وStripe وBrevo وHetzner وCloudflare، في حدود مهامهم.'] },

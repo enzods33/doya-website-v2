@@ -1,4 +1,4 @@
-import { DOYA_CONTACT_EMAIL } from '../../config/contact.js'
+import { ALMENA_CONTACT_EMAIL, DOYA_CONTACT_EMAIL } from '../../config/contact.js'
 
 /** Français - langue de référence / fallback */
 export default {
@@ -706,7 +706,7 @@ export default {
             'Raison sociale : ALMENA PROD',
             'Siège social : Louey, France',
             'SIRET : 101 884 062 00015',
-            `Contact : ${DOYA_CONTACT_EMAIL}`,
+            `Contact : ${ALMENA_CONTACT_EMAIL}`,
             'Contact technique : reelazura@gmail.com',
           ],
         },
@@ -813,7 +813,7 @@ export default {
           heading: 'Responsable du traitement',
           paragraphs: [
             'Responsable : ALMENA PROD',
-            `Contact : ${DOYA_CONTACT_EMAIL}`,
+            `Contact : ${ALMENA_CONTACT_EMAIL}`,
             'Contact technique : reelazura@gmail.com',
           ],
         },
