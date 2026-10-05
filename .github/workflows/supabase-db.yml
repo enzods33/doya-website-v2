@@ -6,7 +6,7 @@ on:
 
 jobs:
   migrations-and-stock:
-    runs-on: [self-hosted, Linux, X64]
+    runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
