@@ -1,5 +1,5 @@
 /** Suivi léger pages vues + clics (agrégats Postgres, sans identité). */
-import { commerceConfigured } from './config.js'
+import { commerceMutationsAllowed } from './config.js'
 
 const SKIP = /^\/admin/
 const PV_COOLDOWN_MS = 60_000
@@ -14,7 +14,7 @@ function pagePath() {
 }
 
 async function client() {
-  if (!commerceConfigured) return null
+  if (!commerceMutationsAllowed) return null
   const { supabase } = await import('./supabase.js')
   return supabase
 }
@@ -38,7 +38,7 @@ function pageviewBudget(path) {
 
 /** @param {string} event @param {string} place */
 export function trackEvent(event, place) {
-  if (!commerceConfigured) return
+  if (!commerceMutationsAllowed) return
   if (SKIP.test(window.location.pathname || '/')) return
   client().then((supabase) => {
     if (!supabase) return
@@ -49,7 +49,7 @@ export function trackEvent(event, place) {
 }
 
 export function startPageAnalytics() {
-  if (!commerceConfigured) return () => {}
+  if (!commerceMutationsAllowed) return () => {}
 
   let last = ''
   let timer = 0

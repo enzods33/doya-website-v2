@@ -69,6 +69,9 @@ export default {
     listenTrack: '{title}を聴く',
     listenTrackMenu: '{title}の配信先',
     trackOn: '{platform}で「{title}」',
+    videoPlayerTitle: '動画プレーヤー：{title}',
+    watchOnYoutube: "YouTubeで見る",
+    watchOn: "視聴する",
     buy: 'ショップ',
   },
   photo: {

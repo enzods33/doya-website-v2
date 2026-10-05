@@ -69,6 +69,9 @@ export default {
     listenTrack: 'Ouvir {title}',
     listenTrackMenu: 'Plataformas para {title}',
     trackOn: '{title} no {platform}',
+    videoPlayerTitle: 'Leitor de vídeo: {title}',
+    watchOnYoutube: "Ver no YouTube",
+    watchOn: "Ver no",
     buy: 'Loja',
   },
   photo: {

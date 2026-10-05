@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { commerceConfigured, supabaseAnonKey, supabaseUrl } from '../commerce/config.js'
+import { commerceMutationsAllowed, supabaseAnonKey, supabaseUrl } from '../commerce/config.js'
 import { useI18n } from '../i18n/I18nProvider.jsx'
 
 const copy = {
@@ -27,7 +27,7 @@ export default function UnsubscribePage() {
 
   async function unsubscribe(event) {
     event.preventDefault()
-    if (!commerceConfigured || !token) { setStatus('error'); return }
+    if (!commerceMutationsAllowed || !token) { setStatus('error'); return }
     setBusy(true)
     try {
       const response = await fetch(`${supabaseUrl}/functions/v1/unsubscribe-newsletter`, {

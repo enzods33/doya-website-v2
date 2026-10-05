@@ -11,6 +11,7 @@ export const album = {
         apple: 'https://music.apple.com/fr/album/solo-t%C3%BA/6812817734?i=6812817939',
         deezer: 'https://www.deezer.com/track/4304248972',
         youtubemusic: 'https://music.youtube.com/watch?v=_zP8gyGShhc',
+        youtube: 'https://www.youtube.com/watch?v=sO-I92cpFSY',
       },
     },
     {

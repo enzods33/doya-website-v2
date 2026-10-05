@@ -69,6 +69,9 @@ export default {
     listenTrack: '收听 {title}',
     listenTrackMenu: '{title} 的收听平台',
     trackOn: '在 {platform} 收听 {title}',
+    videoPlayerTitle: '视频播放器：{title}',
+    watchOnYoutube: "在 YouTube 上观看",
+    watchOn: "观看",
     buy: '商店',
   },
   photo: {

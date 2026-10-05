@@ -69,6 +69,9 @@ export default {
     listenTrack: 'استمع إلى {title}',
     listenTrackMenu: 'منصات الاستماع إلى {title}',
     trackOn: '{title} على {platform}',
+    videoPlayerTitle: 'مشغل الفيديو: {title}',
+    watchOnYoutube: "شاهد على YouTube",
+    watchOn: "شاهد على",
     buy: 'المتجر',
   },
   photo: {

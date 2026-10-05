@@ -1,7 +1,7 @@
-import { commerceConfigured, supabaseAnonKey, supabaseUrl } from './config.js'
+import { commerceMutationsAllowed, supabaseAnonKey, supabaseUrl } from './config.js'
 
 async function invoke(path, body) {
-  if (!commerceConfigured) throw new Error('commerce_disabled')
+  if (!commerceMutationsAllowed) throw new Error('commerce_disabled')
   const response = await fetch(`${supabaseUrl}/functions/v1/${path}`, {
     method: 'POST',
     headers: {

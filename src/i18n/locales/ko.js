@@ -69,6 +69,9 @@ export default {
     listenTrack: '{title} 듣기',
     listenTrackMenu: '{title} 감상 플랫폼',
     trackOn: '{platform}에서 {title}',
+    videoPlayerTitle: '동영상 플레이어: {title}',
+    watchOnYoutube: "YouTube에서 보기",
+    watchOn: "에서 보기",
     buy: '스토어',
   },
   photo: {

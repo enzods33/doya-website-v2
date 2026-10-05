@@ -1890,6 +1890,11 @@
   letter-spacing: .06em;
   text-transform: uppercase;
 }
+.admin-clips-preview { display: flex; flex-direction: column; gap: 12px; padding-block: 16px; border-block: 1px solid rgb(44 41 38 / 10%); }
+.admin-local-preview-note { padding: 14px 18px; border: 1px solid rgb(44 41 38 / 15%); background: rgb(255 255 255 / 55%); font-size: 14px; line-height: 1.5; }
+.admin-preview-fields { border: 0; padding: 0; margin: 0; min-width: 0; }
+.admin-video-title { margin: 0; max-width: 480px; font-size: 22px; line-height: 1.2; overflow-wrap: anywhere; }
+.admin-clips-preview > img { display: block; width: min(100%, 480px); height: auto; aspect-ratio: 16 / 9; object-fit: cover; background: var(--color-doya-black); }
 @media (max-width: 899px) {
   .admin-newsletter-layout { grid-template-columns: 1fr; }
   .admin-mail-preview { position: static; }

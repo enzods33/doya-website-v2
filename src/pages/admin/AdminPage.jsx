@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../../commerce/supabase.js'
+import { readOnlyPreview } from '../../commerce/config.js'
 import {
   adminAuthCheck,
   signInAdminGoogle,
@@ -9,6 +10,7 @@ import { useI18n } from '../../i18n/I18nProvider.jsx'
 import { Wordmark, Stars } from '../../components/Brand.jsx'
 import Link from '../../components/Link.jsx'
 import AdminConcerts from './AdminConcerts.jsx'
+import AdminClips from './AdminClips.jsx'
 import AdminBio from './AdminBio.jsx'
 import AdminNewsletter from './AdminNewsletter.jsx'
 import AdminSales from './AdminSales.jsx'
@@ -26,6 +28,7 @@ const TAB_GROUPS = [
     labelKey: 'admin.groupSite',
     tabs: [
       { id: 'concerts', labelKey: 'admin.tabConcerts' },
+      { id: 'clips', labelKey: 'admin.tabClips' },
       { id: 'bio', labelKey: 'admin.tabBio' },
       { id: 'newsletter', labelKey: 'admin.tabNewsletter' },
     ],
@@ -122,6 +125,10 @@ function AdminPage() {
 
   useEffect(() => {
     let cancelled = false
+    if (readOnlyPreview) {
+      setBoot(false)
+      return undefined
+    }
 
     async function sync(nextSession) {
       setError('')
@@ -188,6 +195,9 @@ function AdminPage() {
   }
 
   const showGate = !allowed
+  const tabGroups = readOnlyPreview
+    ? TAB_GROUPS.filter((group) => group.id === 'site').map((group) => ({ ...group, tabs: group.tabs.filter((item) => ['concerts', 'clips', 'bio'].includes(item.id)) }))
+    : TAB_GROUPS
 
   return (
     <main id="main" className={`admin-shell${showGate ? ' is-gate' : ''}`} tabIndex={-1}>
@@ -201,6 +211,7 @@ function AdminPage() {
         </div>
         <div className="admin-user">
           <Link href="/" className="admin-site-link">{t('admin.viewSite')}</Link>
+          {readOnlyPreview && allowed ? <button type="button" className="admin-ghost" onClick={() => setAllowed(false)}>{t('admin.localPreviewExit')}</button> : null}
           {allowed && session ? (
             <>
               <span className="admin-user-email">{session.user?.email}</span>
@@ -233,20 +244,21 @@ function AdminPage() {
       ) : !allowed ? (
         <AdminLoginStage>
           <h1 className="editorial-title admin-login-title">{t('admin.gateTitle')}</h1>
-          <p className="admin-login-lead">{t('admin.gateText')}</p>
+          <p className="admin-login-lead">{t(readOnlyPreview ? 'admin.localPreviewLead' : 'admin.gateText')}</p>
           {error ? <p className="admin-error" role="alert">{error}</p> : null}
           <div className="admin-login-actions">
-            <GoogleButton
+            {readOnlyPreview ? <button type="button" className="admin-primary" onClick={() => { selectTab('clips'); setAllowed(true) }}>{t('admin.localPreviewEnter')}</button> : <GoogleButton
               disabled={busy || !supabase}
               onClick={onGoogle}
               label={busy ? t('admin.redirecting') : t('admin.google')}
-            />
+            />}
           </div>
         </AdminLoginStage>
       ) : (
         <>
+          {readOnlyPreview ? <p className="admin-local-preview-note" role="status">{t('admin.localPreviewNotice')}</p> : null}
           <nav className="admin-tabs" aria-label={t('admin.nav')}>
-            {TAB_GROUPS.map((group) => (
+            {tabGroups.map((group) => (
               <div key={group.id} className="admin-tabs-group">
                 <p className="admin-tabs-group-label">{t(group.labelKey)}</p>
                 <div
@@ -271,8 +283,9 @@ function AdminPage() {
             ))}
           </nav>
           <div className="admin-panel">
-            {tab === 'concerts' ? <AdminConcerts /> : null}
-            {tab === 'bio' ? <AdminBio /> : null}
+            {tab === 'concerts' ? (readOnlyPreview ? <fieldset className="admin-preview-fields" disabled><AdminConcerts /></fieldset> : <AdminConcerts />) : null}
+            {tab === 'clips' ? <AdminClips /> : null}
+            {tab === 'bio' ? (readOnlyPreview ? <fieldset className="admin-preview-fields" disabled><AdminBio /></fieldset> : <AdminBio />) : null}
             {tab === 'newsletter' ? <AdminNewsletter /> : null}
             {tab === 'orders' ? <AdminSales /> : null}
             {tab === 'catalog' ? <AdminStocks /> : null}

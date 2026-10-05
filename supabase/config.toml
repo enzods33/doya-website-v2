@@ -27,6 +27,10 @@ verify_jwt = false
 [functions.admin-concerts]
 verify_jwt = false
 
+# Like the other admin functions: getUser validates the JWT, then requireAdmin checks the allowlist.
+[functions.admin-clips]
+verify_jwt = false
+
 [functions.admin-bio-photos]
 verify_jwt = false
 

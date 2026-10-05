@@ -1,8 +1,12 @@
-import { commerceConfigured, supabaseAnonKey, supabaseUrl } from './config.js'
+import { commerceMutationsAllowed, readOnlyPreview, supabaseAnonKey, supabaseUrl } from './config.js'
 import { supabase } from './supabase.js'
 
-async function adminInvoke(path, body, { formData } = {}) {
-  if (!commerceConfigured || !supabase) throw new Error('commerce_disabled')
+async function adminInvoke(path, body, { formData, signal } = {}) {
+  if (readOnlyPreview) {
+    const { localAdminPreview } = await import('./localAdminPreview.js')
+    return localAdminPreview(path, body || {})
+  }
+  if (!commerceMutationsAllowed || !supabase) throw new Error('commerce_disabled')
   const { data: sessionData } = await supabase.auth.getSession()
   const token = sessionData.session?.access_token
   if (!token) throw new Error('admin_unauthorized')
@@ -14,6 +18,7 @@ async function adminInvoke(path, body, { formData } = {}) {
   if (!formData) headers['Content-Type'] = 'application/json'
 
   const response = await fetch(`${supabaseUrl}/functions/v1/${path}`, {
+    signal,
     method: 'POST',
     headers,
     body: formData ? formData : JSON.stringify(body ?? {}),
@@ -34,6 +39,10 @@ export function adminAuthCheck() {
 
 export function adminConcerts(action, payload = {}) {
   return adminInvoke('admin-concerts', { action, ...payload })
+}
+
+export function adminClips(action, payload = {}, options) {
+  return adminInvoke('admin-clips', { action, ...payload }, options)
 }
 
 export function adminBioPhotos(action, payload = {}) {
@@ -67,7 +76,7 @@ export function adminShopUpload(file, { width, height, side = 'front', productId
 }
 
 export async function signInAdminGoogle() {
-  if (!supabase) throw new Error('commerce_disabled')
+  if (!commerceMutationsAllowed || !supabase) throw new Error('commerce_disabled')
   const redirectTo = `${window.location.origin}/admin`
   const { error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
@@ -77,6 +86,6 @@ export async function signInAdminGoogle() {
 }
 
 export async function signOutAdmin() {
-  if (!supabase) return
+  if (!commerceMutationsAllowed || !supabase) return
   await supabase.auth.signOut()
 }

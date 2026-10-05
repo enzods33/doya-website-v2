@@ -1,4 +1,4 @@
-import { commerceConfigured, supabaseAnonKey, supabaseUrl } from './config.js'
+import { commerceMutationsAllowed, supabaseAnonKey, supabaseUrl } from './config.js'
 
 export async function requestShippingQuote({
   email,
@@ -8,7 +8,7 @@ export async function requestShippingQuote({
   items,
   website = '',
 }) {
-  if (!commerceConfigured) throw new Error('commerce_disabled')
+  if (!commerceMutationsAllowed) throw new Error('commerce_disabled')
   const response = await fetch(`${supabaseUrl}/functions/v1/request-shipping-quote`, {
     method: 'POST',
     headers: {

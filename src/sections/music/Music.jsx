@@ -9,6 +9,7 @@ import Link from '../../components/Link.jsx'
 import { PlatformIcon, TRACK_PLATFORM_ORDER } from '../../components/PlatformIcon.jsx'
 import { trackEvent } from '../../commerce/pageAnalytics.js'
 import monogramWhite from '../../assets/logos/doya-monogram-white.svg'
+import FeaturedVideo from '../clips/Clips.jsx'
 
 const PLATFORM_NAMES = {
   spotify: 'Spotify',
@@ -294,6 +295,7 @@ function Music() {
             </div>
           </Reveal>
         </div>
+        <FeaturedVideo />
       </div>
     </section>
   )

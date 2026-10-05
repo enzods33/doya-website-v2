@@ -1,7 +1,7 @@
-import { commerceConfigured, supabaseAnonKey, supabaseUrl } from './config.js'
+import { commerceMutationsAllowed, supabaseAnonKey, supabaseUrl } from './config.js'
 
 export async function subscribeNewsletter(email, locale = 'fr', website = '', source = 'footer') {
-  if (!commerceConfigured) throw new Error('commerce_disabled')
+  if (!commerceMutationsAllowed) throw new Error('commerce_disabled')
   const response = await fetch(`${supabaseUrl}/functions/v1/subscribe-newsletter`, {
     method: 'POST',
     headers: {
@@ -26,7 +26,7 @@ export async function subscribeNewsletter(email, locale = 'fr', website = '', so
 }
 
 export async function confirmNewsletter(token) {
-  if (!commerceConfigured) throw new Error('commerce_disabled')
+  if (!commerceMutationsAllowed) throw new Error('commerce_disabled')
   const response = await fetch(`${supabaseUrl}/functions/v1/confirm-newsletter`, {
     method: 'POST',
     headers: {

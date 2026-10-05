@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { products } from '../data/products.js'
 import { loadCatalog } from './catalog.js'
-import { commerceConfigured, demoStoreConfigured } from './config.js'
+import { commerceConfigured, demoStoreConfigured, readOnlyPreview } from './config.js'
 import { supabase } from './supabase.js'
 
 const empty = products.map((product) => ({ ...product, sale: null, variants: [] }))
@@ -99,6 +99,14 @@ export function CatalogProvider({ children }) {
     reload().catch(() => {
       if (activeRef.current) scheduleRecovery()
     })
+
+    if (readOnlyPreview) {
+      return () => {
+        activeRef.current = false
+        if (debounceRef.current) window.clearTimeout(debounceRef.current)
+        clearRecovery()
+      }
+    }
 
     const channel = supabase
       .channel('catalog-live')

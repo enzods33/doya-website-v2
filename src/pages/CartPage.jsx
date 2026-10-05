@@ -6,7 +6,7 @@ import { subscribeNewsletter } from '../commerce/newsletter.js'
 import { requestShippingQuote } from '../commerce/shippingQuote.js'
 import { CART_LIMITS, FLAT_SHIPPING_LIMITS, bestAutoPromo, fetchAutoPromos, formatEuros, isValidEmail, normalizePromoCode } from '../commerce/cartRules.js'
 import { DEFAULT_AUTO_PROMOS } from '../commerce/autoPromos.js'
-import { commerceConfigured } from '../commerce/config.js'
+import { commerceMutationsAllowed } from '../commerce/config.js'
 import { trackEvent } from '../commerce/pageAnalytics.js'
 import { commerceMessage, translateProduct } from '../commerce/messages.js'
 import { availableFor, productImageSrc, resolveProductView } from '../commerce/catalog.js'
@@ -142,7 +142,7 @@ function CartPage() {
       ? commerceMessage('email_required', t)
       : (!emailValid ? commerceMessage('invalid_email', t) : ''))
     : ''
-  const canPay = commerceConfigured
+  const canPay = commerceMutationsAllowed
     && shippingZonesReady
     && !needsShippingQuote
     && lines.length > 0
@@ -201,7 +201,7 @@ function CartPage() {
             // Ne bloque pas le devis si Brevo newsletter échoue.
           }
         }
-        if (!commerceConfigured) {
+        if (!commerceMutationsAllowed) {
           openMailtoFallback()
           setQuoteSent(true)
           setBusy(false)
@@ -275,7 +275,7 @@ function CartPage() {
             </Link>
           </div>
         </header>
-        {!commerceConfigured && <p className="availability-note">{t('shop.note')}</p>}
+        {!commerceMutationsAllowed && <p className="availability-note">{t('shop.note')}</p>}
         {lines.length === 0 ? (
           <div className="cart-empty">
             <Stars color="black" className="cart-empty-stars" />

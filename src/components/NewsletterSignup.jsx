@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { subscribeNewsletter } from '../commerce/newsletter.js'
-import { commerceConfigured } from '../commerce/config.js'
+import { commerceMutationsAllowed } from '../commerce/config.js'
 import { trackEvent } from '../commerce/pageAnalytics.js'
 import { isValidEmail } from '../commerce/cartRules.js'
 import { useI18n } from '../i18n/I18nProvider.jsx'
@@ -38,7 +38,7 @@ function NewsletterSignup({ className = '', variant = 'default' }) {
   async function onSubmit(event) {
     event.preventDefault()
     setStatus(null)
-    if (!commerceConfigured) {
+    if (!commerceMutationsAllowed) {
       setStatus({ kind: 'error', message: t('newsletter.unavailable') })
       return
     }
