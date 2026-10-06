@@ -18,9 +18,7 @@ import { isOfficialSiteIndexable } from './config/publicUrls.js'
 const CartPage = lazy(() => import('./pages/CartPage.jsx'))
 const OrderPage = lazy(() => import('./pages/OrderPage.jsx'))
 const AdminPage = lazy(() => import('./pages/admin/AdminPage.jsx'))
-const MentionsLegalesPage = lazy(() => import('./pages/LegalPages.jsx').then((m) => ({ default: m.MentionsLegalesPage })))
-const CgvPage = lazy(() => import('./pages/LegalPages.jsx').then((m) => ({ default: m.CgvPage })))
-const PrivacyPage = lazy(() => import('./pages/LegalPages.jsx').then((m) => ({ default: m.PrivacyPage })))
+const LegalRoutePage = lazy(() => import('./pages/LegalPages.jsx').then((m) => ({ default: m.LegalRoutePage })))
 const UnsubscribePage = lazy(() => import('./pages/UnsubscribePage.jsx'))
 const NewsletterConfirmationPage = lazy(() => import('./pages/NewsletterConfirmationPage.jsx'))
 
@@ -29,9 +27,9 @@ const pages = {
   '/panier': CartPage,
   '/commande': OrderPage,
   '/admin': AdminPage,
-  '/mentions-legales': MentionsLegalesPage,
-  '/cgv': CgvPage,
-  '/confidentialite': PrivacyPage,
+  '/mentions-legales': LegalRoutePage,
+  '/cgv': LegalRoutePage,
+  '/confidentialite': LegalRoutePage,
   '/desabonnement': UnsubscribePage,
   '/newsletter-confirmation': NewsletterConfirmationPage,
 }
@@ -65,7 +63,7 @@ function AppFrame({ path }) {
       <OfflineBanner />
       <ErrorBoundary resetKey={path}>
         <Suspense fallback={<main id="main" className="page-main" tabIndex={-1} />}>
-          <Page />
+          <Page path={path} />
         </Suspense>
       </ErrorBoundary>
       {!isAdmin ? <Footer /> : null}
