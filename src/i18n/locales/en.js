@@ -329,22 +329,20 @@ export default {
             'The official DOYA website (Luna Bohemia) is published by ALMENA PROD.',
             'ALMENA PROD assumes responsibility for the official website (content, brand and shop).',
             'Legal name: ALMENA PROD',
-            'Registered office: Louey, France',
-            'SIRET: 101 884 062 00015',
+            'Registered office: 14 chemin des Arts, 65290 Louey, France',
+            'SIRET: 101 884 062 00015', "Legal form: SAS (société par actions simplifiée)", "Share capital: 1 000 €", 'RCS Tarbes 101 884 062',
             `Contact: ${ALMENA_CONTACT_EMAIL}`,
             'Technical contact: reelazura@gmail.com',
           ],
         },
         {
           heading: 'Publication director',
-          paragraphs: [
-            'The publication director is the legal representative of ALMENA PROD.',
-          ],
+          paragraphs: ["Publication director: Alice Martin — ALMENA PROD"],
         },
         {
           heading: 'Hosting and providers',
           paragraphs: [
-            'Website hosting: Hetzner Online GmbH',
+            'Website hosting: Hetzner Online GmbH', 'Hetzner Online GmbH — Industriestr. 25, 91710 Gunzenhausen, Germany', '+49 9831 505-0 — info@hetzner.com',
             'Application infrastructure and database: Supabase.',
             'Media storage: Cloudflare R2.',
             'Online payments: Stripe Payments Europe, Ltd.',
@@ -369,8 +367,8 @@ export default {
           heading: 'Seller',
           paragraphs: [
             'ALMENA PROD - DOYA shop',
-            'Registered office: Louey, France',
-            'SIRET: 101 884 062 00015',
+            'Registered office: 14 chemin des Arts, 65290 Louey, France',
+            'SIRET: 101 884 062 00015', "Legal form: SAS (société par actions simplifiée)", "Share capital: 1 000 €", 'RCS Tarbes 101 884 062',
             `Order contact: ${DOYA_CONTACT_EMAIL}`,
           ],
         },

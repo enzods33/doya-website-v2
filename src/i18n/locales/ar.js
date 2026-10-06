@@ -303,9 +303,9 @@ export default {
       title: 'الإشعار القانوني',
       intro: 'وفقًا للقانون الفرنسي، تحدد هذه المعلومات ناشر الموقع ومقدمي خدماته التقنية.',
       sections: [
-        { heading: 'ناشر الموقع', paragraphs: ['الموقع الرسمي لـ DOYA (Luna Bohemia) منشور بواسطة ALMENA PROD.', 'تتحمل ALMENA PROD مسؤولية الموقع الرسمي (المحتوى والعلامة والمتجر).', 'الاسم القانوني: ALMENA PROD', 'المقر: Louey، فرنسا', 'SIRET: 101 884 062 00015', `اتصال: ${ALMENA_CONTACT_EMAIL}`, 'اتصال تقني: reelazura@gmail.com'] },
-        { heading: 'مدير النشر', paragraphs: ['مدير النشر هو الممثل القانوني لـ ALMENA PROD.'] },
-        { heading: 'الاستضافة ومقدمو الخدمات', paragraphs: ['استضافة الموقع: Hetzner Online GmbH', 'البنية التطبيقية وقاعدة البيانات: Supabase.', 'تخزين الوسائط: Cloudflare R2.', 'الدفع الإلكتروني: Stripe Payments Europe, Ltd.', 'رسائل المعاملات والنشرة: Brevo (Sendinblue).'] },
+        { heading: 'ناشر الموقع', paragraphs: ['الموقع الرسمي لـ DOYA (Luna Bohemia) منشور بواسطة ALMENA PROD.', 'تتحمل ALMENA PROD مسؤولية الموقع الرسمي (المحتوى والعلامة والمتجر).', 'الاسم القانوني: ALMENA PROD', 'المقر: 14 chemin des Arts, 65290 Louey، فرنسا', 'SIRET: 101 884 062 00015', "الشكل القانوني: SAS (société par actions simplifiée)", "رأس المال: 1 000 €", 'RCS Tarbes 101 884 062', `اتصال: ${ALMENA_CONTACT_EMAIL}`, 'اتصال تقني: reelazura@gmail.com'] },
+        { heading: 'مدير النشر', paragraphs: ["مديرة النشر: Alice Martin — ALMENA PROD"] },
+        { heading: 'الاستضافة ومقدمو الخدمات', paragraphs: ['استضافة الموقع: Hetzner Online GmbH', 'Hetzner Online GmbH — Industriestr. 25, 91710 Gunzenhausen, Germany', '+49 9831 505-0 — info@hetzner.com', 'البنية التطبيقية وقاعدة البيانات: Supabase.', 'تخزين الوسائط: Cloudflare R2.', 'الدفع الإلكتروني: Stripe Payments Europe, Ltd.', 'رسائل المعاملات والنشرة: Brevo (Sendinblue).'] },
         { heading: 'الملكية الفكرية', paragraphs: ['جميع عناصر الموقع (النصوص والصور والرسومات والشعارات والعلامات والموسيقى وصور المتجر) محمية بقانون الملكية الفكرية.', 'يُحظر أي نسخ أو عرض أو استغلال غير مصرح به.'] },
       ],
     },
@@ -314,7 +314,7 @@ export default {
       title: 'الشروط العامة للبيع',
       intro: 'تنطبق هذه الشروط على المشتريات التي تتم عبر متجر DOYA الإلكتروني.',
       sections: [
-        { heading: 'البائع', paragraphs: ['ALMENA PROD - متجر DOYA', 'المقر: Louey، فرنسا', 'SIRET: 101 884 062 00015', `اتصال الطلبات: ${DOYA_CONTACT_EMAIL}`] },
+        { heading: 'البائع', paragraphs: ['ALMENA PROD - متجر DOYA', 'المقر: 14 chemin des Arts, 65290 Louey، فرنسا', 'SIRET: 101 884 062 00015', "الشكل القانوني: SAS (société par actions simplifiée)", "رأس المال: 1 000 €", 'RCS Tarbes 101 884 062', `اتصال الطلبات: ${DOYA_CONTACT_EMAIL}`] },
         { heading: 'المنتجات', paragraphs: ['يبيع المتجر منتجات ووسائط مادية مرتبطة بـ DOYA (تي شيرت، أقراص CD، إلخ) في حدود المخزون المتاح.', 'الصور توضيحية. إذا أصبح المنتج غير متاح بعد الدفع، يتم رد المبلغ للعميل.'] },
         { heading: 'الأسعار والدفع', paragraphs: ['الأسعار باليورو شاملة الضرائب، باستثناء الشحن. يتم تأكيد المبلغ النهائي (المنتجات والخصم المحتمل والشحن) عند الدفع.', 'الدفع آمن عبر Stripe. لا تخزن ALMENA PROD بيانات البطاقة.'] },
         { heading: 'الطلب', paragraphs: ['يتم تأكيد الطلب بعد اعتماد الدفع من Stripe. يُرسل إيصال إلى البريد الإلكتروني المقدم.'] },

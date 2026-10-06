@@ -329,22 +329,20 @@ export default {
             'El sitio oficial DOYA (Luna Bohemia) es editado por ALMENA PROD.',
             'ALMENA PROD asume la responsabilidad del sitio oficial (contenido, marca y tienda).',
             'Razón social: ALMENA PROD',
-            'Domicilio social: Louey, France',
-            'SIRET: 101 884 062 00015',
+            'Domicilio social: 14 chemin des Arts, 65290 Louey, France',
+            'SIRET: 101 884 062 00015', "Forma jurídica: SAS (société par actions simplifiée)", "Capital social: 1 000 €", 'RCS Tarbes 101 884 062',
             `Contacto: ${ALMENA_CONTACT_EMAIL}`,
             'Contacto técnico: reelazura@gmail.com',
           ],
         },
         {
           heading: 'Director de la publicación',
-          paragraphs: [
-            'El director de la publicación es el representante legal de ALMENA PROD.',
-          ],
+          paragraphs: ["Directora de publicación: Alice Martin — ALMENA PROD"],
         },
         {
           heading: 'Alojamiento y prestadores',
           paragraphs: [
-            'Alojamiento del sitio: Hetzner Online GmbH',
+            'Alojamiento del sitio: Hetzner Online GmbH', 'Hetzner Online GmbH — Industriestr. 25, 91710 Gunzenhausen, Germany', '+49 9831 505-0 — info@hetzner.com',
             'Infraestructura y base de datos: Supabase.',
             'Almacenamiento de medios: Cloudflare R2.',
             'Pagos en línea: Stripe Payments Europe, Ltd.',
@@ -369,8 +367,8 @@ export default {
           heading: 'Vendedor',
           paragraphs: [
             'ALMENA PROD - tienda DOYA',
-            'Domicilio social: Louey, France',
-            'SIRET: 101 884 062 00015',
+            'Domicilio social: 14 chemin des Arts, 65290 Louey, France',
+            'SIRET: 101 884 062 00015', "Forma jurídica: SAS (société par actions simplifiée)", "Capital social: 1 000 €", 'RCS Tarbes 101 884 062',
             `Contacto pedidos: ${DOYA_CONTACT_EMAIL}`,
           ],
         },

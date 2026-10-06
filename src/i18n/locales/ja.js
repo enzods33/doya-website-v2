@@ -303,14 +303,14 @@ export default {
           'DOYA（Luna Bohemia）公式サイトはALMENA PRODが運営しています。',
           'ALMENA PRODは公式サイト（コンテンツ、ブランド、ショップ）の運営責任を負います。',
           '法人名：ALMENA PROD',
-          '所在地：Louey, France',
-          'SIRET：101 884 062 00015',
+          '所在地：14 chemin des Arts, 65290 Louey, France',
+          'SIRET：101 884 062 00015', "法人形態: SAS (société par actions simplifiée)", "資本金: 1 000 €", 'RCS Tarbes 101 884 062',
           `お問い合わせ：${ALMENA_CONTACT_EMAIL}`,
           '技術窓口：reelazura@gmail.com',
         ] },
-        { heading: '発行責任者', paragraphs: ['発行責任者はALMENA PRODの法定代表者です。'] },
+        { heading: '発行責任者', paragraphs: ["発行責任者: Alice Martin — ALMENA PROD"] },
         { heading: 'ホスティング・サービス提供者', paragraphs: [
-          'ウェブホスティング：Hetzner Online GmbH',
+          'ウェブホスティング：Hetzner Online GmbH', 'Hetzner Online GmbH — Industriestr. 25, 91710 Gunzenhausen, Germany', '+49 9831 505-0 — info@hetzner.com',
           'アプリケーション基盤・データベース：Supabase',
           'メディアストレージ：Cloudflare R2',
           'オンライン決済：Stripe Payments Europe, Ltd.',
@@ -327,7 +327,7 @@ export default {
       title: '販売条件',
       intro: '本条件はDOYAオンラインショップでの購入に適用されます。',
       sections: [
-        { heading: '販売者', paragraphs: ['ALMENA PROD - DOYAショップ', '所在地：Louey, France', 'SIRET：101 884 062 00015', `注文窓口：${DOYA_CONTACT_EMAIL}`] },
+        { heading: '販売者', paragraphs: ['ALMENA PROD - DOYAショップ', '所在地：14 chemin des Arts, 65290 Louey, France', 'SIRET：101 884 062 00015', "法人形態: SAS (société par actions simplifiée)", "資本金: 1 000 €", 'RCS Tarbes 101 884 062', `注文窓口：${DOYA_CONTACT_EMAIL}`] },
         { heading: '商品', paragraphs: [
           'ショップでは、在庫の範囲内でDOYAに関連する商品や物理メディア（Tシャツ、CDなど）を販売します。',
           '商品写真はイメージです。決済後に商品を用意できない場合は返金します。',

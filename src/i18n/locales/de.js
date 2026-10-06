@@ -303,16 +303,14 @@ export default {
           'Die offizielle Website von DOYA (Luna Bohemia) wird von ALMENA PROD herausgegeben.',
           'ALMENA PROD trägt die Verantwortung für die offizielle Website (Inhalte, Marke und Shop).',
           'Firmenname: ALMENA PROD',
-          'Sitz: Louey, Frankreich',
-          'SIRET: 101 884 062 00015',
+          'Sitz: 14 chemin des Arts, 65290 Louey, Frankreich',
+          'SIRET: 101 884 062 00015', "Rechtsform: SAS (société par actions simplifiée)", "Kapital: 1 000 €", 'RCS Tarbes 101 884 062',
           `Kontakt: ${ALMENA_CONTACT_EMAIL}`,
           'Technischer Kontakt: reelazura@gmail.com',
         ] },
-        { heading: 'Verantwortlich für die Veröffentlichung', paragraphs: [
-          'Verantwortlich für die Veröffentlichung ist der gesetzliche Vertreter von ALMENA PROD.',
-        ] },
+        { heading: 'Verantwortlich für die Veröffentlichung', paragraphs: ["Verantwortlich für die Veröffentlichung: Alice Martin — ALMENA PROD"] },
         { heading: 'Hosting und Dienstleister', paragraphs: [
-          'Website-Hosting: Hetzner Online GmbH',
+          'Website-Hosting: Hetzner Online GmbH', 'Hetzner Online GmbH — Industriestr. 25, 91710 Gunzenhausen, Germany', '+49 9831 505-0 — info@hetzner.com',
           'Anwendungsinfrastruktur und Datenbank: Supabase.',
           'Medienspeicher: Cloudflare R2.',
           'Online-Zahlungen: Stripe Payments Europe, Ltd.',
@@ -329,7 +327,7 @@ export default {
       title: 'Verkaufsbedingungen',
       intro: 'Diese Bedingungen gelten für Käufe im Online-Shop von DOYA.',
       sections: [
-        { heading: 'Verkäufer', paragraphs: ['ALMENA PROD - DOYA-Shop', 'Sitz: Louey, Frankreich', 'SIRET: 101 884 062 00015', `Kontakt für Bestellungen: ${DOYA_CONTACT_EMAIL}`] },
+        { heading: 'Verkäufer', paragraphs: ['ALMENA PROD - DOYA-Shop', 'Sitz: 14 chemin des Arts, 65290 Louey, Frankreich', 'SIRET: 101 884 062 00015', "Rechtsform: SAS (société par actions simplifiée)", "Kapital: 1 000 €", 'RCS Tarbes 101 884 062', `Kontakt für Bestellungen: ${DOYA_CONTACT_EMAIL}`] },
         { heading: 'Produkte', paragraphs: [
           'Der Shop verkauft Produkte und physische Formate rund um DOYA (T-Shirts, CDs usw.), solange der Vorrat reicht.',
           'Die Fotos dienen der Illustration. Ist ein Artikel nach der Zahlung nicht verfügbar, wird der Kaufpreis erstattet.',

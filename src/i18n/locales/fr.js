@@ -705,22 +705,20 @@ export default {
             'Le site officiel DOYA (marque artistique Luna Bohemia) est édité par ALMENA PROD.',
             'ALMENA PROD assume la responsabilité du site officiel (contenu, marque et boutique).',
             'Raison sociale : ALMENA PROD',
-            'Siège social : Louey, France',
-            'SIRET : 101 884 062 00015',
+            'Siège social : 14 chemin des Arts, 65290 Louey, France',
+            'SIRET : 101 884 062 00015', "Forme juridique: SAS (société par actions simplifiée)", "Capital social: 1 000 €", 'RCS Tarbes 101 884 062',
             `Contact : ${ALMENA_CONTACT_EMAIL}`,
             'Contact technique : reelazura@gmail.com',
           ],
         },
         {
           heading: 'Directeur de la publication',
-          paragraphs: [
-            'Le directeur de la publication est le représentant légal d’ALMENA PROD.',
-          ],
+          paragraphs: ["Directrice de la publication: Alice Martin — ALMENA PROD"],
         },
         {
           heading: 'Hébergement et prestataires',
           paragraphs: [
-            'Hébergement du site : Hetzner Online GmbH',
+            'Hébergement du site : Hetzner Online GmbH', 'Hetzner Online GmbH — Industriestr. 25, 91710 Gunzenhausen, Germany', '+49 9831 505-0 — info@hetzner.com',
             'Infrastructure applicative et base de données : Supabase.',
             'Stockage des médias : Cloudflare R2.',
             'Paiement en ligne : Stripe Payments Europe, Ltd.',
@@ -745,8 +743,8 @@ export default {
           heading: 'Vendeur',
           paragraphs: [
             'ALMENA PROD - boutique DOYA',
-            'Siège social : Louey, France',
-            'SIRET : 101 884 062 00015',
+            'Siège social : 14 chemin des Arts, 65290 Louey, France',
+            'SIRET : 101 884 062 00015', "Forme juridique: SAS (société par actions simplifiée)", "Capital social: 1 000 €", 'RCS Tarbes 101 884 062',
             `Contact commandes : ${DOYA_CONTACT_EMAIL}`,
           ],
         },
