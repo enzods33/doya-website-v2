@@ -206,6 +206,17 @@ test('le monitoring verrouille le contrat cache et 404 des assets', () => {
   assert.match(monitor, /!missingType\.includes\('text\/html'\)/)
 })
 
+test('le fallback FR reprend la vraie bio du backoffice', () => {
+  const fr = readFileSync(new URL('../src/i18n/locales/fr.js', import.meta.url), 'utf8')
+  assert.match(fr, /Deux sœurs\. Une même pulsation\./)
+  assert.match(fr, /Inspirées par la figure mystique et féminine de la Lune/)
+  assert.match(fr, /plus de 500 000 abonnés/)
+  assert.match(fr, /No Anda Sola/)
+  assert.match(fr, /THE VOICE France/)
+  assert.match(fr, /Luna Bohemia.*2 octobre 2026/s)
+  assert.doesNotMatch(fr, /Deux sœurs\. Deux voix\. Une même pulsation\./)
+})
+
 test('Stripe, Brevo et la bio couvrent les 9 langues', () => {
   const labels = readFileSync(new URL('../supabase/functions/_shared/checkoutLabels.ts', import.meta.url), 'utf8')
   const checkout = readFileSync(new URL('../supabase/functions/create-checkout-session/index.ts', import.meta.url), 'utf8')

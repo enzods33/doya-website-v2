@@ -1,4 +1,5 @@
 import { galleryImages as fallbackGallery } from '../data/media.js'
+import { demoBio } from '../data/demoBio.js'
 import { readCache, writeCache } from './offlineCache.js'
 
 function normalizePhoto(row) {
@@ -52,7 +53,7 @@ export async function loadBioCopy(locale) {
 
   try {
     const { supabase } = await import('./supabase.js')
-    if (!supabase) return readCache(cacheKey)
+    if (!supabase) return demoBio[code] ?? readCache(cacheKey)
 
     const { data, error } = await supabase
       .from('site_bio')
@@ -60,7 +61,7 @@ export async function loadBioCopy(locale) {
       .eq('locale', code)
       .maybeSingle()
 
-    if (error) return readCache(cacheKey)
+    if (error) return demoBio[code] ?? readCache(cacheKey)
     if (!data) {
       writeCache(cacheKey, null)
       return null
@@ -77,6 +78,6 @@ export async function loadBioCopy(locale) {
     writeCache(cacheKey, next)
     return next
   } catch {
-    return readCache(cacheKey)
+    return demoBio[code] ?? readCache(cacheKey)
   }
 }
