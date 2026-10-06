@@ -291,6 +291,7 @@ export default {
   },
   notFound: { kicker: 'DOYA', title: '페이지를 찾을 수 없습니다', home: '홈으로' },
   legal: {
+    mediation: {"title":"소비자 조정","link":"조정기관 웹사이트 방문"},
     updated: '최종 업데이트: 2026년 10월',
     backHome: '홈으로',
     mentions: {
@@ -346,9 +347,9 @@ export default {
           `배송 시 상품이 손상된 경우 사진과 주문번호를 첨부해 ${DOYA_CONTACT_EMAIL}으로 연락해 주세요.`,
         ] },
         { heading: '개인정보', paragraphs: ['주문 데이터와 해당되는 경우 뉴스레터 데이터는 본 사이트의 개인정보 처리방침에 따라 처리됩니다.'] },
-        { heading: '준거법', paragraphs: [
+        { mediation: true, heading: '준거법', paragraphs: [
           `프랑스 법률을 준거법으로 합니다. 분쟁이 발생하면 먼저 ${DOYA_CONTACT_EMAIL}으로 연락하여 원만한 해결을 시도해 주세요.`,
-          `합의에 이르지 못한 경우 프랑스 소비자법에 따른 무료 소비자 조정을 이용할 수 있습니다. ALMENA PROD가 지정한 조정기관 정보는 ${DOYA_CONTACT_EMAIL}으로 요청할 수 있습니다.`,
+          "ALMENA PROD에 사전에 서면으로 이의를 제기한 후에도 분쟁이 해결되지 않으면 프랑스 소비자법 제L. 612-1조 이하에 따라 소비자 조정기관 CM2C를 무료로 이용할 수 있습니다.",
         ] },
       ],
     },

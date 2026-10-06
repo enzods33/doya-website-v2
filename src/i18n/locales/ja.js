@@ -291,6 +291,7 @@ export default {
   },
   notFound: { kicker: 'DOYA', title: 'ページが見つかりません', home: 'ホームへ戻る' },
   legal: {
+    mediation: {"title":"消費者調停","link":"調停機関のサイトへ"},
     updated: '最終更新：2026年10月',
     backHome: 'ホームへ戻る',
     mentions: {
@@ -346,9 +347,9 @@ export default {
           `到着時に破損がある場合は、写真と注文番号を添えて${DOYA_CONTACT_EMAIL}へご連絡ください。`,
         ] },
         { heading: '個人情報', paragraphs: ['注文データ（該当する場合はニュースレターデータを含む）は、本サイトのプライバシーポリシーに従って処理されます。'] },
-        { heading: '準拠法', paragraphs: [
+        { mediation: true, heading: '準拠法', paragraphs: [
           `フランス法を準拠法とします。紛争が生じた場合は、まず${DOYA_CONTACT_EMAIL}へ連絡し、円満な解決を試みてください。`,
-          `合意に至らない場合、フランス消費者法に基づく無料の消費者調停を利用できます。ALMENA PRODが指定する調停機関の情報は${DOYA_CONTACT_EMAIL}への請求により提供します。`,
+          "ALMENA PRODへの事前の書面による苦情申立てで紛争が解決しなかった場合、フランス消費者法典第L. 612-1条以下に基づき、消費者調停機関CM2Cを無料で利用できます。",
         ] },
       ],
     },

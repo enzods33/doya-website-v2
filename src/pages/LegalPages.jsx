@@ -1,4 +1,5 @@
 import { useI18n } from '../i18n/I18nProvider.jsx'
+import './Mediation.css'
 import Link from '../components/Link.jsx'
 
 /** @param {{ doc: 'mentions' | 'cgv' | 'privacy' }} props */
@@ -27,6 +28,22 @@ function LegalPage({ doc }) {
             {(section.paragraphs ?? []).map((paragraph, pIndex) => (
               <p key={`${doc}-${index}-${pIndex}`}>{paragraph}</p>
             ))}
+            {section.mediation && doc === 'cgv' && (
+              <div className="legal-mediation">
+                <div className="legal-mediation-details">
+                  <h3>{t('legal.mediation.title')}</h3>
+                  <p><strong>CM2C</strong><br />Centre de la Médiation de la Consommation de Conciliateurs de Justice</p>
+                  <p><bdi>49 rue de Ponthieu, 75008 Paris</bdi><br />
+                    <a href="mailto:contact@cm2c.net"><bdi>contact@cm2c.net</bdi></a><br />
+                    <a href="tel:+33189470014"><bdi>01 89 47 00 14</bdi></a>
+                  </p>
+                  <a className="text-link" href="https://www.cm2c.net/" target="_blank" rel="noopener noreferrer">{t('legal.mediation.link')} · <bdi>cm2c.net</bdi></a>
+                </div>
+                <a className="legal-mediation-qr" href="https://www.cm2c.net/" target="_blank" rel="noopener noreferrer" aria-label={t('legal.mediation.link')}>
+                  <img src="/cm2c-qr.svg" width="132" height="132" alt="" loading="lazy" />
+                </a>
+              </div>
+            )}
           </section>
         ))}
 

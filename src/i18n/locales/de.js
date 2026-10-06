@@ -291,6 +291,7 @@ export default {
   },
   notFound: { kicker: 'DOYA', title: 'Seite nicht gefunden', home: 'Zur Startseite' },
   legal: {
+    mediation: {"title":"Verbraucherschlichtung","link":"Website der Schlichtungsstelle öffnen"},
     updated: 'Zuletzt aktualisiert: Oktober 2026',
     backHome: 'Zur Startseite',
     mentions: {
@@ -348,9 +349,9 @@ export default {
           `Bei beschädigter Lieferung: kontaktiere ${DOYA_CONTACT_EMAIL} mit Fotos und Bestellnummer.`,
         ] },
         { heading: 'Personenbezogene Daten', paragraphs: ['Bestelldaten (und Newsletterdaten, falls zutreffend) werden gemäß der Datenschutzerklärung der Website verarbeitet.'] },
-        { heading: 'Anwendbares Recht', paragraphs: [
+        { mediation: true, heading: 'Anwendbares Recht', paragraphs: [
           `Es gilt französisches Recht. Bei Streitigkeiten kontaktiere zunächst ${DOYA_CONTACT_EMAIL}, um eine gütliche Lösung zu suchen.`,
-          `Kommt keine Einigung zustande, kannst du kostenlos eine Verbraucherschlichtung nach französischem Verbraucherschutzrecht nutzen. Die Angaben zur von ALMENA PROD benannten Schlichtungsstelle sind auf Anfrage unter ${DOYA_CONTACT_EMAIL} erhältlich.`,
+          "Wenn eine vorherige schriftliche Beschwerde bei ALMENA PROD den Streit nicht beigelegt hat, kannst du die Verbraucherschlichtungsstelle CM2C kostenlos anrufen, gemäß Artikel L. 612-1 ff. des französischen Verbrauchergesetzbuchs.",
         ] },
       ],
     },
