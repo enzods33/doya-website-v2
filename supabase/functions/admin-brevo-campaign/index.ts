@@ -16,6 +16,7 @@ type CampaignBody = {
   logoBase?: string
   logoUrl?: string
   email?: string
+  testEmail?: string
   campaignId?: number | string
   scheduledAt?: string | null
   /** fr | es | pt | en | de | ja | ko | zh | ar | all - filtre destinataires via attribut Brevo LANG */
