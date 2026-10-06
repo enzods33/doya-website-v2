@@ -315,6 +315,7 @@ export default {
     home: 'Back to home',
   },
   legal: {
+    mediation: {"title":"Consumer mediation","link":"Visit the mediator’s website"},
     updated: 'Last updated: October 2026',
     backHome: 'Back to home',
     mentions: {
@@ -420,10 +421,10 @@ export default {
           ],
         },
         {
-          heading: 'Governing law',
+          mediation: true, heading: 'Governing law',
           paragraphs: [
             `French law. In case of dispute, first contact ${DOYA_CONTACT_EMAIL} for an amicable solution.`,
-            `Failing agreement, you may use free consumer mediation (French Consumer Code). Details of the mediator designated by ALMENA PROD are available on request at ${DOYA_CONTACT_EMAIL}.`,
+            "After a prior written complaint to ALMENA PROD has failed to resolve the dispute, you may refer it free of charge to consumer mediator CM2C, under Articles L. 612-1 et seq. of the French Consumer Code.",
           ],
         },
       ],

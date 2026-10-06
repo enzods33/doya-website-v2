@@ -315,6 +315,7 @@ export default {
     home: 'Voltar ao início',
   },
   legal: {
+    mediation: {"title":"Mediação de consumo","link":"Aceder ao site do mediador"},
     updated: 'Última atualização: outubro 2026',
     backHome: 'Voltar ao início',
     mentions: {
@@ -420,10 +421,10 @@ export default {
           ],
         },
         {
-          heading: 'Lei aplicável',
+          mediation: true, heading: 'Lei aplicável',
           paragraphs: [
             `Direito francês. Em caso de litígio, contacte primeiro ${DOYA_CONTACT_EMAIL} para uma solução amigável.`,
-            `Na falta de acordo, pode recorrer gratuitamente a um mediador de consumo (Código do consumo). Os dados do mediador designado pela ALMENA PROD estão disponíveis sob pedido em ${DOYA_CONTACT_EMAIL}.`,
+            "Após uma reclamação escrita prévia à ALMENA PROD sem solução, pode recorrer gratuitamente ao mediador de consumo CM2C, nos termos dos artigos L. 612-1 e seguintes do Código do consumo francês.",
           ],
         },
       ],

@@ -291,6 +291,7 @@ export default {
   },
   notFound: { kicker: 'DOYA', title: '找不到页面', home: '返回首页' },
   legal: {
+    mediation: {"title":"消费者调解","link":"访问调解机构网站"},
     updated: '最后更新：2026 年 10 月',
     backHome: '返回首页',
     mentions: {
@@ -346,9 +347,9 @@ export default {
           `若商品到货时损坏，请附照片和订单号联系 ${DOYA_CONTACT_EMAIL}。`,
         ] },
         { heading: '个人数据', paragraphs: ['订单数据（以及适用时的新闻邮件数据）按照本站隐私政策处理。'] },
-        { heading: '适用法律', paragraphs: [
+        { mediation: true, heading: '适用法律', paragraphs: [
           `适用法国法律。如发生争议，请先联系 ${DOYA_CONTACT_EMAIL}，尝试友好解决。`,
-          `如无法达成一致，可依据法国消费者法免费使用消费者调解服务。ALMENA PROD 指定的调解机构信息可通过 ${DOYA_CONTACT_EMAIL} 索取。`,
+          "如果事先向 ALMENA PROD 提交书面投诉后争议仍未解决，可根据法国消费者法典第 L. 612-1 条及后续条款，免费申请 CM2C 消费者调解。",
         ] },
       ],
     },

@@ -691,6 +691,7 @@ export default {
     home: 'Retour à l’accueil',
   },
   legal: {
+    mediation: {"title":"Médiation de la consommation","link":"Accéder au site du médiateur"},
     updated: 'Dernière mise à jour : octobre 2026',
     backHome: 'Retour à l’accueil',
     mentions: {
@@ -796,10 +797,10 @@ export default {
           ],
         },
         {
-          heading: 'Droit applicable',
+          mediation: true, heading: 'Droit applicable',
           paragraphs: [
             `Droit français. En cas de litige, contactez d’abord ${DOYA_CONTACT_EMAIL} pour une solution amiable.`,
-            `À défaut d’accord, vous pouvez recourir gratuitement à un médiateur de la consommation (Code de la consommation). Les coordonnées du médiateur désigné par ALMENA PROD sont disponibles sur demande à ${DOYA_CONTACT_EMAIL}.`,
+            "Après une réclamation écrite préalable auprès d’ALMENA PROD restée sans solution, vous pouvez recourir gratuitement au médiateur de la consommation CM2C, conformément aux articles L. 612-1 et suivants du Code de la consommation.",
           ],
         },
       ],
