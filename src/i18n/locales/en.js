@@ -329,22 +329,20 @@ export default {
             'The official DOYA website (Luna Bohemia) is published by ALMENA PROD.',
             'ALMENA PROD assumes responsibility for the official website (content, brand and shop).',
             'Legal name: ALMENA PROD',
-            'Registered office: Louey, France',
-            'SIRET: 101 884 062 00015',
+            'Registered office: 14 chemin des Arts, 65290 Louey, France',
+            'SIRET: 101 884 062 00015', "Legal form: SAS (société par actions simplifiée)", "Share capital: 1 000 €", 'RCS Tarbes 101 884 062',
             `Contact: ${ALMENA_CONTACT_EMAIL}`,
             'Technical contact: reelazura@gmail.com',
           ],
         },
         {
           heading: 'Publication director',
-          paragraphs: [
-            'The publication director is the legal representative of ALMENA PROD.',
-          ],
+          paragraphs: ["Publication director: Alice Martin — ALMENA PROD"],
         },
         {
           heading: 'Hosting and providers',
           paragraphs: [
-            'Website hosting: Hetzner Online GmbH',
+            'Website hosting: Hetzner Online GmbH', 'Hetzner Online GmbH — Industriestr. 25, 91710 Gunzenhausen, Germany', '+49 9831 505-0 — info@hetzner.com',
             'Application infrastructure and database: Supabase.',
             'Media storage: Cloudflare R2.',
             'Online payments: Stripe Payments Europe, Ltd.',
@@ -369,8 +367,8 @@ export default {
           heading: 'Seller',
           paragraphs: [
             'ALMENA PROD - DOYA shop',
-            'Registered office: Louey, France',
-            'SIRET: 101 884 062 00015',
+            'Registered office: 14 chemin des Arts, 65290 Louey, France',
+            'SIRET: 101 884 062 00015', "Legal form: SAS (société par actions simplifiée)", "Share capital: 1 000 €", 'RCS Tarbes 101 884 062',
             `Order contact: ${DOYA_CONTACT_EMAIL}`,
           ],
         },
@@ -440,6 +438,7 @@ export default {
             'Controller: ALMENA PROD',
             `Contact: ${ALMENA_CONTACT_EMAIL}`,
             'Technical contact: reelazura@gmail.com',
+            "Registered office: 14 chemin des Arts, 65290 Louey, France",
           ],
         },
         {
@@ -456,6 +455,8 @@ export default {
             'Performance of the sales and delivery contract.',
             'Newsletter management based on consent.',
             'Site security and abuse prevention.',
+            "Accounting archives and statutory contract retention: compliance with legal obligations.",
+            "Security, consent evidence and defense of rights: ALMENA PROD’s legitimate interest, limited to necessary data.",
           ],
         },
         {
@@ -467,7 +468,14 @@ export default {
         {
           heading: 'Retention',
           paragraphs: [
-            'Data is kept only as long as needed for the stated purposes. An unconfirmed newsletter address is deleted after no more than 30 days; a technical record of consent or withdrawal may be retained to document it. Pseudonymised anti-abuse counters are purged after 48 hours. Other data is archived or deleted according to legal obligations (accounting, warranties, etc.).',
+            "Newsletter confirmation: the temporary address in Supabase is erased after confirmation and delivery of the welcome message, and no later than expiry of the link, 30 days after the request.",
+            "Newsletter in Brevo: retained until consent is withdrawn or for 3 years after signup or your last active contact (such as a link click or an enquiry). Merely opening a message does not extend this period. Contacts are reviewed before deletion.",
+            "Consent evidence: protected address fingerprint, source, consent version and dates, throughout the subscription and for 5 years after unsubscribe to defend our rights. A minimal withdrawal record is retained during this period to prevent unintended resubscription; it is not used for advertising.",
+            "Orders: necessary data is used for payment, delivery and after-sales support. Records needed as contractual evidence may be kept in a restricted-access archive for 5 years after the contractual relationship ends, unless a specific legal period applies.",
+            "Invoices and accounting supporting documents: 10 years from the close of the financial year. Electronic contracts worth at least €120: 10 years from delivery, including retention between conclusion and delivery. These periods cover necessary documents, not all browsing data.",
+            "Abandoned, canceled or expired unpaid orders: deletion is planned after 90 days, following checks for payment, active stock reservations and outstanding enquiries.",
+            "Technical records of sent order emails: recipient details and technical errors are erased after one year; a minimal technical reference may remain to prevent duplicate sends. Pseudonymized anti-abuse counters: 48 hours.",
+            "A dispute or legal obligation may require longer targeted retention. Necessary archives are restricted to authorized persons; data is deleted or anonymized when retention is no longer justified. These rules cover ALMENA PROD’s processing; providers acting under their own obligations apply their own policies.",
           ],
         },
         {

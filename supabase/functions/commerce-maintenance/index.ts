@@ -1,3 +1,4 @@
+import { parseRetentionHolds, processRetention } from '../_shared/dataRetention.js'
 import { serviceClient, stripeClient } from '../_shared/clients.ts'
 import { finalizePaidCheckout } from '../_shared/checkoutPayment.ts'
 import { processDueOrderEmails } from '../_shared/orderNotifications.ts'
@@ -138,13 +139,28 @@ Deno.serve(async (req) => {
     .lt('expires_at', nowIso)
   if (confirmedOptinError) console.error('newsletter_optin_pii_cleanup_failed', confirmedOptinError)
 
+  // New retention rules are audit-only until explicitly activated.
+  let retention
+  try {
+    retention = await processRetention(admin, stripe, {
+      apply: Deno.env.get('DOYA_RETENTION_MODE') === 'apply',
+      orderHolds: parseRetentionHolds(Deno.env.get('DOYA_RETENTION_HOLD_ORDER_IDS') ?? ''),
+      optinHolds: parseRetentionHolds(Deno.env.get('DOYA_RETENTION_HOLD_OPTIN_IDS') ?? ''),
+    })
+  } catch {
+    retention = { mode: 'blocked', failed: 1 }
+  }
+  if (retention.failed) console.error('retention_maintenance_failed')
+
   return new Response(JSON.stringify({
-    ok: true,
+    ok: retention.failed === 0,
+    retention,
     reconciled: { paid, released, untouched, failed },
     emails,
     newsletterWelcomes: { sent: welcomeSent, failed: welcomeFailed },
   }), {
-    status: 200,
+    status: retention.failed ? 500 : 200,
     headers: { 'Content-Type': 'application/json' },
   })
 })
+

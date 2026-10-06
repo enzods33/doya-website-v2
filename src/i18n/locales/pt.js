@@ -329,22 +329,20 @@ export default {
             'O site oficial DOYA (Luna Bohemia) é editado pela ALMENA PROD.',
             'A ALMENA PROD assume a responsabilidade do site oficial (conteúdo, marca e loja).',
             'Denominação: ALMENA PROD',
-            'Sede social: Louey, France',
-            'SIRET: 101 884 062 00015',
+            'Sede social: 14 chemin des Arts, 65290 Louey, France',
+            'SIRET: 101 884 062 00015', "Forma jurídica: SAS (société par actions simplifiée)", "Capital social: 1 000 €", 'RCS Tarbes 101 884 062',
             `Contacto: ${ALMENA_CONTACT_EMAIL}`,
             'Contacto técnico: reelazura@gmail.com',
           ],
         },
         {
           heading: 'Diretor de publicação',
-          paragraphs: [
-            'O diretor de publicação é o representante legal da ALMENA PROD.',
-          ],
+          paragraphs: ["Diretora de publicação: Alice Martin — ALMENA PROD"],
         },
         {
           heading: 'Alojamento e prestadores',
           paragraphs: [
-            'Alojamento do site: Hetzner Online GmbH',
+            'Alojamento do site: Hetzner Online GmbH', 'Hetzner Online GmbH — Industriestr. 25, 91710 Gunzenhausen, Germany', '+49 9831 505-0 — info@hetzner.com',
             'Infraestrutura e base de dados: Supabase.',
             'Armazenamento de media: Cloudflare R2.',
             'Pagamentos online: Stripe Payments Europe, Ltd.',
@@ -369,8 +367,8 @@ export default {
           heading: 'Vendedor',
           paragraphs: [
             'ALMENA PROD - loja DOYA',
-            'Sede social: Louey, France',
-            'SIRET: 101 884 062 00015',
+            'Sede social: 14 chemin des Arts, 65290 Louey, France',
+            'SIRET: 101 884 062 00015', "Forma jurídica: SAS (société par actions simplifiée)", "Capital social: 1 000 €", 'RCS Tarbes 101 884 062',
             `Contacto encomendas: ${DOYA_CONTACT_EMAIL}`,
           ],
         },
@@ -440,6 +438,7 @@ export default {
             'Responsável: ALMENA PROD',
             `Contacto: ${ALMENA_CONTACT_EMAIL}`,
             'Contacto técnico: reelazura@gmail.com',
+            "Sede social: 14 chemin des Arts, 65290 Louey, France",
           ],
         },
         {
@@ -456,6 +455,8 @@ export default {
             'Execução do contrato de venda e entrega.',
             'Gestão da newsletter com base no consentimento.',
             'Segurança do site e prevenção de abusos.',
+            "Arquivo contabilístico e conservação legal de contratos: cumprimento de obrigações legais.",
+            "Segurança, prova do consentimento e defesa de direitos: interesse legítimo da ALMENA PROD, limitado aos dados necessários.",
           ],
         },
         {
@@ -467,7 +468,14 @@ export default {
         {
           heading: 'Conservação',
           paragraphs: [
-            'Os dados são conservados apenas durante o tempo necessário. Um email de newsletter não confirmado é eliminado no máximo após 30 dias; uma prova técnica do consentimento ou da retirada pode ser conservada para o documentar. Os contadores antiabuso pseudonimizados são eliminados após 48 horas. Os restantes dados são arquivados ou eliminados segundo as obrigações legais.',
+            "Confirmação da newsletter: o endereço temporário no Supabase é apagado após a confirmação e o envio da mensagem de boas-vindas, e o mais tardar quando a ligação expira, 30 dias após o pedido.",
+            "Newsletter no Brevo: até à retirada do consentimento ou durante 3 anos após a inscrição ou o último contacto ativo iniciado por ti (por exemplo, um clique numa ligação ou um pedido). A simples abertura de uma mensagem não prolonga este prazo. Os contactos são revistos antes da eliminação.",
+            "Provas de consentimento: impressão protegida do endereço, origem, versão e datas, durante a subscrição e durante 5 anos após o cancelamento para defender os nossos direitos. Um registo mínimo da retirada é mantido nesse período para evitar uma reinscrição involuntária; não é usado para publicidade.",
+            "Encomendas: os dados necessários são usados para pagamento, entrega e assistência pós-venda. Os elementos necessários como prova do contrato podem ser conservados num arquivo de acesso restrito durante 5 anos após o fim da relação contratual, salvo prazo legal específico.",
+            "Faturas e comprovativos contabilísticos: 10 anos após o encerramento do exercício. Contratos eletrónicos de valor igual ou superior a 120 €: 10 anos após a entrega, incluindo conservação entre a celebração e a entrega. Estes prazos abrangem os documentos necessários, não todos os dados de navegação.",
+            "Encomendas abandonadas, canceladas ou expiradas sem pagamento: eliminação prevista após 90 dias, depois de verificar a ausência de pagamento, reservas ativas de stock e pedidos pendentes.",
+            "Registos técnicos de e-mails de encomendas enviados: os dados do destinatário e erros técnicos são apagados após um ano; pode permanecer uma referência técnica mínima para evitar envios duplicados. Contadores pseudonimizados contra abusos: 48 horas.",
+            "Um litígio ou obrigação legal pode justificar uma conservação específica mais longa. Os arquivos necessários estão reservados a pessoas autorizadas; os dados são eliminados ou anonimizados quando deixam de ser necessários. Estas regras abrangem o tratamento pela ALMENA PROD; prestadores com obrigações próprias aplicam as suas próprias políticas.",
           ],
         },
         {
