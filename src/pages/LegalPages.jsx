@@ -9,6 +9,12 @@ const LEGAL_DOCUMENTS = [
   { doc: 'privacy', href: '/confidentialite', label: 'footer.legalPrivacy' },
 ]
 
+const LEGAL_DOC_BY_PATH = {
+  '/mentions-legales': 'mentions',
+  '/cgv': 'cgv',
+  '/confidentialite': 'privacy',
+}
+
 function LegalNavigation({ doc, bottom = false }) {
   const { t } = useI18n()
   return (
@@ -61,9 +67,6 @@ function LegalPage({ doc }) {
                   </p>
                   <a className="text-link" href="https://www.cm2c.net/" target="_blank" rel="noopener noreferrer">{t('legal.mediation.link')} · <bdi>cm2c.net</bdi></a>
                 </div>
-                <a className="legal-mediation-qr" href="https://www.cm2c.net/" target="_blank" rel="noopener noreferrer" aria-label={t('legal.mediation.link')}>
-                  <img src="/cm2c-qr.svg" width="132" height="132" alt="" loading="lazy" />
-                </a>
               </div>
             )}
           </section>
@@ -77,6 +80,10 @@ function LegalPage({ doc }) {
       </div>
     </main>
   )
+}
+
+export function LegalRoutePage({ path }) {
+  return <LegalPage doc={LEGAL_DOC_BY_PATH[path] ?? 'mentions'} />
 }
 
 export function MentionsLegalesPage() {
