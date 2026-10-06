@@ -1,0 +1,10 @@
+begin;
+select plan(6);
+select has_table('doya_private', 'order_archives', 'Private order archive exists');
+select ok(not has_function_privilege('anon', 'public.archive_completed_orders(integer)', 'EXECUTE'), 'Anonymous callers cannot archive or inspect orders');
+select ok(not has_function_privilege('authenticated', 'public.archive_completed_orders(integer)', 'EXECUTE'), 'Authenticated callers do not inherit service access');
+select throws_ok('select public.archive_completed_orders(0)', 'P0001', 'invalid_archive_limit', 'Invalid batch limit fails closed');
+select is(public.archive_completed_orders(100)->>'paidOrdersDeleted', '0', 'Archiving never deletes operational paid orders');
+select is(public.archive_completed_orders(100)->>'createdSnapshots', '0', 'Repeating an unchanged archive is idempotent');
+select * from finish();
+rollback;

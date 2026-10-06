@@ -330,19 +330,19 @@ export default {
             'ALMENA PROD assumes responsibility for the official website (content, brand and shop).',
             'Legal name: ALMENA PROD',
             'Registered office: 14 chemin des Arts, 65290 Louey, France',
-            'SIRET: 101 884 062 00015', "Legal form: SAS (société par actions simplifiée)", "Share capital: 1 000 €", 'RCS Tarbes 101 884 062',
+            'SIRET: 101 884 062 00015', "Legal form: SAS (société par actions simplifiée)", 'RCS Tarbes 101 884 062',
             `Contact: ${ALMENA_CONTACT_EMAIL}`,
             'Technical contact: reelazura@gmail.com',
           ],
         },
         {
           heading: 'Publication director',
-          paragraphs: ["Publication director: Alice Martin — ALMENA PROD"],
+          paragraphs: ["Publication director: Alice Martin, ALMENA PROD"],
         },
         {
           heading: 'Hosting and providers',
           paragraphs: [
-            'Website hosting: Hetzner Online GmbH', 'Hetzner Online GmbH — Industriestr. 25, 91710 Gunzenhausen, Germany', '+49 9831 505-0 — info@hetzner.com',
+            'Website hosting: Hetzner Online GmbH', 'Hetzner Online GmbH, Industriestr. 25, 91710 Gunzenhausen, Germany', '+49 9831 505-0, info@hetzner.com',
             'Application infrastructure and database: Supabase.',
             'Media storage: Cloudflare R2.',
             'Online payments: Stripe Payments Europe, Ltd.',
