@@ -9,6 +9,12 @@ const LEGAL_DOCUMENTS = [
   { doc: 'privacy', href: '/confidentialite', label: 'footer.legalPrivacy' },
 ]
 
+const LEGAL_DOC_BY_PATH = {
+  '/mentions-legales': 'mentions',
+  '/cgv': 'cgv',
+  '/confidentialite': 'privacy',
+}
+
 function LegalNavigation({ doc, bottom = false }) {
   const { t } = useI18n()
   return (
@@ -77,6 +83,10 @@ function LegalPage({ doc }) {
       </div>
     </main>
   )
+}
+
+export function LegalRoutePage({ path }) {
+  return <LegalPage doc={LEGAL_DOC_BY_PATH[path] ?? 'mentions'} />
 }
 
 export function MentionsLegalesPage() {
