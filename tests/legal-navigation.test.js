@@ -18,6 +18,8 @@ test('la navigation entre les pages légales reste dans le même écran SPA', ()
   assert.match(legal, /'\/cgv': 'cgv'/)
   assert.match(legal, /'\/confidentialite': 'privacy'/)
   assert.match(legal, /export function LegalRoutePage\(\{ path \}\)/)
+  assert.doesNotMatch(legal, /cm2c-qr\.svg/)
+  assert.doesNotMatch(legal, /legal-mediation-qr/)
 
   assert.match(styles, /\.legal-doc-nav a\[aria-current="page"\] \{[\s\S]*?border-bottom-color:\s*var\(--color-doya-red\);/)
   assert.doesNotMatch(styles, /\.legal-doc-nav a\[aria-current="page"\] \{[\s\S]*?font-weight:\s*600;/)
