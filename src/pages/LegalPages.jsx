@@ -67,9 +67,6 @@ function LegalPage({ doc }) {
                   </p>
                   <a className="text-link" href="https://www.cm2c.net/" target="_blank" rel="noopener noreferrer">{t('legal.mediation.link')} · <bdi>cm2c.net</bdi></a>
                 </div>
-                <a className="legal-mediation-qr" href="https://www.cm2c.net/" target="_blank" rel="noopener noreferrer" aria-label={t('legal.mediation.link')}>
-                  <img src="/cm2c-qr.svg" width="132" height="132" alt="" loading="lazy" />
-                </a>
               </div>
             )}
           </section>
