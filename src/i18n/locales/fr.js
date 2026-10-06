@@ -814,6 +814,7 @@ export default {
             'Responsable : ALMENA PROD',
             `Contact : ${ALMENA_CONTACT_EMAIL}`,
             'Contact technique : reelazura@gmail.com',
+            "Siège social : 14 chemin des Arts, 65290 Louey, France",
           ],
         },
         {
@@ -830,6 +831,8 @@ export default {
             'Exécution du contrat de vente et de la livraison.',
             'Gestion de la newsletter sur la base du consentement.',
             'Sécurité du site et prévention des abus.',
+            "Archivage comptable et conservation légale des contrats : respect des obligations légales.",
+            "Sécurité, preuve du consentement et défense des droits : intérêt légitime d’ALMENA PROD, limité aux données nécessaires.",
           ],
         },
         {
@@ -841,7 +844,14 @@ export default {
         {
           heading: 'Durée de conservation',
           paragraphs: [
-            'Les données sont conservées pendant la durée nécessaire aux finalités poursuivies. Une adresse newsletter non confirmée est supprimée au plus tard après 30 jours ; la preuve technique de consentement ou de retrait peut être conservée pour documenter celui-ci. Les compteurs anti-abus pseudonymisés sont purgés après 48 heures. Les autres données sont archivées ou supprimées selon les obligations légales (comptabilité, garanties, etc.).',
+            "Confirmation newsletter : l’adresse temporaire dans Supabase est effacée après confirmation et envoi du message de bienvenue, et au plus tard à l’expiration du lien, 30 jours après la demande.",
+            "Newsletter dans Brevo : conservation jusqu’au retrait du consentement ou pendant 3 ans après l’inscription ou le dernier contact actif venant de vous (par exemple un clic sur un lien ou une demande). Une simple ouverture de message ne prolonge pas cette durée. Les contacts sont examinés avant leur suppression.",
+            "Preuves de consentement : empreinte protégée de l’adresse, source, version du consentement et dates, pendant l’abonnement puis 5 ans après le désabonnement pour défendre nos droits. Une trace minimale du retrait est conservée pendant cette période pour éviter une réinscription involontaire ; elle ne sert pas à envoyer de publicité.",
+            "Commandes : les données nécessaires sont utilisées pour le paiement, la livraison et le service après-vente. Les éléments nécessaires à la preuve du contrat peuvent être conservés dans une archive à accès restreint pendant 5 ans à compter de la fin de la relation contractuelle, sauf délai légal particulier.",
+            "Factures et pièces justificatives comptables : 10 ans à compter de la clôture de l’exercice comptable. Contrats conclus par voie électronique d’un montant au moins égal à 120 € : 10 ans à compter de la livraison (et pendant la période entre conclusion et livraison). Ces durées concernent les documents nécessaires, pas toutes les données de navigation.",
+            "Commandes abandonnées, annulées ou expirées sans paiement : suppression prévue après 90 jours, après vérification de l’absence de paiement, de réservation de stock active et de demande en cours.",
+            "Traces techniques des e-mails de commande envoyés : effacement des coordonnées de destinataire et des erreurs techniques après un an ; une référence technique minimale peut rester pour éviter les doubles envois. Compteurs anti-abus pseudonymisés : 48 heures.",
+            "Un litige ou une obligation légale peut justifier une conservation ciblée plus longue. Les archives nécessaires sont réservées aux personnes habilitées ; les données sont supprimées ou rendues anonymes lorsque leur conservation n’est plus justifiée. Ces règles couvrent les traitements d’ALMENA PROD ; les prestataires agissant pour leurs propres obligations appliquent leurs propres politiques.",
           ],
         },
         {

@@ -438,6 +438,7 @@ export default {
             'Responsable: ALMENA PROD',
             `Contacto: ${ALMENA_CONTACT_EMAIL}`,
             'Contacto técnico: reelazura@gmail.com',
+            "Domicilio social: 14 chemin des Arts, 65290 Louey, France",
           ],
         },
         {
@@ -454,6 +455,8 @@ export default {
             'Ejecución del contrato de venta y entrega.',
             'Gestión de la newsletter basada en el consentimiento.',
             'Seguridad del sitio y prevención de abusos.',
+            "Archivo contable y conservación legal de contratos: cumplimiento de obligaciones legales.",
+            "Seguridad, pruebas del consentimiento y defensa de derechos: interés legítimo de ALMENA PROD, limitado a los datos necesarios.",
           ],
         },
         {
@@ -465,7 +468,14 @@ export default {
         {
           heading: 'Conservación',
           paragraphs: [
-            'Los datos se conservan únicamente durante el tiempo necesario. Un email de newsletter no confirmado se elimina como máximo a los 30 días; puede conservarse una prueba técnica del consentimiento o de su retirada para documentarlo. Los contadores antiabuso seudonimizados se purgan tras 48 horas. El resto se archiva o elimina según las obligaciones legales.',
+            "Confirmación de la newsletter: la dirección temporal en Supabase se elimina tras la confirmación y el envío del mensaje de bienvenida, y como máximo al caducar el enlace, 30 días después de la solicitud.",
+            "Newsletter en Brevo: hasta retirar el consentimiento o durante 3 años desde la inscripción o el último contacto activo iniciado por ti (por ejemplo, un clic en un enlace o una consulta). Abrir un mensaje no amplía este plazo. Los contactos se revisan antes de eliminarlos.",
+            "Pruebas del consentimiento: huella protegida de la dirección, origen, versión y fechas, durante la suscripción y 5 años después de la baja para defender nuestros derechos. Se mantiene una prueba mínima de la retirada durante este periodo para evitar una reinscripción involuntaria; no se utiliza para publicidad.",
+            "Pedidos: los datos necesarios se utilizan para el pago, la entrega y la atención posventa. Los documentos necesarios como prueba del contrato pueden conservarse en un archivo de acceso restringido durante 5 años desde el fin de la relación contractual, salvo plazo legal específico.",
+            "Facturas y justificantes contables: 10 años desde el cierre del ejercicio contable. Contratos electrónicos de importe igual o superior a 120 €: 10 años desde la entrega, conservándose también entre su celebración y la entrega. Estos plazos afectan a los documentos necesarios, no a todos los datos de navegación.",
+            "Pedidos abandonados, cancelados o caducados sin pago: eliminación prevista tras 90 días, después de comprobar que no hay pago, reservas activas de existencias ni solicitudes pendientes.",
+            "Registros técnicos de correos de pedidos enviados: eliminación de los datos del destinatario y de los errores técnicos tras un año; puede mantenerse una referencia técnica mínima para evitar envíos duplicados. Contadores seudonimizados contra abusos: 48 horas.",
+            "Un litigio o una obligación legal puede justificar una conservación específica más larga. Los archivos necesarios se reservan a personas autorizadas; los datos se eliminan o anonimizan cuando dejan de ser necesarios. Estas reglas cubren los tratamientos de ALMENA PROD; los proveedores con obligaciones propias aplican sus propias políticas.",
           ],
         },
         {
