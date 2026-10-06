@@ -30,7 +30,7 @@
 }
 .legal-doc-nav a[aria-current="page"] {
   border-bottom-color: var(--color-doya-red);
-  font-weight: 600;
+  background: rgb(194 5 15 / 4%);
 }
 .legal-doc-nav a:focus-visible {
   outline: 2px solid var(--color-doya-red);
