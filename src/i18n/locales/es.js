@@ -330,19 +330,19 @@ export default {
             'ALMENA PROD asume la responsabilidad del sitio oficial (contenido, marca y tienda).',
             'Razón social: ALMENA PROD',
             'Domicilio social: 14 chemin des Arts, 65290 Louey, France',
-            'SIRET: 101 884 062 00015', "Forma jurídica: SAS (société par actions simplifiée)", "Capital social: 1 000 €", 'RCS Tarbes 101 884 062',
+            'SIRET: 101 884 062 00015', "Forma jurídica: SAS (société par actions simplifiée)", 'RCS Tarbes 101 884 062',
             `Contacto: ${ALMENA_CONTACT_EMAIL}`,
             'Contacto técnico: reelazura@gmail.com',
           ],
         },
         {
           heading: 'Director de la publicación',
-          paragraphs: ["Directora de publicación: Alice Martin — ALMENA PROD"],
+          paragraphs: ["Directora de publicación: Alice Martin, ALMENA PROD"],
         },
         {
           heading: 'Alojamiento y prestadores',
           paragraphs: [
-            'Alojamiento del sitio: Hetzner Online GmbH', 'Hetzner Online GmbH — Industriestr. 25, 91710 Gunzenhausen, Germany', '+49 9831 505-0 — info@hetzner.com',
+            'Alojamiento del sitio: Hetzner Online GmbH', 'Hetzner Online GmbH, Industriestr. 25, 91710 Gunzenhausen, Germany', '+49 9831 505-0, info@hetzner.com',
             'Infraestructura y base de datos: Supabase.',
             'Almacenamiento de medios: Cloudflare R2.',
             'Pagos en línea: Stripe Payments Europe, Ltd.',
