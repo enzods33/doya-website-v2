@@ -12,9 +12,9 @@ function resetInitialHomePosition() {
   const currentPath = window.location.pathname.replace(/\/$/, '') || '/'
   if (currentPath !== basePath) return
 
-  if (window.location.hash) {
-    window.history.replaceState(window.history.state, '', `${window.location.pathname}${window.location.search}`)
-  }
+  // Preserve direct section links (QR codes, shared URLs). App waits for the
+  // lazy section to mount before aligning it below the sticky header.
+  if (window.location.hash) return
   window.scrollTo(0, 0)
 }
 

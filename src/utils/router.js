@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { waitForAnchor } from './waitForAnchor.js'
 
 const BASE = (import.meta.env.BASE_URL || '/').replace(/\/$/, '')
 
@@ -39,26 +40,25 @@ export function syncHeaderHeightVar(headerEl, measuredHeight) {
 
 /**
  * Scroll vers une ancre en respectant le header sticky (mesure live).
- * Réessaie si la cible n’est pas encore montée (ex. /panier → /#shop).
+ * Attend le montage des sections chargées à la demande (ex. /#shop).
  */
-export function scrollToHash(hash, { retries = 16 } = {}) {
+let cancelPendingAnchor
+
+export function scrollToHash(hash) {
+  cancelPendingAnchor?.()
   if (!hash || hash === '#') return
   if (hash === '#top') {
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
     return
   }
-  const target = document.querySelector(hash)
-  if (!target) {
-    if (retries > 0) {
-      requestAnimationFrame(() => scrollToHash(hash, { retries: retries - 1 }))
-    }
-    return
-  }
-  const top = target.getBoundingClientRect().top + window.scrollY - stickyOffset()
-  window.scrollTo({ top: Math.max(0, top), left: 0, behavior: 'auto' })
+  cancelPendingAnchor = waitForAnchor(hash, (target) => {
+    const top = target.getBoundingClientRect().top + window.scrollY - stickyOffset()
+    window.scrollTo({ top: Math.max(0, top), left: 0, behavior: 'auto' })
+  })
 }
 
 export function navigate(to) {
+  cancelPendingAnchor?.()
   const url = new URL(to, window.location.href)
   const path = stripBase(url.pathname)
   const next = `${withBase(path)}${url.search}${url.hash}`
@@ -94,6 +94,7 @@ export function useRoute() {
 
   useEffect(() => {
     function onPop() {
+      cancelPendingAnchor?.()
       setRoute({ path: stripBase(window.location.pathname), search: window.location.search })
       if (window.location.hash) {
         requestAnimationFrame(() => scrollToHash(window.location.hash))
