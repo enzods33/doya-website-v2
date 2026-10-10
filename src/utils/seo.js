@@ -4,7 +4,7 @@ import { album } from '../data/album.js'
 import { siteContent } from '../data/siteContent.js'
 import { STAGING_SITE_URL } from '../config/publicUrls.js'
 
-const INDEXABLE_PATHS = new Set(['/', '/mentions-legales', '/cgv', '/confidentialite'])
+const INDEXABLE_PATHS = new Set(['/', '/boutique', '/mentions-legales', '/cgv', '/confidentialite'])
 
 function setNamedMeta(attr, key, content) {
   const selector = `meta[${attr}="${key}"]`
@@ -29,6 +29,13 @@ function setLink(rel, href) {
 
 /** Résout le contenu SEO d’une route (titre / description / indexabilité). */
 export function resolveRouteSeo(path, t) {
+  if (path === '/boutique') {
+    return {
+      title: t('shop.seoTitle'),
+      description: t('shop.seoDescription'),
+      canonicalPath: '/boutique',
+    }
+  }
   if (path === '/mentions-legales') {
     return {
       title: `${t('legal.mentions.title')} - ${siteContent.name}`,

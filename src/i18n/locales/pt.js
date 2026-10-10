@@ -98,6 +98,8 @@ export default {
     seeMore: 'Ver mais',
   },
   shop: {
+    seoTitle: 'Loja oficial DOYA | Álbum e coleção Luna Bohemia',
+    seoDescription: 'Descubra o álbum Luna Bohemia em CD, camisetas e acessórios DOYA. Conheça a coleção e compre na loja oficial.',
     title: 'Loja',
     uniqueSize: 'Tamanho único',
     label: 'Coleção',

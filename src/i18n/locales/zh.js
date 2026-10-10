@@ -98,6 +98,8 @@ export default {
     seeMore: '查看更多',
   },
   shop: {
+    seoTitle: 'DOYA官方商店 | Luna Bohemia专辑与系列',
+    seoDescription: '探索Luna Bohemia CD专辑、DOYA T恤与周边，在官方商店选购系列产品。',
     title: '商店',
     uniqueSize: '均码',
     label: '系列',

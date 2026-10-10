@@ -16,6 +16,7 @@ import { applyDocumentSeo } from './utils/seo.js'
 import { isOfficialSiteIndexable } from './config/publicUrls.js'
 
 const CartPage = lazy(() => import('./pages/CartPage.jsx'))
+const ShopPage = lazy(() => import('./pages/ShopPage.jsx'))
 const OrderPage = lazy(() => import('./pages/OrderPage.jsx'))
 const AdminPage = lazy(() => import('./pages/admin/AdminPage.jsx'))
 const LegalRoutePage = lazy(() => import('./pages/LegalPages.jsx').then((m) => ({ default: m.LegalRoutePage })))
@@ -24,6 +25,7 @@ const NewsletterConfirmationPage = lazy(() => import('./pages/NewsletterConfirma
 
 const pages = {
   '/': HomePage,
+  '/boutique': ShopPage,
   '/panier': CartPage,
   '/commande': OrderPage,
   '/admin': AdminPage,

@@ -98,6 +98,8 @@ export default {
     seeMore: 'عرض المزيد',
   },
   shop: {
+    seoTitle: 'متجر DOYA الرسمي | ألبوم ومجموعة Luna Bohemia',
+    seoDescription: 'اكتشف ألبوم Luna Bohemia على CD وقمصان وإكسسوارات DOYA. تسوق المجموعة من المتجر الرسمي.',
     title: 'المتجر',
     uniqueSize: 'مقاس واحد',
     label: 'المجموعة',

@@ -98,6 +98,8 @@ export default {
     seeMore: '더 보기',
   },
   shop: {
+    seoTitle: 'DOYA 공식 스토어 | Luna Bohemia 앨범과 컬렉션',
+    seoDescription: 'Luna Bohemia CD와 DOYA 티셔츠 및 액세서리를 만나보세요. 공식 스토어에서 컬렉션을 구매하세요.',
     title: '스토어',
     uniqueSize: '원사이즈',
     label: '컬렉션',

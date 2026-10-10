@@ -8,6 +8,7 @@ import { buildJsonLd } from './src/utils/seo.js'
 import { heroImage } from './src/config/heroImage.js'
 
 const SITEMAP_PATHS = [
+  { path: '/boutique', priority: '0.8', changefreq: 'weekly' },
   { path: '/', priority: '1.0', changefreq: 'weekly' },
   { path: '/mentions-legales', priority: '0.3', changefreq: 'yearly' },
   { path: '/cgv', priority: '0.4', changefreq: 'yearly' },

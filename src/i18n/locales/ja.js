@@ -98,6 +98,8 @@ export default {
     seeMore: 'もっと見る',
   },
   shop: {
+    seoTitle: 'DOYA公式ショップ | Luna Bohemiaアルバムとコレクション',
+    seoDescription: 'Luna BohemiaのCD、DOYAのTシャツやグッズをご紹介。公式ショップでコレクションをご購入いただけます。',
     title: 'ショップ',
     uniqueSize: 'ワンサイズ',
     label: 'コレクション',
