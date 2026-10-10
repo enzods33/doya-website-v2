@@ -20,13 +20,14 @@ test('ancres : montage différé, annulation et cible déjà présente', () => {
   }
   try {
     const results = []
-    waitForAnchor('#shop', (el) => results.push(el))
+    const stop = waitForAnchor('#shop', (el) => results.push(el))
     // Still absent after the initial render: do not give up after 16 frames.
     for (let i = 0; i < 30; i++) notify()
     assert.equal(results.length, 0)
     target = { id: 'shop' }
     notify()
     assert.deepEqual(results, [target])
+    stop()
     assert.equal(disconnected, true)
     assert.equal(listeners.size, 0)
 
@@ -37,8 +38,9 @@ test('ancres : montage différé, annulation et cible déjà présente', () => {
     assert.equal(listeners.size, 0)
 
     target = { id: 'shop' }
-    waitForAnchor('#shop', (el) => results.push(el))
+    const stopImmediate = waitForAnchor('#shop', (el) => results.push(el))
     assert.equal(results.length, 2)
+    stopImmediate()
   } finally {
     for (const [key, value] of Object.entries(original)) {
       if (value === undefined) delete globalThis[key]
